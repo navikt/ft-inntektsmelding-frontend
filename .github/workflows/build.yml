@@ -40,11 +40,9 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
 
-      - name: clean install
-        if: inputs.clean-install
-        run: npm ci
-      - run: npm install --legacy-peer-deps
-      - run: npm run jest
+      - run: npm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
       - run: npm run build
       - name: Generate build version
         id: generate-build-version
