@@ -20,6 +20,7 @@ jobs:
   build-app:
     name: Build
     permissions:
+      contents: read
       packages: write
       id-token: write
     runs-on: "ubuntu-latest"
