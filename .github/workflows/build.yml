@@ -35,6 +35,7 @@ jobs:
       - name: Set up NODE
         uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # ratchet:actions/setup-node@v3
         with:
+          working-directory: server
           node-version: ${{ inputs.node-version }}
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
