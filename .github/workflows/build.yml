@@ -12,6 +12,10 @@ on:
       - 'LICENCE'
       - 'CODEOWNERS'
 
+defaults:
+  run:
+    working-directory: server
+
 jobs:
   build-app:
     name: Build
@@ -19,6 +23,7 @@ jobs:
       contents: read
       packages: write
       id-token: write
+
     uses: navikt/fp-gha-workflows/.github/workflows/build-app-frontend-npm.yml@main
     with:
       node-version: '20'
