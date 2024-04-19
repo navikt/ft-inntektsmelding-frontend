@@ -17,7 +17,7 @@ defaults:
     working-directory: server
 
 jobs:
-  build-and-test:
+  build-app:
     name: Build
     permissions:
       packages: write
