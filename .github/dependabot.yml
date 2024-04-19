@@ -1,0 +1,32 @@
+version: 2
+registries:
+  ft-inntektsmelding-frontend:
+    type: maven-repository
+    url: https://maven.pkg.github.com/navikt/ft-inntektsmelding-frontend
+    username: x-access-token
+    password: ${{ secrets.READER_TOKEN }}
+
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    registries:
+      - ft-inntektsmelding-frontend
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    groups:
+      prod-minor-deps:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      dev-minor-deps:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10

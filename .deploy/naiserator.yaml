@@ -1,0 +1,57 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: ft-inntektsmelding-frontend
+  namespace: teamforeldrepenger
+  labels:
+    team: teamforeldrepenger
+spec:
+  image: {{image}}
+  port: 8080
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
+  liveness:
+    path: /internal/health/isAlive
+    initialDelay: 10
+    timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
+  readiness:
+    path: /internal/health/isReady
+    initialDelay: 10
+    timeout: 1
+  replicas:
+    min: {{minReplicas}}
+    max: {{maxReplicas}}
+    cpuThresholdPercentage: 80
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 512Mi
+    requests:
+      cpu: 600m
+      memory: 256Mi
+  idporten:
+    enabled: true
+    sidecar:
+      autoLogin: true
+      enabled: true
+      level: idporten-loa-high
+      locale: nb
+  accessPolicy:
+    outbound:
+      rules:
+        - application: ftinntektsmelding
+  env:
+    - name: NODE_ENV
+      value: "production"
+    - name: EXPRESS_HOST
+      value: "::"
+    - name: EXPRESS_PORT
+      value: "8080"
+    - name: API_SCOPE
+      value: {{API_SCOPE}}
+    - name: API_URL
+      value: "http://ftinntektsmelding"
