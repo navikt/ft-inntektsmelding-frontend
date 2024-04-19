@@ -50,11 +50,11 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
       - name: Bygg og push docker image
-        if: inputs.build-image
+        if: github.ref_name == 'master'
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           build-version: ${{ steps.generate-build-version.outputs.build-version }}
-          push-image: ${{ inputs.push-image }}
+          push-image: ${{ github.ref_name == 'master' }}
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
 
