@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '**'
+      - 'master'
     paths-ignore:
       - '**.md'
       - '**.MD'
@@ -50,7 +50,6 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
       - name: Bygg og push docker image
-        if: github.ref_name == 'master'
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           docker_context: "./server"
@@ -64,7 +63,6 @@ jobs:
     name: Deploy dev
     permissions:
       id-token: write
-    if: github.ref_name == 'master'
     needs: build-app
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
