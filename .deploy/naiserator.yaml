@@ -44,9 +44,13 @@ spec:
     outbound:
       rules:
         - application: ftinntektsmelding
+        - application: nav-dekoratoren
+          namespace: personbruker
   env:
     - name: NODE_ENV
       value: "production"
+    - name: ENV
+      value: {{ENV}}
     - name: EXPRESS_HOST
       value: "::"
     - name: EXPRESS_PORT
