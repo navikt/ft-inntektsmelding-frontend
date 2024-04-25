@@ -3,7 +3,7 @@ import path from "node:path";
 import {
   buildCspHeader,
   injectDecoratorServerSide,
-} from "@navikt/nav-dekoratoren-moduler/ssr";
+} from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
 import cookieParser from "cookie-parser";
 import express, { Express, Response } from "express";
 

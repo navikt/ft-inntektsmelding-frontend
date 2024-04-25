@@ -1,5 +1,5 @@
 version: '3.8'
-name: team-catalog-frackend
+name: ft-inntektsmelding-server
 services:
   wonderwall:
     image: ghcr.io/nais/wonderwall:latest
