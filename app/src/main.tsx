@@ -1,9 +1,12 @@
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import {createRouter, RouterProvider} from "@tanstack/react-router";
+import "@navikt/ds-css";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import { createRoot } from "react-dom/client";
-import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
-import {routeTree} from "./routeTree.gen.ts";
+
+import { routeTree } from "./routeTree.gen.ts";
 
 export const queryClient = new QueryClient();
 
