@@ -9,7 +9,16 @@ import express, { Express, Response } from "express";
 
 import config from "./config.js";
 
-const csp = await buildCspHeader({}, { env: config.app.env });
+const csp =
+  config.app.env === "prod"
+    ? await buildCspHeader(
+        {},
+        { env: config.app.env },
+      )
+    : await buildCspHeader(
+        { "script-src": ["localhost:5173"] },
+        { env: config.app.env },
+      );
 
 export function setupStaticRoutes(app: Express) {
   app.use(express.static("./public", { index: false }));
