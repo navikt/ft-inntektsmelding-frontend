@@ -16,7 +16,10 @@ const csp =
         { env: config.app.env },
       )
     : await buildCspHeader(
-        { "script-src": ["http://localhost:5173/@react-refresh", "http://localhost:5173/@vite/client", "http://localhost:5173/src/main.tsx"] },
+        {
+          "script-src-elem": ["http://localhost:5173"],
+          "connect-src": ["ws://localhost:5173"]
+        },
         { env: config.app.env },
       );
 
