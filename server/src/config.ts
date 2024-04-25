@@ -6,7 +6,7 @@ const proxy = {
 };
 
 const app = {
-  nodeEnv: requireEnvironment("NODE_ENV"),
+  env: requireEnvironment("ENV") as "dev" | "prod",
   host: requireEnvironment("EXPRESS_HOST"),
   port: Number(requireEnvironment("EXPRESS_PORT")),
 };
