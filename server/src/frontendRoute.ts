@@ -16,7 +16,7 @@ const csp =
         { env: config.app.env },
       )
     : await buildCspHeader(
-        { "script-src": ["localhost:5173"] },
+        { "script-src": ["http://localhost:5173"] },
         { env: config.app.env },
       );
 
