@@ -6,6 +6,5 @@
 !src/
 !tsconfig.json
 !package*.json
-!public/
 !node_modules
 !dist
