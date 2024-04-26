@@ -35,4 +35,4 @@ jobs:
         run: npm run stylelint
 
       - name: Check for typescript errors
-        run: npm run check-types
+        run: npm run check:types
