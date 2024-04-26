@@ -40,6 +40,8 @@ spec:
       enabled: true
       level: idporten-loa-high
       locale: nb
+  tokenx:
+    enabled: true
   accessPolicy:
     outbound:
       rules:
