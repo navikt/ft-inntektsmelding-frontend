@@ -1,4 +1,4 @@
-name: "verify"
+name: "verify: app"
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - '**'
     paths:
       - 'app/**'
-      - '.github/workflows/verify.yml'
+      - '.github/workflows/verify-app.yml'
 
 defaults:
   run:

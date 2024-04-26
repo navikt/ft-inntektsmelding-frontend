@@ -1,0 +1,33 @@
+name: "verify: server"
+
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'server/**'
+      - '.github/workflows/verify-server.yml'
+
+defaults:
+  run:
+    working-directory: server
+
+jobs:
+  verify:
+    name: Verify there are no lint or typescript errors
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: app
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check for typescript errors
+        run: npm run check-types
