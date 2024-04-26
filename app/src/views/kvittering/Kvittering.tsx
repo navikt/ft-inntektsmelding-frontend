@@ -1,6 +1,6 @@
 import { BodyLong } from "@navikt/ds-react";
 
-import { RotLayout } from "../../features/rot-layout/RotLayout";
+import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 export const Kvittering = () => {
   return (
