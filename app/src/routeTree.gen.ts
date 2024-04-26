@@ -11,12 +11,24 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
+import { Route as NyIdImport } from './routes/ny.$id'
+import { Route as KvitteringIdImport } from './routes/kvittering.$id'
+import { Route as EndreIdImport } from './routes/endre.$id'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  path: '/',
+const NyIdRoute = NyIdImport.update({
+  path: '/ny/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const KvitteringIdRoute = KvitteringIdImport.update({
+  path: '/kvittering/$id',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EndreIdRoute = EndreIdImport.update({
+  path: '/endre/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -24,8 +36,16 @@ const IndexRoute = IndexImport.update({
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      preLoaderRoute: typeof IndexImport
+    '/endre/$id': {
+      preLoaderRoute: typeof EndreIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/kvittering/$id': {
+      preLoaderRoute: typeof KvitteringIdImport
+      parentRoute: typeof rootRoute
+    }
+    '/ny/$id': {
+      preLoaderRoute: typeof NyIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -33,6 +53,10 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexRoute])
+export const routeTree = rootRoute.addChildren([
+  EndreIdRoute,
+  KvitteringIdRoute,
+  NyIdRoute,
+])
 
 /* prettier-ignore-end */
