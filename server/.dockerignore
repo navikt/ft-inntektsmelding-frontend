@@ -9,3 +9,4 @@
 !package*.json
 !node_modules
 !dist
+!vite-dev-server.html
