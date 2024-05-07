@@ -44,6 +44,13 @@ jobs:
         working-directory: app
         run: npm run build
 
+      - name: Check Directory Contents
+        run: |
+          ls -l
+          ls -l dist
+          ls -l ../server
+          ls -l ../server/public
+
       - name: Copy webapp dist into public directory of server
         working-directory: app
         run: cp -r dist/ ../server/public
