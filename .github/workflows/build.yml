@@ -45,6 +45,7 @@ jobs:
         run: npm run build
 
       - name: Check Directory Contents
+        working-directory: app
         run: |
           ls -l
           ls -l dist
