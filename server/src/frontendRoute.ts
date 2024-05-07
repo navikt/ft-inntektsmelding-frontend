@@ -40,10 +40,7 @@ export function setupStaticRoutes(app: Express) {
 }
 
 function addLocalViteServerHandlerWithDecorator(app: Express) {
-  const viteDevelopmentServerPath = path.resolve(
-    "./public",
-    "vite-dev-server.html",
-  );
+  const viteDevelopmentServerPath = path.resolve(".", "vite-dev-server.html");
 
   app.use(cookieParser());
   app.get("/vite-on", (request, response) => {
