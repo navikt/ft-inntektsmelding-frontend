@@ -56,6 +56,14 @@ jobs:
         working-directory: app
         run: cp -r dist/ ../server/public
 
+      - name: Check Directory Contents after copy
+        working-directory: app
+        run: |
+          ls -l
+          ls -l dist
+          ls -l ../server
+          ls -l ../server/public
+
       - run: npm install
         working-directory: server
         env:
