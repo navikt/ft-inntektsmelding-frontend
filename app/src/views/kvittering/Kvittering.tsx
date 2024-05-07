@@ -1,12 +1,14 @@
 import { BodyLong } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
+import { getRouteApi } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { Route } from "~/routes/kvittering.$id";
+
+const route = getRouteApi("/kvittering/$id");
 
 export const Kvittering = () => {
-  const { id } = Route.useParams();
+  const { id } = route.useParams();
   useEffect(() => {
     setBreadcrumbs([
       {
