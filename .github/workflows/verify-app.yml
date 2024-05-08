@@ -22,6 +22,8 @@ jobs:
         with:
           node-version: '20'
           cache: 'npm'
+          registry-url: https://npm.pkg.github.com/
+          scope: '@navikt'
           cache-dependency-path: app
       - name: Install dependencies
         run: npm ci
