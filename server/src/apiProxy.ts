@@ -33,6 +33,7 @@ export function addProxyHandler(
         request.headers["obo-token"] = obo.token;
         return next();
       } else {
+        console.log("OBO-exchange failed", obo.error);
         return response.status(403).send();
       }
     },
