@@ -9,6 +9,7 @@ import {
   organisasjonQueryOptions,
 } from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon";
 
 const route = getRouteApi("/ny/$id");
 
@@ -38,13 +39,7 @@ export const NyInntektsmelding = () => {
   return (
     <RotLayout tittel="Ny inntektsmelding" ytelse="Omsorgspenger">
       <BodyLong>Dette er siden for nye omsorgspenger med id {id}</BodyLong>
-      <BodyLong>
-        Her er et navn fra backend {arbeidsGiverQuery.data?.navn}
-      </BodyLong>
-      <BodyLong>
-        Her er et organisasjonsnavn{" "}
-        {organisasjonsnummerQuery.data?.organisasjonNavn}
-      </BodyLong>
+      <PersonOgSelskapsInformasjonSeksjon className="mt-6" />
     </RotLayout>
   );
 };
