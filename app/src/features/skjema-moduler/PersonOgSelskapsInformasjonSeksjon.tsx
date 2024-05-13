@@ -1,4 +1,11 @@
-import { BodyShort, Heading, HGrid, TextField } from "@navikt/ds-react";
+import {
+  BodyShort,
+  Heading,
+  HGrid,
+  Skeleton,
+  TextField,
+} from "@navikt/ds-react";
+import { useQuery } from "@tanstack/react-query";
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
@@ -7,6 +14,10 @@ type PersonOgSelskapsInformasjonSeksjonProps = {
 export const PersonOgSelskapsInformasjonSeksjon = ({
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
+  const { data } = useQuery<typeof mockData>({
+    queryKey: ["personOgSelskapsInformasjon"],
+    queryFn: () => mockData,
+  });
   return (
     <section className={className}>
       <HGrid columns={{ xs: 1, md: 2 }} gap="6">
@@ -19,13 +30,15 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
               <Heading level="3" size="xsmall">
                 Navn
               </Heading>
-              <BodyShort>Navn Navnesen</BodyShort>
+              <BodyShort>{data?.arbeidstaker.navn ?? <Skeleton />}</BodyShort>
             </div>
             <div className="flex-1">
               <Heading level="3" size="xsmall">
                 Personnummer
               </Heading>
-              <BodyShort>010101 12345</BodyShort>
+              <BodyShort>
+                {data?.arbeidstaker.personnummer ?? <Skeleton />}
+              </BodyShort>
             </div>
           </div>
         </div>
@@ -38,13 +51,17 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
               <Heading level="3" size="xsmall">
                 Virksomhetsnavn
               </Heading>
-              <BodyShort>Firma AS</BodyShort>
+              <BodyShort>
+                {data?.arbeidsgiver.virksomhetsnavn ?? <Skeleton />}
+              </BodyShort>
             </div>
             <div className="flex-1">
               <Heading level="3" size="xsmall">
                 Org. nummer for underenhet
               </Heading>
-              <BodyShort>123 456 789</BodyShort>
+              <BodyShort>
+                {data?.arbeidsgiver.orgNummerForUnderenhet ?? <Skeleton />}
+              </BodyShort>
             </div>
           </div>
           <div className="flex flex-column md:flex-row gap-2 flex-wrap">
@@ -52,10 +69,13 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
               <Heading level="3" size="xsmall">
                 Innsender
               </Heading>
-              <BodyShort>Inn Sendersen</BodyShort>
+              <BodyShort>
+                {data?.arbeidsgiver.innsender ?? <Skeleton />}
+              </BodyShort>
             </div>
             <div className="flex-1">
               <TextField
+                defaultValue={data?.arbeidsgiver.telefonnummerInnsender}
                 label="Telefonnummer, innsender"
                 name="telefonnummer-innsender"
                 size="medium"
@@ -66,4 +86,17 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
       </HGrid>
     </section>
   );
+};
+
+const mockData = {
+  arbeidstaker: {
+    navn: "Navn Navnesen",
+    personnummer: "010101 12345",
+  },
+  arbeidsgiver: {
+    virksomhetsnavn: "Firma AS",
+    orgNummerForUnderenhet: "123 456 789",
+    innsender: "Inn Sendersen",
+    telefonnummerInnsender: "22 22 55 55",
+  },
 };
