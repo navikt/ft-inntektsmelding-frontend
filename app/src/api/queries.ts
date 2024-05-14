@@ -5,12 +5,12 @@ import type { OrganisasjonInfoDto, PersonInfoDto } from "~/types/api-models.ts";
 const FT_INNTEKTSMELDING_BACKEND_URL =
   "/server/api/ftinntektsmelding/api/imdialog";
 
-export function arbeidsgiverQueryOptions(fnr: string, ytelse: string) {
+export function arbeidsgiverQueryOptions(aktørId: string, ytelse: string) {
   return queryOptions({
-    queryKey: ["ARBEIDSGIVER", fnr, ytelse],
+    queryKey: ["ARBEIDSGIVER", aktørId, ytelse],
     queryFn: async () => {
       const response = await fetch(
-        `${FT_INNTEKTSMELDING_BACKEND_URL}/personinfo?aktorId=${fnr}&ytelse=${ytelse}`,
+        `${FT_INNTEKTSMELDING_BACKEND_URL}/personinfo?aktorId=${aktørId}&ytelse=${ytelse}`,
       );
       return (await response.json()) as PersonInfoDto;
     },
