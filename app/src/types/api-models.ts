@@ -3,3 +3,8 @@ export type PersonInfoDto = {
   fødselsnummer: string;
   navn: string;
 };
+
+export type OrganisasjonInfoDto = {
+  organisasjonNavn: string;
+  organisasjonNummer: string;
+};
