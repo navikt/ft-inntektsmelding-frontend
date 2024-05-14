@@ -14,6 +14,7 @@ npm run dev
 ## Logge inn med idporten i dev
 
 Gå til https://familie-inntektsmelding.intern.dev.nav.no/
+
 * Velg BankID
 * Fødselsnummer: 10107400090
 * Velg BankID med kodebrikke

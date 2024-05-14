@@ -5,9 +5,9 @@ import type { OrganisasjonInfoDto, PersonInfoDto } from "~/types/api-models.ts";
 const FT_INNTEKTSMELDING_BACKEND_URL =
   "/server/api/ftinntektsmelding/api/imdialog";
 
-export function arbeidsgiverQueryOptions(aktørId: string, ytelse: string) {
+export function personinfoQueryOptions(aktørId: string, ytelse: string) {
   return queryOptions({
-    queryKey: ["ARBEIDSGIVER", aktørId, ytelse],
+    queryKey: ["PERSONINFO", aktørId, ytelse],
     queryFn: async () => {
       const response = await fetch(
         `${FT_INNTEKTSMELDING_BACKEND_URL}/personinfo?aktorId=${aktørId}&ytelse=${ytelse}`,
