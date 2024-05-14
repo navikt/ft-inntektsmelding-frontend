@@ -13,6 +13,7 @@ export const verifyToken = async (
 
   const validation = await validateToken(token);
   if (!validation.ok) {
+    console.log("Invalid token validation", validation);
     return response.status(403).send();
   }
 
