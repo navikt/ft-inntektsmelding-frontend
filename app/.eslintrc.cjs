@@ -14,6 +14,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:@tanstack/eslint-plugin-query/recommended",
     "prettier",
     "plugin:unicorn/recommended",
   ],
