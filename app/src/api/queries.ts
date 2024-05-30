@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import type { OrganisasjonInfoDto, PersonInfoDto } from "~/types/api-models.ts";
 
-const FT_INNTEKTSMELDING_BACKEND_URL = `/server/api/api/imdialog`;
+const FT_INNTEKTSMELDING_BACKEND_URL = `/server/api/ftinntektsmelding/api/imdialog`;
 
 export function personinfoQueryOptions(aktørId: string, ytelse: string) {
   return queryOptions({
