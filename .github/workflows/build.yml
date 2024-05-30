@@ -63,7 +63,7 @@ jobs:
         run: echo "build-version=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
-      - name: Bygg og push docker image
+      - name: Bygg og push docker image teamforeldrepenger
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           docker_context: "./server"
@@ -72,9 +72,21 @@ jobs:
           push-image: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          namespace: teamforeldrepenger
 
-  deploy-dev:
-    name: Deploy dev
+      - name: Bygg og push docker image k9saksbehandling
+        uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
+        with:
+          docker_context: "./server"
+          dockerfile: "./server/Dockerfile"
+          build-version: ${{ steps.generate-build-version.outputs.build-version }}
+          push-image: true
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          namespace: k9saksbehandling
+
+  deploy-dev-teamforeldrepenger:
+    name: Deploy dev teamforeldrepenger
     permissions:
       id-token: write
     needs: build-app
@@ -83,7 +95,24 @@ jobs:
       gar: true
       image: ${{ needs.build-app.outputs.build-version }}
       cluster: dev-gcp
+      namespace: teamforeldrepenger
+      naiserator_file: "fp/naiserator.yaml"
     secrets: inherit
+
+  deploy-dev-k9saksbehandling:
+    name: Deploy dev k9saksbehandling
+    permissions:
+      id-token: write
+    needs: build-app
+    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
+    with:
+      gar: true
+      image: ${{ needs.build-app.outputs.build-version }}
+      cluster: dev-gcp
+      naiserator_file: "k9/naiserator.yaml"
+      namespace: k9saksbehandling
+    secrets: inherit
+
 
 #  deploy-prod:
 #    name: Deploy prod

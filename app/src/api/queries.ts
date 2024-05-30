@@ -1,9 +1,9 @@
+import { requireEnvironment } from "@navikt/backend-for-frontend-utils";
 import { queryOptions } from "@tanstack/react-query";
 
 import type { OrganisasjonInfoDto, PersonInfoDto } from "~/types/api-models.ts";
 
-const FT_INNTEKTSMELDING_BACKEND_URL =
-  "/server/api/ftinntektsmelding/api/imdialog";
+const FT_INNTEKTSMELDING_BACKEND_URL = `/server/api/${requireEnvironment("APP_PATH_PREFIX")}/api/imdialog`;
 
 export function personinfoQueryOptions(aktørId: string, ytelse: string) {
   return queryOptions({
