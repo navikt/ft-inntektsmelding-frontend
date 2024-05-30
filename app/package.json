@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@navikt/aksel-icons": "6.7.0",
-    "@navikt/backend-for-frontend-utils": "0.7.3",
     "@navikt/ds-css": "6.7.0",
     "@navikt/ds-react": "6.7.0",
     "@navikt/ds-tailwind": "6.7.0",

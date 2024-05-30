@@ -60,6 +60,4 @@ spec:
     - name: API_SCOPE
       value: {{API_SCOPE}}
     - name: API_URL
-      value: "http://k9-inntektsmelding"
-    - name: APP_PATH_PREFIX
-      value: "k9/inntektsmelding"
+      value: "http://k9-inntektsmelding/k9/inntektsmelding"
