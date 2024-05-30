@@ -60,4 +60,4 @@ spec:
     - name: API_SCOPE
       value: {{API_SCOPE}}
     - name: API_URL
-      value: "http://ftinntektsmelding"
+      value: "http://ftinntektsmelding/ftinntektsmelding"
