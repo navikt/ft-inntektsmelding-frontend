@@ -49,11 +49,18 @@ export function inntektQueryOptions(
         `${FT_INNTEKTSMELDING_BACKEND_URL}/inntekt`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(hentInntektRequestDto),
         },
       );
 
-      return (await response.json()) as MånedsinntektResponsDto;
+      return (await response.json()) as MånedsinntektResponsDto[];
     },
+    select: (data) =>
+      data.sort(
+        (a, b) => new Date(a.fom).getTime() - new Date(b.fom).getTime(),
+      ), // Tanker om Lodash??
   });
 }

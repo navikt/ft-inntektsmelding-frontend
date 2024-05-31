@@ -1,19 +1,26 @@
-import { Detail, Heading, HStack, Label, VStack } from "@navikt/ds-react";
+import {
+  Detail,
+  Heading,
+  HGrid,
+  HStack,
+  Label,
+  VStack,
+} from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { format, subMonths } from "date-fns";
+import { format } from "date-fns";
+import { Fragment } from "react";
 
 import { inntektQueryOptions } from "~/api/queries.ts";
 
 export function Inntekt() {
   const inntekt = useQuery(
     inntektQueryOptions({
-      ytelse: "FP",
-      aktorId: "2715347149890",
-      organisasjonsnummer: "974652277",
-      startdato: format(subMonths(new Date(), 3), "yyyy-MM-dd"),
+      aktorId: "2242003545158",
+      ytelse: "FORELDREPENGER",
+      organisasjonsnummer: "896929119",
+      startdato: format(new Date(), "yyyy-MM-dd"),
     }),
   );
-  console.log(inntekt);
 
   return (
     <>
@@ -25,8 +32,23 @@ export function Inntekt() {
           <Label size="small">Utbetalt lønn de siste tre månedene: </Label>
           <Detail>fra A-ordningen</Detail>
         </HStack>
-        <div></div>
+        <HGrid columns={{ md: 2 }} gap="6">
+          {inntekt.data?.map((inntekt) => (
+            <Fragment key={inntekt.fom}>
+              <span>{navnPåMåned(inntekt.fom)}</span>
+              <span>{inntekt.beløp}</span>
+            </Fragment>
+          ))}
+        </HGrid>
       </VStack>
     </>
   );
+}
+
+function navnPåMåned(date: string) {
+  const måned = new Intl.DateTimeFormat("no", { month: "long" }).format(
+    new Date(date),
+  );
+
+  return måned.charAt(0).toUpperCase() + måned.slice(1);
 }
