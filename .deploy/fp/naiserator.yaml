@@ -60,6 +60,4 @@ spec:
     - name: API_SCOPE
       value: {{API_SCOPE}}
     - name: API_URL
-      value: "http://ftinntektsmelding"
-    - name: APP_PATH_PREFIX
-      value: "ftinntektsmelding"
+      value: "http://ftinntektsmelding/ftinntektsmelding"
