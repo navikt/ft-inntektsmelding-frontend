@@ -22,6 +22,11 @@ export function organisasjonQueryOptions(organisasjonsnummer: string) {
     queryFn: async () => {
       const response = await fetch(
         `${FT_INNTEKTSMELDING_BACKEND_URL}/organisasjon?organisasjonsnummer=${organisasjonsnummer}`,
+        {
+          headers: {
+            "nav-consumer-id": "ft-inntektsmelding-frontend", // TODO: dobbeltsjekk hva denne headeren burde være
+          },
+        },
       );
       return (await response.json()) as OrganisasjonInfoDto;
     },
