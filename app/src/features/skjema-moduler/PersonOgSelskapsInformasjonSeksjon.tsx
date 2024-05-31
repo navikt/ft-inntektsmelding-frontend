@@ -11,19 +11,24 @@ import {
   organisasjonQueryOptions,
   personinfoQueryOptions,
 } from "~/api/queries";
+import type { ForespørselEntitet } from "~/types/api-models.ts";
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
+  forespørsel: ForespørselEntitet;
 };
 
 export const PersonOgSelskapsInformasjonSeksjon = ({
+  forespørsel,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   const personinfoQuery = useQuery(
-    personinfoQueryOptions("2715347149890", "FORELDREPENGER"),
+    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
   );
 
-  const organisasjonQuery = useQuery(organisasjonQueryOptions("974652277"));
+  const organisasjonQuery = useQuery(
+    organisasjonQueryOptions(forespørsel.organisasjonsnummer),
+  );
 
   return (
     <section className={className}>

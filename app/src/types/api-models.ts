@@ -76,3 +76,15 @@ type NaturalytelseRequestDto = {
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
 };
+
+export type ForespørselEntitet = {
+  id: number;
+  uuid: string;
+  sakId: string;
+  oppgaveId: string;
+  organisasjonsnummer: string;
+  skjæringstidspunkt: string;
+  brukerAktørId: string;
+  ytelseType: Ytelsetype;
+  fagsystemSaksnummer: string;
+};
