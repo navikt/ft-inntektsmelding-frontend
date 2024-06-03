@@ -36,7 +36,13 @@ export function Inntekt() {
           {inntekt.data?.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}</span>
-              <span>{inntekt.beløp}</span>
+              <span>
+                {Intl.NumberFormat("nb-no", {
+                  style: "currency",
+                  currency: "NOK",
+                  maximumFractionDigits: 0,
+                }).format(inntekt.beløp)}
+              </span>
             </Fragment>
           ))}
         </HGrid>
