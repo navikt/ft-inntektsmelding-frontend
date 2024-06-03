@@ -17,7 +17,7 @@ export function Inntekt() {
     inntektQueryOptions({
       aktorId: "2242003545158",
       ytelse: "FORELDREPENGER",
-      organisasjonsnummer: "896929119",
+      arbeidsgiverIdent: "896929119",
       startdato: format(new Date(), "yyyy-MM-dd"),
     }),
   );

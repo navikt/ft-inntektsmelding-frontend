@@ -47,6 +47,12 @@ export function forespørselQueryOptions(forespørselUUID: string) {
       const response = await fetch(
         `${FT_INNTEKTSMELDING_BACKEND_URL}/foresporsel/${forespørselUUID}`,
       );
+      if (response.status === 404) {
+        throw new Error("Forespørsel ikke funnet");
+      }
+      if (!response.ok) {
+        throw new Error("Kunne ikke hente forespørsel");
+      }
       return (await response.json()) as ForespørselEntitet;
     },
   });

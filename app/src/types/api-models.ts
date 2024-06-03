@@ -13,13 +13,13 @@ export type MånedsinntektResponsDto = {
   fom: string;
   tom: string;
   beløp: number;
-  organisasjonsnummer: string;
+  arbeidsgiverIdent: string;
 };
 
 export type HentInntektRequestDto = {
   aktorId: string;
   ytelse: Ytelsetype;
-  organisasjonsnummer: string;
+  arbeidsgiverIdent: string;
   startdato: string;
 };
 
