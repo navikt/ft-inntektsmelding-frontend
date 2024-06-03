@@ -1,3 +1,4 @@
+import { ArrowRightIcon, FloppydiskIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -5,10 +6,9 @@ import {
   Button,
   CopyButton,
   Detail,
-  FormProgress,
   GuidePanel,
-  Heading,
   HGrid,
+  Heading,
   Label,
   Skeleton,
   TextField,
@@ -21,6 +21,8 @@ import {
   personinfoQueryOptions,
 } from "~/api/queries";
 import type { ForespørselEntitet } from "~/types/api-models.ts";
+
+import { Fremgangsindikator } from "./Skjemafremgang";
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
@@ -42,24 +44,30 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
           <Heading level="3" size="large">
             Dine opplysninger
           </Heading>
-          <FormProgress activeStep={1} className="col-span-2" totalSteps={3}>
-            <FormProgress.Step href="#">Dine opplysninger</FormProgress.Step>
-            <FormProgress.Step href="#">
-              Den ansattes opplysninger
-            </FormProgress.Step>
-            <FormProgress.Step href="#">Oppsummering</FormProgress.Step>
-          </FormProgress>
+          <Fremgangsindikator aktivtSteg={1} />
           <Intro forespørsel={forespørsel} />
           <ArbeidsgiverInformasjon forespørsel={forespørsel} />
           <Personinformasjon forespørsel={forespørsel} />
           <InnsenderOgKontaktpersonInformasjon />
 
-          <div className="flex justify-center">
-            <Button variant="primary">Informasjonen stemmer</Button>
+          <div className="flex justify-center col-span-2">
+            <Button
+              icon={<ArrowRightIcon />}
+              iconPosition="right"
+              variant="primary"
+            >
+              Bekreft og gå videre
+            </Button>
           </div>
         </HGrid>
-        <div className="flex justify-center">
-          <Button variant="tertiary">Lagre og fortsett senere</Button>
+        <div className="flex justify-center mt-3">
+          <Button
+            icon={<FloppydiskIcon />}
+            iconPosition="left"
+            variant="tertiary"
+          >
+            Fortsett senere
+          </Button>
         </div>
       </form>
     </section>
@@ -168,19 +176,21 @@ const InnsenderOgKontaktpersonInformasjon = () => {
       kilde="Fra Altinn"
       tittel="Innsender og kontaktperson"
     >
-      <div className="flex gap-6">
+      <HGrid columns={{ sm: 1, md: 2 }} gap="5">
         <TextField
+          className="w-full"
           defaultValue="Innlogget Bruker"
           label="Navn innsender"
           name="navn-innsender"
           size="medium"
         />
         <TextField
+          className="w-full md:w-1/2"
           label="Telefon innsender"
           name="telefon-innsender"
           size="medium"
         />
-      </div>
+      </HGrid>
       <Alert variant="info">
         <Heading level="3" size="small">
           Stemmer informasjonen?
