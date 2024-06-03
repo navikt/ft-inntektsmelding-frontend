@@ -22,7 +22,7 @@ export const EndreInntektsmelding = () => {
     ]);
   }, [id]);
   return (
-    <RotLayout tittel="Endre inntektsmelding" ytelse="Omsorgspenger">
+    <RotLayout tittel="Endre inntektsmelding, omsorgspenger">
       <BodyLong>
         Dette er siden for å endre inntektsmelding for omsorgspenger
       </BodyLong>
