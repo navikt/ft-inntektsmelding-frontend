@@ -74,6 +74,6 @@ export function inntektQueryOptions(
     select: (data) =>
       data.sort(
         (a, b) => new Date(a.fom).getTime() - new Date(b.fom).getTime(),
-      ), // Tanker om Lodash??
+      ),
   });
 }
