@@ -1,6 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import {
+import type {
   ForespørselEntitet,
   HentInntektRequestDto,
   MånedsinntektResponsDto,
