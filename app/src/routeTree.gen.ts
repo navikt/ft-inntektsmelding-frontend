@@ -14,6 +14,9 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as NyIdImport } from './routes/ny.$id'
 import { Route as KvitteringIdImport } from './routes/kvittering.$id'
 import { Route as EndreIdImport } from './routes/endre.$id'
+import { Route as NyIdOppsummeringImport } from './routes/ny.$id.oppsummering'
+import { Route as NyIdInntektOgRefusjonImport } from './routes/ny.$id.inntekt-og-refusjon'
+import { Route as NyIdDineOpplysningerImport } from './routes/ny.$id.dine-opplysninger'
 
 // Create/Update Routes
 
@@ -32,6 +35,21 @@ const EndreIdRoute = EndreIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const NyIdOppsummeringRoute = NyIdOppsummeringImport.update({
+  path: '/oppsummering',
+  getParentRoute: () => NyIdRoute,
+} as any)
+
+const NyIdInntektOgRefusjonRoute = NyIdInntektOgRefusjonImport.update({
+  path: '/inntekt-og-refusjon',
+  getParentRoute: () => NyIdRoute,
+} as any)
+
+const NyIdDineOpplysningerRoute = NyIdDineOpplysningerImport.update({
+  path: '/dine-opplysninger',
+  getParentRoute: () => NyIdRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -48,6 +66,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NyIdImport
       parentRoute: typeof rootRoute
     }
+    '/ny/$id/dine-opplysninger': {
+      preLoaderRoute: typeof NyIdDineOpplysningerImport
+      parentRoute: typeof NyIdImport
+    }
+    '/ny/$id/inntekt-og-refusjon': {
+      preLoaderRoute: typeof NyIdInntektOgRefusjonImport
+      parentRoute: typeof NyIdImport
+    }
+    '/ny/$id/oppsummering': {
+      preLoaderRoute: typeof NyIdOppsummeringImport
+      parentRoute: typeof NyIdImport
+    }
   }
 }
 
@@ -56,7 +86,11 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren([
   EndreIdRoute,
   KvitteringIdRoute,
-  NyIdRoute,
+  NyIdRoute.addChildren([
+    NyIdDineOpplysningerRoute,
+    NyIdInntektOgRefusjonRoute,
+    NyIdOppsummeringRoute,
+  ]),
 ])
 
 /* prettier-ignore-end */
