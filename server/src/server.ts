@@ -4,7 +4,6 @@ import { setupActuators } from "./actuators.js";
 import { setupApiProxy } from "./apiProxy.js";
 import { errorHandling } from "./errorHandler.js";
 import { setupStaticRoutes } from "./frontendRoute.js";
-import { internalRoutes } from "./internalRoutes.js";
 import { verifyToken } from "./tokenValidation.js";
 
 const app = express();
@@ -18,7 +17,6 @@ app.set("trust proxy", 1);
 
 app.use(verifyToken);
 
-internalRoutes(app);
 setupApiProxy(app);
 
 // Catch all route, må være sist
