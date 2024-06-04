@@ -58,6 +58,22 @@ export function forespørselQueryOptions(forespørselUUID: string) {
   });
 }
 
+export function hentInnloggetBrukerNavn() {
+  return queryOptions({
+    queryKey: ["INNLOGGET_BRUKER"],
+    queryFn: async () => {
+      const response = await fetch(
+        `https://dekoratoren.ekstern.dev.nav.no/auth?ssr=false&context=arbeidsgiver`,
+        {
+          credentials: "include",
+        },
+      );
+
+      return (await response.json()) as unknown;
+    },
+  });
+}
+
 export function inntektQueryOptions(
   hentInntektRequestDto: HentInntektRequestDto,
 ) {

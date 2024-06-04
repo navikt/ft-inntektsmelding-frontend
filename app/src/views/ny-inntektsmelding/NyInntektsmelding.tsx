@@ -1,9 +1,12 @@
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import {
+  forespørselQueryOptions,
+  hentInnloggetBrukerNavn,
+} from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon";
 
@@ -13,6 +16,8 @@ export const NyInntektsmelding = () => {
   const { id } = route.useParams();
 
   const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
+
+  useQuery(hentInnloggetBrukerNavn());
 
   useEffect(() => {
     setBreadcrumbs([
