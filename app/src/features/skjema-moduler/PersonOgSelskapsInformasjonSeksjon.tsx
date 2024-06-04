@@ -59,7 +59,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
               iconPosition="right"
               onClick={() =>
                 navigate({
-                  // @ts-expect-error Fikser senere.
+                  from: "/ny/$id/dine-opplysninger",
                   to: "../inntekt-og-refusjon",
                 })
               }
@@ -220,7 +220,7 @@ type InformasjonsseksjonMedKildeProps = {
   children: React.ReactNode;
   className?: string;
 };
-const InformasjonsseksjonMedKilde = ({
+export const InformasjonsseksjonMedKilde = ({
   children,
   kilde,
   tittel,

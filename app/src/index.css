@@ -2,3 +2,7 @@
 @import "@navikt/ds-css";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+hr {
+    color: var(--a-gray-300);
+}
