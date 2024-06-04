@@ -10,11 +10,18 @@ import {
 } from "@navikt/ds-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { format } from "date-fns";
+import { nb } from "date-fns/locale";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import {
+  forespørselQueryOptions,
+  personinfoQueryOptions,
+} from "~/api/queries.ts";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang.tsx";
+import type { ForespørselEntitet } from "~/types/api-models.ts";
+import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/ny/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
@@ -31,8 +38,8 @@ function InntektOgRefusjon() {
           Inntekt og refusjon
         </Heading>
         <Fremgangsindikator aktivtSteg={2} />
-        <ForeldrepengePeriode />
-        <Inntekt />
+        <ForeldrepengePeriode forespørsel={forespørsel} />
+        <Inntekt forespørsel={forespørsel} />
         <UtbetalingOgRefusjon />
         <Naturalytelser />
         <div className="flex gap-4 justify-center">
@@ -59,7 +66,20 @@ function InntektOgRefusjon() {
   );
 }
 
-function ForeldrepengePeriode() {
+type ForeldrepengePeriodeProps = {
+  forespørsel: ForespørselEntitet;
+};
+function ForeldrepengePeriode({ forespørsel }: ForeldrepengePeriodeProps) {
+  const { data: brukerdata } = useSuspenseQuery(
+    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
+  );
+
+  const førsteDag = capitalizeSetning(
+    format(forespørsel.skjæringstidspunkt, "EEEE dd.MMMM yyyy", {
+      locale: nb,
+    }),
+  );
+
   return (
     <VStack gap="4">
       <hr />
@@ -67,10 +87,10 @@ function ForeldrepengePeriode() {
         Periode med foreldrepenger
       </Heading>
       <InformasjonsseksjonMedKilde
-        kilde="Fra søknaden til {PERSON}"
-        tittel="{PERSON}s første dag med foreldrepenger"
+        kilde={`Fra søknaden til ${brukerdata.navn}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(brukerdata.navn))} første dag med foreldrepenger`}
       >
-        <BodyLong size="medium">DATO HER</BodyLong>
+        <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
       <ReadMore header="Hva hvis datoen ikke stemmer?">TODO</ReadMore>
     </VStack>

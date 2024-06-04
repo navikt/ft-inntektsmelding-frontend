@@ -11,20 +11,40 @@ import {
   ReadMore,
   VStack,
 } from "@navikt/ds-react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
-import { inntektQueryOptions } from "~/api/queries.ts";
+import { inntektQueryOptions, personinfoQueryOptions } from "~/api/queries.ts";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
+import type {
+  ForespørselEntitet,
+  MånedsinntektResponsDto,
+} from "~/types/api-models.ts";
+import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
 
-export function Inntekt() {
+type InntektProps = {
+  forespørsel: ForespørselEntitet;
+};
+export function Inntekt({ forespørsel }: InntektProps) {
+  const førsteDag = capitalizeSetning(
+    format(forespørsel.skjæringstidspunkt, "dd.MM yyyy", {
+      locale: nb,
+    }),
+  );
+
+  const { data: brukerdata } = useSuspenseQuery(
+    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
+  );
+
   const inntekt = useQuery(
     inntektQueryOptions({
-      aktorId: "2242003545158", //TODO: Dynamisk
-      ytelse: "FORELDREPENGER",
-      arbeidsgiverIdent: "896929119",
+      ytelse: forespørsel.ytelseType,
+      aktorId: forespørsel.brukerAktørId,
+      arbeidsgiverIdent: forespørsel.organisasjonsnummer,
+      // arbeidsgiverIdent: "896929119", Bruk disse for å faktisk få data
+      // aktorId: "2242003545158",
       startdato: format(new Date(), "yyyy-MM-dd"),
     }),
   );
@@ -37,26 +57,22 @@ export function Inntekt() {
       </Heading>
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
-        tittel="{PERSON}s lønn fra de siste tre månedene før {DATO}"
+        tittel={`${capitalizeSetning(leggTilGenitiv(brukerdata.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
           {inntekt.data?.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}:</span>
-              <Label as="span">
-                {Intl.NumberFormat("nb-no", {
-                  style: "currency",
-                  currency: "NOK",
-                  maximumFractionDigits: 0,
-                }).format(inntekt.beløp)}
-              </Label>
+              <Label as="span">{formatKroner(inntekt.beløp)}</Label>
             </Fragment>
           ))}
         </HGrid>
       </InformasjonsseksjonMedKilde>
       <BodyShort>Beregnet månedslønn</BodyShort>
       <b>{formatKroner(gjennomsnittInntekt(inntekt.data ?? []))}</b>
-      <BodyShort>Gjennomsnittet av de siste tre månedene før DATO</BodyShort>
+      <BodyShort>
+        Gjennomsnittet av de siste tre månedene før {førsteDag}
+      </BodyShort>
       <Button
         className="w-max"
         icon={<PencilIcon />}
@@ -94,21 +110,12 @@ export function Inntekt() {
   );
 }
 
-// TODO: util
-function formatKroner(kroner: number) {
-  return Intl.NumberFormat("nb-no", {
-    style: "currency",
-    currency: "NOK",
-    maximumFractionDigits: 0,
-  }).format(kroner);
-}
-
 function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
   const summerteInntekter = inntekter.reduce((sum, inntekt) => {
     return sum + inntekt.beløp;
   }, 0);
 
-  return summerteInntekter / inntekter.length;
+  return summerteInntekter / (inntekter.length || 1);
 }
 
 function navnPåMåned(date: string) {
@@ -116,5 +123,5 @@ function navnPåMåned(date: string) {
     new Date(date),
   );
 
-  return måned.charAt(0).toUpperCase() + måned.slice(1);
+  return capitalizeSetning(måned);
 }
