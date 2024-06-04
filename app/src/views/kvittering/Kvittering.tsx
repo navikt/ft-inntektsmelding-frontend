@@ -22,7 +22,7 @@ export const Kvittering = () => {
     ]);
   }, [id]);
   return (
-    <RotLayout tittel="Kvittering, inntektsmelding" ytelse="Omsorgspenger">
+    <RotLayout tittel="Kvittering, inntektsmelding omsorgspenger">
       <BodyLong>
         Dette er kvitteringen for inntektsmelding for omsorgspenger.
       </BodyLong>
