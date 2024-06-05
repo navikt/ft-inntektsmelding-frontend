@@ -10,6 +10,7 @@ import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { type ForespørselEntitet } from "~/types/api-models.ts";
+import { formatDatoLang, formatIdentitetsnummer, formatKroner } from "~/utils";
 
 const route = getRouteApi("/$id/oppsummering");
 
@@ -36,6 +37,11 @@ export const Oppsummering = () => {
     ]);
   }, [id]);
 
+  const søknad = {
+    ytelseType: "Foreldrepenger",
+    oppstart: new Date("2024-01-01"),
+  };
+
   const skjemadata = {
     dineOpplysninger: {
       arbeidsgiver: {
@@ -46,7 +52,7 @@ export const Oppsummering = () => {
       ansatt: {
         fornavn: "Ansa",
         etternavn: "Tesen",
-        identitetsnummer: "010101 23456",
+        identitetsnummer: "01010123456",
       },
     },
     inntektOgRefusjon: {
@@ -58,12 +64,6 @@ export const Oppsummering = () => {
       naturalytelser: false,
     },
   };
-
-  const pengeformatterer = new Intl.NumberFormat("nb-no", {
-    style: "currency",
-    currency: "NOK",
-    maximumFractionDigits: 0,
-  });
 
   return (
     <section>
@@ -131,8 +131,11 @@ export const Oppsummering = () => {
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.dineOpplysninger.ansatt.fornavn}{" "}
-                {skjemadata.dineOpplysninger.ansatt.etternavn}, (
-                {skjemadata.dineOpplysninger.ansatt.identitetsnummer})
+                {skjemadata.dineOpplysninger.ansatt.etternavn} (
+                {formatIdentitetsnummer(
+                  skjemadata.dineOpplysninger.ansatt.identitetsnummer,
+                )}
+                )
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -141,13 +144,15 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">
-              Første dag med YTELSE
+              Første dag med {søknad.ytelseType.toLowerCase()}
             </FormSummary.Heading>
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>Fra og med</FormSummary.Label>
-              <FormSummary.Value>01.01.2024</FormSummary.Value>
+              <FormSummary.Value>
+                {formatDatoLang(søknad.oppstart)}
+              </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
@@ -161,12 +166,10 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Beregnet månedslønn basert på de tre siste, fulle månedene før
-                YTELSE
+                {søknad.ytelseType.toLowerCase()}
               </FormSummary.Label>
               <FormSummary.Value>
-                {pengeformatterer.format(
-                  skjemadata.inntektOgRefusjon.månedslønn,
-                )}
+                {formatKroner(skjemadata.inntektOgRefusjon.månedslønn)}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -191,7 +194,7 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
               <FormSummary.Value>
-                {pengeformatterer.format(
+                {formatKroner(
                   skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
                 )}
               </FormSummary.Value>
