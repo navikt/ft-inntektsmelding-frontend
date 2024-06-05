@@ -14,7 +14,7 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-import { useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 
 import {
@@ -34,8 +34,6 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
   forespørsel,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
-  const navigate = useNavigate();
-
   return (
     <section className={className}>
       <form>
@@ -55,14 +53,10 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 
           <div className="flex justify-center col-span-2">
             <Button
+              as={Link}
               icon={<ArrowRightIcon />}
               iconPosition="right"
-              onClick={() =>
-                navigate({
-                  // @ts-expect-error Fikser senere.
-                  to: "../inntekt-og-refusjon",
-                })
-              }
+              to="../inntekt-og-refusjon"
               variant="primary"
             >
               Bekreft og gå videre
@@ -220,7 +214,7 @@ type InformasjonsseksjonMedKildeProps = {
   children: React.ReactNode;
   className?: string;
 };
-const InformasjonsseksjonMedKilde = ({
+export const InformasjonsseksjonMedKilde = ({
   children,
   kilde,
   tittel,
