@@ -111,10 +111,7 @@ function Naturalytelser() {
         Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
         mobiltelefon og internett-abonnement.
       </ReadMore>
-      <RadioGroup
-        legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        onChange={console.log}
-      >
+      <RadioGroup legend="Har den ansatte naturalytelser som faller bort ved fraværet?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>
         <Radio value="NEI">Nei</Radio>
@@ -131,10 +128,7 @@ function UtbetalingOgRefusjon() {
         Utbetaling og refusjon
       </Heading>
       <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
-      <RadioGroup
-        legend="Betaler dere lønn under fraværet og krever refusjon?"
-        onChange={console.log}
-      >
+      <RadioGroup legend="Betaler dere lønn under fraværet og krever refusjon?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>
         <Radio value="NEI">Nei</Radio>
