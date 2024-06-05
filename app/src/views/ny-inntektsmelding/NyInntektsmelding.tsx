@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import {
   forespørselQueryOptions,
+  organisasjonQueryOptions,
   personinfoQueryOptions,
 } from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
@@ -21,6 +22,10 @@ export const NyInntektsmelding = () => {
       forespørsel.brukerAktørId,
       forespørsel.ytelseType,
     ),
+    enabled: !!forespørsel,
+  });
+  const { data: organisasjonsData } = useQuery({
+    ...organisasjonQueryOptions(forespørsel.organisasjonsnummer),
     enabled: !!forespørsel,
   });
 
@@ -42,7 +47,7 @@ export const NyInntektsmelding = () => {
       tittel={`Inntektsmelding ${forespørsel.ytelseType.toLowerCase().replace("_", " ")}`}
       undertittel={
         <div className="flex gap-3">
-          <span>{forespørsel.organisasjonsnummer}</span>
+          <span>{organisasjonsData?.organisasjonNavn ?? ""}</span>
           <span>|</span>
           <span>{capitalizeSetning(brukerdata?.navn ?? "")}</span>
         </div>
