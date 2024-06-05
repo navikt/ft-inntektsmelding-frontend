@@ -62,4 +62,4 @@ spec:
     - name: API_URL
       value: "http://ftinntektsmelding/ftinntektsmelding"
     - name: NESTED_PATH
-      value: "fp-im-dialog"
+      value: "/fp-im-dialog"
