@@ -81,7 +81,8 @@ jobs:
         run: npm run build:k9
 
       - name: Clear the existing public directory
-        run: rm -rf ../server/public/*
+        working-directory: server
+        run: rm -rf public/*
 
       - name: Copy K9 webapp public directory of server
         working-directory: app

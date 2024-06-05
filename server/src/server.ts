@@ -12,12 +12,12 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use((request) => console.log(request.url));
 // Setup route for actuators before we protect our routes
-const actuatorRouter = express.Router();
+// const actuatorRouter = express.Router();
 const protectedRouter = express.Router();
-setupActuators(actuatorRouter);
+// setupActuators(actuatorRouter);
 setupActuators(app);
-app.use("/fp-im-dialog", actuatorRouter);
-app.use("/", actuatorRouter);
+// app.use("/fp-im-dialog", actuatorRouter);
+// app.use("/", actuatorRouter);
 
 app.set("trust proxy", 1);
 
