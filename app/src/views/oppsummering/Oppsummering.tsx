@@ -67,7 +67,7 @@ export const Oppsummering = () => {
 
   return (
     <section>
-      <div className="bg-bg-default mt-8 px-5 py-6 rounded-md flex flex-col gap-6">
+      <div className="bg-bg-default mt-6 px-5 py-6 rounded-md flex flex-col gap-6">
         <Heading level="2" size="large">
           Oppsummering
         </Heading>
