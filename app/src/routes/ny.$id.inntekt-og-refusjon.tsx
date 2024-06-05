@@ -105,11 +105,13 @@ function Naturalytelser() {
         Naturalytelser
       </Heading>
       <ReadMore header="Hva er naturalytelser?">
-        Naturalytelser er skattepliktige goder eller fordeler en ansatt får fra
-        arbeidsgiver på toppen av vanlig lønn.
-        <br />
-        Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
-        mobiltelefon og internett-abonnement.
+        <BodyLong>
+          Naturalytelser er skattepliktige goder eller fordeler en ansatt får
+          fra arbeidsgiver på toppen av vanlig lønn.
+          <br />
+          Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
+          mobiltelefon og internett-abonnement.
+        </BodyLong>
       </ReadMore>
       <RadioGroup legend="Har den ansatte naturalytelser som faller bort ved fraværet?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}

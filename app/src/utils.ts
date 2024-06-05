@@ -1,4 +1,3 @@
-// TODO: Finnes sikkert noe bedre alternativ?
 export function leggTilGenitiv(navn: string) {
   if (navn.endsWith("s") || navn.endsWith("x")) {
     return `${navn}'`;
@@ -7,8 +6,8 @@ export function leggTilGenitiv(navn: string) {
   return `${navn}s`;
 }
 
-export function capitalizeSetning(ord: string) {
-  const oppdelteOrd = ord.split(" ");
+export function capitalizeSetning(setning: string) {
+  const oppdelteOrd = setning.split(" ");
   return oppdelteOrd
     .map((ord) => ord.charAt(0).toUpperCase() + ord.slice(1).toLowerCase())
     .join(" ");

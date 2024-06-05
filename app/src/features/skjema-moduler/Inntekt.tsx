@@ -9,7 +9,6 @@ import {
   Label,
   Link,
   ReadMore,
-  VStack,
 } from "@navikt/ds-react";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
@@ -50,7 +49,7 @@ export function Inntekt({ forespørsel }: InntektProps) {
   );
 
   return (
-    <VStack gap="4">
+    <div className="flex flex-col gap-4">
       <hr />
       <Heading level="4" size="medium">
         Beregnet månedslønn
@@ -69,7 +68,7 @@ export function Inntekt({ forespørsel }: InntektProps) {
         </HGrid>
       </InformasjonsseksjonMedKilde>
       <BodyShort>Beregnet månedslønn</BodyShort>
-      <b>{formatKroner(gjennomsnittInntekt(inntekt.data ?? []))}</b>
+      <strong>{formatKroner(gjennomsnittInntekt(inntekt.data ?? []))}</strong>
       <BodyShort>
         Gjennomsnittet av de siste tre månedene før {førsteDag}
       </BodyShort>
@@ -98,15 +97,15 @@ export function Inntekt({ forespørsel }: InntektProps) {
           </Link>
         </BodyLong>
       </Alert>
-      <VStack gap="2">
+      <div className="flex flex-col gap-2">
         <ReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
           TODO
         </ReadMore>
         <ReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
           TODO
         </ReadMore>
-      </VStack>
-    </VStack>
+      </div>
+    </div>
   );
 }
 
