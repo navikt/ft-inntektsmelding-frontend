@@ -13,7 +13,7 @@ on:
       - 'CODEOWNERS'
 
 jobs:
-  build-app:
+  build-fp-app:
     name: Build
     permissions:
       contents: read
@@ -23,7 +23,8 @@ jobs:
     env:
       TZ: "Europe/Oslo"
     outputs:
-      build-version: ${{ steps.generate-build-version.outputs.build-version }}
+      build-version-fp: ${{ steps.generate-build-version-fp.outputs.build-version }}
+      build-version-k9: ${{ steps.generate-build-version-k9.outputs.build-version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # ratchet:actions/checkout@v4
@@ -61,16 +62,16 @@ jobs:
         run: cp -r dist/ ../server/public
 
       - name: Generate build version
-        id: generate-build-version
+        id: generate-build-version-fp
         run: echo "build-version=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
       - name: Print build version
-        run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
+        run: echo "Generated build-version-fp is ${{ steps.generate-build-version-fp.outputs.build-version }}"
       - name: Bygg og push docker image teamforeldrepenger
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           docker_context: "./server"
           dockerfile: "./server/Dockerfile"
-          build-version: ${{ steps.generate-build-version.outputs.build-version }}
+          build-version: ${{ steps.generate-build-version-fp.outputs.build-version }}
           push-image: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
@@ -88,12 +89,17 @@ jobs:
         working-directory: app
         run: cp -r dist/ ../server/public
 
+      - name: Generate build version
+        id: generate-build-version-k9
+        run: echo "build-version=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+      - name: Print build version
+        run: echo "Generated build-version-k9 is ${{ steps.generate-build-version-k9.outputs.build-version }}"
       - name: Bygg og push docker image k9saksbehandling
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           docker_context: "./server"
           dockerfile: "./server/Dockerfile"
-          build-version: ${{ steps.generate-build-version.outputs.build-version }}
+          build-version: ${{ steps.generate-build-version-k9.outputs.build-version }}
           push-image: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
