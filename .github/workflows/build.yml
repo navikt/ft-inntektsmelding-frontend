@@ -36,27 +36,29 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@navikt'
 
+      - name: Install server dependencies
+        run: npm install
+        working-directory: server
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+
+      - name: Build server
+        run: npm run build
+        working-directory: server
+
       - name: Install webapp dependencies
         working-directory: app
         run: npm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-      - name: Build webapp
+      - name: Build webapp [FP]
         working-directory: app
-        run: npm run build
+        run: npm run build:fp
 
-      - name: Copy webapp dist into public directory of server
+      - name: Copy FP webapp into public directory of server
         working-directory: app
         run: cp -r dist/ ../server/public
-
-      - run: npm install
-        working-directory: server
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
-
-      - run: npm run build
-        working-directory: server
 
       - name: Generate build version
         id: generate-build-version
@@ -73,6 +75,17 @@ jobs:
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           namespace: teamforeldrepenger
+
+      - name: Build webapp [K9]
+        working-directory: app
+        run: npm run build:k9
+
+      - name: Clear the existing public directory
+        run: rm -rf ../server/public/*
+
+      - name: Copy K9 webapp public directory of server
+        working-directory: app
+        run: cp -r dist/ ../server/public
 
       - name: Bygg og push docker image k9saksbehandling
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude

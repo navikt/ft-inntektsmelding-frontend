@@ -7,6 +7,8 @@
     "dev": "vite",
     "dev:debug": "vite --debug",
     "build": "tsc && vite build",
+    "build:fp": "tsc && vite build --base=/fp-im-dialog/",
+    "build:k9": "tsc && vite build --base=/k9-im-dialog/",
     "check:types": "tsc --noemit",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --fix --ext .js,.jsx,.ts,.tsx .",
