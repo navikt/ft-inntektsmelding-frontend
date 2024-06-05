@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express from "express";
 
 import { setupActuators } from "./actuators.js";
 import { setupApiProxy } from "./apiProxy.js";
@@ -12,21 +12,24 @@ const router = express.Router();
 // Restricts the server to only accept UTF-8 encoding of bodies
 app.use(express.urlencoded({ extended: true }));
 
+// Setup route for actuators before we protect our routes
+const actuatorRouter = express.Router();
 setupActuators(router);
-setupActuators(app as Router); // just try hack
+app.use("/fp-im-dialog", actuatorRouter);
 
 app.set("trust proxy", 1);
 
 app.use(verifyToken);
 
-setupApiProxy(router);
+const protectedRouter = express.Router();
 
+setupApiProxy(protectedRouter);
 // Catch all route, må være sist
-app.use("/fp-im-dialog", express.static("./public", { index: false }));
-setupStaticRoutes(router);
+setupStaticRoutes(protectedRouter);
+
+// TODO: dynamic
+app.use("/fp-im-dialog", protectedRouter);
 
 app.use(errorHandling);
-
-app.use("/fp-im-dialog", router);
 
 export default app;
