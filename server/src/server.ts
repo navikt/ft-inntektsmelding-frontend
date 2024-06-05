@@ -7,14 +7,13 @@ import { setupStaticRoutes } from "./frontendRoute.js";
 import { verifyToken } from "./tokenValidation.js";
 
 const app = express();
-const router = express.Router();
 
 // Restricts the server to only accept UTF-8 encoding of bodies
 app.use(express.urlencoded({ extended: true }));
 
 // Setup route for actuators before we protect our routes
 const actuatorRouter = express.Router();
-setupActuators(router);
+setupActuators(actuatorRouter);
 app.use("/fp-im-dialog", actuatorRouter);
 
 app.set("trust proxy", 1);
