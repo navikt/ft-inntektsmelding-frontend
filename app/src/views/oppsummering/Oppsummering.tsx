@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import { forespørselQueryOptions } from "~/api/queries.ts";
-import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { type ForespørselEntitet } from "~/types/api-models.ts";
 import { formatDatoLang, formatIdentitetsnummer, formatKroner } from "~/utils";
@@ -165,7 +165,7 @@ export const Oppsummering = () => {
             <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
             <FormSummary.EditLink
               as={Link}
-              to="../inntekt-og-refusjon#beregnet-manedslønn"
+              to="../inntekt-og-refusjon#beregnet-manedslonn"
             />
           </FormSummary.Header>
           <FormSummary.Answers>
@@ -224,7 +224,7 @@ export const Oppsummering = () => {
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
             <FormSummary.EditLink
               as={Link}
-              href="../inntekt-og-refusjon#naturalytelse"
+              href="../inntekt-og-refusjon#naturalytelser"
             />
           </FormSummary.Header>
           <FormSummary.Answers>

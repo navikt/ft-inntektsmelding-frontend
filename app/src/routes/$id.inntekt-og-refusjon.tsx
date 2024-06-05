@@ -17,9 +17,9 @@ import {
   forespørselQueryOptions,
   personinfoQueryOptions,
 } from "~/api/queries.ts";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang.tsx";
 import type { ForespørselEntitet } from "~/types/api-models.ts";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
@@ -100,7 +100,7 @@ function Naturalytelser() {
   return (
     <VStack gap="4">
       <hr />
-      <Heading level="4" size="medium">
+      <Heading id="naturalytelser" level="4" size="medium">
         Naturalytelser
       </Heading>
       <ReadMore header="Hva er naturalytelser?">
@@ -125,7 +125,7 @@ function UtbetalingOgRefusjon() {
   return (
     <VStack gap="4">
       <hr />
-      <Heading level="4" size="medium">
+      <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
       <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>

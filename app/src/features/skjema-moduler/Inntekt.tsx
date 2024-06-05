@@ -51,7 +51,7 @@ export function Inntekt({ forespørsel }: InntektProps) {
   return (
     <div className="flex flex-col gap-4">
       <hr />
-      <Heading level="4" size="medium">
+      <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
       <InformasjonsseksjonMedKilde
