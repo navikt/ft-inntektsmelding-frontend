@@ -10,15 +10,10 @@ const app = express();
 
 // Restricts the server to only accept UTF-8 encoding of bodies
 app.use(express.urlencoded({ extended: true }));
-app.use((request) => console.log(request.url));
-// Setup route for actuators before we protect our routes
-// const actuatorRouter = express.Router();
-const protectedRouter = express.Router();
-// setupActuators(actuatorRouter);
-setupActuators(app);
-// app.use("/fp-im-dialog", actuatorRouter);
-// app.use("/", actuatorRouter);
 
+setupActuators(app);
+
+const protectedRouter = express.Router();
 app.set("trust proxy", 1);
 
 app.use(verifyToken);
