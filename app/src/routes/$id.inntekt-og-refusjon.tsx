@@ -48,7 +48,6 @@ function InntektOgRefusjon() {
             icon={<ArrowLeftIcon />}
             to="../dine-opplysninger"
             variant="secondary"
-            // TODO: bruker knapper som lenker? Ser ut til å miste Router sin type-safety
           >
             Forrige steg
           </Button>

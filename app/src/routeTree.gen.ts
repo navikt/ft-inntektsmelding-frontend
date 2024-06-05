@@ -17,6 +17,7 @@ import { Route as EndreIdImport } from './routes/endre.$id'
 import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
 import { Route as IdInntektOgRefusjonImport } from './routes/$id.inntekt-og-refusjon'
 import { Route as IdDineOpplysningerImport } from './routes/$id.dine-opplysninger'
+import { Route as NyIdKvitteringImport } from './routes/ny.$id.kvittering'
 
 // Create/Update Routes
 
@@ -50,6 +51,11 @@ const IdDineOpplysningerRoute = IdDineOpplysningerImport.update({
   getParentRoute: () => IdRoute,
 } as any)
 
+const NyIdKvitteringRoute = NyIdKvitteringImport.update({
+  path: '/ny/$id/kvittering',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -78,6 +84,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KvitteringIdImport
       parentRoute: typeof rootRoute
     }
+    '/ny/$id/kvittering': {
+      preLoaderRoute: typeof NyIdKvitteringImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -91,6 +101,7 @@ export const routeTree = rootRoute.addChildren([
   ]),
   EndreIdRoute,
   KvitteringIdRoute,
+  NyIdKvitteringRoute,
 ])
 
 /* prettier-ignore-end */
