@@ -22,7 +22,7 @@ app.use(verifyToken);
 setupApiProxy(router);
 
 // Catch all route, må være sist
-app.use(express.static("./public", { index: false }));
+app.use("/fp-im-dialog", express.static("./public", { index: false }));
 setupStaticRoutes(router);
 
 app.use(errorHandling);
