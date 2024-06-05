@@ -16,6 +16,7 @@ const actuatorRouter = express.Router();
 const protectedRouter = express.Router();
 setupActuators(actuatorRouter);
 app.use("/fp-im-dialog", actuatorRouter);
+app.use("/", actuatorRouter);
 
 app.set("trust proxy", 1);
 
