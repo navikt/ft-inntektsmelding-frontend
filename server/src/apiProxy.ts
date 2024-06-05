@@ -1,5 +1,5 @@
 import { getToken, requestOboToken } from "@navikt/oasis";
-import { Express, NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { createProxyMiddleware } from "http-proxy-middleware";
 
 import config from "./config.js";
@@ -10,18 +10,18 @@ type ProxyOptions = {
   scope: string;
 };
 
-export const setupApiProxy = (app: Express) =>
-  addProxyHandler(app, {
+export const setupApiProxy = (router: Router) =>
+  addProxyHandler(router, {
     ingoingUrl: "/server",
     outgoingUrl: config.proxy.apiUrl,
     scope: config.proxy.apiScope,
   });
 
 export function addProxyHandler(
-  server: Express,
+  router: Router,
   { ingoingUrl, outgoingUrl, scope }: ProxyOptions,
 ) {
-  server.use(
+  router.use(
     ingoingUrl,
     async (request: Request, response: Response, next: NextFunction) => {
       const token = getToken(request);

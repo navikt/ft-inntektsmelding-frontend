@@ -5,7 +5,7 @@ import {
   injectDecoratorServerSide,
 } from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
 import cookieParser from "cookie-parser";
-import express, { Express, Response } from "express";
+import { Response, Router } from "express";
 
 import config from "./config.js";
 
@@ -20,9 +20,7 @@ const csp =
         { env: config.app.env },
       );
 
-export function setupStaticRoutes(app: Express) {
-  app.use(express.static("./public", { index: false }));
-
+export function setupStaticRoutes(router: Router) {
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
 
@@ -31,10 +29,10 @@ export function setupStaticRoutes(app: Express) {
 
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
-    addLocalViteServerHandlerWithDecorator(app);
+    addLocalViteServerHandlerWithDecorator(router);
   }
 
-  app.get("*", async (request, response) => {
+  router.get("*", async (request, response) => {
     console.log("request.url", request.url);
     const html = await injectDecorator(spaFilePath);
     response.setHeader("Content-Security-Policy", csp);
@@ -43,19 +41,19 @@ export function setupStaticRoutes(app: Express) {
   });
 }
 
-function addLocalViteServerHandlerWithDecorator(app: Express) {
+function addLocalViteServerHandlerWithDecorator(router: Router) {
   const viteDevelopmentServerPath = path.resolve(".", "vite-dev-server.html");
 
-  app.use(cookieParser());
-  app.get("/vite-on", (request, response) => {
+  router.use(cookieParser());
+  router.get("/vite-on", (request, response) => {
     setViteCookie(response, true);
     return response.redirect("/");
   });
-  app.get("/vite-off", (request, response) => {
+  router.get("/vite-off", (request, response) => {
     setViteCookie(response, false);
     return response.redirect("/");
   });
-  app.get("*", async (request, response, next) => {
+  router.get("*", async (request, response, next) => {
     const localViteServerIsEnabled =
       request.cookies["use-local-vite-server"] === "true";
     if (localViteServerIsEnabled) {
