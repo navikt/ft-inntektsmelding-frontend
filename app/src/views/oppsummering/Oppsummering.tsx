@@ -1,10 +1,13 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Button, FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { getRouteApi, Link } from "@tanstack/react-router";
+import { useMutation } from "@tanstack/react-query";
+import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { sendInntektsmelding } from "~/api/mutations.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
+import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 
 const route = getRouteApi("/ny/$id/oppsummering");
 
@@ -218,25 +221,42 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
-        <div className="flex gap-4 justify-center">
-          <Button
-            as={Link}
-            icon={<ArrowLeftIcon />}
-            to="../inntekt-og-refusjon"
-            variant="secondary"
-          >
-            Forrige steg
-          </Button>
-          <Button
-            as={Link}
-            icon={<PaperplaneIcon />}
-            to="../oppsummering"
-            variant="primary"
-          >
-            Send inn
-          </Button>
-        </div>
+        <SendInnInntektsmelding />
       </div>
     </section>
   );
 };
+
+function SendInnInntektsmelding() {
+  const navigate = useNavigate();
+
+  const mutation = useMutation<unknown, unknown, SendInntektsmeldingRequestDto>(
+    {
+      mutationFn: sendInntektsmelding,
+      onSuccess: () => {
+        navigate({ to: "../kvittering" });
+      },
+    },
+  );
+
+  return (
+    <div className="flex gap-4 justify-center">
+      <Button
+        as={Link}
+        icon={<ArrowLeftIcon />}
+        to="../inntekt-og-refusjon"
+        variant="secondary"
+      >
+        Forrige steg
+      </Button>
+      <Button
+        as={Link}
+        icon={<PaperplaneIcon />}
+        to="../oppsummering"
+        variant="primary"
+      >
+        Send inn
+      </Button>
+    </div>
+  );
+}

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 
 import { forespørselQueryOptions } from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { capitalize } from "~/utils.ts";
 
 const route = getRouteApi("/ny/$id");
 
@@ -27,7 +28,9 @@ export const NyInntektsmelding = () => {
   }, [id]);
 
   return (
-    <RotLayout tittel={`Ny inntektsmelding – ${forespørsel.ytelseType}`}>
+    <RotLayout
+      tittel={`Ny inntektsmelding – ${capitalize(forespørsel.ytelseType).replace("_", " ")}`}
+    >
       <Outlet />
     </RotLayout>
   );
