@@ -1,4 +1,5 @@
-import { FormSummary, Heading } from "@navikt/ds-react";
+import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
+import { Button, FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -7,6 +8,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
 
 const route = getRouteApi("/ny/$id/oppsummering");
 
+// TODO: linke til rett felt når man klikker "endre
 export const Oppsummering = () => {
   const { id } = route.useParams();
 
@@ -166,7 +168,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -202,7 +204,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -216,6 +218,24 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
+        <div className="flex gap-4 justify-center">
+          <Button
+            as={Link}
+            icon={<ArrowLeftIcon />}
+            to="../inntekt-og-refusjon"
+            variant="secondary"
+          >
+            Forrige steg
+          </Button>
+          <Button
+            as={Link}
+            icon={<PaperplaneIcon />}
+            to="../oppsummering"
+            variant="primary"
+          >
+            Send inn
+          </Button>
+        </div>
       </div>
     </section>
   );
