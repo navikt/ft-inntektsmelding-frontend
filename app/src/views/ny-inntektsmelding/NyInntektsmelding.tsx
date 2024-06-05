@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { forespørselQueryOptions } from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
-const route = getRouteApi("/ny/$id");
+const route = getRouteApi("/$id");
 
 export const NyInntektsmelding = () => {
   const { id } = route.useParams();
@@ -21,7 +21,7 @@ export const NyInntektsmelding = () => {
       },
       {
         title: "Inntektsmelding",
-        url: `/ny/${id}`,
+        url: `${id}`,
       },
     ]);
   }, [id]);

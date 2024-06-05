@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
 
-const route = getRouteApi("/ny/$id/oppsummering");
+const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
@@ -18,11 +18,11 @@ export const Oppsummering = () => {
       },
       {
         title: "Inntektsmelding",
-        url: `/ny/${id}`,
+        url: `/${id}`,
       },
       {
         title: "Oppsummering",
-        url: `/ny/${id}/oppsummering`,
+        url: `/${id}/oppsummering`,
       },
     ]);
   }, [id]);
@@ -166,7 +166,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink href="/$id/inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -202,7 +202,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink href="/$id/inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
