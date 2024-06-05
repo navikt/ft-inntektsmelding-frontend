@@ -22,7 +22,7 @@ export const RotLayout = ({
   return (
     <Page background="bg-subtle">
       <Page.Block className="bg-bg-default border-border-focus-on-inverted border-b-4 py-5">
-        <Page.Block width="lg">
+        <Page.Block width="md">
           <HStack align="center">
             <Illustrasjon />
             <div className="ml-4">
@@ -34,9 +34,7 @@ export const RotLayout = ({
           </HStack>
         </Page.Block>
       </Page.Block>
-      <Page.Block gutters={true} width="lg">
-        {children}
-      </Page.Block>
+      <Page.Block width="md">{children}</Page.Block>
     </Page>
   );
 };
