@@ -68,7 +68,7 @@ async function injectDecorator(filePath: string) {
   return injectDecoratorServerSide({
     env: config.app.env,
     filePath,
-    params: { context: "arbeidsgiver", simple: true },
+    params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
   });
 }
 
