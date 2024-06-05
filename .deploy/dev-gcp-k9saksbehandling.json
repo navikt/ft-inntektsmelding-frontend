@@ -3,6 +3,5 @@
   "minReplicas": "1",
   "maxReplicas": "2",
   "API_SCOPE": "dev-gcp:k9saksbehandling:k9-inntektsmelding",
-  "ENV": "dev",
-  "NESTED_PATH": "k9-im-dialog"
+  "ENV": "dev"
 }

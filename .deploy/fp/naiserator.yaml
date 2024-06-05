@@ -60,6 +60,6 @@ spec:
     - name: API_SCOPE
       value: {{API_SCOPE}}
     - name: API_URL
-      value: "http://ftinntektsmelding/ftinntektsmelding"
+      value: {{API_URL}
     - name: NESTED_PATH
-      value: {{NESTED_PATH}}
+      value: "fp-im-dialog"
