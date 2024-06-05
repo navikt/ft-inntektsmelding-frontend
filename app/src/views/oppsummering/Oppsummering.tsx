@@ -180,7 +180,9 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Skal dere betale lønn til FORNAVN og ha refusjon fra NAV?
+                Skal dere betale lønn til{" "}
+                {skjemadata.dineOpplysninger.ansatt.fornavn} og ha refusjon fra
+                NAV?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
@@ -196,8 +198,8 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Vil det være endringer i refusjon i løpet av perioden FORNAVN er
-                i permisjon?
+                Vil det være endringer i refusjon i løpet av perioden{" "}
+                {skjemadata.dineOpplysninger.ansatt.fornavn} er i permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
