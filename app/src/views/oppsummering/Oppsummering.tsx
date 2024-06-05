@@ -171,7 +171,7 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Beregnet månedslønn basert på de tre siste, fulle månedene før
+                Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
                 {søknad.ytelseType.toLowerCase()}
               </FormSummary.Label>
               <FormSummary.Value>
@@ -184,7 +184,10 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink href="../inntekt-og-refusjon#refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              to="../inntekt-og-refusjon#refusjon"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -197,14 +200,16 @@ export const Oppsummering = () => {
                 {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
-            <FormSummary.Answer>
-              <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
-              <FormSummary.Value>
-                {formatKroner(
-                  skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
-                )}
-              </FormSummary.Value>
-            </FormSummary.Answer>
+            {skjemadata.inntektOgRefusjon.refusjon && (
+              <FormSummary.Answer>
+                <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
+                <FormSummary.Value>
+                  {formatKroner(
+                    skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
+                  )}
+                </FormSummary.Value>
+              </FormSummary.Answer>
+            )}
             <FormSummary.Answer>
               <FormSummary.Label>
                 Vil det være endringer i refusjon i løpet av perioden{" "}
