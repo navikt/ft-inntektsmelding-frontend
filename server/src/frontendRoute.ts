@@ -26,12 +26,16 @@ export function setupStaticRoutes(app: Express) {
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
 
+  console.log("Requested static resource");
+  console.log("spaFilePath", spaFilePath);
+
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
     addLocalViteServerHandlerWithDecorator(app);
   }
 
   app.get("*", async (request, response) => {
+    console.log("request.url", request.url);
     const html = await injectDecorator(spaFilePath);
     response.setHeader("Content-Security-Policy", csp);
 
