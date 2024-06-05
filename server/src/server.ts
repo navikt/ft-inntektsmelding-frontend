@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 
 import { setupActuators } from "./actuators.js";
 import { setupApiProxy } from "./apiProxy.js";
@@ -13,6 +13,7 @@ const router = express.Router();
 app.use(express.urlencoded({ extended: true }));
 
 setupActuators(router);
+setupActuators(app as Router); // just try hack
 
 app.set("trust proxy", 1);
 
