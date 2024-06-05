@@ -107,6 +107,27 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Kontaktperson og innsender</FormSummary.Label>
               <FormSummary.Value>
+                {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.length >
+                1 ? (
+                  <FormSummary.Answers>
+                    {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.map(
+                      (kontaktperson, i) => (
+                        <FormSummary.Answer key={i}>
+                          <FormSummary.Label>
+                            Innsender og kontaktperson
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {formatterKontaktperson(kontaktperson)}
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      ),
+                    )}
+                  </FormSummary.Answers>
+                ) : (
+                  formatterKontaktperson(
+                    skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson[0],
+                  )
+                )}
                 <FormSummary.Answers>
                   <FormSummary.Answer>
                     <FormSummary.Label>
@@ -234,6 +255,13 @@ export const Oppsummering = () => {
       </div>
     </section>
   );
+};
+
+const formatterKontaktperson = (kontaktperson: {
+  navn: string;
+  telefon: string;
+}) => {
+  return `${kontaktperson.navn}, ${kontaktperson.telefon}`;
 };
 
 type SendInnInntektsmeldingProps = {
