@@ -1,6 +1,6 @@
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 
-const SERVER_URL = "fp-im-dialog/server/api";
+const SERVER_URL = "/fp-im-dialog/server/api";
 
 export async function sendInntektsmelding(
   sendInntektsmeldingRequest: SendInntektsmeldingRequestDto,

@@ -14,6 +14,7 @@ export const queryClient = new QueryClient();
 // TODO not found route
 const router = createRouter({
   routeTree,
+  basepath: "fp-im-dialog",
   context: {
     queryClient,
   },

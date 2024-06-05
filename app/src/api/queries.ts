@@ -9,7 +9,7 @@ import type {
   Ytelsetype,
 } from "~/types/api-models.ts";
 
-const SERVER_URL = "fp-im-dialog/server/api";
+const SERVER_URL = "/fp-im-dialog/server/api";
 
 export function personinfoQueryOptions(aktørId: string, ytelse: Ytelsetype) {
   return queryOptions({
