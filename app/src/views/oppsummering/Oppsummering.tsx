@@ -1,14 +1,23 @@
-import { FormSummary, Heading } from "@navikt/ds-react";
+import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
+import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { getRouteApi, Link } from "@tanstack/react-router";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { sendInntektsmelding } from "~/api/mutations.ts";
+import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
+import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
+import { type ForespørselEntitet } from "~/types/api-models.ts";
 
 const route = getRouteApi("/ny/$id/oppsummering");
 
+// TODO: linke til rett felt når man klikker "endre
 export const Oppsummering = () => {
   const { id } = route.useParams();
+
+  const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
 
   useEffect(() => {
     setBreadcrumbs([
@@ -166,7 +175,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -202,7 +211,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -216,7 +225,63 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
+        <SendInnInntektsmelding forespørsel={forespørsel} />
       </div>
     </section>
   );
 };
+
+type SendInnInntektsmeldingProps = {
+  forespørsel: ForespørselEntitet;
+};
+function SendInnInntektsmelding({ forespørsel }: SendInnInntektsmeldingProps) {
+  const navigate = useNavigate();
+
+  const DUMMY_IM = {
+    foresporselUuid: forespørsel.uuid,
+    aktorId: forespørsel.brukerAktørId,
+    ytelse: forespørsel.ytelseType,
+    arbeidsgiverIdent: forespørsel.organisasjonsnummer,
+    telefonnummer: "12345678",
+    startdato: forespørsel.skjæringstidspunkt,
+    inntekt: 30_000,
+    refusjonsperioder: [],
+    bortfaltNaturaltytelsePerioder: [],
+  };
+
+  const { mutate, error, isPending } = useMutation<
+    unknown,
+    unknown,
+    SendInntektsmeldingRequestDto
+  >({
+    mutationFn: sendInntektsmelding,
+    onSuccess: () => {
+      navigate({ from: "/ny/$id/oppsummering", to: "../kvittering" });
+    },
+  });
+
+  return (
+    <>
+      {/*TODO: hvordan feilmeldinger viser man mot bruker?*/}
+      {error ? <Alert variant="error">Noe gikk galt.</Alert> : undefined}
+      <div className="flex gap-4 justify-center">
+        <Button
+          as={Link}
+          icon={<ArrowLeftIcon />}
+          to="../inntekt-og-refusjon"
+          variant="secondary"
+        >
+          Forrige steg
+        </Button>
+        <Button
+          icon={<PaperplaneIcon />}
+          loading={isPending}
+          onClick={() => mutate(DUMMY_IM)}
+          variant="primary"
+        >
+          Send inn
+        </Button>
+      </div>
+    </>
+  );
+}

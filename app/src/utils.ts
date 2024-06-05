@@ -8,9 +8,11 @@ export function leggTilGenitiv(navn: string) {
 
 export function capitalizeSetning(setning: string) {
   const oppdelteOrd = setning.split(" ");
-  return oppdelteOrd
-    .map((ord) => ord.charAt(0).toUpperCase() + ord.slice(1).toLowerCase())
-    .join(" ");
+  return oppdelteOrd.map((ord) => capitalize(ord)).join(" ");
+}
+
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 export function formatKroner(kroner: number) {

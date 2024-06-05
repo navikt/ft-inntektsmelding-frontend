@@ -15,6 +15,7 @@ import { Route as NyIdImport } from './routes/ny.$id'
 import { Route as KvitteringIdImport } from './routes/kvittering.$id'
 import { Route as EndreIdImport } from './routes/endre.$id'
 import { Route as NyIdOppsummeringImport } from './routes/ny.$id.oppsummering'
+import { Route as NyIdKvitteringImport } from './routes/ny.$id.kvittering'
 import { Route as NyIdInntektOgRefusjonImport } from './routes/ny.$id.inntekt-og-refusjon'
 import { Route as NyIdDineOpplysningerImport } from './routes/ny.$id.dine-opplysninger'
 
@@ -37,6 +38,11 @@ const EndreIdRoute = EndreIdImport.update({
 
 const NyIdOppsummeringRoute = NyIdOppsummeringImport.update({
   path: '/oppsummering',
+  getParentRoute: () => NyIdRoute,
+} as any)
+
+const NyIdKvitteringRoute = NyIdKvitteringImport.update({
+  path: '/kvittering',
   getParentRoute: () => NyIdRoute,
 } as any)
 
@@ -74,6 +80,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NyIdInntektOgRefusjonImport
       parentRoute: typeof NyIdImport
     }
+    '/ny/$id/kvittering': {
+      preLoaderRoute: typeof NyIdKvitteringImport
+      parentRoute: typeof NyIdImport
+    }
     '/ny/$id/oppsummering': {
       preLoaderRoute: typeof NyIdOppsummeringImport
       parentRoute: typeof NyIdImport
@@ -89,6 +99,7 @@ export const routeTree = rootRoute.addChildren([
   NyIdRoute.addChildren([
     NyIdDineOpplysningerRoute,
     NyIdInntektOgRefusjonRoute,
+    NyIdKvitteringRoute,
     NyIdOppsummeringRoute,
   ]),
 ])

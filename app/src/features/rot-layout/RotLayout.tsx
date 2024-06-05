@@ -10,6 +10,7 @@ type RotLayoutProps = {
   /** Innholdet i viewet */
   children: React.ReactNode;
 };
+
 /**
  * Layout som deles på tvers av alle views.
  * Dette burde være den ytterste komponenten på alle sider.
