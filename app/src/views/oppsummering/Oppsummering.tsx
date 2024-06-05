@@ -1,18 +1,14 @@
 import { FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
 
 const route = getRouteApi("/ny/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
-
-  const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
 
   useEffect(() => {
     setBreadcrumbs([
@@ -49,7 +45,7 @@ export const Oppsummering = () => {
             <FormSummary.Heading level="3">
               Arbeidsgiver og den ansatte
             </FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/dine-opplysninger" />
+            <FormSummary.EditLink as={Link} to="../dine-opplysninger" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -114,7 +110,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-            <FormSummary.EditLink href="/ny/$id/inntekt-og-refusjon" />
+            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
