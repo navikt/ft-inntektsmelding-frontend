@@ -224,7 +224,7 @@ export const Oppsummering = () => {
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
             <FormSummary.EditLink
               as={Link}
-              href="../inntekt-og-refusjon#naturalytelser"
+              to="../inntekt-og-refusjon#naturalytelser"
             />
           </FormSummary.Header>
           <FormSummary.Answers>
