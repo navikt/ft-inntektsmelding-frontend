@@ -15,6 +15,7 @@ app.use((request) => console.log(request.url));
 const actuatorRouter = express.Router();
 const protectedRouter = express.Router();
 setupActuators(actuatorRouter);
+setupActuators(app);
 app.use("/fp-im-dialog", actuatorRouter);
 app.use("/", actuatorRouter);
 
