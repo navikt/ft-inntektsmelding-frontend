@@ -11,7 +11,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { type ForespørselEntitet } from "~/types/api-models.ts";
 
-const route = getRouteApi("/ny/$id/oppsummering");
+const route = getRouteApi("/$id/oppsummering");
 
 // TODO: linke til rett felt når man klikker "endre
 export const Oppsummering = () => {
@@ -27,11 +27,11 @@ export const Oppsummering = () => {
       },
       {
         title: "Inntektsmelding",
-        url: `/ny/${id}`,
+        url: `/${id}`,
       },
       {
         title: "Oppsummering",
-        url: `/ny/${id}/oppsummering`,
+        url: `/${id}/oppsummering`,
       },
     ]);
   }, [id]);

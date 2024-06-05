@@ -16,6 +16,6 @@ const DineOpplysninger = () => {
   );
 };
 
-export const Route = createFileRoute("/ny/$id/dine-opplysninger")({
+export const Route = createFileRoute("/$id/dine-opplysninger")({
   component: DineOpplysninger,
 });

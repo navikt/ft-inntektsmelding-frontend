@@ -1,5 +1,5 @@
 {
-  "ingresses": [ "https://familie-inntektsmelding.intern.dev.nav.no" ],
+  "ingresses": [ "https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog" ],
   "minReplicas": "1",
   "maxReplicas": "2",
   "API_SCOPE": "dev-gcp:teamforeldrepenger:ftinntektsmelding",

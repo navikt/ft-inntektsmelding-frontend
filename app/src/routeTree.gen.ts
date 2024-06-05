@@ -11,18 +11,18 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as NyIdImport } from './routes/ny.$id'
+import { Route as IdImport } from './routes/$id'
 import { Route as KvitteringIdImport } from './routes/kvittering.$id'
 import { Route as EndreIdImport } from './routes/endre.$id'
-import { Route as NyIdOppsummeringImport } from './routes/ny.$id.oppsummering'
+import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
+import { Route as IdInntektOgRefusjonImport } from './routes/$id.inntekt-og-refusjon'
+import { Route as IdDineOpplysningerImport } from './routes/$id.dine-opplysninger'
 import { Route as NyIdKvitteringImport } from './routes/ny.$id.kvittering'
-import { Route as NyIdInntektOgRefusjonImport } from './routes/ny.$id.inntekt-og-refusjon'
-import { Route as NyIdDineOpplysningerImport } from './routes/ny.$id.dine-opplysninger'
 
 // Create/Update Routes
 
-const NyIdRoute = NyIdImport.update({
-  path: '/ny/$id',
+const IdRoute = IdImport.update({
+  path: '/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -36,30 +36,46 @@ const EndreIdRoute = EndreIdImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const NyIdOppsummeringRoute = NyIdOppsummeringImport.update({
+const IdOppsummeringRoute = IdOppsummeringImport.update({
   path: '/oppsummering',
-  getParentRoute: () => NyIdRoute,
+  getParentRoute: () => IdRoute,
+} as any)
+
+const IdInntektOgRefusjonRoute = IdInntektOgRefusjonImport.update({
+  path: '/inntekt-og-refusjon',
+  getParentRoute: () => IdRoute,
+} as any)
+
+const IdDineOpplysningerRoute = IdDineOpplysningerImport.update({
+  path: '/dine-opplysninger',
+  getParentRoute: () => IdRoute,
 } as any)
 
 const NyIdKvitteringRoute = NyIdKvitteringImport.update({
-  path: '/kvittering',
-  getParentRoute: () => NyIdRoute,
-} as any)
-
-const NyIdInntektOgRefusjonRoute = NyIdInntektOgRefusjonImport.update({
-  path: '/inntekt-og-refusjon',
-  getParentRoute: () => NyIdRoute,
-} as any)
-
-const NyIdDineOpplysningerRoute = NyIdDineOpplysningerImport.update({
-  path: '/dine-opplysninger',
-  getParentRoute: () => NyIdRoute,
+  path: '/ny/$id/kvittering',
+  getParentRoute: () => rootRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/$id': {
+      preLoaderRoute: typeof IdImport
+      parentRoute: typeof rootRoute
+    }
+    '/$id/dine-opplysninger': {
+      preLoaderRoute: typeof IdDineOpplysningerImport
+      parentRoute: typeof IdImport
+    }
+    '/$id/inntekt-og-refusjon': {
+      preLoaderRoute: typeof IdInntektOgRefusjonImport
+      parentRoute: typeof IdImport
+    }
+    '/$id/oppsummering': {
+      preLoaderRoute: typeof IdOppsummeringImport
+      parentRoute: typeof IdImport
+    }
     '/endre/$id': {
       preLoaderRoute: typeof EndreIdImport
       parentRoute: typeof rootRoute
@@ -68,25 +84,9 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KvitteringIdImport
       parentRoute: typeof rootRoute
     }
-    '/ny/$id': {
-      preLoaderRoute: typeof NyIdImport
-      parentRoute: typeof rootRoute
-    }
-    '/ny/$id/dine-opplysninger': {
-      preLoaderRoute: typeof NyIdDineOpplysningerImport
-      parentRoute: typeof NyIdImport
-    }
-    '/ny/$id/inntekt-og-refusjon': {
-      preLoaderRoute: typeof NyIdInntektOgRefusjonImport
-      parentRoute: typeof NyIdImport
-    }
     '/ny/$id/kvittering': {
       preLoaderRoute: typeof NyIdKvitteringImport
-      parentRoute: typeof NyIdImport
-    }
-    '/ny/$id/oppsummering': {
-      preLoaderRoute: typeof NyIdOppsummeringImport
-      parentRoute: typeof NyIdImport
+      parentRoute: typeof rootRoute
     }
   }
 }
@@ -94,14 +94,14 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export const routeTree = rootRoute.addChildren([
+  IdRoute.addChildren([
+    IdDineOpplysningerRoute,
+    IdInntektOgRefusjonRoute,
+    IdOppsummeringRoute,
+  ]),
   EndreIdRoute,
   KvitteringIdRoute,
-  NyIdRoute.addChildren([
-    NyIdDineOpplysningerRoute,
-    NyIdInntektOgRefusjonRoute,
-    NyIdKvitteringRoute,
-    NyIdOppsummeringRoute,
-  ]),
+  NyIdKvitteringRoute,
 ])
 
 /* prettier-ignore-end */

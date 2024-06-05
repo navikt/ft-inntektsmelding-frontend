@@ -11,7 +11,7 @@ import {
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { capitalizeSetning } from "~/utils.ts";
 
-const route = getRouteApi("/ny/$id");
+const route = getRouteApi("/$id");
 
 export const NyInntektsmelding = () => {
   const { id } = route.useParams();
@@ -37,7 +37,7 @@ export const NyInntektsmelding = () => {
       },
       {
         title: "Inntektsmelding",
-        url: `/ny/${id}`,
+        url: `${id}`,
       },
     ]);
   }, [id]);

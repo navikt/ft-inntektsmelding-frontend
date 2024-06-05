@@ -23,7 +23,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang.tsx
 import type { ForespørselEntitet } from "~/types/api-models.ts";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
-export const Route = createFileRoute("/ny/$id/inntekt-og-refusjon")({
+export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
 });
 
