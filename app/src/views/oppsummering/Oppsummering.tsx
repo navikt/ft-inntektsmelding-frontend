@@ -256,7 +256,7 @@ function SendInnInntektsmelding({ forespørsel }: SendInnInntektsmeldingProps) {
   >({
     mutationFn: sendInntektsmelding,
     onSuccess: () => {
-      navigate({ to: "../kvittering" });
+      navigate({ from: "/ny/$id/oppsummering", to: "../kvittering" });
     },
   });
 
