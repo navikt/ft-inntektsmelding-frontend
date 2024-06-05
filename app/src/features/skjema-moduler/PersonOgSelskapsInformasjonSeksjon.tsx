@@ -23,7 +23,7 @@ import {
 } from "~/api/queries";
 import type { ForespørselEntitet } from "~/types/api-models.ts";
 
-import { Fremgangsindikator } from "./Skjemafremgang";
+import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;

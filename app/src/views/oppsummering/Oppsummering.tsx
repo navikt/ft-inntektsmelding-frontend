@@ -7,9 +7,15 @@ import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import { forespørselQueryOptions } from "~/api/queries.ts";
-import { Fremgangsindikator } from "~/features/skjema-moduler/Skjemafremgang";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { type ForespørselEntitet } from "~/types/api-models.ts";
+import {
+  formatDatoLang,
+  formatIdentitetsnummer,
+  formatKroner,
+  formatYtelsesnavn,
+} from "~/utils";
 
 const route = getRouteApi("/$id/oppsummering");
 
@@ -36,6 +42,11 @@ export const Oppsummering = () => {
     ]);
   }, [id]);
 
+  const søknad = {
+    ytelseType: "Foreldrepenger",
+    oppstart: new Date("2024-01-01"),
+  };
+
   const skjemadata = {
     dineOpplysninger: {
       arbeidsgiver: {
@@ -46,7 +57,7 @@ export const Oppsummering = () => {
       ansatt: {
         fornavn: "Ansa",
         etternavn: "Tesen",
-        identitetsnummer: "010101 23456",
+        identitetsnummer: "01010123456",
       },
     },
     inntektOgRefusjon: {
@@ -59,15 +70,9 @@ export const Oppsummering = () => {
     },
   };
 
-  const pengeformatterer = new Intl.NumberFormat("nb-no", {
-    style: "currency",
-    currency: "NOK",
-    maximumFractionDigits: 0,
-  });
-
   return (
     <section>
-      <div className="bg-bg-default mt-8 px-5 py-6 rounded-md flex flex-col gap-6">
+      <div className="bg-bg-default mt-6 px-5 py-6 rounded-md flex flex-col gap-6">
         <Heading level="2" size="large">
           Oppsummering
         </Heading>
@@ -107,32 +112,38 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Kontaktperson og innsender</FormSummary.Label>
               <FormSummary.Value>
-                <FormSummary.Answers>
-                  <FormSummary.Answer>
-                    <FormSummary.Label>
-                      Innsender og kontaktperson
-                    </FormSummary.Label>
-                    <FormSummary.Value>
-                      {
-                        skjemadata.dineOpplysninger.arbeidsgiver
-                          .kontaktperson[0].navn
-                      }
-                      ,{" "}
-                      {
-                        skjemadata.dineOpplysninger.arbeidsgiver
-                          .kontaktperson[0].telefon
-                      }
-                    </FormSummary.Value>
-                  </FormSummary.Answer>
-                </FormSummary.Answers>
+                {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.length >
+                1 ? (
+                  <FormSummary.Answers>
+                    {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.map(
+                      (kontaktperson, i) => (
+                        <FormSummary.Answer key={i}>
+                          <FormSummary.Label>
+                            Kontaktperson for innsendelse
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {formatterKontaktperson(kontaktperson)}
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      ),
+                    )}
+                  </FormSummary.Answers>
+                ) : (
+                  formatterKontaktperson(
+                    skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson[0],
+                  )
+                )}
               </FormSummary.Value>
             </FormSummary.Answer>
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.dineOpplysninger.ansatt.fornavn}{" "}
-                {skjemadata.dineOpplysninger.ansatt.etternavn}, (
-                {skjemadata.dineOpplysninger.ansatt.identitetsnummer})
+                {skjemadata.dineOpplysninger.ansatt.etternavn} (
+                {formatIdentitetsnummer(
+                  skjemadata.dineOpplysninger.ansatt.identitetsnummer,
+                )}
+                )
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -141,13 +152,15 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">
-              Første dag med YTELSE
+              Første dag med {formatYtelsesnavn(søknad.ytelseType)}
             </FormSummary.Heading>
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>Fra og med</FormSummary.Label>
-              <FormSummary.Value>01.01.2024</FormSummary.Value>
+              <FormSummary.Value>
+                {formatDatoLang(søknad.oppstart)}
+              </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
@@ -155,18 +168,19 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              to="../inntekt-og-refusjon#beregnet-manedslonn"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Beregnet månedslønn basert på de tre siste, fulle månedene før
-                YTELSE
+                Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
+                {formatYtelsesnavn(søknad.ytelseType)}
               </FormSummary.Label>
               <FormSummary.Value>
-                {pengeformatterer.format(
-                  skjemadata.inntektOgRefusjon.månedslønn,
-                )}
+                {formatKroner(skjemadata.inntektOgRefusjon.månedslønn)}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -175,29 +189,36 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              to="../inntekt-og-refusjon#refusjon"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Skal dere betale lønn til FORNAVN og ha refusjon fra NAV?
+                Skal dere betale lønn til{" "}
+                {skjemadata.dineOpplysninger.ansatt.fornavn} og ha refusjon fra
+                NAV?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
-            <FormSummary.Answer>
-              <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
-              <FormSummary.Value>
-                {pengeformatterer.format(
-                  skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
-                )}
-              </FormSummary.Value>
-            </FormSummary.Answer>
+            {skjemadata.inntektOgRefusjon.refusjon && (
+              <FormSummary.Answer>
+                <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
+                <FormSummary.Value>
+                  {formatKroner(
+                    skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
+                  )}
+                </FormSummary.Value>
+              </FormSummary.Answer>
+            )}
             <FormSummary.Answer>
               <FormSummary.Label>
-                Vil det være endringer i refusjon i løpet av perioden FORNAVN er
-                i permisjon?
+                Vil det være endringer i refusjon i løpet av perioden{" "}
+                {skjemadata.dineOpplysninger.ansatt.fornavn} er i permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
@@ -211,7 +232,10 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              to="../inntekt-og-refusjon#naturalytelser"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -229,6 +253,13 @@ export const Oppsummering = () => {
       </div>
     </section>
   );
+};
+
+const formatterKontaktperson = (kontaktperson: {
+  navn: string;
+  telefon: string;
+}) => {
+  return `${kontaktperson.navn}, ${kontaktperson.telefon}`;
 };
 
 type SendInnInntektsmeldingProps = {
