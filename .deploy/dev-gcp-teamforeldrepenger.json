@@ -3,5 +3,6 @@
   "minReplicas": "1",
   "maxReplicas": "2",
   "API_SCOPE": "dev-gcp:teamforeldrepenger:ftinntektsmelding",
-  "ENV": "dev"
+  "ENV": "dev",
+  "NESTED_PATH": "fp-im-dialog"
 }
