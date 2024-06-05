@@ -45,3 +45,7 @@ export function formatIdentitetsnummer(identitetsnummer: string) {
   }
   return `${identitetsnummer.slice(0, 6)} ${identitetsnummer.slice(6)}`;
 }
+
+export function formatYtelsesnavn(ytelsesnavn: string) {
+  return ytelsesnavn.toLowerCase().replace("_", " ");
+}

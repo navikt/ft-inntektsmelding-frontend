@@ -10,7 +10,12 @@ import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { type ForespørselEntitet } from "~/types/api-models.ts";
-import { formatDatoLang, formatIdentitetsnummer, formatKroner } from "~/utils";
+import {
+  formatDatoLang,
+  formatIdentitetsnummer,
+  formatKroner,
+  formatYtelsesnavn,
+} from "~/utils";
 
 const route = getRouteApi("/$id/oppsummering");
 
@@ -147,7 +152,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">
-              Første dag med {søknad.ytelseType.toLowerCase()}
+              Første dag med {formatYtelsesnavn(søknad.ytelseType)}
             </FormSummary.Heading>
           </FormSummary.Header>
           <FormSummary.Answers>
@@ -172,7 +177,7 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
-                {søknad.ytelseType.toLowerCase()}
+                {formatYtelsesnavn(søknad.ytelseType)}
               </FormSummary.Label>
               <FormSummary.Value>
                 {formatKroner(skjemadata.inntektOgRefusjon.månedslønn)}
