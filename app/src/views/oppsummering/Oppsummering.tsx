@@ -114,7 +114,7 @@ export const Oppsummering = () => {
                       (kontaktperson, i) => (
                         <FormSummary.Answer key={i}>
                           <FormSummary.Label>
-                            Innsender og kontaktperson
+                            Kontaktperson for innsendelse
                           </FormSummary.Label>
                           <FormSummary.Value>
                             {formatterKontaktperson(kontaktperson)}
@@ -128,24 +128,6 @@ export const Oppsummering = () => {
                     skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson[0],
                   )
                 )}
-                <FormSummary.Answers>
-                  <FormSummary.Answer>
-                    <FormSummary.Label>
-                      Innsender og kontaktperson
-                    </FormSummary.Label>
-                    <FormSummary.Value>
-                      {
-                        skjemadata.dineOpplysninger.arbeidsgiver
-                          .kontaktperson[0].navn
-                      }
-                      ,{" "}
-                      {
-                        skjemadata.dineOpplysninger.arbeidsgiver
-                          .kontaktperson[0].telefon
-                      }
-                    </FormSummary.Value>
-                  </FormSummary.Answer>
-                </FormSummary.Answers>
               </FormSummary.Value>
             </FormSummary.Answer>
             <FormSummary.Answer>
@@ -181,7 +163,10 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              to="../inntekt-og-refusjon#beregnet-manedslønn"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -199,7 +184,7 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink href="../inntekt-og-refusjon#refusjon" />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
@@ -237,7 +222,10 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-            <FormSummary.EditLink as={Link} to="../inntekt-og-refusjon" />
+            <FormSummary.EditLink
+              as={Link}
+              href="../inntekt-og-refusjon#naturalytelse"
+            />
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
