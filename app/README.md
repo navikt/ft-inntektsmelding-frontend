@@ -15,8 +15,8 @@ npm run dev
 
 Gå til https://familie-inntektsmelding.intern.dev.nav.no/
 
-* Velg BankID
-* Fødselsnummer: 10107400090
-* Velg BankID med kodebrikke
-* Legg inn engangskode: otp
-* Legg inn BankID passord: qwer1234
+- Velg BankID
+- Fødselsnummer: 10107400090
+- Velg BankID med kodebrikke
+- Legg inn engangskode: otp
+- Legg inn BankID passord: qwer1234

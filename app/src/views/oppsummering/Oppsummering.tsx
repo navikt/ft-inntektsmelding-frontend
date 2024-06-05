@@ -27,6 +27,29 @@ export const Oppsummering = () => {
     ]);
   }, [id]);
 
+  const skjemadata = {
+    dineOpplysninger: {
+      arbeidsgiver: {
+        virksomhetsnavn: "Eksempelhuset AS",
+        orgnrForUnderenhet: "123 456 789",
+        kontaktperson: [{ navn: "Test Personesen", telefon: "815 49 300" }],
+      },
+      ansatt: {
+        fornavn: "Ansa",
+        etternavn: "Tesen",
+        identitetsnummer: "010101 23456",
+      },
+    },
+    inntektOgRefusjon: {
+      månedslønn: 45_000,
+      refusjon: {
+        refusjonBeløpPerMåned: 30_000,
+        endringIRefusjon: false,
+      },
+      naturalytelser: false,
+    },
+  };
+
   const pengeformatterer = new Intl.NumberFormat("nb-no", {
     style: "currency",
     currency: "NOK",
@@ -54,13 +77,20 @@ export const Oppsummering = () => {
                 <FormSummary.Answers>
                   <FormSummary.Answer>
                     <FormSummary.Label>Virksomhetsnavn</FormSummary.Label>
-                    <FormSummary.Value>TODO</FormSummary.Value>
+                    <FormSummary.Value>
+                      {skjemadata.dineOpplysninger.arbeidsgiver.virksomhetsnavn}
+                    </FormSummary.Value>
                   </FormSummary.Answer>
                   <FormSummary.Answer>
                     <FormSummary.Label>
                       Org. nr. for underenhet
                     </FormSummary.Label>
-                    <FormSummary.Value>000000000</FormSummary.Value>
+                    <FormSummary.Value>
+                      {
+                        skjemadata.dineOpplysninger.arbeidsgiver
+                          .orgnrForUnderenhet
+                      }
+                    </FormSummary.Value>
                   </FormSummary.Answer>
                 </FormSummary.Answers>
               </FormSummary.Value>
@@ -74,13 +104,15 @@ export const Oppsummering = () => {
                       Innsender og kontaktperson
                     </FormSummary.Label>
                     <FormSummary.Value>
-                      Todo Todosen, 815 493 00
-                    </FormSummary.Value>
-                  </FormSummary.Answer>
-                  <FormSummary.Answer>
-                    <FormSummary.Label>Kontaktperson</FormSummary.Label>
-                    <FormSummary.Value>
-                      André Todosen, 22 22 55 55
+                      {
+                        skjemadata.dineOpplysninger.arbeidsgiver
+                          .kontaktperson[0].navn
+                      }
+                      ,{" "}
+                      {
+                        skjemadata.dineOpplysninger.arbeidsgiver
+                          .kontaktperson[0].telefon
+                      }
                     </FormSummary.Value>
                   </FormSummary.Answer>
                 </FormSummary.Answers>
@@ -88,7 +120,11 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
-              <FormSummary.Value>Ann Sattesen, 010203 12345</FormSummary.Value>
+              <FormSummary.Value>
+                {skjemadata.dineOpplysninger.ansatt.fornavn}{" "}
+                {skjemadata.dineOpplysninger.ansatt.etternavn}, (
+                {skjemadata.dineOpplysninger.ansatt.identitetsnummer})
+              </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
@@ -119,7 +155,9 @@ export const Oppsummering = () => {
                 YTELSE
               </FormSummary.Label>
               <FormSummary.Value>
-                {pengeformatterer.format(12_345)}
+                {pengeformatterer.format(
+                  skjemadata.inntektOgRefusjon.månedslønn,
+                )}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -135,12 +173,16 @@ export const Oppsummering = () => {
               <FormSummary.Label>
                 Skal dere betale lønn til FORNAVN og ha refusjon fra NAV?
               </FormSummary.Label>
-              <FormSummary.Value>Ja</FormSummary.Value>
+              <FormSummary.Value>
+                {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
+              </FormSummary.Value>
             </FormSummary.Answer>
             <FormSummary.Answer>
               <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
               <FormSummary.Value>
-                {pengeformatterer.format(12_345)}
+                {pengeformatterer.format(
+                  skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
+                )}
               </FormSummary.Value>
             </FormSummary.Answer>
             <FormSummary.Answer>
@@ -148,7 +190,11 @@ export const Oppsummering = () => {
                 Vil det være endringer i refusjon i løpet av perioden FORNAVN er
                 i permisjon?
               </FormSummary.Label>
-              <FormSummary.Value>Nei</FormSummary.Value>
+              <FormSummary.Value>
+                {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
+                  ? "Ja"
+                  : "Nei"}
+              </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
@@ -161,9 +207,12 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Har FORNAVN naturalytelser som faller bort ved fraværet
+                Har {skjemadata.dineOpplysninger.ansatt.fornavn} naturalytelser
+                som faller bort ved fraværet?
               </FormSummary.Label>
-              <FormSummary.Value>Nei</FormSummary.Value>
+              <FormSummary.Value>
+                {skjemadata.inntektOgRefusjon.naturalytelser ? "Ja" : "Nei"}
+              </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
