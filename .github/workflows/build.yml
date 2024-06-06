@@ -14,7 +14,7 @@ on:
 
 jobs:
   build-fp-app:
-    name: Build
+    name: Build [FP]
     permissions:
       contents: read
       packages: write
@@ -77,7 +77,7 @@ jobs:
           namespace: teamforeldrepenger
 
   build-K9-app:
-    name: Build
+    name: Build [K9]
     permissions:
       contents: read
       packages: write
@@ -125,10 +125,10 @@ jobs:
 
       - name: Generate build version
         id: generate-build-version
-        run: echo "build-version=k9-$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+        run: echo "build-version=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
-      - name: Bygg og push docker image teamforeldrepenger
+      - name: Bygg og push docker image k9saksbehandling
         uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
         with:
           docker_context: "./server"
