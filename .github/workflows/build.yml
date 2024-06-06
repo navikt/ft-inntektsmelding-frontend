@@ -125,7 +125,7 @@ jobs:
 
       - name: Generate build version
         id: generate-build-version
-        run: echo "build-version=$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
+        run: echo "build-version=k9-$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
       - name: Bygg og push docker image k9saksbehandling
@@ -137,7 +137,7 @@ jobs:
           push-image: true
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          namespace: k9saksbehandling
+          namespace: teamforeldrepenger #k9saksbehandling -- midltertidig
 
   deploy-dev-teamforeldrepenger:
     name: Deploy dev teamforeldrepenger
