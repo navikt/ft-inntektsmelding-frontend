@@ -76,7 +76,7 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           namespace: teamforeldrepenger
 
-  build-K9-app:
+  build-k9-app:
     name: Build [K9]
     permissions:
       contents: read
