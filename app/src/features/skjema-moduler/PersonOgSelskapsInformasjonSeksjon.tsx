@@ -10,28 +10,22 @@ import {
   Heading,
   HGrid,
   Label,
-  Skeleton,
   TextField,
 } from "@navikt/ds-react";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 
-import {
-  organisasjonQueryOptions,
-  personinfoQueryOptions,
-} from "~/api/queries";
-import type { ForespørselEntitet } from "~/types/api-models.ts";
+import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
 
 export const PersonOgSelskapsInformasjonSeksjon = ({
-  forespørsel,
+  inntektsmeldingDialogDto,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   return (
@@ -46,9 +40,13 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
             Dine opplysninger
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
-          <Intro forespørsel={forespørsel} />
-          <ArbeidsgiverInformasjon forespørsel={forespørsel} />
-          <Personinformasjon forespørsel={forespørsel} />
+          <Intro inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
+          <ArbeidsgiverInformasjon
+            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
+          />
+          <Personinformasjon
+            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
+          />
           <InnsenderOgKontaktpersonInformasjon />
 
           <div className="flex justify-center col-span-2">
@@ -78,16 +76,11 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 };
 
 type IntroProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
-const Intro = ({ forespørsel }: IntroProps) => {
-  const { data: brukerdata } = useSuspenseQuery(
-    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
-  );
-  const { data: organisasjonsdata } = useSuspenseQuery(
-    organisasjonQueryOptions(forespørsel.organisasjonsnummer),
-  );
-  const [fornavn] = brukerdata.navn.split(" ") ?? ["den ansatte"];
+const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
+  const { person, arbeidsgiver } = inntektsmeldingDialogDto;
+  const [fornavn] = person.navn.split(" ") ?? ["den ansatte"];
   return (
     <GuidePanel className="mb-4 col-span-2">
       <div className="flex flex-col gap-4">
@@ -96,12 +89,11 @@ const Intro = ({ forespørsel }: IntroProps) => {
         </Heading>
         <BodyLong>
           <strong>
-            {brukerdata.navn} ({formaterFødselsnummer(brukerdata.fødselsnummer)}
-            )
+            {person.navn} ({formaterFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
-          som jobber på <strong>{organisasjonsdata.organisasjonNavn}</strong>{" "}
-          har søkt om foreldrepenger. NAV trenger derfor informasjon om
-          inntekten til {fornavn}.
+          som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
+          søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
+          til {fornavn}.
         </BodyLong>
         <BodyLong>
           Vi har forhåndsutfylt skjema med opplysninger fra søknaden til{" "}
@@ -115,30 +107,22 @@ const Intro = ({ forespørsel }: IntroProps) => {
 };
 
 type PersoninformasjonProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
 
-const Personinformasjon = ({ forespørsel }: PersoninformasjonProps) => {
-  const personinfoQuery = useQuery(
-    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
-  );
+const Personinformasjon = ({
+  inntektsmeldingDialogDto,
+}: PersoninformasjonProps) => {
+  const { person } = inntektsmeldingDialogDto;
+
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
-      <LabelOgVerdi label="Navn">
-        {personinfoQuery.data?.navn ?? <Skeleton />}
-      </LabelOgVerdi>
+      <LabelOgVerdi label="Navn">{person.navn}</LabelOgVerdi>
       <LabelOgVerdi label="Fødselsdato">
-        {personinfoQuery.data?.fødselsnummer ? (
-          <div className="flex items-center gap-2">
-            {formaterFødselsnummer(personinfoQuery.data.fødselsnummer)}{" "}
-            <CopyButton
-              copyText={personinfoQuery.data.fødselsnummer}
-              size="small"
-            />
-          </div>
-        ) : (
-          <Skeleton />
-        )}
+        <div className="flex items-center gap-2">
+          {formaterFødselsnummer(person.fødselsnummer)}{" "}
+          <CopyButton copyText={person.fødselsnummer} size="small" />
+        </div>
       </LabelOgVerdi>
     </InformasjonsseksjonMedKilde>
   );
@@ -152,21 +136,20 @@ const formaterFødselsnummer = (str: string) => {
 };
 
 type ArbeidsgiverInformasjonProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
 const ArbeidsgiverInformasjon = ({
-  forespørsel,
+  inntektsmeldingDialogDto,
 }: ArbeidsgiverInformasjonProps) => {
-  const organisasjonQuery = useQuery(
-    organisasjonQueryOptions(forespørsel.organisasjonsnummer),
-  );
+  const { arbeidsgiver } = inntektsmeldingDialogDto;
+
   return (
     <InformasjonsseksjonMedKilde kilde="Fra Altinn" tittel="Arbeidsgiver">
       <LabelOgVerdi label="Virksomhetsnavn">
-        {organisasjonQuery.data?.organisasjonNavn ?? <Skeleton />}
+        {arbeidsgiver.organisasjonNavn}
       </LabelOgVerdi>
       <LabelOgVerdi label="Org. nr. for underenhet">
-        {organisasjonQuery.data?.organisasjonNummer ?? <Skeleton />}
+        {arbeidsgiver.organisasjonNummer}
       </LabelOgVerdi>
     </InformasjonsseksjonMedKilde>
   );

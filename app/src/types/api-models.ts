@@ -77,6 +77,14 @@ type NaturalytelseRequestDto = {
   naturalytelsetype: Naturalytelsetype;
 };
 
+export type InntektsmeldingDialogDto = {
+  person: PersonInfoDto;
+  arbeidsgiver: OrganisasjonInfoDto;
+  inntekter: MånedsinntektResponsDto[];
+  startdatoPermisjon: string;
+  ytelse: Ytelsetype;
+};
+
 export type ForespørselEntitet = {
   id: number;
   uuid: string;

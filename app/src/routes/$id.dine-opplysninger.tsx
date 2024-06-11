@@ -6,12 +6,14 @@ import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/Pe
 
 const DineOpplysninger = () => {
   const { id } = Route.useParams();
-  const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
+  const inntektsmeldingDialogDto = useSuspenseQuery(
+    forespørselQueryOptions(id),
+  ).data;
 
   return (
     <PersonOgSelskapsInformasjonSeksjon
       className="mt-6"
-      forespørsel={forespørsel}
+      inntektsmeldingDialogDto={inntektsmeldingDialogDto}
     />
   );
 };
