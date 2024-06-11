@@ -12,7 +12,7 @@ import {
   Label,
   TextField,
 } from "@navikt/ds-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
@@ -43,9 +43,14 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
       ...inntektsmeldingSkjemaState.kontaktperson,
     },
   });
+  const navigate = useNavigate();
 
   const onSubmit = handleSubmit((kontaktperson) => {
     setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
+    navigate({
+      from: "/$id/dine-opplysninger",
+      to: "../inntekt-og-refusjon",
+    });
   });
   return (
     <section className={className}>
@@ -104,10 +109,9 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 
           <div className="flex justify-center col-span-2">
             <Button
-              as={Link}
               icon={<ArrowRightIcon />}
               iconPosition="right"
-              to="../inntekt-og-refusjon"
+              type="submit"
               variant="primary"
             >
               Bekreft og gå videre
