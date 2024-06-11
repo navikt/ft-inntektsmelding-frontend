@@ -10,41 +10,26 @@ import {
   Link,
   ReadMore,
 } from "@navikt/ds-react";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
-import { inntektQueryOptions, personinfoQueryOptions } from "~/api/queries.ts";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type {
-  ForespørselEntitet,
+  InntektsmeldingDialogDto,
   MånedsinntektResponsDto,
 } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
 
 type InntektProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
-export function Inntekt({ forespørsel }: InntektProps) {
+export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
+  const { startdatoPermisjon, person, inntekter } = inntektsmeldingDialogDto;
+
   const førsteDag = capitalizeSetning(
-    format(forespørsel.skjæringstidspunkt, "dd.MM yyyy", {
+    format(startdatoPermisjon, "dd.MM yyyy", {
       locale: nb,
-    }),
-  );
-
-  const { data: brukerdata } = useSuspenseQuery(
-    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
-  );
-
-  const inntekt = useQuery(
-    inntektQueryOptions({
-      ytelse: forespørsel.ytelseType,
-      aktorId: forespørsel.brukerAktørId,
-      arbeidsgiverIdent: forespørsel.organisasjonsnummer,
-      // arbeidsgiverIdent: "896929119", Bruk disse for å faktisk få data
-      // aktorId: "2242003545158",
-      startdato: format(new Date(), "yyyy-MM-dd"),
     }),
   );
 
@@ -56,10 +41,10 @@ export function Inntekt({ forespørsel }: InntektProps) {
       </Heading>
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
-        tittel={`${capitalizeSetning(leggTilGenitiv(brukerdata.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {inntekt.data?.map((inntekt) => (
+          {inntekter.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}:</span>
               <Label as="span">{formatKroner(inntekt.beløp)}</Label>
@@ -68,7 +53,7 @@ export function Inntekt({ forespørsel }: InntektProps) {
         </HGrid>
       </InformasjonsseksjonMedKilde>
       <BodyShort>Beregnet månedslønn</BodyShort>
-      <strong>{formatKroner(gjennomsnittInntekt(inntekt.data ?? []))}</strong>
+      <strong>{formatKroner(gjennomsnittInntekt(inntekter))}</strong>
       <BodyShort>
         Gjennomsnittet av de siste tre månedene før {førsteDag}
       </BodyShort>

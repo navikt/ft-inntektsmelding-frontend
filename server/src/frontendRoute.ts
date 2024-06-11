@@ -44,20 +44,24 @@ function addLocalViteServerHandlerWithDecorator(router: Router) {
   router.use(cookieParser());
   router.get("/vite-on", (request, response) => {
     setViteCookie(response, true);
-    return response.redirect("/");
+    return response.redirect(`${config.app.nestedPath}`);
   });
   router.get("/vite-off", (request, response) => {
     setViteCookie(response, false);
-    return response.redirect("/");
+    return response.redirect(`${config.app.nestedPath}`);
   });
   router.get("*", async (request, response, next) => {
     const localViteServerIsEnabled =
       request.cookies["use-local-vite-server"] === "true";
     if (localViteServerIsEnabled) {
       const html = await injectDecorator(viteDevelopmentServerPath);
+      const modifiedHtml = html.replaceAll(
+        "http://localhost:5173",
+        `http://localhost:5173${config.app.nestedPath}`,
+      );
       response.setHeader("Content-Security-Policy", csp);
 
-      return response.send(html);
+      return response.send(modifiedHtml);
     }
     return next();
   });

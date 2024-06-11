@@ -8,8 +8,10 @@ import { useEffect } from "react";
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import { type ForespørselEntitet } from "~/types/api-models.ts";
+import type {
+  InntektsmeldingDialogDto,
+  SendInntektsmeldingRequestDto,
+} from "~/types/api-models.ts";
 import {
   formatDatoLang,
   formatIdentitetsnummer,
@@ -23,7 +25,9 @@ const route = getRouteApi("/$id/oppsummering");
 export const Oppsummering = () => {
   const { id } = route.useParams();
 
-  const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
+  const inntektsmeldingDialogDto = useSuspenseQuery(
+    forespørselQueryOptions(id),
+  ).data;
 
   useEffect(() => {
     setBreadcrumbs([
@@ -249,7 +253,9 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
-        <SendInnInntektsmelding forespørsel={forespørsel} />
+        <SendInnInntektsmelding
+          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
+        />
       </div>
     </section>
   );
@@ -263,18 +269,20 @@ const formatterKontaktperson = (kontaktperson: {
 };
 
 type SendInnInntektsmeldingProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
-function SendInnInntektsmelding({ forespørsel }: SendInnInntektsmeldingProps) {
+function SendInnInntektsmelding({
+  inntektsmeldingDialogDto,
+}: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
 
   const DUMMY_IM = {
-    foresporselUuid: forespørsel.uuid,
-    aktorId: forespørsel.brukerAktørId,
-    ytelse: forespørsel.ytelseType,
-    arbeidsgiverIdent: forespørsel.organisasjonsnummer,
+    foresporselUuid: "123", // TODO
+    aktorId: inntektsmeldingDialogDto.person.aktørId,
+    ytelse: inntektsmeldingDialogDto.ytelse,
+    arbeidsgiverIdent: inntektsmeldingDialogDto.arbeidsgiver.organisasjonNummer,
     telefonnummer: "12345678",
-    startdato: forespørsel.skjæringstidspunkt,
+    startdato: inntektsmeldingDialogDto.startdatoPermisjon,
     inntekt: 30_000,
     refusjonsperioder: [],
     bortfaltNaturaltytelsePerioder: [],

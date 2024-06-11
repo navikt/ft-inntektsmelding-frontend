@@ -1,8 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 
 import type {
-  ForespørselEntitet,
   HentInntektRequestDto,
+  InntektsmeldingDialogDto,
   MånedsinntektResponsDto,
   OrganisasjonInfoDto,
   PersonInfoDto,
@@ -44,16 +44,14 @@ export function forespørselQueryOptions(forespørselUUID: string) {
   return queryOptions({
     queryKey: ["FORESPØRSEL", forespørselUUID],
     queryFn: async () => {
-      const response = await fetch(
-        `${SERVER_URL}/foresporsel/${forespørselUUID}`,
-      );
+      const response = await fetch(`${SERVER_URL}/imdialog/${forespørselUUID}`);
       if (response.status === 404) {
         throw new Error("Forespørsel ikke funnet");
       }
       if (!response.ok) {
         throw new Error("Kunne ikke hente forespørsel");
       }
-      return (await response.json()) as ForespørselEntitet;
+      return (await response.json()) as InntektsmeldingDialogDto;
     },
   });
 }

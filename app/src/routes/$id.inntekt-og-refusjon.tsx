@@ -13,14 +13,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-import {
-  forespørselQueryOptions,
-  personinfoQueryOptions,
-} from "~/api/queries.ts";
+import { forespørselQueryOptions } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import type { ForespørselEntitet } from "~/types/api-models.ts";
+import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
@@ -29,7 +26,9 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
 
 function InntektOgRefusjon() {
   const { id } = Route.useParams();
-  const forespørsel = useSuspenseQuery(forespørselQueryOptions(id)).data;
+  const inntektsmeldingDialogDto = useSuspenseQuery(
+    forespørselQueryOptions(id),
+  ).data;
 
   return (
     <section className="mt-6">
@@ -38,8 +37,10 @@ function InntektOgRefusjon() {
           Inntekt og refusjon
         </Heading>
         <Fremgangsindikator aktivtSteg={2} />
-        <ForeldrepengePeriode forespørsel={forespørsel} />
-        <Inntekt forespørsel={forespørsel} />
+        <ForeldrepengePeriode
+          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
+        />
+        <Inntekt inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
         <UtbetalingOgRefusjon />
         <Naturalytelser />
         <div className="flex gap-4 justify-center">
@@ -66,15 +67,15 @@ function InntektOgRefusjon() {
 }
 
 type ForeldrepengePeriodeProps = {
-  forespørsel: ForespørselEntitet;
+  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
-function ForeldrepengePeriode({ forespørsel }: ForeldrepengePeriodeProps) {
-  const { data: brukerdata } = useSuspenseQuery(
-    personinfoQueryOptions(forespørsel.brukerAktørId, forespørsel.ytelseType),
-  );
+function ForeldrepengePeriode({
+  inntektsmeldingDialogDto,
+}: ForeldrepengePeriodeProps) {
+  const { startdatoPermisjon, person } = inntektsmeldingDialogDto;
 
   const førsteDag = capitalizeSetning(
-    format(forespørsel.skjæringstidspunkt, "EEEE dd.MMMM yyyy", {
+    format(startdatoPermisjon, "EEEE dd.MMMM yyyy", {
       locale: nb,
     }),
   );
@@ -86,8 +87,8 @@ function ForeldrepengePeriode({ forespørsel }: ForeldrepengePeriodeProps) {
         Periode med foreldrepenger
       </Heading>
       <InformasjonsseksjonMedKilde
-        kilde={`Fra søknaden til ${brukerdata.navn}`}
-        tittel={`${capitalizeSetning(leggTilGenitiv(brukerdata.navn))} første dag med foreldrepenger`}
+        kilde={`Fra søknaden til ${person.navn}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} første dag med foreldrepenger`}
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
