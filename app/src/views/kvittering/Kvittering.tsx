@@ -23,7 +23,7 @@ export const Kvittering = () => {
     setBreadcrumbs([
       {
         title: "Min side – Arbeidsgiver",
-        url: "/",
+        url: "/arbeidsgiver/min-side",
       },
       {
         title: "Kvittering, inntektsmelding",
