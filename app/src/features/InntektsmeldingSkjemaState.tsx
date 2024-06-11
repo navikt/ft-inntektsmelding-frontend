@@ -1,6 +1,8 @@
 import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext } from "react";
+
+import { usePersistedState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefon: string };
@@ -28,7 +30,10 @@ type InntektsmeldingSkjemaStateProviderProps = {
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  const [state, setState] = useState<InntektsmeldingSkjemaState>({});
+  const [state, setState] = usePersistedState<InntektsmeldingSkjemaState>(
+    "skjemadata",
+    {},
+  );
   return (
     <InntektsmeldingSkjemaStateContext.Provider
       value={{
