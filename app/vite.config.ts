@@ -12,13 +12,8 @@ export default defineConfig({
       "~": fileURLToPath(new URL("src", import.meta.url)),
     },
   },
+  // base: "/fp-im-dialog/",
   server: {
     origin: "http://localhost:5173",
-    proxy: {
-      "/api": {
-        target: "http://localhost:8080/",
-        changeOrigin: true,
-      },
-    },
   },
 });

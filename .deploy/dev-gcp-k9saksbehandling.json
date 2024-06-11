@@ -1,5 +1,7 @@
 {
-  "ingresses": [ "https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog" ],
+  "ingresses": [
+    "https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog"
+  ],
   "minReplicas": "1",
   "maxReplicas": "2",
   "API_SCOPE": "dev-gcp:k9saksbehandling:k9-inntektsmelding",

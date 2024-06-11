@@ -38,3 +38,4 @@ services:
       API_SCOPE: "api://dev-gcp.teamforeldrepenger.ftinntektsmelding/.default"
       API_URL: "http://ftinntektsmelding"
       ENV: "dev"
+      NESTED_PATH: "/fp-im-dialog"

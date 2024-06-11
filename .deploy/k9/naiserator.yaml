@@ -61,3 +61,5 @@ spec:
       value: {{API_SCOPE}}
     - name: API_URL
       value: "http://k9-inntektsmelding/k9/inntektsmelding"
+    - name: NESTED_PATH
+      value: "/k9-im-dialog"

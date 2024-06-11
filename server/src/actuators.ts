@@ -1,14 +1,14 @@
-import { Express } from "express";
+import { Router } from "express";
 
-export function setupActuators(app: Express) {
-  app.get("/internal/health/isAlive", (request, response) => {
+export function setupActuators(router: Router) {
+  router.get("/internal/health/isAlive", (request, response) => {
     response.send({
       status: "UP",
     });
   });
   console.log("Liveness available on /internal/health/isAlive");
 
-  app.get("/internal/health/isReady", (request, response) => {
+  router.get("/internal/health/isReady", (request, response) => {
     response.send({
       status: "UP",
     });

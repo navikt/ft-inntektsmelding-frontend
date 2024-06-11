@@ -38,3 +38,4 @@ services:
       API_SCOPE: "api://dev-gcp.k9saksbehandling.k9-inntektsmelding/.default"
       API_URL: "http://k9-inntektsmelding"
       ENV: "dev"
+      NESTED_PATH: "/k9-im-dialog"
