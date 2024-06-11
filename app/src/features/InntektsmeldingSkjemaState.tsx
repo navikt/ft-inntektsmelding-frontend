@@ -10,9 +10,9 @@ export type InntektsmeldingSkjemaState = {
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned?: number;
   endringIRefusjon?: boolean;
-  refusjonsendringer?: { måned: string; beløp: number }[];
+  refusjonsendringer: { måned: string; beløp: number }[];
   misterNaturalytelser?: boolean;
-  naturalytelserSomMistes?: { navn: string; beløp: number; fraOgMed: string }[];
+  naturalytelserSomMistes: { navn: string; beløp: number; fraOgMed: string }[];
 };
 
 type InntektsmeldingSkjemaStateContextType = {
@@ -32,7 +32,10 @@ export const InntektsmeldingSkjemaStateProvider = ({
 }: InntektsmeldingSkjemaStateProviderProps) => {
   const [state, setState] = usePersistedState<InntektsmeldingSkjemaState>(
     "skjemadata",
-    {},
+    {
+      refusjonsendringer: [],
+      naturalytelserSomMistes: [],
+    },
   );
   return (
     <InntektsmeldingSkjemaStateContext.Provider
