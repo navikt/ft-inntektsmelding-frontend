@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { forespørselQueryOptions } from "~/api/queries.ts";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { capitalizeSetning } from "~/utils.ts";
+import { capitalizeSetning, formatYtelsesnavn } from "~/utils.ts";
 
 const route = getRouteApi("/$id");
 
@@ -31,7 +31,7 @@ export const NyInntektsmelding = () => {
 
   return (
     <RotLayout
-      tittel={`Inntektsmelding ${inntektsmeldingDialogDto.ytelse.toLowerCase().replace("_", " ")}`}
+      tittel={`Inntektsmelding ${formatYtelsesnavn(inntektsmeldingDialogDto.ytelse)}`}
       undertittel={
         <div className="flex gap-3">
           <span>{inntektsmeldingDialogDto.arbeidsgiver.organisasjonNavn}</span>
