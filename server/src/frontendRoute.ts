@@ -14,14 +14,8 @@ const csp =
     ? await buildCspHeader({}, { env: config.app.env })
     : await buildCspHeader(
         {
-          "script-src-elem": [
-            "http://localhost:5173/fp-im-dialog",
-            "http://localhost:5173/k9-im-dialog",
-          ],
-          "connect-src": [
-            "ws://localhost:5173/fp-im-dialog",
-            "ws://localhost:5173/k9-im-dialog",
-          ],
+          "script-src-elem": ["http://localhost:5173"],
+          "connect-src": ["ws://localhost:5173"],
         },
         { env: config.app.env },
       );
