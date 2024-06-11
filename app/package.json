@@ -4,7 +4,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev:fp": "vite --base=/fp-im-dialog",
+    "dev:k9": "vite --base=/k9-im-dialog",
     "dev:debug": "vite --debug",
     "build": "tsc && vite build",
     "build:fp": "tsc && vite build --base=/fp-im-dialog",
