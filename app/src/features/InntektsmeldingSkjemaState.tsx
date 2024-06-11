@@ -45,7 +45,9 @@ export const InntektsmeldingSkjemaStateProvider = ({
 export const useInntektsmeldingSkjema = () => {
   const context = useContext(InntektsmeldingSkjemaStateContext);
   if (!context) {
-    throw new Error("useSkjemaState must be used within a SkjemaStateProvider");
+    throw new Error(
+      "useInntektsmeldingSkjema må brukes inne i en InntektsmeldingSkjemaStateProvider",
+    );
   }
 
   return context;
