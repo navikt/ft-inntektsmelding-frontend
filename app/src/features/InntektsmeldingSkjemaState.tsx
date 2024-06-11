@@ -1,7 +1,8 @@
 import type { ReactNode } from "@tanstack/react-router";
+import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext, useState } from "react";
 
-type InntektsmeldingSkjemaState = {
+export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefon: string };
   korrigertMånedslønn?: number;
   skalRefunderes?: boolean;
@@ -14,7 +15,9 @@ type InntektsmeldingSkjemaState = {
 
 type InntektsmeldingSkjemaStateContextType = {
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
-  setInntektsmeldingSkjemaState: (state: InntektsmeldingSkjemaState) => void;
+  setInntektsmeldingSkjemaState: Dispatch<
+    SetStateAction<InntektsmeldingSkjemaState>
+  >;
 };
 const InntektsmeldingSkjemaStateContext =
   createContext<InntektsmeldingSkjemaStateContextType | null>(null);
