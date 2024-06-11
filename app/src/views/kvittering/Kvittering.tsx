@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
-const route = getRouteApi("/kvittering/$id");
+const route = getRouteApi("/$id/kvittering");
 
 export const Kvittering = () => {
   const { id } = route.useParams();
@@ -17,7 +17,7 @@ export const Kvittering = () => {
       },
       {
         title: "Kvittering, inntektsmelding",
-        url: `/kvittering/${id}`,
+        url: `/${id}/kvittering`,
       },
     ]);
   }, [id]);
