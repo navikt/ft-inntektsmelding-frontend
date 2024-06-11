@@ -16,12 +16,12 @@ import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
-import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
-
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
-} from "../InntektsmeldingSkjemaState";
+} from "~/features/InntektsmeldingSkjemaState";
+import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
+
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
