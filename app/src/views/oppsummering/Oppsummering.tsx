@@ -7,6 +7,8 @@ import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import { forespørselQueryOptions } from "~/api/queries.ts";
+import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
+import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type {
   InntektsmeldingDialogDto,
@@ -73,6 +75,8 @@ export const Oppsummering = () => {
     },
   };
 
+  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+
   return (
     <section>
       <div className="bg-bg-default mt-6 px-5 py-6 rounded-md flex flex-col gap-6">
@@ -115,26 +119,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Kontaktperson og innsender</FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.length >
-                1 ? (
-                  <FormSummary.Answers>
-                    {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.map(
-                      (kontaktperson, i) => (
-                        <FormSummary.Answer key={i}>
-                          <FormSummary.Label>
-                            Kontaktperson for innsendelse
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            {formatterKontaktperson(kontaktperson)}
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      ),
-                    )}
-                  </FormSummary.Answers>
-                ) : (
-                  formatterKontaktperson(
-                    skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson[0],
-                  )
+                {formatterKontaktperson(
+                  inntektsmeldingSkjemaState.kontaktperson,
                 )}
               </FormSummary.Value>
             </FormSummary.Answer>
@@ -261,10 +247,12 @@ export const Oppsummering = () => {
   );
 };
 
-const formatterKontaktperson = (kontaktperson: {
-  navn: string;
-  telefon: string;
-}) => {
+const formatterKontaktperson = (
+  kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
+) => {
+  if (!kontaktperson) {
+    return "";
+  }
   return `${kontaktperson.navn}, ${kontaktperson.telefon}`;
 };
 
