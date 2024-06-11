@@ -24,7 +24,9 @@ export const Route = createRootRouteWithContext<{
         <React.Suspense fallback="">
           <TanStackRouterDevtools position="bottom-right" />
         </React.Suspense>
-        <Outlet />
+        <InntektsmeldingSkjemaStateProvider>
+          <Outlet />
+        </InntektsmeldingSkjemaStateProvider>
         <ScrollRestoration />
       </>
     );

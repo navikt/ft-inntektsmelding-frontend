@@ -21,7 +21,6 @@ import {
 
 const route = getRouteApi("/$id/oppsummering");
 
-// TODO: linke til rett felt når man klikker "endre
 export const Oppsummering = () => {
   const { id } = route.useParams();
 
@@ -58,7 +57,7 @@ export const Oppsummering = () => {
         orgnrForUnderenhet: "123 456 789",
         kontaktperson: [{ navn: "Test Personesen", telefon: "815 49 300" }],
       },
-      ansatt: {
+      arbeidstaker: {
         fornavn: "Ansa",
         etternavn: "Tesen",
         identitetsnummer: "01010123456",
@@ -142,10 +141,10 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.dineOpplysninger.ansatt.fornavn}{" "}
-                {skjemadata.dineOpplysninger.ansatt.etternavn} (
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
+                {skjemadata.dineOpplysninger.arbeidstaker.etternavn} (
                 {formatIdentitetsnummer(
-                  skjemadata.dineOpplysninger.ansatt.identitetsnummer,
+                  skjemadata.dineOpplysninger.arbeidstaker.identitetsnummer,
                 )}
                 )
               </FormSummary.Value>
@@ -202,8 +201,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Skal dere betale lønn til{" "}
-                {skjemadata.dineOpplysninger.ansatt.fornavn} og ha refusjon fra
-                NAV?
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} og ha
+                refusjon fra NAV?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
@@ -222,7 +221,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Vil det være endringer i refusjon i løpet av perioden{" "}
-                {skjemadata.dineOpplysninger.ansatt.fornavn} er i permisjon?
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} er i
+                permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
@@ -244,8 +244,8 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Har {skjemadata.dineOpplysninger.ansatt.fornavn} naturalytelser
-                som faller bort ved fraværet?
+                Har {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
+                naturalytelser som faller bort ved fraværet?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.naturalytelser ? "Ja" : "Nei"}

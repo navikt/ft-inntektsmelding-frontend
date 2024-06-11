@@ -1,0 +1,49 @@
+import type { ReactNode } from "@tanstack/react-router";
+import { createContext, useContext, useState } from "react";
+
+type InntektsmeldingSkjemaState = {
+  kontaktperson?: { navn: string; telefon: string };
+  korrigertMånedslønn?: number;
+  skalRefunderes?: boolean;
+  refusjonsbeløpPerMåned?: number;
+  endringIRefusjon?: boolean;
+  refusjonsendringer?: { måned: string; beløp: number }[];
+  misterNaturalytelser?: boolean;
+  naturalytelserSomMistes?: { navn: string; beløp: number; fraOgMed: string }[];
+};
+
+type InntektsmeldingSkjemaStateContextType = {
+  inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
+  setInntektsmeldingSkjemaState: (state: InntektsmeldingSkjemaState) => void;
+};
+const InntektsmeldingSkjemaStateContext =
+  createContext<InntektsmeldingSkjemaStateContextType | null>(null);
+
+type InntektsmeldingSkjemaStateProviderProps = {
+  children: ReactNode;
+};
+export const InntektsmeldingSkjemaStateProvider = ({
+  children,
+}: InntektsmeldingSkjemaStateProviderProps) => {
+  const [state, setState] = useState<InntektsmeldingSkjemaState>({});
+  return (
+    <InntektsmeldingSkjemaStateContext.Provider
+      value={{
+        inntektsmeldingSkjemaState: state,
+        setInntektsmeldingSkjemaState: setState,
+      }}
+    >
+      {children}
+    </InntektsmeldingSkjemaStateContext.Provider>
+  );
+};
+
+/** Henter ut global skjematilstand, og lar deg manipulere den */
+export const useInntektsmeldingSkjema = () => {
+  const context = useContext(InntektsmeldingSkjemaStateContext);
+  if (!context) {
+    throw new Error("useSkjemaState must be used within a SkjemaStateProvider");
+  }
+
+  return context;
+};
