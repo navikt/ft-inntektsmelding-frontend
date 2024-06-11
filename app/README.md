@@ -13,10 +13,15 @@ npm run dev
 
 ## Logge inn med idporten i dev
 
-Gå til https://familie-inntektsmelding.intern.dev.nav.no/
+Du kan utvikle appen på to forskjellige domener, for foreldrepenger og k9-ytelser:
+
+https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog
+https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog
+
+Gå inn på den du ønsker å jobbe med, og l
 
 - Velg BankID
 - Fødselsnummer: 10107400090
-- Velg BankID med kodebrikke
+- Velg BankID med kodebrikke eller BankID med app – det har ikke noe å si
 - Legg inn engangskode: otp
 - Legg inn BankID passord: qwer1234

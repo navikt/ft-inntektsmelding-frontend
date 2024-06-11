@@ -30,7 +30,7 @@ export const RotLayout = ({
               <Heading level="1" size="large">
                 {tittel}
               </Heading>
-              {undertittel && <Detail>{undertittel}</Detail>}
+              {undertittel && <Detail as="div">{undertittel}</Detail>}
             </div>
           </HStack>
         </Page.Block>

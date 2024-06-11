@@ -44,7 +44,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
         tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {inntekter.map((inntekt) => (
+          {inntekter?.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}:</span>
               <Label as="span">{formatKroner(inntekt.beløp)}</Label>
@@ -95,6 +95,9 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
 }
 
 function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
+  if (!inntekter) {
+    return 0;
+  }
   const summerteInntekter = inntekter.reduce((sum, inntekt) => {
     return sum + inntekt.beløp;
   }, 0);

@@ -6,6 +6,8 @@ import {
 } from "@tanstack/react-router";
 import React from "react";
 
+import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSkjemaState";
+
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null // Render nothing in production
   : React.lazy(() =>
@@ -24,7 +26,9 @@ export const Route = createRootRouteWithContext<{
         <React.Suspense fallback="">
           <TanStackRouterDevtools position="bottom-right" />
         </React.Suspense>
-        <Outlet />
+        <InntektsmeldingSkjemaStateProvider>
+          <Outlet />
+        </InntektsmeldingSkjemaStateProvider>
         <ScrollRestoration />
       </>
     );

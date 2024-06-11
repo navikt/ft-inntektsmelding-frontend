@@ -7,6 +7,8 @@ import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import { forespørselQueryOptions } from "~/api/queries.ts";
+import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
+import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type {
   InntektsmeldingDialogDto,
@@ -21,7 +23,6 @@ import {
 
 const route = getRouteApi("/$id/oppsummering");
 
-// TODO: linke til rett felt når man klikker "endre
 export const Oppsummering = () => {
   const { id } = route.useParams();
 
@@ -58,7 +59,7 @@ export const Oppsummering = () => {
         orgnrForUnderenhet: "123 456 789",
         kontaktperson: [{ navn: "Test Personesen", telefon: "815 49 300" }],
       },
-      ansatt: {
+      arbeidstaker: {
         fornavn: "Ansa",
         etternavn: "Tesen",
         identitetsnummer: "01010123456",
@@ -73,6 +74,8 @@ export const Oppsummering = () => {
       naturalytelser: false,
     },
   };
+
+  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   return (
     <section>
@@ -116,36 +119,18 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Kontaktperson og innsender</FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.length >
-                1 ? (
-                  <FormSummary.Answers>
-                    {skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson.map(
-                      (kontaktperson, i) => (
-                        <FormSummary.Answer key={i}>
-                          <FormSummary.Label>
-                            Kontaktperson for innsendelse
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            {formatterKontaktperson(kontaktperson)}
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      ),
-                    )}
-                  </FormSummary.Answers>
-                ) : (
-                  formatterKontaktperson(
-                    skjemadata.dineOpplysninger.arbeidsgiver.kontaktperson[0],
-                  )
+                {formatterKontaktperson(
+                  inntektsmeldingSkjemaState.kontaktperson,
                 )}
               </FormSummary.Value>
             </FormSummary.Answer>
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.dineOpplysninger.ansatt.fornavn}{" "}
-                {skjemadata.dineOpplysninger.ansatt.etternavn} (
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
+                {skjemadata.dineOpplysninger.arbeidstaker.etternavn} (
                 {formatIdentitetsnummer(
-                  skjemadata.dineOpplysninger.ansatt.identitetsnummer,
+                  skjemadata.dineOpplysninger.arbeidstaker.identitetsnummer,
                 )}
                 )
               </FormSummary.Value>
@@ -202,8 +187,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Skal dere betale lønn til{" "}
-                {skjemadata.dineOpplysninger.ansatt.fornavn} og ha refusjon fra
-                NAV?
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} og ha
+                refusjon fra NAV?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
@@ -222,7 +207,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Vil det være endringer i refusjon i løpet av perioden{" "}
-                {skjemadata.dineOpplysninger.ansatt.fornavn} er i permisjon?
+                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} er i
+                permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
@@ -244,8 +230,8 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Har {skjemadata.dineOpplysninger.ansatt.fornavn} naturalytelser
-                som faller bort ved fraværet?
+                Har {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
+                naturalytelser som faller bort ved fraværet?
               </FormSummary.Label>
               <FormSummary.Value>
                 {skjemadata.inntektOgRefusjon.naturalytelser ? "Ja" : "Nei"}
@@ -261,10 +247,12 @@ export const Oppsummering = () => {
   );
 };
 
-const formatterKontaktperson = (kontaktperson: {
-  navn: string;
-  telefon: string;
-}) => {
+const formatterKontaktperson = (
+  kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
+) => {
+  if (!kontaktperson) {
+    return "";
+  }
   return `${kontaktperson.navn}, ${kontaktperson.telefon}`;
 };
 
@@ -295,7 +283,7 @@ function SendInnInntektsmelding({
   >({
     mutationFn: sendInntektsmelding,
     onSuccess: () => {
-      navigate({ from: "/ny/$id/oppsummering", to: "../kvittering" });
+      navigate({ from: "/$id/oppsummering", to: "../kvittering" });
     },
   });
 

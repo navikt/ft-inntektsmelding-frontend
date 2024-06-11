@@ -12,25 +12,49 @@ import {
   Label,
   TextField,
 } from "@navikt/ds-react";
-import { Link } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import clsx from "clsx";
+import { useForm } from "react-hook-form";
 
+import {
+  type InntektsmeldingSkjemaState,
+  useInntektsmeldingSkjema,
+} from "~/features/InntektsmeldingSkjemaState";
 import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
+
+type PersonOgSelskapsInformasjonForm = NonNullable<
+  InntektsmeldingSkjemaState["kontaktperson"]
+>;
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
   inntektsmeldingDialogDto: InntektsmeldingDialogDto;
 };
-
 export const PersonOgSelskapsInformasjonSeksjon = ({
   inntektsmeldingDialogDto,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
+  const { register, handleSubmit } = useForm<PersonOgSelskapsInformasjonForm>({
+    defaultValues: {
+      ...inntektsmeldingSkjemaState.kontaktperson,
+    },
+  });
+  const navigate = useNavigate();
+
+  const onSubmit = handleSubmit((kontaktperson) => {
+    setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
+    navigate({
+      from: "/$id/dine-opplysninger",
+      to: "../inntekt-og-refusjon",
+    });
+  });
   return (
     <section className={className}>
-      <form>
+      <form onSubmit={onSubmit}>
         <HGrid
           className="bg-bg-default px-5 py-6 rounded-md"
           columns={{ xs: 1, md: 2 }}
@@ -40,6 +64,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
             Dine opplysninger
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
+
           <Intro inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
           <ArbeidsgiverInformasjon
             inntektsmeldingDialogDto={inntektsmeldingDialogDto}
@@ -47,14 +72,46 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
           <Personinformasjon
             inntektsmeldingDialogDto={inntektsmeldingDialogDto}
           />
-          <InnsenderOgKontaktpersonInformasjon />
+
+          <InformasjonsseksjonMedKilde
+            className="col-span-2"
+            kilde="Fra Altinn"
+            tittel="Innsender og kontaktperson"
+          >
+            <HGrid columns={{ sm: 1, md: 2 }} gap="5">
+              <TextField
+                className="w-full"
+                {...register("navn", { required: "Navn er påkrevd" })}
+                label="Navn innsender"
+                size="medium"
+              />
+              <TextField
+                className="w-full md:w-1/2"
+                {...register("telefon", {
+                  required: "Telefonnummer er påkrevd",
+                  // TODO: Legg til mer avansert validering for telefonnumre
+                })}
+                label="Telefon innsender"
+                size="medium"
+              />
+            </HGrid>
+            <Alert variant="info">
+              <Heading level="3" size="small">
+                Stemmer informasjonen?
+              </Heading>
+              <BodyShort>
+                Har vi spørsmål til inntektsmeldingen er det viktig at vi når
+                rett person. Legg til ekstra kontaktperson dersom du vet du vil
+                være utilgjengelig fremover.
+              </BodyShort>
+            </Alert>
+          </InformasjonsseksjonMedKilde>
 
           <div className="flex justify-center col-span-2">
             <Button
-              as={Link}
               icon={<ArrowRightIcon />}
               iconPosition="right"
-              to="../inntekt-og-refusjon"
+              type="submit"
               variant="primary"
             >
               Bekreft og gå videre
@@ -151,42 +208,6 @@ const ArbeidsgiverInformasjon = ({
       <LabelOgVerdi label="Org. nr. for underenhet">
         {arbeidsgiver.organisasjonNummer}
       </LabelOgVerdi>
-    </InformasjonsseksjonMedKilde>
-  );
-};
-
-const InnsenderOgKontaktpersonInformasjon = () => {
-  return (
-    <InformasjonsseksjonMedKilde
-      className="col-span-2"
-      kilde="Fra Altinn"
-      tittel="Innsender og kontaktperson"
-    >
-      <HGrid columns={{ sm: 1, md: 2 }} gap="5">
-        <TextField
-          className="w-full"
-          defaultValue="Innlogget Bruker"
-          label="Navn innsender"
-          name="navn-innsender"
-          size="medium"
-        />
-        <TextField
-          className="w-full md:w-1/2"
-          label="Telefon innsender"
-          name="telefon-innsender"
-          size="medium"
-        />
-      </HGrid>
-      <Alert variant="info">
-        <Heading level="3" size="small">
-          Stemmer informasjonen?
-        </Heading>
-        <BodyShort>
-          Har vi spørsmål til inntektsmeldingen er det viktig at vi når rett
-          person. Legg til ekstra kontaktperson dersom du vet du vil være
-          utilgjengelig fremover.
-        </BodyShort>
-      </Alert>
     </InformasjonsseksjonMedKilde>
   );
 };
