@@ -8,12 +8,11 @@ import {
   ReadMore,
   VStack,
 } from "@navikt/ds-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import { hentForespørselData } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
@@ -22,13 +21,11 @@ import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
+  loader: ({ params }) => hentForespørselData(params.id),
 });
 
 function InntektOgRefusjon() {
-  const { id } = Route.useParams();
-  const inntektsmeldingDialogDto = useSuspenseQuery(
-    forespørselQueryOptions(id),
-  ).data;
+  const inntektsmeldingDialogDto = Route.useLoaderData();
 
   return (
     <section className="mt-6">

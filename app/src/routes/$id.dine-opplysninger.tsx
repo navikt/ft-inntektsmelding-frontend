@@ -1,23 +1,20 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import { hentForespørselData } from "~/api/queries.ts";
 import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 
 const DineOpplysninger = () => {
-  const { id } = Route.useParams();
-  const inntektsmeldingDialogDto = useSuspenseQuery(
-    forespørselQueryOptions(id),
-  ).data;
+  const data = Route.useLoaderData();
 
   return (
     <PersonOgSelskapsInformasjonSeksjon
       className="mt-6"
-      inntektsmeldingDialogDto={inntektsmeldingDialogDto}
+      inntektsmeldingDialogDto={data}
     />
   );
 };
 
 export const Route = createFileRoute("/$id/dine-opplysninger")({
   component: DineOpplysninger,
+  loader: ({ params }) => hentForespørselData(params.id),
 });

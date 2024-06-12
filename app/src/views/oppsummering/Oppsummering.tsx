@@ -1,12 +1,11 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
-import { forespørselQueryOptions } from "~/api/queries.ts";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
@@ -25,10 +24,7 @@ const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
-
-  const inntektsmeldingDialogDto = useSuspenseQuery(
-    forespørselQueryOptions(id),
-  ).data;
+  const inntektsmeldingDialogDto = route.useLoaderData();
 
   useEffect(() => {
     setBreadcrumbs([
