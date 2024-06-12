@@ -156,8 +156,8 @@ const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
           til {fornavn}.
         </BodyLong>
         <BodyLong>
-          Vi har forhåndsutfylt s adsdsdsa kjema med opplysninger fra søknaden
-          til {fornavn} og A-ordningen. Bekreft om opplysningene om den ansatte
+          Vi har forhåndsutfylt skjema med opplysninger fra søknaden til{" "}
+          {fornavn} og A-ordningen. Bekreft om opplysningene om den ansatte
           stemmer eller endre hvis noe er feil. Den ansatte vil få tilgang til å
           se innsendt inntektsmelding under «Min side» på nav.no.
         </BodyLong>
