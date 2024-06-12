@@ -80,7 +80,7 @@ type NaturalytelseRequestDto = {
 export type InntektsmeldingDialogDto = {
   person: PersonInfoDto;
   arbeidsgiver: OrganisasjonInfoDto;
-  inntekter: MånedsinntektResponsDto[];
+  inntekter?: MånedsinntektResponsDto[]; // Dette burde være empty list fra backend, men en bug gjør at feltet ikke kommer med.
   startdatoPermisjon: string;
   ytelse: Ytelsetype;
 };

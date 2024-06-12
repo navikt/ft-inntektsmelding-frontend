@@ -39,6 +39,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
+      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd*/}
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
         tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
@@ -53,7 +54,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
         </HGrid>
       </InformasjonsseksjonMedKilde>
       <BodyShort>Beregnet månedslønn</BodyShort>
-      <strong>{formatKroner(gjennomsnittInntekt(inntekter))}</strong>
+      <strong>{formatKroner(gjennomsnittInntekt(inntekter ?? []))}</strong>
       <BodyShort>
         Gjennomsnittet av de siste tre månedene før {førsteDag}
       </BodyShort>
@@ -61,6 +62,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
         className="w-max"
         icon={<PencilIcon />}
         size="small"
+        type="button"
         variant="secondary"
       >
         Endre månedslønn
