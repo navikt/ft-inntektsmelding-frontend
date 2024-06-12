@@ -5,7 +5,6 @@ import {
   Heading,
   Radio,
   RadioGroup,
-  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -14,6 +13,7 @@ import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
 import { forespørselQueryOptions } from "~/api/queries.ts";
+import { HjelpeTekst } from "~/features/HjelpeTekst.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
@@ -92,7 +92,7 @@ function ForeldrepengePeriode({
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
-      <ReadMore header="Hva hvis datoen ikke stemmer?">TODO</ReadMore>
+      <HjelpeTekst header="Hva hvis datoen ikke stemmer?">TODO</HjelpeTekst>
     </VStack>
   );
 }
@@ -104,7 +104,7 @@ function Naturalytelser() {
       <Heading id="naturalytelser" level="4" size="medium">
         Naturalytelser
       </Heading>
-      <ReadMore header="Hva er naturalytelser?">
+      <HjelpeTekst header="Hva er naturalytelser?">
         <BodyLong>
           Naturalytelser er skattepliktige goder eller fordeler en ansatt får
           fra arbeidsgiver på toppen av vanlig lønn.
@@ -112,7 +112,7 @@ function Naturalytelser() {
           Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
           mobiltelefon og internett-abonnement.
         </BodyLong>
-      </ReadMore>
+      </HjelpeTekst>
       <RadioGroup legend="Har den ansatte naturalytelser som faller bort ved fraværet?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>
@@ -129,7 +129,7 @@ function UtbetalingOgRefusjon() {
       <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
-      <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
+      <HjelpeTekst header="Hva vil det si å ha refusjon?">TODO</HjelpeTekst>
       <RadioGroup legend="Betaler dere lønn under fraværet og krever refusjon?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>

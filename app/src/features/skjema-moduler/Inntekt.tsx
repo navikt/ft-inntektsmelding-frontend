@@ -8,12 +8,12 @@ import {
   HGrid,
   Label,
   Link,
-  ReadMore,
 } from "@navikt/ds-react";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
+import { HjelpeTekst } from "~/features/HjelpeTekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type {
   InntektsmeldingDialogDto,
@@ -85,12 +85,12 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
         </BodyLong>
       </Alert>
       <div className="flex flex-col gap-2">
-        <ReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
+        <HjelpeTekst header="Hvordan beregne ved fravær i beregningsperioden?">
           TODO
-        </ReadMore>
-        <ReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
+        </HjelpeTekst>
+        <HjelpeTekst header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
           TODO
-        </ReadMore>
+        </HjelpeTekst>
       </div>
     </div>
   );
