@@ -12,11 +12,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
+import type { ForespørselDto } from "~/api/queries.ts";
 import { hentForespørselData } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
@@ -64,7 +64,7 @@ function InntektOgRefusjon() {
 }
 
 type ForeldrepengePeriodeProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 function ForeldrepengePeriode({
   inntektsmeldingDialogDto,

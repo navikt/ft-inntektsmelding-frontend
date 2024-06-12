@@ -59,3 +59,5 @@ const forespørselSchema = z.object({
     "OMSORGSPENGER",
   ]),
 });
+
+export type ForespørselDto = z.infer<typeof forespørselSchema>;

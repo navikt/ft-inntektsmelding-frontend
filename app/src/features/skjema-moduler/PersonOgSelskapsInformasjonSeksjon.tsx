@@ -16,11 +16,11 @@ import { useNavigate } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
+import type { ForespørselDto } from "~/api/queries";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
-import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
@@ -30,7 +30,7 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 export const PersonOgSelskapsInformasjonSeksjon = ({
   inntektsmeldingDialogDto,
@@ -136,7 +136,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 };
 
 type IntroProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
   const { person, arbeidsgiver } = inntektsmeldingDialogDto;
@@ -167,7 +167,7 @@ const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
 };
 
 type PersoninformasjonProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 
 const Personinformasjon = ({
@@ -196,7 +196,7 @@ const formaterFødselsnummer = (str: string) => {
 };
 
 type ArbeidsgiverInformasjonProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 const ArbeidsgiverInformasjon = ({
   inntektsmeldingDialogDto,

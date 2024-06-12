@@ -6,13 +6,11 @@ import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
+import type { ForespørselDto } from "~/api/queries";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type {
-  InntektsmeldingDialogDto,
-  SendInntektsmeldingRequestDto,
-} from "~/types/api-models.ts";
+import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import {
   formatDatoLang,
   formatIdentitetsnummer,
@@ -253,7 +251,7 @@ const formatterKontaktperson = (
 };
 
 type SendInnInntektsmeldingProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  inntektsmeldingDialogDto: ForespørselDto;
 };
 function SendInnInntektsmelding({
   inntektsmeldingDialogDto,
