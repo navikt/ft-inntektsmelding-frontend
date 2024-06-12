@@ -38,11 +38,12 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
-  const { register, handleSubmit } = useForm<PersonOgSelskapsInformasjonForm>({
-    defaultValues: {
-      ...inntektsmeldingSkjemaState.kontaktperson,
-    },
-  });
+  const { register, handleSubmit, formState } =
+    useForm<PersonOgSelskapsInformasjonForm>({
+      defaultValues: {
+        ...inntektsmeldingSkjemaState.kontaktperson,
+      },
+    });
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((kontaktperson) => {
@@ -78,10 +79,11 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
             kilde="Fra Altinn"
             tittel="Innsender og kontaktperson"
           >
-            <HGrid columns={{ sm: 1, md: 2 }} gap="5">
+            <HGrid align="start" columns={{ sm: 1, md: 2 }} gap="5">
               <TextField
                 className="w-full"
                 {...register("navn", { required: "Navn er påkrevd" })}
+                error={formState.errors.navn?.message}
                 label="Navn innsender"
                 size="medium"
               />
@@ -91,6 +93,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
                   required: "Telefonnummer er påkrevd",
                   // TODO: Legg til mer avansert validering for telefonnumre
                 })}
+                error={formState.errors.telefon?.message}
                 label="Telefon innsender"
                 size="medium"
               />
