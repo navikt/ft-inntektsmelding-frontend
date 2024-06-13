@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import React from "react";
 
+import { VisHjelpeTeksterStateProvider } from "~/features/HjelpeTekst.tsx";
 import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSkjemaState";
 
 const TanStackRouterDevtools = import.meta.env.PROD
@@ -26,9 +27,11 @@ export const Route = createRootRouteWithContext<{
         <React.Suspense fallback="">
           <TanStackRouterDevtools position="bottom-right" />
         </React.Suspense>
-        <InntektsmeldingSkjemaStateProvider>
-          <Outlet />
-        </InntektsmeldingSkjemaStateProvider>
+        <VisHjelpeTeksterStateProvider>
+          <InntektsmeldingSkjemaStateProvider>
+            <Outlet />
+          </InntektsmeldingSkjemaStateProvider>
+        </VisHjelpeTeksterStateProvider>
         <ScrollRestoration />
       </>
     );
