@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { forespørselQueryOptions } from "~/api/queries.ts";
 import { VIS_HJELPETEKSTER_KEY } from "~/features/HjelpeTekst.tsx";
-import { getParsedLocalStorageItem } from "~/features/useLocalStorage.tsx";
+import { getParsedLocalStorageItem } from "~/features/local-storage-utils.ts";
 import { NyInntektsmelding } from "~/views/ny-inntektsmelding/NyInntektsmelding";
 
 const searchSchema = z.object({

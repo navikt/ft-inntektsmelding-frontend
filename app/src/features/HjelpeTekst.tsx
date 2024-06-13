@@ -3,17 +3,16 @@ import { Alert } from "@navikt/ds-react";
 import { ReadMore, Switch } from "@navikt/ds-react";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 
-import { useLocalStorage } from "~/features/useLocalStorage.tsx";
+import { setLocalStorageItem } from "~/features/local-storage-utils.ts";
 
 export const VIS_HJELPETEKSTER_KEY = "vis-hjelpe-tekster";
 
 export function HjelpeTekstMasterSwitch() {
-  const [_, setVisHjelpeTekst] = useLocalStorage(VIS_HJELPETEKSTER_KEY, true);
   const { visHjelpeTekst } = useSearch({ from: "/$id" });
   const navigate = useNavigate();
 
   const onHjelpeTekstChanged = (newValue: boolean) => {
-    setVisHjelpeTekst(newValue);
+    setLocalStorageItem(VIS_HJELPETEKSTER_KEY, newValue);
     navigate({
       search: (prevSearch) => ({ ...prevSearch, visHjelpeTekst: newValue }),
     });
