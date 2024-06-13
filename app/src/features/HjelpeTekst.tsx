@@ -47,7 +47,7 @@ export const useHjelpeTekst = () => {
   return context;
 };
 
-export function HjelpeTekstMasterSwitch() {
+export function HjelpetekstToggle() {
   const { visHjelpeTekster, setVisHjelpeTekster } = useHjelpeTekst();
 
   return (

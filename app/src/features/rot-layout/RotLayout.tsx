@@ -1,6 +1,6 @@
 import { Detail, Heading, HStack, Page } from "@navikt/ds-react";
 
-import { HjelpeTekstMasterSwitch } from "~/features/HjelpeTekst.tsx";
+import { HjelpetekstToggle } from "~/features/HjelpeTekst.tsx";
 
 import { Illustrasjon } from "./Illustrasjon";
 
@@ -38,7 +38,7 @@ export const RotLayout = ({
         </Page.Block>
       </Page.Block>
       <Page.Block className="mt-4" width="md">
-        <HjelpeTekstMasterSwitch />
+        <HjelpetekstToggle />
       </Page.Block>
       <Page.Block width="md">{children}</Page.Block>
     </Page>
