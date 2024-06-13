@@ -49,3 +49,10 @@ export function formatIdentitetsnummer(identitetsnummer: string) {
 export function formatYtelsesnavn(ytelsesnavn: string) {
   return ytelsesnavn.toLowerCase().replace("_", " ");
 }
+
+export function formatFødselsnummer(str: string) {
+  if (str?.length !== 11) {
+    return str;
+  }
+  return `${str.slice(0, 6)} ${str.slice(6)}`;
+}

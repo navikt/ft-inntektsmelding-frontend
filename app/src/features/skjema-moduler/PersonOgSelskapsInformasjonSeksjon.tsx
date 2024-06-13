@@ -21,6 +21,7 @@ import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
+import { formatFødselsnummer } from "~/utils";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
@@ -145,7 +146,7 @@ const Intro = ({ opplysninger }: IntroProps) => {
         </Heading>
         <BodyLong>
           <strong>
-            {person.navn} ({formaterFødselsnummer(person.fødselsnummer)})
+            {person.navn} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
           som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
           søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
@@ -174,19 +175,12 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
       <LabelOgVerdi label="Navn">{person.navn}</LabelOgVerdi>
       <LabelOgVerdi label="Fødselsdato">
         <div className="flex items-center gap-2">
-          {formaterFødselsnummer(person.fødselsnummer)}{" "}
+          {formatFødselsnummer(person.fødselsnummer)}{" "}
           <CopyButton copyText={person.fødselsnummer} size="small" />
         </div>
       </LabelOgVerdi>
     </InformasjonsseksjonMedKilde>
   );
-};
-
-const formaterFødselsnummer = (str: string) => {
-  if (str?.length !== 11) {
-    return str;
-  }
-  return str.slice(0, 6) + " " + str.slice(6);
 };
 
 type ArbeidsgiverInformasjonProps = {
