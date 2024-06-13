@@ -13,7 +13,10 @@ import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
 import type { OpplysningerDto } from "~/api/queries";
-import { HjelpeAlert, HjelpeTekst } from "~/features/HjelpeTekst.tsx";
+import {
+  HjelpetekstAlert,
+  HjelpetekstReadMore,
+} from "~/features/HjelpeTekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
@@ -64,7 +67,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       >
         Endre månedslønn
       </Button>
-      <HjelpeAlert>
+      <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
           Når må du endre månedslønnen?
         </Heading>
@@ -80,14 +83,14 @@ export function Inntekt({ opplysninger }: InntektProps) {
             folketrygdloven §8-28.
           </Link>
         </BodyLong>
-      </HjelpeAlert>
+      </HjelpetekstAlert>
       <div className="flex flex-col gap-2">
-        <HjelpeTekst header="Hvordan beregne ved fravær i beregningsperioden?">
+        <HjelpetekstReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
           TODO
-        </HjelpeTekst>
-        <HjelpeTekst header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
+        </HjelpetekstReadMore>
+        <HjelpetekstReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
           TODO
-        </HjelpeTekst>
+        </HjelpetekstReadMore>
       </div>
     </div>
   );

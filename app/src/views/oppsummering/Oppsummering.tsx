@@ -276,7 +276,6 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       navigate({
         from: "/$id/oppsummering",
         to: "../kvittering",
-        search: (prev) => prev,
       });
     },
   });

@@ -8,39 +8,39 @@ import { useLocalStorageState } from "~/features/usePersistedState.tsx";
 
 export const VIS_HJELPETEKSTER_KEY = "vis-hjelpetekster";
 
-type HjelpeTeksterContextType = {
-  visHjelpeTekster: boolean;
-  setVisHjelpeTekster: Dispatch<SetStateAction<boolean>>;
+type HjelpeteksterContextType = {
+  visHjelpetekster: boolean;
+  setVisHjelpetekster: Dispatch<SetStateAction<boolean>>;
 };
-const VisHjelpeTeksterStateContext =
-  createContext<HjelpeTeksterContextType | null>(null);
+const VisHjelpeteksterStateContext =
+  createContext<HjelpeteksterContextType | null>(null);
 
-export const VisHjelpeTeksterStateProvider = ({
+export const VisHjelpeteksterStateProvider = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  const [visHjelpeTekster, setVisHjelpeTekster] = useLocalStorageState<boolean>(
+  const [visHjelpetekster, setVisHjelpetekster] = useLocalStorageState<boolean>(
     VIS_HJELPETEKSTER_KEY,
     true,
   );
   return (
-    <VisHjelpeTeksterStateContext.Provider
+    <VisHjelpeteksterStateContext.Provider
       value={{
-        visHjelpeTekster,
-        setVisHjelpeTekster,
+        visHjelpetekster,
+        setVisHjelpetekster,
       }}
     >
       {children}
-    </VisHjelpeTeksterStateContext.Provider>
+    </VisHjelpeteksterStateContext.Provider>
   );
 };
 
-export const useHjelpeTekst = () => {
-  const context = useContext(VisHjelpeTeksterStateContext);
+export const useHjelpetekst = () => {
+  const context = useContext(VisHjelpeteksterStateContext);
   if (!context) {
     throw new Error(
-      "useHjelpeTekst må brukes inne i en InntektsmeldingSkjemaStateProvider",
+      "useHjelpetekst må brukes inne i en VisHjelpeteksterStateProvider",
     );
   }
 
@@ -48,35 +48,35 @@ export const useHjelpeTekst = () => {
 };
 
 export function HjelpetekstToggle() {
-  const { visHjelpeTekster, setVisHjelpeTekster } = useHjelpeTekst();
+  const { visHjelpetekster, setVisHjelpetekster } = useHjelpetekst();
 
   return (
     <Switch
-      checked={visHjelpeTekster}
-      onChange={(e) => setVisHjelpeTekster(e.target.checked)}
+      checked={visHjelpetekster}
+      onChange={(e) => setVisHjelpetekster(e.target.checked)}
     >
       Vis hjelpetekster i skjema
     </Switch>
   );
 }
 
-export function HjelpeTekst({
+export function HjelpetekstReadMore({
   header,
   children,
 }: Pick<ReadMoreProps, "header" | "children">) {
-  const { visHjelpeTekster } = useHjelpeTekst();
+  const { visHjelpetekster } = useHjelpetekst();
 
-  if (!visHjelpeTekster) {
+  if (!visHjelpetekster) {
     return null;
   }
 
   return <ReadMore header={header}>{children}</ReadMore>;
 }
 
-export function HjelpeAlert({ children }: Pick<AlertProps, "children">) {
-  const { visHjelpeTekster } = useHjelpeTekst();
+export function HjelpetekstAlert({ children }: Pick<AlertProps, "children">) {
+  const { visHjelpetekster } = useHjelpetekst();
 
-  if (!visHjelpeTekster) {
+  if (!visHjelpetekster) {
     return null;
   }
 
