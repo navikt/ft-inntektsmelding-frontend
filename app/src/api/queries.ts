@@ -10,6 +10,11 @@ export function forespørselQueryOptions(forespørselUUID: string) {
     queryFn: async () => {
       const response = await fetch(
         `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${forespørselUUID}`,
+        {
+          headers: {
+            "nav-consumer-id": "ft-inntektsmelding-frontend", // TODO: Kan fjernes når backend har skrudd på auth
+          },
+        },
       );
       if (response.status === 404) {
         throw new Error("Forespørsel ikke funnet");
