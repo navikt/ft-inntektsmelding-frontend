@@ -4,6 +4,6 @@
   ],
   "minReplicas": "1",
   "maxReplicas": "2",
-  "API_SCOPE": "dev-gcp:teamforeldrepenger:ftinntektsmelding",
+  "API_SCOPE": "dev-gcp:teamforeldrepenger:fpinntektsmelding",
   "ENV": "dev"
 }

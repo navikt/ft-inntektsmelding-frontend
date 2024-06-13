@@ -5,5 +5,5 @@ const hostName = config.app.host;
 const port = config.app.port;
 
 server.listen(port, hostName, () => {
-  console.log(`Starting ft-inntektsmelding server at ${hostName}:${port}`);
+  console.log(`Starting fp-inntektsmelding server at ${hostName}:${port}`);
 });
