@@ -1,6 +1,6 @@
 import { Detail, Heading, HStack, Page } from "@navikt/ds-react";
 
-import { HjelpetekstToggle } from "~/features/HjelpeTekst.tsx";
+import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
 
 import { Illustrasjon } from "./Illustrasjon";
 

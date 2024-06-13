@@ -13,7 +13,7 @@ import { nb } from "date-fns/locale";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
-import { HjelpetekstReadMore } from "~/features/HjelpeTekst.tsx";
+import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";

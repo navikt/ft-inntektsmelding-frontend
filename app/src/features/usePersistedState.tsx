@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import type { ZodSchema } from "zod";
 
 /** En useState versjon som lagrer innholdet til session storage.
  *
@@ -29,12 +30,20 @@ export function useSessionStorageState<T = unknown>(
 export function useLocalStorageState<T = unknown>(
   key: string,
   defaultValue: T,
+  schema: ZodSchema,
 ) {
   const [state, setState] = useState<T>(
-    () => JSON.parse(localStorage.getItem(key) || "false") || defaultValue,
+    () => parseStorageItem(localStorage, key, schema) || defaultValue,
   );
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(state));
   }, [key, state]);
   return [state, setState] as const;
+}
+
+function parseStorageItem(storage: Storage, key: string, schema: ZodSchema) {
+  const item = storage.getItem(key);
+
+  const { success, data } = schema.safeParse(item);
+  return success ? data : undefined;
 }

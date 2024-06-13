@@ -3,6 +3,7 @@ import { Alert, ReadMore, Switch } from "@navikt/ds-react";
 import { type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
+import { z } from "zod";
 
 import { useLocalStorageState } from "~/features/usePersistedState.tsx";
 
@@ -23,6 +24,7 @@ export const VisHjelpeteksterStateProvider = ({
   const [visHjelpetekster, setVisHjelpetekster] = useLocalStorageState<boolean>(
     VIS_HJELPETEKSTER_KEY,
     true,
+    z.boolean(),
   );
   return (
     <VisHjelpeteksterStateContext.Provider

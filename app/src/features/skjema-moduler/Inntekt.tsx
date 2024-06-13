@@ -16,7 +16,7 @@ import type { OpplysningerDto } from "~/api/queries";
 import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
-} from "~/features/HjelpeTekst.tsx";
+} from "~/features/Hjelpetekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
