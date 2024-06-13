@@ -5,83 +5,125 @@ import {
   Heading,
   Radio,
   RadioGroup,
+  ReadMore,
   VStack,
 } from "@navikt/ds-react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { format } from "date-fns";
-import { nb } from "date-fns/locale";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
-import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
+import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
+import {
+  capitalizeSetning,
+  formatDatoLang,
+  formatYtelsesnavn,
+  leggTilGenitiv,
+} from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
   loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
+type InntektOgRefusjonForm = {
+  skalRefunderes: "ja" | "nei";
+  misterNaturalytelser: "ja" | "nei";
+};
+
 function InntektOgRefusjon() {
   const opplysninger = Route.useLoaderData();
 
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
+  const formMethods = useForm<InntektOgRefusjonForm>({
+    defaultValues: {
+      skalRefunderes:
+        inntektsmeldingSkjemaState.skalRefunderes === undefined
+          ? undefined
+          : inntektsmeldingSkjemaState.skalRefunderes
+            ? "ja"
+            : "nei",
+      misterNaturalytelser:
+        inntektsmeldingSkjemaState.misterNaturalytelser === undefined
+          ? undefined
+          : inntektsmeldingSkjemaState.misterNaturalytelser
+            ? "ja"
+            : "nei",
+    },
+  });
+  const { handleSubmit } = formMethods;
+  const navigate = useNavigate();
+
+  const onSubmit = handleSubmit((skjemadata) => {
+    setInntektsmeldingSkjemaState((prev) => ({
+      ...prev,
+      skalRefunderes: skjemadata.skalRefunderes === "ja",
+      misterNaturalytelser: skjemadata.misterNaturalytelser === "ja",
+    }));
+    navigate({
+      from: "/$id/inntekt-og-refusjon",
+      to: "../oppsummering",
+    });
+  });
+
   return (
-    <section className="mt-4">
-      <form className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col">
-        <Heading level="3" size="large">
-          Inntekt og refusjon
-        </Heading>
-        <Fremgangsindikator aktivtSteg={2} />
-        <ForeldrepengePeriode opplysninger={opplysninger} />
-        <Inntekt opplysninger={opplysninger} />
-        <UtbetalingOgRefusjon />
-        <Naturalytelser />
-        <div className="flex gap-4 justify-center">
-          <Button
-            as={Link}
-            icon={<ArrowLeftIcon />}
-            to="../dine-opplysninger"
-            variant="secondary"
-          >
-            Forrige steg
-          </Button>
-          <Button
-            as={Link}
-            icon={<ArrowRightIcon />}
-            to="../oppsummering"
-            variant="primary"
-          >
-            Neste steg
-          </Button>
-        </div>
-      </form>
-    </section>
+    <FormProvider {...formMethods}>
+      <section className="mt-4">
+        <form
+          className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col"
+          onSubmit={onSubmit}
+        >
+          <Heading level="3" size="large">
+            Inntekt og refusjon
+          </Heading>
+          <Fremgangsindikator aktivtSteg={2} />
+          <Ytelsesperiode opplysninger={opplysninger} />
+          <Inntekt opplysninger={opplysninger} />
+          <UtbetalingOgRefusjon />
+          <Naturalytelser />
+          <div className="flex gap-4 justify-center">
+            <Button
+              as={Link}
+              icon={<ArrowLeftIcon />}
+              to="../dine-opplysninger"
+              variant="secondary"
+            >
+              Forrige steg
+            </Button>
+            <Button icon={<ArrowRightIcon />} type="submit" variant="primary">
+              Neste steg
+            </Button>
+          </div>
+        </form>
+      </section>
+    </FormProvider>
   );
 }
 
-type ForeldrepengePeriodeProps = {
+type YtelsesperiodeProps = {
   opplysninger: OpplysningerDto;
 };
-function ForeldrepengePeriode({ opplysninger }: ForeldrepengePeriodeProps) {
-  const { startdatoPermisjon, person } = opplysninger;
+function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
+  const { startdatoPermisjon, person, ytelse } = opplysninger;
 
   const førsteDag = capitalizeSetning(
-    format(startdatoPermisjon, "EEEE dd.MMMM yyyy", {
-      locale: nb,
-    }),
+    formatDatoLang(new Date(startdatoPermisjon)),
   );
 
   return (
     <VStack gap="4">
       <hr />
       <Heading level="4" size="medium">
-        Periode med foreldrepenger
+        Periode med {formatYtelsesnavn(ytelse)}
       </Heading>
       <InformasjonsseksjonMedKilde
         kilde={`Fra søknaden til ${person.navn}`}
-        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} første dag med foreldrepenger`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} første dag med ${formatYtelsesnavn(ytelse)}`}
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
@@ -93,6 +135,7 @@ function ForeldrepengePeriode({ opplysninger }: ForeldrepengePeriodeProps) {
 }
 
 function Naturalytelser() {
+  const { register, formState } = useFormContext<InntektOgRefusjonForm>();
   return (
     <VStack gap="4">
       <hr />
@@ -108,29 +151,38 @@ function Naturalytelser() {
           mobiltelefon og internett-abonnement.
         </BodyLong>
       </HjelpetekstReadMore>
-      <RadioGroup legend="Har den ansatte naturalytelser som faller bort ved fraværet?">
-        {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
-        <Radio value="JA">Ja</Radio>
-        <Radio value="NEI">Nei</Radio>
+      <RadioGroup
+        legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
+        {...register("misterNaturalytelser", {
+          required: "Du må svare på dette spørsmålet",
+        })}
+        error={formState.errors.misterNaturalytelser?.message}
+      >
+        <Radio value="ja">Ja</Radio>
+        <Radio value="nei">Nei</Radio>
       </RadioGroup>
     </VStack>
   );
 }
 
 function UtbetalingOgRefusjon() {
+  const { register, formState } = useFormContext<InntektOgRefusjonForm>();
   return (
     <VStack gap="4">
       <hr />
       <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
-      <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
-        TODO
-      </HjelpetekstReadMore>
-      <RadioGroup legend="Betaler dere lønn under fraværet og krever refusjon?">
-        {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
-        <Radio value="JA">Ja</Radio>
-        <Radio value="NEI">Nei</Radio>
+      <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
+      <RadioGroup
+        legend="Betaler dere lønn under fraværet og krever refusjon?"
+        {...register("skalRefunderes", {
+          required: "Du må svare på dette spørsmålet",
+        })}
+        error={formState.errors.skalRefunderes?.message}
+      >
+        <Radio value="ja">Ja</Radio>
+        <Radio value="nei">Nei</Radio>
       </RadioGroup>
     </VStack>
   );
