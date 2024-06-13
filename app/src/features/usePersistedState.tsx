@@ -33,7 +33,7 @@ export function useLocalStorageState<T = unknown>(
   schema: ZodSchema,
 ) {
   const [state, setState] = useState<T>(
-    () => parseStorageItem(localStorage, key, schema) || defaultValue,
+    () => parseStorageItem(localStorage, key, schema) ?? defaultValue,
   );
   useEffect(() => {
     localStorage.setItem(key, JSON.stringify(state));
@@ -43,7 +43,6 @@ export function useLocalStorageState<T = unknown>(
 
 function parseStorageItem(storage: Storage, key: string, schema: ZodSchema) {
   const item = storage.getItem(key);
-
   const { success, data } = schema.safeParse(item);
   return success ? data : undefined;
 }

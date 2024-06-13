@@ -24,7 +24,7 @@ export const VisHjelpeteksterStateProvider = ({
   const [visHjelpetekster, setVisHjelpetekster] = useLocalStorageState<boolean>(
     VIS_HJELPETEKSTER_KEY,
     true,
-    z.boolean(),
+    z.string().transform((value) => value === "true"),
   );
   return (
     <VisHjelpeteksterStateContext.Provider
