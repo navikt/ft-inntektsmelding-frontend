@@ -39,20 +39,13 @@ export function formatIsoDatostempel(dato: Date) {
   return `${år}-${måned}-${dag}`;
 }
 
-export function formatIdentitetsnummer(identitetsnummer: string) {
-  if (!/^\d{11}$/.test(identitetsnummer)) {
-    return identitetsnummer;
+export function formatFødselsnummer(fødselsnummer: string) {
+  if (!/^\d{11}$/.test(fødselsnummer)) {
+    return fødselsnummer;
   }
-  return `${identitetsnummer.slice(0, 6)} ${identitetsnummer.slice(6)}`;
+  return `${fødselsnummer.slice(0, 6)} ${fødselsnummer.slice(6)}`;
 }
 
 export function formatYtelsesnavn(ytelsesnavn: string) {
   return ytelsesnavn.toLowerCase().replace("_", " ");
-}
-
-export function formatFødselsnummer(str: string) {
-  if (str?.length !== 11) {
-    return str;
-  }
-  return `${str.slice(0, 6)} ${str.slice(6)}`;
 }

@@ -13,7 +13,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import {
   formatDatoLang,
-  formatIdentitetsnummer,
+  formatFødselsnummer,
   formatKroner,
   formatYtelsesnavn,
 } from "~/utils";
@@ -118,7 +118,7 @@ export const Oppsummering = () => {
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
                 {opplysninger.person.navn} (
-                {formatIdentitetsnummer(opplysninger.person.fødselsnummer)})
+                {formatFødselsnummer(opplysninger.person.fødselsnummer)})
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>

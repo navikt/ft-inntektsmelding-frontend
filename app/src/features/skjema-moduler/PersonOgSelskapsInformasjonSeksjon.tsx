@@ -23,8 +23,8 @@ import {
 } from "~/features/InntektsmeldingSkjemaState";
 import { formatFødselsnummer } from "~/utils";
 
-import { Fremgangsindikator } from "./Fremgangsindikator";
 import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
+import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
   InntektsmeldingSkjemaState["kontaktperson"]
