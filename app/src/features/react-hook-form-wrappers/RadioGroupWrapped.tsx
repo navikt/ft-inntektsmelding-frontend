@@ -1,5 +1,5 @@
-import type { DateInputProps, RadioGroupProps } from "@navikt/ds-react";
-import { Radio, RadioGroup } from "@navikt/ds-react";
+import type { RadioGroupProps } from "@navikt/ds-react";
+import { RadioGroup } from "@navikt/ds-react";
 import { useController } from "react-hook-form";
 
 type RadioGroupWrappedProps = { name: string; rules?: any } & RadioGroupProps;

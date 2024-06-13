@@ -12,11 +12,12 @@ import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { RadioGroupWrapped } from "~/features/react-hook-form-wrappers/RadioGroupWrapped.tsx";
 
 export function Naturalytelser() {
-  const misterNaturalYtelser = useFormContext().watch("misterNaturalYtelser");
+  const misterNaturalytelser = useFormContext().watch("misterNaturalytelser");
   return (
     <VStack gap="4">
       <hr />
@@ -34,17 +35,21 @@ export function Naturalytelser() {
       </HjelpetekstReadMore>
       <RadioGroupWrapped
         legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        name="misterNaturalYtelser"
+        name="misterNaturalytelser"
+        rules={{
+          validate: (value: boolean | null) =>
+            value === null ? "Må oppgis" : true,
+        }}
       >
         <Radio value={true}>Ja</Radio>
         <Radio value={false}>Nei</Radio>
       </RadioGroupWrapped>
-      {misterNaturalYtelser ? <NaturalYtelserFallerBortForm /> : undefined}
+      {misterNaturalytelser ? <MisterNaturalytelser /> : undefined}
     </VStack>
   );
 }
 
-const naturalYtelser = [
+const naturalytelser = [
   "ELEKTRISK_KOMMUNIKASJON",
   "AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS",
   "LOSJI",
@@ -65,29 +70,31 @@ const naturalYtelser = [
   "YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS",
   "INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING",
 ];
-function NaturalYtelserFallerBortForm() {
-  const { control, register, formState } = useFormContext();
+
+type FormType = Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
+function MisterNaturalytelser() {
+  const { control, register, formState } = useFormContext<FormType>();
   const { fields, append } = useFieldArray({
     control,
-    name: "naturalYtelse",
+    name: "naturalytelserSomMistes",
   });
 
-  console.log("errors", formState.errors);
-
   return (
-    <div className="grid grid-cols-3 gap-4 items-start">
+    <div className="grid grid-cols-[1fr_min-content_min-content] gap-4 items-start">
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <Select
             hideLabel={index > 0}
             label="Naturalytelse som faller bort"
-            {...register(`naturalYtelse.${index}.ytelse` as const, {
+            {...register(`naturalytelserSomMistes.${index}.navn` as const, {
               required: "Må oppgis",
             })}
-            error={formState.errors?.naturalYtelse?.[index]?.ytelse?.message}
+            error={
+              formState.errors?.naturalytelserSomMistes?.[index]?.navn?.message
+            }
           >
             <option value="">Velg naturalytelse</option>
-            {naturalYtelser.map((naturalYtelse) => (
+            {naturalytelser.map((naturalYtelse) => (
               <option key={naturalYtelse} value={naturalYtelse}>
                 {naturalYtelse}
               </option>
@@ -96,23 +103,27 @@ function NaturalYtelserFallerBortForm() {
           <DatePickerWrapped
             hideLabel={index > 0}
             label="Fra og med"
-            name={`naturalYtelse.${index}.fom`}
+            name={`naturalytelserSomMistes.${index}.fraOgMed` as const}
             rules={{ required: "Må oppgis" }}
           />
           <TextField
-            {...register(`naturalYtelse.${index}.verdi` as const, {
+            {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
               required: "Må oppgis", // TODO: bedre validering
+              valueAsNumber: true,
             })}
-            error={formState.errors?.naturalYtelse?.[index]?.verdi?.message}
+            error={
+              formState.errors?.naturalytelserSomMistes?.[index]?.beløp?.message
+            }
             hideLabel={index > 0}
-            label="Verdi pr.måned"
+            label={<span>Verdi&nbsp;pr.måned</span>}
             size="medium"
           />
         </Fragment>
       ))}
       <Button
+        className="w-fit"
         icon={<PlusIcon />}
-        onClick={() => append({ fom: null, verdi: "" })}
+        onClick={() => append({ fraOgMed: "", beløp: 0, navn: "" })}
         size="small"
         type="button"
         variant="secondary"

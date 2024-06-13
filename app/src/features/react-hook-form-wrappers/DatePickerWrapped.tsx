@@ -15,9 +15,9 @@ export function DatePickerWrapped({
   });
   const datePickerProperties = useDatepicker({
     onDateChange: async (date) => {
-      field.onChange(date ? date : undefined); // TODO: format date to string
+      field.onChange(date);
     },
-    // defaultSelected: defaultDate ? new Date(defaultDate) : undefined, // TODO:
+    defaultSelected: field.value ? new Date(field.value) : undefined,
   });
 
   return (

@@ -15,9 +15,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
-import { Naturalytelser } from "~/features/skjema-moduler/NaturalYtelser.tsx";
+import { Naturalytelser } from "~/features/skjema-moduler/Naturalytelser.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
@@ -28,17 +29,22 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
 
 function InntektOgRefusjon() {
   const opplysninger = Route.useLoaderData();
+
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
+  console.log(inntektsmeldingSkjemaState);
+
   const methods = useForm({
     defaultValues: {
-      misterNaturalYtelser: null,
+      misterNaturalytelser:
+        inntektsmeldingSkjemaState.misterNaturalytelser ?? null,
+      naturalytelserSomMistes:
+        inntektsmeldingSkjemaState.naturalytelserSomMistes,
     },
   });
 
-  console.log("values", methods.watch());
-
   const onSubmit = methods.handleSubmit((v) => {
-    console.log(v);
-    // setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
+    setInntektsmeldingSkjemaState((prev) => ({ ...prev, ...v }));
   });
 
   return (
