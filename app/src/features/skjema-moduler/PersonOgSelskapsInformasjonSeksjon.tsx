@@ -24,6 +24,7 @@ import {
 import { formatFødselsnummer } from "~/utils";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
   InntektsmeldingSkjemaState["kontaktperson"]
@@ -203,36 +204,6 @@ const ArbeidsgiverInformasjon = ({
   );
 };
 
-type InformasjonsseksjonMedKildeProps = {
-  kilde: string;
-  tittel: string;
-  children: React.ReactNode;
-  className?: string;
-};
-export const InformasjonsseksjonMedKilde = ({
-  children,
-  kilde,
-  tittel,
-  className,
-}: InformasjonsseksjonMedKildeProps) => {
-  return (
-    <div
-      className={clsx(
-        "bg-bg-subtle p-4 flex flex-col gap-4 rounded-md",
-        className,
-      )}
-    >
-      <div className="flex justify-between items-center">
-        <Heading level="3" size="xsmall">
-          {tittel}
-        </Heading>
-        <Detail className="uppercase flex items-center">{kilde}</Detail>
-      </div>
-      {children}
-    </div>
-  );
-};
-
 type LabelOgVerdiProps = {
   label: string;
   children: React.ReactNode;
@@ -243,7 +214,7 @@ const LabelOgVerdi = ({ label, children }: LabelOgVerdiProps) => {
       <Label as="p" size="small">
         {label}
       </Label>
-      <BodyShort>{children}</BodyShort>
+      <BodyShort as="div">{children}</BodyShort>
     </div>
   );
 };

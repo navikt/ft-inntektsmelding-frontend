@@ -14,10 +14,10 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
+import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
-import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import {
   capitalizeSetning,
   formatDatoLang,
@@ -136,6 +136,9 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
 
 function Naturalytelser() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
+  const { onChange, ...radioGroupProps } = register("misterNaturalytelser", {
+    required: "Du må svare på dette spørsmålet",
+  });
   return (
     <VStack gap="4">
       <hr />
@@ -152,11 +155,10 @@ function Naturalytelser() {
         </BodyLong>
       </HjelpetekstReadMore>
       <RadioGroup
-        legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        {...register("misterNaturalytelser", {
-          required: "Du må svare på dette spørsmålet",
-        })}
         error={formState.errors.misterNaturalytelser?.message}
+        legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
+        onChange={(value) => onChange({ target: { value } })}
+        {...radioGroupProps}
       >
         <Radio value="ja">Ja</Radio>
         <Radio value="nei">Nei</Radio>
@@ -167,6 +169,9 @@ function Naturalytelser() {
 
 function UtbetalingOgRefusjon() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
+  const { onChange, ...radioGroupProps } = register("skalRefunderes", {
+    required: "Du må svare på dette spørsmålet",
+  });
   return (
     <VStack gap="4">
       <hr />
@@ -175,11 +180,10 @@ function UtbetalingOgRefusjon() {
       </Heading>
       <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
       <RadioGroup
-        legend="Betaler dere lønn under fraværet og krever refusjon?"
-        {...register("skalRefunderes", {
-          required: "Du må svare på dette spørsmålet",
-        })}
         error={formState.errors.skalRefunderes?.message}
+        legend="Betaler dere lønn under fraværet og krever refusjon?"
+        onChange={(value) => onChange({ target: { value } })}
+        {...radioGroupProps}
       >
         <Radio value="ja">Ja</Radio>
         <Radio value="nei">Nei</Radio>
