@@ -1,7 +1,7 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
-  name: ft-inntektsmelding-frontend
+  name: fpinntektsmelding-frontend
   namespace: teamforeldrepenger
   labels:
     team: teamforeldrepenger
@@ -49,7 +49,7 @@ spec:
   accessPolicy:
     outbound:
       rules:
-        - application: ftinntektsmelding
+        - application: fpinntektsmelding
         - application: nav-dekoratoren
           namespace: personbruker
   env:
@@ -64,6 +64,6 @@ spec:
     - name: API_SCOPE
       value: {{API_SCOPE}}
     - name: API_URL
-      value: "http://ftinntektsmelding/ftinntektsmelding"
+      value: "http://fpinntektsmelding/fpinntektsmelding"
     - name: NESTED_PATH
       value: "/fp-im-dialog"

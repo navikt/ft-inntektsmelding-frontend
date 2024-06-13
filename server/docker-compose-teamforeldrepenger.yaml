@@ -1,5 +1,5 @@
 version: '3.8'
-name: ft-inntektsmelding-server
+name: fpinntektsmelding-server
 services:
   wonderwall:
     image: ghcr.io/nais/wonderwall:latest
@@ -35,7 +35,7 @@ services:
       AZURE_OPENID_CONFIG_TOKEN_ENDPOINT: "${AZURE_OPENID_CONFIG_TOKEN_ENDPOINT}"
       AZURE_APP_JWK: "${AZURE_APP_JWK}"
       AZURE_OPENID_CONFIG_JWKS_URI: "${AZURE_OPENID_CONFIG_JWKS_URI}"
-      API_SCOPE: "api://dev-gcp.teamforeldrepenger.ftinntektsmelding/.default"
-      API_URL: "http://ftinntektsmelding"
+      API_SCOPE: "api://dev-gcp.teamforeldrepenger.fpinntektsmelding/.default"
+      API_URL: "http://fpinntektsmelding"
       ENV: "dev"
       NESTED_PATH: "/fp-im-dialog"
