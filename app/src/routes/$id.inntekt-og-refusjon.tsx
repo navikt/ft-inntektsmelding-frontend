@@ -31,7 +31,7 @@ function InntektOgRefusjon() {
   ).data;
 
   return (
-    <section className="mt-6">
+    <section className="mt-4">
       <form className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col">
         <Heading level="3" size="large">
           Inntekt og refusjon

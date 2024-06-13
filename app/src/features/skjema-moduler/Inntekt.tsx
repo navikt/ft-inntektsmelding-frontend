@@ -1,6 +1,5 @@
 import { PencilIcon } from "@navikt/aksel-icons";
 import {
-  Alert,
   BodyLong,
   BodyShort,
   Button,
@@ -13,7 +12,7 @@ import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
-import { HjelpeTekst } from "~/features/HjelpeTekst.tsx";
+import { HjelpeAlert, HjelpeTekst } from "~/features/HjelpeTekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type {
   InntektsmeldingDialogDto,
@@ -67,7 +66,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
       >
         Endre månedslønn
       </Button>
-      <Alert variant="info">
+      <HjelpeAlert>
         <Heading level="4" size="xsmall">
           Når må du endre månedslønnen?
         </Heading>
@@ -83,7 +82,7 @@ export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
             folketrygdloven §8-28.
           </Link>
         </BodyLong>
-      </Alert>
+      </HjelpeAlert>
       <div className="flex flex-col gap-2">
         <HjelpeTekst header="Hvordan beregne ved fravær i beregningsperioden?">
           TODO

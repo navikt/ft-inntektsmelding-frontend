@@ -1,23 +1,28 @@
-import type { ReadMoreProps } from "@navikt/ds-react";
+import type { AlertProps, ReadMoreProps } from "@navikt/ds-react";
+import { Alert } from "@navikt/ds-react";
 import { ReadMore, Switch } from "@navikt/ds-react";
-import { useState } from "react";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
-const VIS_HJELPETEKSTER_KEY = "vis-hjelpe-tekster";
+import { useLocalStorage } from "~/features/useLocalStorage.tsx";
+
+export const VIS_HJELPETEKSTER_KEY = "vis-hjelpe-tekster";
 
 export function HjelpeTekstMasterSwitch() {
-  const [isActive, setIsActive] = useState<boolean>(
-    window.localStorage.getItem(VIS_HJELPETEKSTER_KEY) === "true",
-  );
+  const [_, setVisHjelpeTekst] = useLocalStorage(VIS_HJELPETEKSTER_KEY, true);
+  const { visHjelpeTekst } = useSearch({ from: "/$id" });
+  const navigate = useNavigate();
 
-  const toggle = (value: boolean) => {
-    window.localStorage.setItem("vis-hjelpe-tekster", value.toString());
-    setIsActive(value);
+  const onHjelpeTekstChanged = (newValue: boolean) => {
+    setVisHjelpeTekst(newValue);
+    navigate({
+      search: (prevSearch) => ({ ...prevSearch, visHjelpeTekst: newValue }),
+    });
   };
 
   return (
     <Switch
-      onChange={(e) => toggle(e.target.value === "true")}
-      value={isActive ? "true" : "false"}
+      checked={visHjelpeTekst}
+      onChange={(e) => onHjelpeTekstChanged(e.target.checked)}
     >
       Vis hjelpetekster i skjema
     </Switch>
@@ -28,12 +33,21 @@ export function HjelpeTekst({
   header,
   children,
 }: Pick<ReadMoreProps, "header" | "children">) {
-  const visHjelpeTekst =
-    window.localStorage.getItem(VIS_HJELPETEKSTER_KEY) === "true"; // TODO: ikke reaktiv
+  const { visHjelpeTekst } = useSearch({ from: "/$id" });
 
   if (!visHjelpeTekst) {
     return <></>;
   }
 
   return <ReadMore header={header}>{children}</ReadMore>;
+}
+
+export function HjelpeAlert({ children }: Pick<AlertProps, "children">) {
+  const { visHjelpeTekst } = useSearch({ from: "/$id" });
+
+  if (!visHjelpeTekst) {
+    return <></>;
+  }
+
+  return <Alert variant="info">{children}</Alert>;
 }

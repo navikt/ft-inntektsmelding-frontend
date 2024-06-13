@@ -37,7 +37,7 @@ export const RotLayout = ({
           </HStack>
         </Page.Block>
       </Page.Block>
-      <Page.Block>
+      <Page.Block className="mt-4" width="md">
         <HjelpeTekstMasterSwitch />
       </Page.Block>
       <Page.Block width="md">{children}</Page.Block>
