@@ -136,9 +136,12 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
 
 function Naturalytelser() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { onChange, ...radioGroupProps } = register("misterNaturalytelser", {
-    required: "Du må svare på dette spørsmålet",
-  });
+  const { onChange, name, ...radioGroupProps } = register(
+    "misterNaturalytelser",
+    {
+      required: "Du må svare på dette spørsmålet",
+    },
+  );
   return (
     <VStack gap="4">
       <hr />
@@ -158,10 +161,14 @@ function Naturalytelser() {
         error={formState.errors.misterNaturalytelser?.message}
         legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
         onChange={(value) => onChange({ target: { value } })}
-        {...radioGroupProps}
+        name={name}
       >
-        <Radio value="ja">Ja</Radio>
-        <Radio value="nei">Nei</Radio>
+        <Radio value="ja" {...radioGroupProps}>
+          Ja
+        </Radio>
+        <Radio value="nei" {...radioGroupProps}>
+          Nei
+        </Radio>
       </RadioGroup>
     </VStack>
   );
@@ -169,7 +176,7 @@ function Naturalytelser() {
 
 function UtbetalingOgRefusjon() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { onChange, ...radioGroupProps } = register("skalRefunderes", {
+  const { onChange, name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
   return (
@@ -183,10 +190,14 @@ function UtbetalingOgRefusjon() {
         error={formState.errors.skalRefunderes?.message}
         legend="Betaler dere lønn under fraværet og krever refusjon?"
         onChange={(value) => onChange({ target: { value } })}
-        {...radioGroupProps}
+        name={name}
       >
-        <Radio value="ja">Ja</Radio>
-        <Radio value="nei">Nei</Radio>
+        <Radio value="ja" {...radioGroupProps}>
+          Ja
+        </Radio>
+        <Radio value="nei" {...radioGroupProps}>
+          Nei
+        </Radio>
       </RadioGroup>
     </VStack>
   );
