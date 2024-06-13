@@ -44,6 +44,7 @@ function InntektOgRefusjon() {
   });
 
   const onSubmit = methods.handleSubmit((v) => {
+    console.log("submit", v);
     setInntektsmeldingSkjemaState((prev) => ({ ...prev, ...v }));
   });
 
