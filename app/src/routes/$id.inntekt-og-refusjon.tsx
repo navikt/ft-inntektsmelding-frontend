@@ -7,28 +7,25 @@ import {
   RadioGroup,
   VStack,
 } from "@navikt/ds-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import type { OpplysningerDto } from "~/api/queries.ts";
+import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpeTekst } from "~/features/HjelpeTekst.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
+  loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
 function InntektOgRefusjon() {
-  const { id } = Route.useParams();
-  const inntektsmeldingDialogDto = useSuspenseQuery(
-    forespørselQueryOptions(id),
-  ).data;
+  const opplysninger = Route.useLoaderData();
 
   return (
     <section className="mt-4">
@@ -37,10 +34,8 @@ function InntektOgRefusjon() {
           Inntekt og refusjon
         </Heading>
         <Fremgangsindikator aktivtSteg={2} />
-        <ForeldrepengePeriode
-          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-        />
-        <Inntekt inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
+        <ForeldrepengePeriode opplysninger={opplysninger} />
+        <Inntekt opplysninger={opplysninger} />
         <UtbetalingOgRefusjon />
         <Naturalytelser />
         <div className="flex gap-4 justify-center">
@@ -67,12 +62,10 @@ function InntektOgRefusjon() {
 }
 
 type ForeldrepengePeriodeProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
-function ForeldrepengePeriode({
-  inntektsmeldingDialogDto,
-}: ForeldrepengePeriodeProps) {
-  const { startdatoPermisjon, person } = inntektsmeldingDialogDto;
+function ForeldrepengePeriode({ opplysninger }: ForeldrepengePeriodeProps) {
+  const { startdatoPermisjon, person } = opplysninger;
 
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "EEEE dd.MMMM yyyy", {

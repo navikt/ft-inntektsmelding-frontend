@@ -16,11 +16,11 @@ import { useNavigate } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
+import type { OpplysningerDto } from "~/api/queries";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
-import type { InntektsmeldingDialogDto } from "~/types/api-models.ts";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
@@ -30,10 +30,10 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
 export const PersonOgSelskapsInformasjonSeksjon = ({
-  inntektsmeldingDialogDto,
+  opplysninger,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
@@ -67,13 +67,9 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
 
-          <Intro inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
-          <ArbeidsgiverInformasjon
-            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-          />
-          <Personinformasjon
-            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-          />
+          <Intro opplysninger={opplysninger} />
+          <ArbeidsgiverInformasjon opplysninger={opplysninger} />
+          <Personinformasjon opplysninger={opplysninger} />
 
           <InformasjonsseksjonMedKilde
             className="col-span-2"
@@ -137,10 +133,10 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 };
 
 type IntroProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
-const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
-  const { person, arbeidsgiver } = inntektsmeldingDialogDto;
+const Intro = ({ opplysninger }: IntroProps) => {
+  const { person, arbeidsgiver } = opplysninger;
   const [fornavn] = person.navn.split(" ") ?? ["den ansatte"];
   return (
     <GuidePanel className="mb-4 col-span-2">
@@ -168,13 +164,11 @@ const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
 };
 
 type PersoninformasjonProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
 
-const Personinformasjon = ({
-  inntektsmeldingDialogDto,
-}: PersoninformasjonProps) => {
-  const { person } = inntektsmeldingDialogDto;
+const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
+  const { person } = opplysninger;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
@@ -197,12 +191,12 @@ const formaterFødselsnummer = (str: string) => {
 };
 
 type ArbeidsgiverInformasjonProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
 const ArbeidsgiverInformasjon = ({
-  inntektsmeldingDialogDto,
+  opplysninger,
 }: ArbeidsgiverInformasjonProps) => {
-  const { arbeidsgiver } = inntektsmeldingDialogDto;
+  const { arbeidsgiver } = opplysninger;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra Altinn" tittel="Arbeidsgiver">

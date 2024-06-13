@@ -149,6 +149,7 @@ jobs:
       gar: true
       image: ${{ needs.build-fp-app.outputs.build-version }}
       cluster: dev-gcp
+      deploy_context: "/fp"
       naiserator_file: "fp/naiserator.yaml"
       namespace: teamforeldrepenger
     secrets: inherit
@@ -163,6 +164,7 @@ jobs:
       gar: true
       image: ${{ needs.build-k9-app.outputs.build-version }}
       cluster: dev-gcp
+      deploy_context: "/k9"
       naiserator_file: "k9/naiserator.yaml"
       namespace: k9saksbehandling
     secrets: inherit
