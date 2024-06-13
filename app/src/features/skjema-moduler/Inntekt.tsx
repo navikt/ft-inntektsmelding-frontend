@@ -20,10 +20,10 @@ import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
 
 type InntektProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
-export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
-  const { startdatoPermisjon, person, inntekter } = inntektsmeldingDialogDto;
+export function Inntekt({ forespørsel }: InntektProps) {
+  const { startdatoPermisjon, person, inntekter } = forespørsel;
 
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {

@@ -37,7 +37,7 @@ function InntektOgRefusjon() {
         <ForeldrepengePeriode
           inntektsmeldingDialogDto={inntektsmeldingDialogDto}
         />
-        <Inntekt inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
+        <Inntekt forespørsel={inntektsmeldingDialogDto} />
         <UtbetalingOgRefusjon />
         <Naturalytelser />
         <div className="flex gap-4 justify-center">

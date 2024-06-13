@@ -7,10 +7,7 @@ const DineOpplysninger = () => {
   const data = Route.useLoaderData();
 
   return (
-    <PersonOgSelskapsInformasjonSeksjon
-      className="mt-6"
-      inntektsmeldingDialogDto={data}
-    />
+    <PersonOgSelskapsInformasjonSeksjon className="mt-6" forespørsel={data} />
   );
 };
 

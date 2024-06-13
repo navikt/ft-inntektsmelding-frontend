@@ -30,10 +30,10 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
 export const PersonOgSelskapsInformasjonSeksjon = ({
-  inntektsmeldingDialogDto,
+  forespørsel,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
@@ -66,13 +66,9 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
 
-          <Intro inntektsmeldingDialogDto={inntektsmeldingDialogDto} />
-          <ArbeidsgiverInformasjon
-            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-          />
-          <Personinformasjon
-            inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-          />
+          <Intro forespørsel={forespørsel} />
+          <ArbeidsgiverInformasjon forespørsel={forespørsel} />
+          <Personinformasjon forespørsel={forespørsel} />
 
           <InformasjonsseksjonMedKilde
             className="col-span-2"
@@ -136,10 +132,10 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 };
 
 type IntroProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
-const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
-  const { person, arbeidsgiver } = inntektsmeldingDialogDto;
+const Intro = ({ forespørsel }: IntroProps) => {
+  const { person, arbeidsgiver } = forespørsel;
   const [fornavn] = person.navn.split(" ") ?? ["den ansatte"];
   return (
     <GuidePanel className="mb-4 col-span-2">
@@ -167,13 +163,11 @@ const Intro = ({ inntektsmeldingDialogDto }: IntroProps) => {
 };
 
 type PersoninformasjonProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
 
-const Personinformasjon = ({
-  inntektsmeldingDialogDto,
-}: PersoninformasjonProps) => {
-  const { person } = inntektsmeldingDialogDto;
+const Personinformasjon = ({ forespørsel }: PersoninformasjonProps) => {
+  const { person } = forespørsel;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
@@ -196,12 +190,12 @@ const formaterFødselsnummer = (str: string) => {
 };
 
 type ArbeidsgiverInformasjonProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
 const ArbeidsgiverInformasjon = ({
-  inntektsmeldingDialogDto,
+  forespørsel,
 }: ArbeidsgiverInformasjonProps) => {
-  const { arbeidsgiver } = inntektsmeldingDialogDto;
+  const { arbeidsgiver } = forespørsel;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra Altinn" tittel="Arbeidsgiver">

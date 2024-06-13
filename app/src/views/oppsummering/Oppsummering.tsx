@@ -22,7 +22,7 @@ const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
-  const inntektsmeldingDialogDto = route.useLoaderData();
+  const forespørsel = route.useLoaderData();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -233,9 +233,7 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
-        <SendInnInntektsmelding
-          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-        />
+        <SendInnInntektsmelding forespørsel={forespørsel} />
       </div>
     </section>
   );
@@ -251,20 +249,18 @@ const formatterKontaktperson = (
 };
 
 type SendInnInntektsmeldingProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  forespørsel: ForespørselDto;
 };
-function SendInnInntektsmelding({
-  inntektsmeldingDialogDto,
-}: SendInnInntektsmeldingProps) {
+function SendInnInntektsmelding({ forespørsel }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
 
   const DUMMY_IM = {
     foresporselUuid: "123", // TODO
-    aktorId: inntektsmeldingDialogDto.person.aktørId,
-    ytelse: inntektsmeldingDialogDto.ytelse,
-    arbeidsgiverIdent: inntektsmeldingDialogDto.arbeidsgiver.organisasjonNummer,
+    aktorId: forespørsel.person.aktørId,
+    ytelse: forespørsel.ytelse,
+    arbeidsgiverIdent: forespørsel.arbeidsgiver.organisasjonNummer,
     telefonnummer: "12345678",
-    startdato: inntektsmeldingDialogDto.startdatoPermisjon,
+    startdato: forespørsel.startdatoPermisjon,
     inntekt: 30_000,
     refusjonsperioder: [],
     bortfaltNaturaltytelsePerioder: [],
