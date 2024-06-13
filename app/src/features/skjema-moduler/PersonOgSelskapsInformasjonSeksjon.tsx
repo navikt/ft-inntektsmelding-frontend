@@ -51,6 +51,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
     navigate({
       from: "/$id/dine-opplysninger",
       to: "../inntekt-og-refusjon",
+      search: (prev) => prev,
     });
   });
   return (
