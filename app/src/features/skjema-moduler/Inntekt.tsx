@@ -14,18 +14,16 @@ import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
+import type { OpplysningerDto } from "~/api/queries";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
-import type {
-  InntektsmeldingDialogDto,
-  MånedsinntektResponsDto,
-} from "~/types/api-models.ts";
+import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
 
 type InntektProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
-export function Inntekt({ inntektsmeldingDialogDto }: InntektProps) {
-  const { startdatoPermisjon, person, inntekter } = inntektsmeldingDialogDto;
+export function Inntekt({ opplysninger }: InntektProps) {
+  const { startdatoPermisjon, person, inntekter } = opplysninger;
 
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {

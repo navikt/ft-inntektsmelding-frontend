@@ -1,19 +1,16 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
-import { forespørselQueryOptions } from "~/api/queries.ts";
+import type { OpplysningerDto } from "~/api/queries";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type {
-  InntektsmeldingDialogDto,
-  SendInntektsmeldingRequestDto,
-} from "~/types/api-models.ts";
+import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import {
   formatDatoLang,
   formatIdentitetsnummer,
@@ -25,10 +22,7 @@ const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
-
-  const inntektsmeldingDialogDto = useSuspenseQuery(
-    forespørselQueryOptions(id),
-  ).data;
+  const opplysninger = route.useLoaderData();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -239,9 +233,7 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
-        <SendInnInntektsmelding
-          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-        />
+        <SendInnInntektsmelding opplysninger={opplysninger} />
       </div>
     </section>
   );
@@ -257,20 +249,18 @@ const formatterKontaktperson = (
 };
 
 type SendInnInntektsmeldingProps = {
-  inntektsmeldingDialogDto: InntektsmeldingDialogDto;
+  opplysninger: OpplysningerDto;
 };
-function SendInnInntektsmelding({
-  inntektsmeldingDialogDto,
-}: SendInnInntektsmeldingProps) {
+function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
 
   const DUMMY_IM = {
     foresporselUuid: "123", // TODO
-    aktorId: inntektsmeldingDialogDto.person.aktørId,
-    ytelse: inntektsmeldingDialogDto.ytelse,
-    arbeidsgiverIdent: inntektsmeldingDialogDto.arbeidsgiver.organisasjonNummer,
+    aktorId: opplysninger.person.aktørId,
+    ytelse: opplysninger.ytelse,
+    arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
     telefonnummer: "12345678",
-    startdato: inntektsmeldingDialogDto.startdatoPermisjon,
+    startdato: opplysninger.startdatoPermisjon,
     inntekt: 30_000,
     refusjonsperioder: [],
     bortfaltNaturaltytelsePerioder: [],

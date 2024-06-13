@@ -1,26 +1,8 @@
-export type PersonInfoDto = {
-  aktørId: string;
-  fødselsnummer: string;
-  navn: string;
-};
-
-export type OrganisasjonInfoDto = {
-  organisasjonNavn: string;
-  organisasjonNummer: string;
-};
-
 export type MånedsinntektResponsDto = {
   fom: string;
   tom: string;
   beløp: number;
   arbeidsgiverIdent: string;
-};
-
-export type HentInntektRequestDto = {
-  aktorId: string;
-  ytelse: Ytelsetype;
-  arbeidsgiverIdent: string;
-  startdato: string;
 };
 
 export type Ytelsetype =
@@ -75,24 +57,4 @@ type NaturalytelseRequestDto = {
   tom: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
-};
-
-export type InntektsmeldingDialogDto = {
-  person: PersonInfoDto;
-  arbeidsgiver: OrganisasjonInfoDto;
-  inntekter?: MånedsinntektResponsDto[]; // Dette burde være empty list fra backend, men en bug gjør at feltet ikke kommer med.
-  startdatoPermisjon: string;
-  ytelse: Ytelsetype;
-};
-
-export type ForespørselEntitet = {
-  id: number;
-  uuid: string;
-  sakId: string;
-  oppgaveId: string;
-  organisasjonsnummer: string;
-  skjæringstidspunkt: string;
-  brukerAktørId: string;
-  ytelseType: Ytelsetype;
-  fagsystemSaksnummer: string;
 };
