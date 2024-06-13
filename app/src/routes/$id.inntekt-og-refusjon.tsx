@@ -5,7 +5,6 @@ import {
   Heading,
   Radio,
   RadioGroup,
-  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 import { createFileRoute, Link } from "@tanstack/react-router";
@@ -14,6 +13,7 @@ import { nb } from "date-fns/locale";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
+import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
@@ -28,7 +28,7 @@ function InntektOgRefusjon() {
   const opplysninger = Route.useLoaderData();
 
   return (
-    <section className="mt-6">
+    <section className="mt-4">
       <form className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col">
         <Heading level="3" size="large">
           Inntekt og refusjon
@@ -85,7 +85,9 @@ function ForeldrepengePeriode({ opplysninger }: ForeldrepengePeriodeProps) {
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
-      <ReadMore header="Hva hvis datoen ikke stemmer?">TODO</ReadMore>
+      <HjelpetekstReadMore header="Hva hvis datoen ikke stemmer?">
+        TODO
+      </HjelpetekstReadMore>
     </VStack>
   );
 }
@@ -97,7 +99,7 @@ function Naturalytelser() {
       <Heading id="naturalytelser" level="4" size="medium">
         Naturalytelser
       </Heading>
-      <ReadMore header="Hva er naturalytelser?">
+      <HjelpetekstReadMore header="Hva er naturalytelser?">
         <BodyLong>
           Naturalytelser er skattepliktige goder eller fordeler en ansatt får
           fra arbeidsgiver på toppen av vanlig lønn.
@@ -105,7 +107,7 @@ function Naturalytelser() {
           Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
           mobiltelefon og internett-abonnement.
         </BodyLong>
-      </ReadMore>
+      </HjelpetekstReadMore>
       <RadioGroup legend="Har den ansatte naturalytelser som faller bort ved fraværet?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>
@@ -122,7 +124,9 @@ function UtbetalingOgRefusjon() {
       <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
-      <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
+      <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
+        TODO
+      </HjelpetekstReadMore>
       <RadioGroup legend="Betaler dere lønn under fraværet og krever refusjon?">
         {/*TODO: hvordan representere ja/nei radio best egentlig?*/}
         <Radio value="JA">Ja</Radio>
