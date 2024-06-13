@@ -2,7 +2,7 @@ import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
-import { usePersistedState } from "./usePersistedState";
+import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefon: string };
@@ -30,7 +30,7 @@ type InntektsmeldingSkjemaStateProviderProps = {
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  const [state, setState] = usePersistedState<InntektsmeldingSkjemaState>(
+  const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
       refusjonsendringer: [],

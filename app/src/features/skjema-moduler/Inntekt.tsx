@@ -1,6 +1,5 @@
 import { PencilIcon } from "@navikt/aksel-icons";
 import {
-  Alert,
   BodyLong,
   BodyShort,
   Button,
@@ -8,13 +7,16 @@ import {
   HGrid,
   Label,
   Link,
-  ReadMore,
 } from "@navikt/ds-react";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 
 import type { OpplysningerDto } from "~/api/queries";
+import {
+  HjelpetekstAlert,
+  HjelpetekstReadMore,
+} from "~/features/Hjelpetekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
@@ -65,7 +67,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       >
         Endre månedslønn
       </Button>
-      <Alert variant="info">
+      <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
           Når må du endre månedslønnen?
         </Heading>
@@ -81,14 +83,14 @@ export function Inntekt({ opplysninger }: InntektProps) {
             folketrygdloven §8-28.
           </Link>
         </BodyLong>
-      </Alert>
+      </HjelpetekstAlert>
       <div className="flex flex-col gap-2">
-        <ReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
+        <HjelpetekstReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
           TODO
-        </ReadMore>
-        <ReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
+        </HjelpetekstReadMore>
+        <HjelpetekstReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
           TODO
-        </ReadMore>
+        </HjelpetekstReadMore>
       </div>
     </div>
   );
