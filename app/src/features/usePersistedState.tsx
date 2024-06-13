@@ -19,7 +19,7 @@ export function useSessionStorageState<T = unknown>(
   defaultValue: T,
 ) {
   const [state, setState] = useState<T>(
-    () => JSON.parse(sessionStorage.getItem(key) || "false") || defaultValue,
+    () => JSON.parse(sessionStorage.getItem(key) || "false") || defaultValue, // TODO: Bytt om til parseStorageItem her også
   );
   useEffect(() => {
     sessionStorage.setItem(key, JSON.stringify(state));
