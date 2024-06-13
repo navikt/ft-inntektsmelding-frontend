@@ -9,7 +9,7 @@ const route = getRouteApi("/$id");
 
 export const NyInntektsmelding = () => {
   const { id } = route.useParams();
-  const forespørsel = route.useLoaderData();
+  const opplysninger = route.useLoaderData();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -26,12 +26,12 @@ export const NyInntektsmelding = () => {
 
   return (
     <RotLayout
-      tittel={`Inntektsmelding ${formatYtelsesnavn(forespørsel.ytelse)}`}
+      tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
       undertittel={
         <div className="flex gap-3">
-          <span>{forespørsel.arbeidsgiver.organisasjonNavn}</span>
+          <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
           <span>|</span>
-          <span>{capitalizeSetning(forespørsel.person.navn)}</span>
+          <span>{capitalizeSetning(opplysninger.person.navn)}</span>
         </div>
       }
     >

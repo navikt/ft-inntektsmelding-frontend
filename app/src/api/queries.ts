@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
-export async function hentForespørselData(uuid: string) {
+export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(
     `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${uuid}`,
     {
@@ -18,7 +18,7 @@ export async function hentForespørselData(uuid: string) {
     throw new Error("Kunne ikke hente forespørsel");
   }
   const json = await response.json();
-  const parsedJson = forespørselSchema.safeParse(json);
+  const parsedJson = opplysningerSchema.safeParse(json);
 
   if (!parsedJson.success) {
     // TODO: Har med en error-logger her, bør fjernes før vi går i prod
@@ -29,7 +29,7 @@ export async function hentForespørselData(uuid: string) {
   return parsedJson.data;
 }
 
-const forespørselSchema = z.object({
+const opplysningerSchema = z.object({
   person: z.object({
     aktørId: z.string(),
     fødselsnummer: z.string(),
@@ -60,4 +60,4 @@ const forespørselSchema = z.object({
   ]),
 });
 
-export type ForespørselDto = z.infer<typeof forespørselSchema>;
+export type OpplysningerDto = z.infer<typeof opplysningerSchema>;

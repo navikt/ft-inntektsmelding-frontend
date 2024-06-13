@@ -16,7 +16,7 @@ import { useNavigate } from "@tanstack/react-router";
 import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
-import type { ForespørselDto } from "~/api/queries";
+import type { OpplysningerDto } from "~/api/queries";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
@@ -30,10 +30,10 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 
 type PersonOgSelskapsInformasjonSeksjonProps = {
   className?: string;
-  forespørsel: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
 export const PersonOgSelskapsInformasjonSeksjon = ({
-  forespørsel,
+  opplysninger,
   className,
 }: PersonOgSelskapsInformasjonSeksjonProps) => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
@@ -66,9 +66,9 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
 
-          <Intro forespørsel={forespørsel} />
-          <ArbeidsgiverInformasjon forespørsel={forespørsel} />
-          <Personinformasjon forespørsel={forespørsel} />
+          <Intro opplysninger={opplysninger} />
+          <ArbeidsgiverInformasjon opplysninger={opplysninger} />
+          <Personinformasjon opplysninger={opplysninger} />
 
           <InformasjonsseksjonMedKilde
             className="col-span-2"
@@ -132,10 +132,10 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
 };
 
 type IntroProps = {
-  forespørsel: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
-const Intro = ({ forespørsel }: IntroProps) => {
-  const { person, arbeidsgiver } = forespørsel;
+const Intro = ({ opplysninger }: IntroProps) => {
+  const { person, arbeidsgiver } = opplysninger;
   const [fornavn] = person.navn.split(" ") ?? ["den ansatte"];
   return (
     <GuidePanel className="mb-4 col-span-2">
@@ -163,11 +163,11 @@ const Intro = ({ forespørsel }: IntroProps) => {
 };
 
 type PersoninformasjonProps = {
-  forespørsel: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
 
-const Personinformasjon = ({ forespørsel }: PersoninformasjonProps) => {
-  const { person } = forespørsel;
+const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
+  const { person } = opplysninger;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
@@ -190,12 +190,12 @@ const formaterFødselsnummer = (str: string) => {
 };
 
 type ArbeidsgiverInformasjonProps = {
-  forespørsel: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
 const ArbeidsgiverInformasjon = ({
-  forespørsel,
+  opplysninger,
 }: ArbeidsgiverInformasjonProps) => {
-  const { arbeidsgiver } = forespørsel;
+  const { arbeidsgiver } = opplysninger;
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra Altinn" tittel="Arbeidsgiver">

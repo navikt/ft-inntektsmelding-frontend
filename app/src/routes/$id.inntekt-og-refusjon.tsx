@@ -12,8 +12,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 
-import type { ForespørselDto } from "~/api/queries.ts";
-import { hentForespørselData } from "~/api/queries.ts";
+import type { OpplysningerDto } from "~/api/queries.ts";
+import { hentOpplysningerData } from "~/api/queries.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
@@ -21,11 +21,11 @@ import { capitalizeSetning, leggTilGenitiv } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
-  loader: ({ params }) => hentForespørselData(params.id),
+  loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
 function InntektOgRefusjon() {
-  const inntektsmeldingDialogDto = Route.useLoaderData();
+  const opplysninger = Route.useLoaderData();
 
   return (
     <section className="mt-6">
@@ -34,10 +34,8 @@ function InntektOgRefusjon() {
           Inntekt og refusjon
         </Heading>
         <Fremgangsindikator aktivtSteg={2} />
-        <ForeldrepengePeriode
-          inntektsmeldingDialogDto={inntektsmeldingDialogDto}
-        />
-        <Inntekt forespørsel={inntektsmeldingDialogDto} />
+        <ForeldrepengePeriode opplysninger={opplysninger} />
+        <Inntekt opplysninger={opplysninger} />
         <UtbetalingOgRefusjon />
         <Naturalytelser />
         <div className="flex gap-4 justify-center">
@@ -64,12 +62,10 @@ function InntektOgRefusjon() {
 }
 
 type ForeldrepengePeriodeProps = {
-  inntektsmeldingDialogDto: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
-function ForeldrepengePeriode({
-  inntektsmeldingDialogDto,
-}: ForeldrepengePeriodeProps) {
-  const { startdatoPermisjon, person } = inntektsmeldingDialogDto;
+function ForeldrepengePeriode({ opplysninger }: ForeldrepengePeriodeProps) {
+  const { startdatoPermisjon, person } = opplysninger;
 
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "EEEE dd.MMMM yyyy", {

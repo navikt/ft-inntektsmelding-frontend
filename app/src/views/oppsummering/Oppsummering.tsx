@@ -6,7 +6,7 @@ import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
-import type { ForespørselDto } from "~/api/queries";
+import type { OpplysningerDto } from "~/api/queries";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
@@ -22,7 +22,7 @@ const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
   const { id } = route.useParams();
-  const forespørsel = route.useLoaderData();
+  const opplysninger = route.useLoaderData();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -233,7 +233,7 @@ export const Oppsummering = () => {
             </FormSummary.Answer>
           </FormSummary.Answers>
         </FormSummary>
-        <SendInnInntektsmelding forespørsel={forespørsel} />
+        <SendInnInntektsmelding opplysninger={opplysninger} />
       </div>
     </section>
   );
@@ -249,18 +249,18 @@ const formatterKontaktperson = (
 };
 
 type SendInnInntektsmeldingProps = {
-  forespørsel: ForespørselDto;
+  opplysninger: OpplysningerDto;
 };
-function SendInnInntektsmelding({ forespørsel }: SendInnInntektsmeldingProps) {
+function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
 
   const DUMMY_IM = {
     foresporselUuid: "123", // TODO
-    aktorId: forespørsel.person.aktørId,
-    ytelse: forespørsel.ytelse,
-    arbeidsgiverIdent: forespørsel.arbeidsgiver.organisasjonNummer,
+    aktorId: opplysninger.person.aktørId,
+    ytelse: opplysninger.ytelse,
+    arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
     telefonnummer: "12345678",
-    startdato: forespørsel.startdatoPermisjon,
+    startdato: opplysninger.startdatoPermisjon,
     inntekt: 30_000,
     refusjonsperioder: [],
     bortfaltNaturaltytelsePerioder: [],
