@@ -4,6 +4,7 @@ import {
   Button,
   Heading,
   Radio,
+  RadioGroup,
   Select,
   TextField,
   VStack,
@@ -14,10 +15,22 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
-import { RadioGroupWrapped } from "~/features/react-hook-form-wrappers/RadioGroupWrapped.tsx";
+import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
+
+export const DEFAULT_NATURALYTELSE_SOM_MISTES = {
+  fraOgMed: "",
+  beløp: 0,
+  navn: "",
+};
 
 export function Naturalytelser() {
-  const misterNaturalytelser = useFormContext().watch("misterNaturalytelser");
+  const { register, formState, watch } =
+    useFormContext<InntektOgRefusjonForm>();
+  const { name, ...radioGroupProps } = register("misterNaturalytelser", {
+    required: "Du må svare på dette spørsmålet",
+  });
+
+  const misterNaturalytelser = watch("misterNaturalytelser");
   return (
     <VStack gap="4">
       <hr />
@@ -33,18 +46,30 @@ export function Naturalytelser() {
           mobiltelefon og internett-abonnement.
         </BodyLong>
       </HjelpetekstReadMore>
-      <RadioGroupWrapped
+      {/*<RadioGroupWrapped*/}
+      {/*  legend="Har den ansatte naturalytelser som faller bort ved fraværet?"*/}
+      {/*  name="misterNaturalytelser"*/}
+      {/*  rules={{*/}
+      {/*    validate: (value: boolean | null) =>*/}
+      {/*      value === null ? "Må oppgis" : true,*/}
+      {/*  }}*/}
+      {/*>*/}
+      {/*  <Radio value={true}>Ja</Radio>*/}
+      {/*  <Radio value={false}>Nei</Radio>*/}
+      {/*</RadioGroupWrapped>*/}
+      <RadioGroup
+        error={formState.errors.misterNaturalytelser?.message}
         legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        name="misterNaturalytelser"
-        rules={{
-          validate: (value: boolean | null) =>
-            value === null ? "Må oppgis" : true,
-        }}
+        name={name}
       >
-        <Radio value={true}>Ja</Radio>
-        <Radio value={false}>Nei</Radio>
-      </RadioGroupWrapped>
-      {misterNaturalytelser ? <MisterNaturalytelser /> : undefined}
+        <Radio value="ja" {...radioGroupProps}>
+          Ja
+        </Radio>
+        <Radio value="nei" {...radioGroupProps}>
+          Nei
+        </Radio>
+      </RadioGroup>
+      {misterNaturalytelser === "ja" ? <MisterNaturalytelser /> : undefined}
     </VStack>
   );
 }
@@ -123,7 +148,7 @@ function MisterNaturalytelser() {
       <Button
         className="w-fit"
         icon={<PlusIcon />}
-        onClick={() => append({ fraOgMed: "", beløp: 0, navn: "" })}
+        onClick={() => append(DEFAULT_NATURALYTELSE_SOM_MISTES)}
         size="small"
         type="button"
         variant="secondary"

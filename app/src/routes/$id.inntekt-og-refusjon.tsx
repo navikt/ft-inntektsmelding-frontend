@@ -14,10 +14,14 @@ import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
+import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt";
-import { Naturalytelser } from "~/features/skjema-moduler/Naturalytelser";
+import {
+  DEFAULT_NATURALYTELSE_SOM_MISTES,
+  Naturalytelser,
+} from "~/features/skjema-moduler/Naturalytelser";
 import {
   capitalizeSetning,
   formatDatoLang,
@@ -30,10 +34,10 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
-type InntektOgRefusjonForm = {
+export type InntektOgRefusjonForm = {
   skalRefunderes: "ja" | "nei";
   misterNaturalytelser: "ja" | "nei";
-};
+} & Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 
 function InntektOgRefusjon() {
   const opplysninger = Route.useLoaderData();
@@ -54,12 +58,15 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.misterNaturalytelser
             ? "ja"
             : "nei",
+      naturalytelserSomMistes: [DEFAULT_NATURALYTELSE_SOM_MISTES],
     },
   });
+  console.log("values", formMethods.watch());
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
+    console.log("submit", skjemadata);
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       skalRefunderes: skjemadata.skalRefunderes === "ja",
@@ -136,7 +143,7 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
 
 function UtbetalingOgRefusjon() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { onChange, name, ...radioGroupProps } = register("skalRefunderes", {
+  const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
   return (
@@ -152,7 +159,6 @@ function UtbetalingOgRefusjon() {
         error={formState.errors.skalRefunderes?.message}
         legend="Betaler dere lønn under fraværet og krever refusjon?"
         name={name}
-        onChange={(value) => onChange({ target: { value } })}
       >
         <Radio value="ja" {...radioGroupProps}>
           Ja
