@@ -67,10 +67,16 @@ function InntektOgRefusjon() {
 
   const onSubmit = handleSubmit((skjemadata) => {
     console.log("submit", skjemadata);
+    const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
+    const naturalytelserSomMistes = misterNaturalytelser
+      ? skjemadata.naturalytelserSomMistes
+      : [];
+
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       skalRefunderes: skjemadata.skalRefunderes === "ja",
-      misterNaturalytelser: skjemadata.misterNaturalytelser === "ja",
+      misterNaturalytelser,
+      naturalytelserSomMistes,
     }));
     navigate({
       from: "/$id/inntekt-og-refusjon",

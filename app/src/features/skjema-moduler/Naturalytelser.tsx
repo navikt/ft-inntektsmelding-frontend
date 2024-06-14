@@ -12,6 +12,7 @@ import {
 import clsx from "clsx";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { z } from "zod";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
@@ -123,8 +124,11 @@ function MisterNaturalytelser() {
           />
           <TextField
             {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
-              required: "Må oppgis", // TODO: bedre validering
-              valueAsNumber: true,
+              validate: (value) => {
+                const { success } = z.coerce.number().gt(0).safeParse(value);
+
+                return success || "Må være mer enn 0";
+              },
             })}
             error={
               formState.errors?.naturalytelserSomMistes?.[index]?.beløp?.message
