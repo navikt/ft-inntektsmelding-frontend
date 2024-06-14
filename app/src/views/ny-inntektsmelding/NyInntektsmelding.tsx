@@ -3,7 +3,11 @@ import { getRouteApi, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { capitalizeSetning, formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils.ts";
+import {
+  capitalizeSetning,
+  formatYtelsesnavn,
+  slåSammenTilFulltNavn,
+} from "~/utils.ts";
 
 const route = getRouteApi("/$id");
 
