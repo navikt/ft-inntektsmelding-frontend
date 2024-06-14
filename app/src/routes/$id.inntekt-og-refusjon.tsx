@@ -5,7 +5,6 @@ import {
   Heading,
   Radio,
   RadioGroup,
-  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -146,7 +145,9 @@ function UtbetalingOgRefusjon() {
       <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
-      <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
+      <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
+        TODO
+      </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.skalRefunderes?.message}
         legend="Betaler dere lønn under fraværet og krever refusjon?"
