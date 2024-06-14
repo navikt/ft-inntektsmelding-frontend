@@ -13,7 +13,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import {
   formatDatoLang,
-  formatIdentitetsnummer,
+  formatFødselsnummer,
   formatKroner,
   formatYtelsesnavn,
 } from "~/utils";
@@ -23,6 +23,7 @@ const route = getRouteApi("/$id/oppsummering");
 export const Oppsummering = () => {
   const { id } = route.useParams();
   const opplysninger = route.useLoaderData();
+  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -69,8 +70,6 @@ export const Oppsummering = () => {
     },
   };
 
-  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
-
   return (
     <section>
       <div className="bg-bg-default mt-6 px-5 py-6 rounded-md flex flex-col gap-6">
@@ -93,7 +92,7 @@ export const Oppsummering = () => {
                   <FormSummary.Answer>
                     <FormSummary.Label>Virksomhetsnavn</FormSummary.Label>
                     <FormSummary.Value>
-                      {skjemadata.dineOpplysninger.arbeidsgiver.virksomhetsnavn}
+                      {opplysninger.arbeidsgiver.organisasjonNavn}
                     </FormSummary.Value>
                   </FormSummary.Answer>
                   <FormSummary.Answer>
@@ -101,10 +100,7 @@ export const Oppsummering = () => {
                       Org. nr. for underenhet
                     </FormSummary.Label>
                     <FormSummary.Value>
-                      {
-                        skjemadata.dineOpplysninger.arbeidsgiver
-                          .orgnrForUnderenhet
-                      }
+                      {opplysninger.arbeidsgiver.organisasjonNummer}
                     </FormSummary.Value>
                   </FormSummary.Answer>
                 </FormSummary.Answers>
@@ -121,12 +117,8 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
-                {skjemadata.dineOpplysninger.arbeidstaker.etternavn} (
-                {formatIdentitetsnummer(
-                  skjemadata.dineOpplysninger.arbeidstaker.identitetsnummer,
-                )}
-                )
+                {opplysninger.person.navn} (
+                {formatFødselsnummer(opplysninger.person.fødselsnummer)})
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -185,7 +177,7 @@ export const Oppsummering = () => {
                 refusjon fra NAV?
               </FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.inntektOgRefusjon.refusjon ? "Ja" : "Nei"}
+                {inntektsmeldingSkjemaState.skalRefunderes ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
             {skjemadata.inntektOgRefusjon.refusjon && (
@@ -205,9 +197,7 @@ export const Oppsummering = () => {
                 permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.inntektOgRefusjon.refusjon?.endringIRefusjon
-                  ? "Ja"
-                  : "Nei"}
+                {inntektsmeldingSkjemaState.endringIRefusjon ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -228,7 +218,7 @@ export const Oppsummering = () => {
                 naturalytelser som faller bort ved fraværet?
               </FormSummary.Label>
               <FormSummary.Value>
-                {skjemadata.inntektOgRefusjon.naturalytelser ? "Ja" : "Nei"}
+                {inntektsmeldingSkjemaState.misterNaturalytelser ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
