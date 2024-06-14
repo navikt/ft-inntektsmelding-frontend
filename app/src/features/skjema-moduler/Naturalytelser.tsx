@@ -12,7 +12,6 @@ import {
 import clsx from "clsx";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { z } from "zod";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
@@ -20,7 +19,7 @@ import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePicke
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import type { Naturalytelsetype } from "~/types/api-models.ts";
 
-export const DEFAULT_NATURALYTELSE_SOM_MISTES = {
+export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fraOgMed: "",
   beløp: 0,
   navn: "",
@@ -127,20 +126,18 @@ function MisterNaturalytelser() {
           />
           <TextField
             {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
-              validate: (value) => {
-                const { success } = z.coerce.number().gt(0).safeParse(value);
-
-                return success || "Må være mer enn 0";
-              },
+              min: { value: 1, message: "Må være mer enn 0" },
             })}
             error={
               formState.errors?.naturalytelserSomMistes?.[index]?.beløp?.message
             }
             hideLabel={index > 0}
-            label={<span>Verdi&nbsp;pr.måned</span>}
+            inputMode="numeric"
+            label={<span>Verdi&nbsp;pr. måned</span>}
             size="medium"
           />
           <Button
+            aria-label="fjern naturalytelse"
             className={clsx({ "mt-8": index === 0 })}
             disabled={index === 0}
             icon={<TrashIcon />}
@@ -152,7 +149,8 @@ function MisterNaturalytelser() {
       <Button
         className="w-fit"
         icon={<PlusIcon />}
-        onClick={() => append(DEFAULT_NATURALYTELSE_SOM_MISTES)}
+        iconPosition="left"
+        onClick={() => append(NATURALYTELSE_SOM_MISTES_TEMPLATE)}
         size="small"
         type="button"
         variant="secondary"

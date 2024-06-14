@@ -19,7 +19,7 @@ import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState"
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { Inntekt } from "~/features/skjema-moduler/Inntekt";
 import {
-  DEFAULT_NATURALYTELSE_SOM_MISTES,
+  NATURALYTELSE_SOM_MISTES_TEMPLATE,
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import {
@@ -60,7 +60,7 @@ function InntektOgRefusjon() {
             : "nei",
       naturalytelserSomMistes:
         inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
-          ? [DEFAULT_NATURALYTELSE_SOM_MISTES]
+          ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
           : inntektsmeldingSkjemaState.naturalytelserSomMistes,
     },
   });
