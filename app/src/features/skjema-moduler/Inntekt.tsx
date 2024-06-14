@@ -43,7 +43,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd*/}
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
-        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} lønn fra de siste tre månedene før ${førsteDag}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
           {inntekter?.map((inntekt) => (

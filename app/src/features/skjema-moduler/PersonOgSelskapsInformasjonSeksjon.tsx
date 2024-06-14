@@ -19,7 +19,7 @@ import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
-import { formatFødselsnummer } from "~/utils";
+import { formatFødselsnummer, slåSammenTilFulltNavn } from "~/utils";
 
 import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
 import { Fremgangsindikator } from "./Fremgangsindikator";
@@ -136,16 +136,22 @@ type IntroProps = {
 };
 const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
-  const [fornavn] = person.navn.split(" ") ?? ["den ansatte"];
+  const fulltNavn = slåSammenTilFulltNavn(
+    person.fornavn,
+    person.mellomnavn,
+    person.etternavn,
+  );
+  const fornavn = person.fornavn;
+
   return (
     <GuidePanel className="mb-4 col-span-2">
       <div className="flex flex-col gap-4">
         <Heading level="3" size="medium">
-          Hei der!
+          Hei {fornavn}!
         </Heading>
         <BodyLong>
           <strong>
-            {person.navn} ({formatFødselsnummer(person.fødselsnummer)})
+            {fulltNavn} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
           som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
           søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
@@ -168,10 +174,15 @@ type PersoninformasjonProps = {
 
 const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
   const { person } = opplysninger;
+  const fulltNavn = slåSammenTilFulltNavn(
+    person.fornavn,
+    person.mellomnavn,
+    person.etternavn,
+  );
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
-      <LabelOgVerdi label="Navn">{person.navn}</LabelOgVerdi>
+      <LabelOgVerdi label="Navn">{fulltNavn}</LabelOgVerdi>
       <LabelOgVerdi label="Fødselsdato">
         <div className="flex items-center gap-2">
           {formatFødselsnummer(person.fødselsnummer)}{" "}

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { navnMedStorBokstav } from "~/utils.ts";
+
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
 export async function hentOpplysningerData(uuid: string) {
@@ -33,7 +35,12 @@ const opplysningerSchema = z.object({
   person: z.object({
     aktørId: z.string(),
     fødselsnummer: z.string(),
-    navn: z.string(),
+    fornavn: z.string().transform(navnMedStorBokstav),
+    mellomnavn: z
+      .string()
+      .optional()
+      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || "")),
+    etternavn: z.string().transform(navnMedStorBokstav),
   }),
   arbeidsgiver: z.object({
     organisasjonNavn: z.string(),

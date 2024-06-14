@@ -6,6 +6,21 @@ export function leggTilGenitiv(navn: string) {
   return `${navn}s`;
 }
 
+export function slåSammenTilFulltNavn(
+  fornavn: string,
+  mellomnavn: string | undefined,
+  etternavn: string,
+) {
+  return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
+}
+
+export function navnMedStorBokstav(navn: string) {
+  return navn
+    .split("-")
+    .map((old) => capitalize(old))
+    .join("-");
+}
+
 export function capitalizeSetning(setning: string) {
   const oppdelteOrd = setning.split(" ");
   return oppdelteOrd.map((ord) => capitalize(ord)).join(" ");

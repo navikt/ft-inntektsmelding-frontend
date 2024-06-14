@@ -141,8 +141,8 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
         Periode med {formatYtelsesnavn(ytelse)}
       </Heading>
       <InformasjonsseksjonMedKilde
-        kilde={`Fra søknaden til ${person.navn}`}
-        tittel={`${capitalizeSetning(leggTilGenitiv(person.navn))} første dag med ${formatYtelsesnavn(ytelse)}`}
+        kilde={`Fra søknaden til ${person.fornavn}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} første dag med ${formatYtelsesnavn(ytelse)}`}
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
