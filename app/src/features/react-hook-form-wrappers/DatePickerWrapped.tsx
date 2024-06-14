@@ -15,9 +15,7 @@ export function DatePickerWrapped({
     rules,
   });
   const datePickerProperties = useDatepicker({
-    onDateChange: async (date) => {
-      field.onChange(date);
-    },
+    onDateChange: field.onChange,
     defaultSelected: field.value ? new Date(field.value) : undefined,
   });
 
