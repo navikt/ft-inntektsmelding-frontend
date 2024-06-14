@@ -58,7 +58,10 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.misterNaturalytelser
             ? "ja"
             : "nei",
-      naturalytelserSomMistes: [DEFAULT_NATURALYTELSE_SOM_MISTES],
+      naturalytelserSomMistes:
+        inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
+          ? [DEFAULT_NATURALYTELSE_SOM_MISTES]
+          : inntektsmeldingSkjemaState.naturalytelserSomMistes,
     },
   });
   console.log("values", formMethods.watch());
