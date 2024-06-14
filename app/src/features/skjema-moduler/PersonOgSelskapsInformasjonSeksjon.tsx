@@ -136,7 +136,7 @@ type IntroProps = {
 };
 const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
-  const fulltNavn1 = slåSammenTilFulltNavn(
+  const fulltNavn = slåSammenTilFulltNavn(
     person.fornavn,
     person.mellomnavn,
     person.etternavn,
@@ -151,7 +151,7 @@ const Intro = ({ opplysninger }: IntroProps) => {
         </Heading>
         <BodyLong>
           <strong>
-            {fulltNavn1} ({formatFødselsnummer(person.fødselsnummer)})
+            {fulltNavn} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
           som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
           søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
