@@ -1,4 +1,4 @@
-import { PlusIcon } from "@navikt/aksel-icons";
+import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
   BodyLong,
   Button,
@@ -9,6 +9,7 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import clsx from "clsx";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -46,17 +47,6 @@ export function Naturalytelser() {
           mobiltelefon og internett-abonnement.
         </BodyLong>
       </HjelpetekstReadMore>
-      {/*<RadioGroupWrapped*/}
-      {/*  legend="Har den ansatte naturalytelser som faller bort ved fraværet?"*/}
-      {/*  name="misterNaturalytelser"*/}
-      {/*  rules={{*/}
-      {/*    validate: (value: boolean | null) =>*/}
-      {/*      value === null ? "Må oppgis" : true,*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  <Radio value={true}>Ja</Radio>*/}
-      {/*  <Radio value={false}>Nei</Radio>*/}
-      {/*</RadioGroupWrapped>*/}
       <RadioGroup
         error={formState.errors.misterNaturalytelser?.message}
         legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
@@ -99,13 +89,13 @@ const naturalytelser = [
 type FormType = Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 function MisterNaturalytelser() {
   const { control, register, formState } = useFormContext<FormType>();
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "naturalytelserSomMistes",
   });
 
   return (
-    <div className="grid grid-cols-[1fr_min-content_min-content] gap-4 items-start">
+    <div className="grid grid-cols-[1fr_min-content_min-content_max-content] gap-4 items-start">
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <Select
@@ -142,6 +132,13 @@ function MisterNaturalytelser() {
             hideLabel={index > 0}
             label={<span>Verdi&nbsp;pr.måned</span>}
             size="medium"
+          />
+          <Button
+            className={clsx({ "mt-8": index === 0 })}
+            disabled={index === 0}
+            icon={<TrashIcon />}
+            onClick={() => remove(index)}
+            variant="secondary"
           />
         </Fragment>
       ))}
