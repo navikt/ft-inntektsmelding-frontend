@@ -11,8 +11,7 @@ export function slåSammenTilFulltNavn(
   mellomnavn: string | undefined,
   etternavn: string,
 ) {
-  const mellomNavnMedSpace = mellomnavn ? `${mellomnavn} ` : "";
-  return `${fornavn} ${mellomNavnMedSpace}${etternavn}`;
+  return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
 }
 
 export function navnMedStorBokstav(navn: string) {
