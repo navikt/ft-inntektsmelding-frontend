@@ -109,7 +109,12 @@ function InntektOgRefusjon() {
             >
               Forrige steg
             </Button>
-            <Button icon={<ArrowRightIcon />} type="submit" variant="primary">
+            <Button
+              icon={<ArrowRightIcon />}
+              iconPosition="right"
+              type="submit"
+              variant="primary"
+            >
               Neste steg
             </Button>
           </div>

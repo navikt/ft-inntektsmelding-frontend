@@ -18,6 +18,7 @@ import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
+import type { Naturalytelsetype } from "~/types/api-models.ts";
 
 export const DEFAULT_NATURALYTELSE_SOM_MISTES = {
   fraOgMed: "",
@@ -65,27 +66,29 @@ export function Naturalytelser() {
   );
 }
 
-const naturalytelser = [
-  "ELEKTRISK_KOMMUNIKASJON",
-  "AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS",
-  "LOSJI",
-  "KOST_DØGN",
-  "BESØKSREISER_HJEMMET_ANNET",
-  "KOSTBESPARELSE_I_HJEMMET",
-  "RENTEFORDEL_LÅN",
-  "BIL",
-  "KOST_DAGER",
-  "BOLIG",
-  "SKATTEPLIKTIG_DEL_FORSIKRINGER",
-  "FRI_TRANSPORT",
-  "OPSJONER",
-  "TILSKUDD_BARNEHAGEPLASS",
-  "ANNET",
-  "BEDRIFTSBARNEHAGEPLASS",
-  "YRKEBIL_TJENESTLIGBEHOV_KILOMETER",
-  "YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS",
-  "INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING",
-];
+const naturalytelser: Record<Naturalytelsetype, string> = {
+  ELEKTRISK_KOMMUNIKASJON: "Elektronisk kommunikasjon",
+  AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS:
+    "Aksjer / grunnfondsbevis til underkurs",
+  LOSJI: "Losji",
+  KOST_DØGN: "Kost (døgn)",
+  BESØKSREISER_HJEMMET_ANNET: "Besøksreiser i hjemmet annet",
+  KOSTBESPARELSE_I_HJEMMET: "Kostbesparelse i hjemmet",
+  RENTEFORDEL_LÅN: "Rentefordel lån",
+  BIL: "Bil",
+  KOST_DAGER: "Kost (dager)",
+  BOLIG: "Bolig",
+  SKATTEPLIKTIG_DEL_FORSIKRINGER: "Skattepliktig del av visse forsikringer",
+  FRI_TRANSPORT: "Fri transport",
+  OPSJONER: "Opsjoner",
+  TILSKUDD_BARNEHAGEPLASS: "Tilskudd barnehageplass",
+  BEDRIFTSBARNEHAGEPLASS: "Bedriftsbarnehageplass",
+  YRKEBIL_TJENESTLIGBEHOV_KILOMETER: "Yrkesbil tjenestebehov kilometer",
+  YRKEBIL_TJENESTLIGBEHOV_LISTEPRIS: "Yrkesbil tjenestebehov listepris",
+  INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING:
+    "Innbetaling utenlandsk pensjonsordning",
+  ANNET: "Annet",
+};
 
 type FormType = Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 function MisterNaturalytelser() {
@@ -110,9 +113,9 @@ function MisterNaturalytelser() {
             }
           >
             <option value="">Velg naturalytelse</option>
-            {naturalytelser.map((naturalYtelse) => (
-              <option key={naturalYtelse} value={naturalYtelse}>
-                {naturalYtelse}
+            {Object.entries(naturalytelser).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
               </option>
             ))}
           </Select>
@@ -142,7 +145,7 @@ function MisterNaturalytelser() {
             disabled={index === 0}
             icon={<TrashIcon />}
             onClick={() => remove(index)}
-            variant="secondary"
+            variant="tertiary"
           />
         </Fragment>
       ))}
