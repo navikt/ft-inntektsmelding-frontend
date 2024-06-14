@@ -5,7 +5,6 @@ import {
   BodyShort,
   Button,
   CopyButton,
-  Detail,
   GuidePanel,
   Heading,
   HGrid,
@@ -13,7 +12,6 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
-import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries";

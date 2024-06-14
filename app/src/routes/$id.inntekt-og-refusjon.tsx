@@ -160,8 +160,8 @@ function Naturalytelser() {
       <RadioGroup
         error={formState.errors.misterNaturalytelser?.message}
         legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        onChange={(value) => onChange({ target: { value } })}
         name={name}
+        onChange={(value) => onChange({ target: { value } })}
       >
         <Radio value="ja" {...radioGroupProps}>
           Ja
@@ -189,8 +189,8 @@ function UtbetalingOgRefusjon() {
       <RadioGroup
         error={formState.errors.skalRefunderes?.message}
         legend="Betaler dere lønn under fraværet og krever refusjon?"
-        onChange={(value) => onChange({ target: { value } })}
         name={name}
+        onChange={(value) => onChange({ target: { value } })}
       >
         <Radio value="ja" {...radioGroupProps}>
           Ja
