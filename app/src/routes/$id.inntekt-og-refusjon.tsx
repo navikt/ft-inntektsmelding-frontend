@@ -64,12 +64,10 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.naturalytelserSomMistes,
     },
   });
-  console.log("values", formMethods.watch());
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    console.log("submit", skjemadata);
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const naturalytelserSomMistes = misterNaturalytelser
       ? skjemadata.naturalytelserSomMistes
