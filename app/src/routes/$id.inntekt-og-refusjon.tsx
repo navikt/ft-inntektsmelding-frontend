@@ -5,7 +5,6 @@ import {
   Heading,
   Radio,
   RadioGroup,
-  ReadMore,
   VStack,
 } from "@navikt/ds-react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
@@ -15,9 +14,14 @@ import type { OpplysningerDto } from "~/api/queries.ts";
 import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
+import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
-import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
-import { Inntekt } from "~/features/skjema-moduler/Inntekt.tsx";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
+import { Inntekt } from "~/features/skjema-moduler/Inntekt";
+import {
+  NATURALYTELSE_SOM_MISTES_TEMPLATE,
+  Naturalytelser,
+} from "~/features/skjema-moduler/Naturalytelser";
 import {
   capitalizeSetning,
   formatDatoLang,
@@ -30,10 +34,10 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
-type InntektOgRefusjonForm = {
+export type InntektOgRefusjonForm = {
   skalRefunderes: "ja" | "nei";
   misterNaturalytelser: "ja" | "nei";
-};
+} & Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 
 function InntektOgRefusjon() {
   const opplysninger = Route.useLoaderData();
@@ -54,16 +58,26 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.misterNaturalytelser
             ? "ja"
             : "nei",
+      naturalytelserSomMistes:
+        inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
+          ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
+          : inntektsmeldingSkjemaState.naturalytelserSomMistes,
     },
   });
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
+    const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
+    const naturalytelserSomMistes = misterNaturalytelser
+      ? skjemadata.naturalytelserSomMistes
+      : [];
+
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       skalRefunderes: skjemadata.skalRefunderes === "ja",
-      misterNaturalytelser: skjemadata.misterNaturalytelser === "ja",
+      misterNaturalytelser,
+      naturalytelserSomMistes,
     }));
     navigate({
       from: "/$id/inntekt-og-refusjon",
@@ -95,7 +109,12 @@ function InntektOgRefusjon() {
             >
               Forrige steg
             </Button>
-            <Button icon={<ArrowRightIcon />} type="submit" variant="primary">
+            <Button
+              icon={<ArrowRightIcon />}
+              iconPosition="right"
+              type="submit"
+              variant="primary"
+            >
               Neste steg
             </Button>
           </div>
@@ -134,49 +153,9 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
   );
 }
 
-function Naturalytelser() {
-  const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { onChange, name, ...radioGroupProps } = register(
-    "misterNaturalytelser",
-    {
-      required: "Du må svare på dette spørsmålet",
-    },
-  );
-  return (
-    <VStack gap="4">
-      <hr />
-      <Heading id="naturalytelser" level="4" size="medium">
-        Naturalytelser
-      </Heading>
-      <HjelpetekstReadMore header="Hva er naturalytelser?">
-        <BodyLong>
-          Naturalytelser er skattepliktige goder eller fordeler en ansatt får
-          fra arbeidsgiver på toppen av vanlig lønn.
-          <br />
-          Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
-          mobiltelefon og internett-abonnement.
-        </BodyLong>
-      </HjelpetekstReadMore>
-      <RadioGroup
-        error={formState.errors.misterNaturalytelser?.message}
-        legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
-        name={name}
-        onChange={(value) => onChange({ target: { value } })}
-      >
-        <Radio value="ja" {...radioGroupProps}>
-          Ja
-        </Radio>
-        <Radio value="nei" {...radioGroupProps}>
-          Nei
-        </Radio>
-      </RadioGroup>
-    </VStack>
-  );
-}
-
 function UtbetalingOgRefusjon() {
   const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { onChange, name, ...radioGroupProps } = register("skalRefunderes", {
+  const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
   return (
@@ -185,12 +164,13 @@ function UtbetalingOgRefusjon() {
       <Heading id="refusjon" level="4" size="medium">
         Utbetaling og refusjon
       </Heading>
-      <ReadMore header="Hva vil det si å ha refusjon?">TODO</ReadMore>
+      <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
+        TODO
+      </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.skalRefunderes?.message}
         legend="Betaler dere lønn under fraværet og krever refusjon?"
         name={name}
-        onChange={(value) => onChange({ target: { value } })}
       >
         <Radio value="ja" {...radioGroupProps}>
           Ja
