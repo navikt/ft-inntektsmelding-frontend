@@ -17,9 +17,10 @@ import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/Hjelpetekst.tsx";
-import { InformasjonsseksjonMedKilde } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import { capitalizeSetning, formatKroner, leggTilGenitiv } from "~/utils.ts";
+
+import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
 
 type InntektProps = {
   opplysninger: OpplysningerDto;

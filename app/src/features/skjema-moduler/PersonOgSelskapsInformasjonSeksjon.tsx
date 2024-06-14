@@ -5,7 +5,6 @@ import {
   BodyShort,
   Button,
   CopyButton,
-  Detail,
   GuidePanel,
   Heading,
   HGrid,
@@ -13,7 +12,6 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
-import clsx from "clsx";
 import { useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries";
@@ -21,7 +19,9 @@ import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
+import { formatFødselsnummer } from "~/utils";
 
+import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
@@ -145,7 +145,7 @@ const Intro = ({ opplysninger }: IntroProps) => {
         </Heading>
         <BodyLong>
           <strong>
-            {person.navn} ({formaterFødselsnummer(person.fødselsnummer)})
+            {person.navn} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
           som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
           søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
@@ -174,19 +174,12 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
       <LabelOgVerdi label="Navn">{person.navn}</LabelOgVerdi>
       <LabelOgVerdi label="Fødselsdato">
         <div className="flex items-center gap-2">
-          {formaterFødselsnummer(person.fødselsnummer)}{" "}
+          {formatFødselsnummer(person.fødselsnummer)}{" "}
           <CopyButton copyText={person.fødselsnummer} size="small" />
         </div>
       </LabelOgVerdi>
     </InformasjonsseksjonMedKilde>
   );
-};
-
-const formaterFødselsnummer = (str: string) => {
-  if (str?.length !== 11) {
-    return str;
-  }
-  return str.slice(0, 6) + " " + str.slice(6);
 };
 
 type ArbeidsgiverInformasjonProps = {
@@ -209,36 +202,6 @@ const ArbeidsgiverInformasjon = ({
   );
 };
 
-type InformasjonsseksjonMedKildeProps = {
-  kilde: string;
-  tittel: string;
-  children: React.ReactNode;
-  className?: string;
-};
-export const InformasjonsseksjonMedKilde = ({
-  children,
-  kilde,
-  tittel,
-  className,
-}: InformasjonsseksjonMedKildeProps) => {
-  return (
-    <div
-      className={clsx(
-        "bg-bg-subtle p-4 flex flex-col gap-4 rounded-md",
-        className,
-      )}
-    >
-      <div className="flex justify-between items-center">
-        <Heading level="3" size="xsmall">
-          {tittel}
-        </Heading>
-        <Detail className="uppercase flex items-center">{kilde}</Detail>
-      </div>
-      {children}
-    </div>
-  );
-};
-
 type LabelOgVerdiProps = {
   label: string;
   children: React.ReactNode;
@@ -249,7 +212,7 @@ const LabelOgVerdi = ({ label, children }: LabelOgVerdiProps) => {
       <Label as="p" size="small">
         {label}
       </Label>
-      <BodyShort>{children}</BodyShort>
+      <BodyShort as="div">{children}</BodyShort>
     </div>
   );
 };
