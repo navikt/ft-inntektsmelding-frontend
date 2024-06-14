@@ -16,6 +16,7 @@ import {
   formatFødselsnummer,
   formatKroner,
   formatYtelsesnavn,
+  slåSammenTilFulltNavn,
 } from "~/utils";
 
 const route = getRouteApi("/$id/oppsummering");
@@ -117,8 +118,12 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
-                {opplysninger.person.navn} (
-                {formatFødselsnummer(opplysninger.person.fødselsnummer)})
+                {slåSammenTilFulltNavn(
+                  opplysninger.person.fornavn,
+                  opplysninger.person.mellomnavn,
+                  opplysninger.person.etternavn,
+                )}
+                {", "}({formatFødselsnummer(opplysninger.person.fødselsnummer)})
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>

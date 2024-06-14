@@ -6,6 +6,20 @@ export function leggTilGenitiv(navn: string) {
   return `${navn}s`;
 }
 
+export function slåSammenTilFulltNavn(
+  fornavn: string,
+  mellomnavn: string | undefined,
+  etternavn: string,
+) {
+  const mellomNavnMedSpace = mellomnavn ? `${mellomnavn} ` : "";
+  return `${fornavn} ${mellomNavnMedSpace}${etternavn}`;
+}
+
+export function navnMedStorBokstav(navn: string) {
+  // TODO: dobbeltnavn?? Tror backend har noen utils, kanskje endre til at den formatterer navn istedenfor capslock?
+  return capitalize(navn);
+}
+
 export function capitalizeSetning(setning: string) {
   const oppdelteOrd = setning.split(" ");
   return oppdelteOrd.map((ord) => capitalize(ord)).join(" ");
