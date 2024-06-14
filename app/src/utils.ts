@@ -15,8 +15,10 @@ export function slåSammenTilFulltNavn(
 }
 
 export function navnMedStorBokstav(navn: string) {
-  // TODO: dobbeltnavn?? Tror backend har noen utils, kanskje endre til at den formatterer navn istedenfor capslock?
-  return capitalize(navn);
+  return navn
+    .split("-")
+    .map((old) => capitalize(old))
+    .join("-");
 }
 
 export function capitalizeSetning(setning: string) {
