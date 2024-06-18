@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prefer-top-level-await */
 import { createFileRoute } from "@tanstack/react-router";
 
-import { hentOpplysningerData } from "~/api/queries.ts";
+import { hentOpplysningerData } from "~/api/queries";
 import { NyInntektsmelding } from "~/views/ny-inntektsmelding/NyInntektsmelding";
 
 export const Route = createFileRoute("/$id")({
