@@ -1,5 +1,5 @@
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
-import { getRouteApi, Outlet } from "@tanstack/react-router";
+import { getRouteApi, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
@@ -14,6 +14,7 @@ const route = getRouteApi("/$id");
 export const NyInntektsmelding = () => {
   const { id } = route.useParams();
   const opplysninger = route.useLoaderData();
+  const location = useLocation();
 
   useEffect(() => {
     setBreadcrumbs([
@@ -23,7 +24,7 @@ export const NyInntektsmelding = () => {
       },
       {
         title: "Inntektsmelding",
-        url: `${id}`,
+        url: location.pathname,
       },
     ]);
   }, [id]);
