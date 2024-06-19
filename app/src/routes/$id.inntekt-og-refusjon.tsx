@@ -51,7 +51,7 @@ function InntektOgRefusjon() {
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
       refusjonsbeløpPerMåned:
-        inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ??
+        inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnittInntekt(opplysninger.inntekter ?? []),
       skalRefunderes:
         inntektsmeldingSkjemaState.skalRefunderes === undefined
