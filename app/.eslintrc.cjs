@@ -25,7 +25,6 @@ module.exports = {
     sourceType: "module",
   },
   plugins: [
-    "lodash",
     "react",
     "prettier",
     "@typescript-eslint",
@@ -34,7 +33,6 @@ module.exports = {
   rules: {
     eqeqeq: ["error", "always"],
     "no-console": "error",
-    "lodash/import-scope": ["error", "method"],
     "react/jsx-key": "error",
     "react/jsx-sort-props": "error",
     "prettier/prettier": ["error"],
