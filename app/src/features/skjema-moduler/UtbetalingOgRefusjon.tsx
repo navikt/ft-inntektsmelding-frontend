@@ -16,7 +16,7 @@ import type { OpplysningerDto } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import { formatKroner, gjennomsnittInntekt } from "~/utils.ts";
+import { formatKroner } from "~/utils.ts";
 
 type UtbetalingOgRefusjonProps = {
   opplysninger: OpplysningerDto;
@@ -59,11 +59,14 @@ export function UtbetalingOgRefusjon({
   );
 }
 
+// @ts-expect-error -- trenger kanskje senere
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("endringIRefusjon", {
     required: "Du må svare på dette spørsmålet",
+    shouldUnregister: true,
   });
 
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false); // TODO: dynamisk default

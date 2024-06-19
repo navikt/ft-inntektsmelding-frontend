@@ -98,7 +98,7 @@ function MisterNaturalytelser() {
   });
 
   return (
-    <div className="grid grid-cols-[1fr_min-content_min-content_max-content] gap-4 items-start">
+    <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <Select
