@@ -46,15 +46,15 @@ export type SendInntektsmeldingRequestDto = {
   bortfaltNaturaltytelsePerioder: NaturalytelseRequestDto[];
 };
 
-type RefusjonsperiodeRequestDto = {
+export type RefusjonsperiodeRequestDto = {
   fom: string;
-  tom: string;
+  tom?: string;
   beløp: number;
 };
 
 type NaturalytelseRequestDto = {
   fom: string;
-  tom: string;
+  tom?: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
 };

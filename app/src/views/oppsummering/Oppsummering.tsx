@@ -10,7 +10,10 @@ import type { OpplysningerDto } from "~/api/queries";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
+import type {
+  RefusjonsperiodeRequestDto,
+  SendInntektsmeldingRequestDto,
+} from "~/types/api-models.ts";
 import {
   formatDatoLang,
   formatFødselsnummer,
@@ -26,22 +29,22 @@ export const Oppsummering = () => {
   const opplysninger = route.useLoaderData();
   const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
-  useEffect(() => {
-    setBreadcrumbs([
-      {
-        title: "Min side – Arbeidsgiver",
-        url: "/",
-      },
-      {
-        title: "Inntektsmelding",
-        url: `/${id}`,
-      },
-      {
-        title: "Oppsummering",
-        url: `/${id}/oppsummering`,
-      },
-    ]);
-  }, [id]);
+  // useEffect(() => {
+  //   setBreadcrumbs([
+  //     {
+  //       title: "Min side – Arbeidsgiver",
+  //       url: "/",
+  //     },
+  //     {
+  //       title: "Inntektsmelding",
+  //       url: `/${id}`,
+  //     },
+  //     {
+  //       title: "Oppsummering",
+  //       url: `/${id}/oppsummering`,
+  //     },
+  //   ]);
+  // }, [id]);
 
   const søknad = {
     ytelseType: "Foreldrepenger",
@@ -248,25 +251,44 @@ type SendInnInntektsmeldingProps = {
 };
 function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
+  const { id } = route.useParams();
 
-  const DUMMY_IM = {
-    foresporselUuid: "123", // TODO
-    aktorId: opplysninger.person.aktørId,
-    ytelse: opplysninger.ytelse,
-    arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-    telefonnummer: "12345678",
-    startdato: opplysninger.startdatoPermisjon,
-    inntekt: 30_000,
-    refusjonsperioder: [],
-    bortfaltNaturaltytelsePerioder: [],
-  };
+  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  // const DUMMY_IM = {
+  //   foresporselUuid: "123", // TODO
+  //   aktorId: opplysninger.person.aktørId,
+  //   ytelse: opplysninger.ytelse,
+  //   arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
+  //   telefonnummer: "12345678",
+  //   startdato: opplysninger.startdatoPermisjon,
+  //   inntekt: 30_000,
+  //   refusjonsperioder: [],
+  //   bortfaltNaturaltytelsePerioder: [],
+  // };
 
-  const { mutate, error, isPending } = useMutation<
-    unknown,
-    unknown,
-    SendInntektsmeldingRequestDto
-  >({
-    mutationFn: sendInntektsmelding,
+  const { mutate, error, isPending } = useMutation({
+    mutationFn: async () => {
+      const månedsLønn = inntektsmeldingSkjemaState.korrigertMånedslønn ?? 0; // TODO: burde dette feltet alltid settes i formet, slik at korrigertMånedslønn i utgpkt er inntekt som så endres
+      const inntektsmelding: SendInntektsmeldingRequestDto = {
+        foresporselUuid: id,
+        aktorId: opplysninger.person.aktørId,
+        ytelse: opplysninger.ytelse,
+        arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
+        telefonnummer: inntektsmeldingSkjemaState.kontaktperson?.telefon,
+        startdato: opplysninger.startdatoPermisjon,
+        inntekt: månedsLønn,
+        refusjonsperioder: utledRefusjonsPerioder([
+          ...inntektsmeldingSkjemaState.refusjonsendringer,
+          { beløp: månedsLønn, fraOgMed: opplysninger.startdatoPermisjon },
+        ]),
+        // TODO: formattert dato og endre til fom
+        bortfaltNaturaltytelsePerioder:
+          inntektsmeldingSkjemaState.naturalytelserSomMistes, // Skal være tom dersom valgt nei. Hvordan finne tom-dato?
+      };
+
+      console.log(inntektsmelding);
+      // return sendInntektsmelding(inntektsmelding);
+    },
     onSuccess: () => {
       navigate({
         from: "/$id/oppsummering",
@@ -291,7 +313,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         <Button
           icon={<PaperplaneIcon />}
           loading={isPending}
-          onClick={() => mutate(DUMMY_IM)}
+          onClick={() => mutate()}
           variant="primary"
         >
           Send inn
@@ -299,4 +321,24 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       </div>
     </>
   );
+}
+
+function utledRefusjonsPerioder(
+  refusjonsPerioder: InntektsmeldingSkjemaState["refusjonsendringer"],
+): RefusjonsperiodeRequestDto[] {
+  // TODO: sorter etter gyldigFomDato.
+  console.log(refusjonsPerioder);
+  const perioderSynkende = [...refusjonsPerioder].sort(
+    (a, b) => new Date(b.fraOgMed).getTime() - new Date(a.fraOgMed).getTime(),
+  );
+  console.log(perioderSynkende);
+
+  return perioderSynkende.map((currentValue, index, array) => {
+    const forrigePeriode = array[index - 1];
+    return {
+      fom: currentValue.fraOgMed,
+      beløp: currentValue.beløp,
+      tom: forrigePeriode ? forrigePeriode.fraOgMed : undefined,
+    };
+  });
 }
