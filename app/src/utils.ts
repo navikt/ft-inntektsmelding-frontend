@@ -1,3 +1,5 @@
+import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
+
 export function leggTilGenitiv(navn: string) {
   if (navn.endsWith("s") || navn.endsWith("x")) {
     return `${navn}'`;
@@ -63,4 +65,15 @@ export function formatFødselsnummer(fødselsnummer: string) {
 
 export function formatYtelsesnavn(ytelsesnavn: string) {
   return ytelsesnavn.toLowerCase().replace("_", " ");
+}
+
+export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
+  if (!inntekter) {
+    return 0;
+  }
+  const summerteInntekter = inntekter.reduce((sum, inntekt) => {
+    return sum + inntekt.beløp;
+  }, 0);
+
+  return summerteInntekter / (inntekter.length || 1);
 }

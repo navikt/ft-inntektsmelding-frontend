@@ -8,9 +8,9 @@ export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefon: string };
   korrigertMånedslønn?: number;
   skalRefunderes?: boolean;
-  refusjonsbeløpPerMåned?: number;
+  refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
-  refusjonsendringer: { måned: string; beløp: number }[];
+  refusjonsendringer: { fraOgMed: string; beløp: number }[];
   misterNaturalytelser?: boolean;
   naturalytelserSomMistes: { navn: string; beløp: number; fraOgMed: string }[];
 };
@@ -33,6 +33,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
+      refusjonsbeløpPerMåned: 0,
       refusjonsendringer: [],
       naturalytelserSomMistes: [],
     },
