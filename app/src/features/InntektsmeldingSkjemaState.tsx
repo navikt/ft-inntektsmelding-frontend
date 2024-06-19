@@ -2,17 +2,23 @@ import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
+import type { Naturalytelsetype } from "~/types/api-models.ts";
+
 import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
-  kontaktperson?: { navn: string; telefon: string };
+  kontaktperson?: { navn: string; telefonnummer: string };
   korrigertMånedslønn?: number;
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
   refusjonsendringer: { fraOgMed: string; beløp: number }[];
   misterNaturalytelser?: boolean;
-  naturalytelserSomMistes: { navn: string; beløp: number; fraOgMed: string }[];
+  naturalytelserSomMistes: {
+    navn: Naturalytelsetype | "";
+    beløp: number;
+    fraOgMed: string;
+  }[];
 };
 
 type InntektsmeldingSkjemaStateContextType = {

@@ -39,11 +39,16 @@ export type SendInntektsmeldingRequestDto = {
   aktorId: string;
   ytelse: Ytelsetype;
   arbeidsgiverIdent: string;
-  telefonnummer: string;
+  kontaktperson: KontaktpersonDto;
   startdato: string;
   inntekt: number;
   refusjonsperioder: RefusjonsperiodeRequestDto[];
   bortfaltNaturaltytelsePerioder: NaturalytelseRequestDto[];
+};
+
+type KontaktpersonDto = {
+  telefonnummer: string;
+  navn: string;
 };
 
 export type RefusjonsperiodeRequestDto = {
@@ -52,9 +57,10 @@ export type RefusjonsperiodeRequestDto = {
   beløp: number;
 };
 
-type NaturalytelseRequestDto = {
+export type NaturalytelseRequestDto = {
   fom: string;
   tom?: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
+  erBortfalt: boolean;
 };
