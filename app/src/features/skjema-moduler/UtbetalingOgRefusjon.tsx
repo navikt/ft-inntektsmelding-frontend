@@ -79,6 +79,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
       {skalEndreBeløp ? (
         <HStack gap="4">
           <TextField
+            autoFocus
             {...register("refusjonsbeløpPerMåned")}
             label="Refusjonsbeløp pr. måned"
           />
