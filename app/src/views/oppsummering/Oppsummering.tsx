@@ -256,7 +256,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
-        inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak,
+        // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
         refusjonsperioder: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
