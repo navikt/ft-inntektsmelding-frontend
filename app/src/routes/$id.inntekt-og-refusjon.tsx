@@ -46,7 +46,8 @@ export type InntektOgRefusjonForm = {
   | "naturalytelserSomMistes"
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
-  | "månedslønn"
+  | "inntekt"
+  | "inntektEndringsÅrsak"
 >;
 
 function InntektOgRefusjon() {
@@ -54,14 +55,20 @@ function InntektOgRefusjon() {
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
+
+  const gjennomsnikkInntektFraAOrdning = gjennomsnittInntekt(
+    opplysninger.inntekter ?? [],
+  );
+
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
-      månedslønn:
-        inntektsmeldingSkjemaState.månedslønn ||
-        gjennomsnittInntekt(opplysninger.inntekter ?? []),
+      // Denne ligger i formet, men brukes ikke annet enn for submit
+      inntekt:
+        inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning,
+      inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
-        gjennomsnittInntekt(opplysninger.inntekter ?? []),
+        gjennomsnikkInntektFraAOrdning,
       skalRefunderes:
         inntektsmeldingSkjemaState.skalRefunderes === undefined
           ? undefined
@@ -94,7 +101,8 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjonsbeløpPerMåned, månedslønn } = skjemadata;
+    const { refusjonsbeløpPerMåned, inntekt, inntektEndringsÅrsak } =
+      skjemadata;
     const skalRefunderes = skjemadata.skalRefunderes === "ja";
     const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
     const refusjonsendringer = endringIRefusjon
@@ -108,7 +116,8 @@ function InntektOgRefusjon() {
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
-      månedslønn,
+      inntekt,
+      inntektEndringsÅrsak,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       endringIRefusjon,

@@ -2,13 +2,19 @@ import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
-import type { Naturalytelsetype } from "~/types/api-models.ts";
+import type { ÅrsaksType, Naturalytelsetype } from "~/types/api-models.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefonnummer: string };
-  månedslønn: number;
+  inntekt: number;
+  inntektEndringsÅrsak?: {
+    årsak: ÅrsaksType;
+    korrigertInntekt: number;
+    fom?: string;
+    tom?: string;
+  };
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
@@ -40,7 +46,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
-      månedslønn: 0,
+      inntekt: 0,
       refusjonsbeløpPerMåned: 0,
       refusjonsendringer: [],
       naturalytelserSomMistes: [],

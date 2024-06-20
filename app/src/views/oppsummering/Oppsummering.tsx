@@ -244,6 +244,9 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async () => {
+      const gjeldendeInntekt =
+        inntektsmeldingSkjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
+        inntektsmeldingSkjemaState.inntekt;
       const inntektsmelding: SendInntektsmeldingRequestDto = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
@@ -252,11 +255,12 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
         kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
-        inntekt: inntektsmeldingSkjemaState.månedslønn,
+        inntekt: gjeldendeInntekt,
+        // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
         refusjonsperioder: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
-            beløp: inntektsmeldingSkjemaState.månedslønn,
+            beløp: gjeldendeInntekt,
             fraOgMed: opplysninger.startdatoPermisjon,
           },
         ]),
