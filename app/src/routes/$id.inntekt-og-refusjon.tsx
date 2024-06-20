@@ -55,14 +55,20 @@ function InntektOgRefusjon() {
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
+
+  const gjennomsnikkInntektFraAOrdning = gjennomsnittInntekt(
+    opplysninger.inntekter ?? [],
+  );
+
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
+      // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt:
-        inntektsmeldingSkjemaState.inntekt ||
-        gjennomsnittInntekt(opplysninger.inntekter ?? []),
+        inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning,
+      // inntektEndringsÅrsak: {}
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
-        gjennomsnittInntekt(opplysninger.inntekter ?? []),
+        gjennomsnikkInntektFraAOrdning,
       skalRefunderes:
         inntektsmeldingSkjemaState.skalRefunderes === undefined
           ? undefined

@@ -158,10 +158,18 @@ type EndreMånedslønnProps = {
 const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
   const { startdatoPermisjon } = opplysninger;
 
-  const { register, watch, formState } =
+  const { register, watch, formState, resetField } =
     useFormContext<InntektOgRefusjonForm>();
 
+  // Formålet her er å unregister alle verdier i inntektEndringsÅrsak.
+  // Gjør det som en resetField når denne komponenten unmountes, istedenfor å putte shouldUnregister på hver individuelle input.
+  const tilbakestillOgLukk = () => {
+    resetField("inntektEndringsÅrsak");
+    onClose();
+  };
+
   const årsak = watch("inntektEndringsÅrsak.årsak");
+  const inntekt = watch("inntekt");
 
   return (
     <div>
@@ -170,6 +178,8 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
           {...register("inntektEndringsÅrsak.korrigertInntekt", {
             min: { value: 1, message: "Må være mer enn 0" },
             required: "Må oppgis",
+            value: inntekt,
+            shouldUnregister: true,
           })}
           error={
             formState.errors.inntektEndringsÅrsak?.korrigertInntekt?.message
@@ -184,6 +194,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
           label="Velg endringsårsak"
           {...register("inntektEndringsÅrsak.årsak", {
             required: "Må oppgis",
+            shouldUnregister: true,
           })}
         >
           <option value="">Velg endringsårsak</option>
@@ -193,7 +204,11 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
             </option>
           ))}
         </Select>
-        <Button className="mt-8" onClick={onClose} variant="tertiary">
+        <Button
+          className="mt-8"
+          onClick={tilbakestillOgLukk}
+          variant="tertiary"
+        >
           Tilbakestill
         </Button>
       </div>
