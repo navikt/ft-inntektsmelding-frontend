@@ -20,12 +20,12 @@ import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/Hjelpetekst.tsx";
-import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 import {
+
   capitalizeSetning,
   formatDatoKort,
   formatKroner,
-  leggTilGenitiv,
+ gjennomsnittInntekt, leggTilGenitiv,
 } from "~/utils.ts";
 
 import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
@@ -168,17 +168,6 @@ const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
     </div>
   );
 };
-
-function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
-  if (!inntekter) {
-    return 0;
-  }
-  const summerteInntekter = inntekter.reduce((sum, inntekt) => {
-    return sum + inntekt.beløp;
-  }, 0);
-
-  return summerteInntekter / (inntekter.length || 1);
-}
 
 function navnPåMåned(date: string) {
   const måned = new Intl.DateTimeFormat("no", { month: "long" }).format(

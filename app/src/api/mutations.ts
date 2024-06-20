@@ -5,7 +5,7 @@ const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 export async function sendInntektsmelding(
   sendInntektsmeldingRequest: SendInntektsmeldingRequestDto,
 ) {
-  const response = await fetch(`${SERVER_URL}/send-inntektsmelding`, {
+  const response = await fetch(`${SERVER_URL}/imdialog/send-inntektsmelding`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

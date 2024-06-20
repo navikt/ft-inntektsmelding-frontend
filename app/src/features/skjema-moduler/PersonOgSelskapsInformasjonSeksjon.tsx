@@ -11,7 +11,7 @@ import {
   Label,
   TextField,
 } from "@navikt/ds-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries";
@@ -28,14 +28,8 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
   InntektsmeldingSkjemaState["kontaktperson"]
 >;
 
-type PersonOgSelskapsInformasjonSeksjonProps = {
-  className?: string;
-  opplysninger: OpplysningerDto;
-};
-export const PersonOgSelskapsInformasjonSeksjon = ({
-  opplysninger,
-  className,
-}: PersonOgSelskapsInformasjonSeksjonProps) => {
+export const PersonOgSelskapsInformasjonSeksjon = () => {
+  const opplysninger = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
   const { register, handleSubmit, formState } =
@@ -54,7 +48,7 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
     });
   });
   return (
-    <section className={className}>
+    <section className="mt-6">
       <form onSubmit={onSubmit}>
         <HGrid
           className="bg-bg-default px-5 py-6 rounded-md"
@@ -85,11 +79,11 @@ export const PersonOgSelskapsInformasjonSeksjon = ({
               />
               <TextField
                 className="w-full md:w-1/2"
-                {...register("telefon", {
+                {...register("telefonnummer", {
                   required: "Telefonnummer er påkrevd",
                   // TODO: Legg til mer avansert validering for telefonnumre
                 })}
-                error={formState.errors.telefon?.message}
+                error={formState.errors.telefonnummer?.message}
                 label="Telefon innsender"
                 size="medium"
               />

@@ -2,21 +2,27 @@ import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
+import type { Naturalytelsetype } from "~/types/api-models.ts";
+
 import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
-  kontaktperson?: { navn: string; telefon: string };
-  korrigertMånedslønn?: {
+  kontaktperson?: { navn: string; telefonnummer: string };
+  månedslønn: {
     beløp?: number;
     endringsgrunn?: string; // TODO: Gjøre denne typesikker via en enum eller lignende?
     ekstraData?: { [key: string]: string }[]; // TODO: Gjøre denne mer typesikker?
   };
   skalRefunderes?: boolean;
-  refusjonsbeløpPerMåned?: number;
+  refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
-  refusjonsendringer: { måned: string; beløp: number }[];
+  refusjonsendringer: { fraOgMed: string; beløp: number }[];
   misterNaturalytelser?: boolean;
-  naturalytelserSomMistes: { navn: string; beløp: number; fraOgMed: string }[];
+  naturalytelserSomMistes: {
+    navn: Naturalytelsetype | "";
+    beløp: number;
+    fraOgMed: string;
+  }[];
 };
 
 type InntektsmeldingSkjemaStateContextType = {
@@ -34,9 +40,12 @@ type InntektsmeldingSkjemaStateProviderProps = {
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
+  // TODO: 1. cleare sessionStorage når en IM er sendt. 2. skjemadata basert på forspørsel-ID?
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
+      månedslønn: 0,
+      refusjonsbeløpPerMåned: 0,
       refusjonsendringer: [],
       naturalytelserSomMistes: [],
     },

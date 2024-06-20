@@ -1,17 +1,14 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
+import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
 import {
-  BodyLong,
-  Button,
-  Heading,
-  Radio,
-  RadioGroup,
-  VStack,
-} from "@navikt/ds-react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+  createFileRoute,
+  Link,
+  useLoaderData,
+  useNavigate,
+} from "@tanstack/react-router";
+import { FormProvider, useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
-import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
@@ -23,33 +20,58 @@ import {
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import {
+  ENDRING_I_REFUSJON_TEMPLATE,
+  UtbetalingOgRefusjon,
+} from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
+import {
   capitalizeSetning,
   formatDatoLang,
   formatYtelsesnavn,
+  gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
-  loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
+type JaNei = "ja" | "nei";
+
 export type InntektOgRefusjonForm = {
-  skalRefunderes: "ja" | "nei";
-  misterNaturalytelser: "ja" | "nei";
-} & Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
+  skalRefunderes: JaNei;
+  endringIRefusjon: JaNei;
+  misterNaturalytelser: JaNei;
+} & Pick<
+  InntektsmeldingSkjemaState,
+  | "naturalytelserSomMistes"
+  | "refusjonsendringer"
+  | "refusjonsbeløpPerMåned"
+  | "månedslønn"
+>;
 
 function InntektOgRefusjon() {
-  const opplysninger = Route.useLoaderData();
+  const opplysninger = useLoaderData({ from: "/$id" });
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
+      månedslønn:
+        inntektsmeldingSkjemaState.månedslønn ||
+        gjennomsnittInntekt(opplysninger.inntekter ?? []),
+      refusjonsbeløpPerMåned:
+        inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
+        gjennomsnittInntekt(opplysninger.inntekter ?? []),
       skalRefunderes:
         inntektsmeldingSkjemaState.skalRefunderes === undefined
           ? undefined
           : inntektsmeldingSkjemaState.skalRefunderes
+            ? "ja"
+            : "nei",
+      endringIRefusjon:
+        inntektsmeldingSkjemaState.endringIRefusjon === undefined
+          ? undefined
+          : inntektsmeldingSkjemaState.endringIRefusjon
             ? "ja"
             : "nei",
       misterNaturalytelser:
@@ -62,12 +84,23 @@ function InntektOgRefusjon() {
         inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
           ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
           : inntektsmeldingSkjemaState.naturalytelserSomMistes,
+      refusjonsendringer:
+        inntektsmeldingSkjemaState.refusjonsendringer.length === 0
+          ? [ENDRING_I_REFUSJON_TEMPLATE]
+          : inntektsmeldingSkjemaState.refusjonsendringer,
     },
   });
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
+    const { refusjonsbeløpPerMåned, månedslønn } = skjemadata;
+    const skalRefunderes = skjemadata.skalRefunderes === "ja";
+    const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
+    const refusjonsendringer = endringIRefusjon
+      ? skjemadata.refusjonsendringer
+      : [];
+
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const naturalytelserSomMistes = misterNaturalytelser
       ? skjemadata.naturalytelserSomMistes
@@ -75,7 +108,11 @@ function InntektOgRefusjon() {
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
-      skalRefunderes: skjemadata.skalRefunderes === "ja",
+      månedslønn,
+      refusjonsbeløpPerMåned,
+      skalRefunderes,
+      endringIRefusjon,
+      refusjonsendringer,
       misterNaturalytelser,
       naturalytelserSomMistes,
     }));
@@ -98,7 +135,7 @@ function InntektOgRefusjon() {
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode opplysninger={opplysninger} />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon />
+          <UtbetalingOgRefusjon opplysninger={opplysninger} />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button
@@ -149,36 +186,6 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
       <HjelpetekstReadMore header="Hva hvis datoen ikke stemmer?">
         TODO
       </HjelpetekstReadMore>
-    </VStack>
-  );
-}
-
-function UtbetalingOgRefusjon() {
-  const { register, formState } = useFormContext<InntektOgRefusjonForm>();
-  const { name, ...radioGroupProps } = register("skalRefunderes", {
-    required: "Du må svare på dette spørsmålet",
-  });
-  return (
-    <VStack gap="4">
-      <hr />
-      <Heading id="refusjon" level="4" size="medium">
-        Utbetaling og refusjon
-      </Heading>
-      <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
-        TODO
-      </HjelpetekstReadMore>
-      <RadioGroup
-        error={formState.errors.skalRefunderes?.message}
-        legend="Betaler dere lønn under fraværet og krever refusjon?"
-        name={name}
-      >
-        <Radio value="ja" {...radioGroupProps}>
-          Ja
-        </Radio>
-        <Radio value="nei" {...radioGroupProps}>
-          Nei
-        </Radio>
-      </RadioGroup>
     </VStack>
   );
 }
