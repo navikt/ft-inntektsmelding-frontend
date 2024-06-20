@@ -7,11 +7,15 @@ import {
   RadioGroup,
   VStack,
 } from "@navikt/ds-react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useLoaderData,
+  useNavigate,
+} from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
-import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
@@ -31,7 +35,6 @@ import {
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
-  loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
 export type InntektOgRefusjonForm = {
@@ -40,7 +43,7 @@ export type InntektOgRefusjonForm = {
 } & Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 
 function InntektOgRefusjon() {
-  const opplysninger = Route.useLoaderData();
+  const opplysninger = useLoaderData({ from: "/$id" });
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
