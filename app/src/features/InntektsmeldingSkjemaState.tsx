@@ -8,7 +8,7 @@ import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefonnummer: string };
-  korrigertMånedslønn?: number;
+  månedslønn: number;
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
@@ -40,6 +40,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
+      månedslønn: 0,
       refusjonsbeløpPerMåned: 0,
       refusjonsendringer: [],
       naturalytelserSomMistes: [],

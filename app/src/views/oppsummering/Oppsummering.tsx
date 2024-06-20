@@ -24,7 +24,6 @@ import {
   formatIsoDatostempel,
   formatKroner,
   formatYtelsesnavn,
-  gjennomsnittInntekt,
   slåSammenTilFulltNavn,
 } from "~/utils";
 
@@ -245,10 +244,6 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async () => {
-      const månedsLønn =
-        inntektsmeldingSkjemaState.korrigertMånedslønn ??
-        gjennomsnittInntekt(opplysninger.inntekter ?? []); // TODO: burde dette feltet alltid settes i formet, slik at korrigertMånedslønn i utgpkt er inntekt som så endres
-
       const inntektsmelding: SendInntektsmeldingRequestDto = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
@@ -257,10 +252,13 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
         kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
-        inntekt: månedsLønn,
+        inntekt: inntektsmeldingSkjemaState.månedslønn,
         refusjonsperioder: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
-          { beløp: månedsLønn, fraOgMed: opplysninger.startdatoPermisjon },
+          {
+            beløp: inntektsmeldingSkjemaState.månedslønn,
+            fraOgMed: opplysninger.startdatoPermisjon,
+          },
         ]),
         bortfaltNaturaltytelsePerioder: konverterNaturalytelsePerioder(
           inntektsmeldingSkjemaState.naturalytelserSomMistes,
