@@ -47,6 +47,7 @@ export type InntektOgRefusjonForm = {
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
   | "månedslønn"
+  | "inntektEndringsÅrsak"
 >;
 
 function InntektOgRefusjon() {
@@ -91,6 +92,7 @@ function InntektOgRefusjon() {
     },
   });
   const { handleSubmit } = formMethods;
+  console.log(formMethods.watch());
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {

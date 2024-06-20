@@ -10,35 +10,29 @@ import {
   Select,
   TextField,
 } from "@navikt/ds-react";
-import { getRouteApi } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
+import { useFormContext } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries";
 import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/Hjelpetekst.tsx";
+import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
+import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
+import type { ÅrsaksType } from "~/types/api-models.ts";
 import {
-
   capitalizeSetning,
   formatDatoKort,
   formatKroner,
- gjennomsnittInntekt, leggTilGenitiv,
+  gjennomsnittInntekt,
+  leggTilGenitiv,
 } from "~/utils.ts";
 
 import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
-import { useInntektsmeldingSkjema } from "../InntektsmeldingSkjemaState";
 import { useDisclosure } from "../useDisclosure";
-
-const Route = getRouteApi("/$id/inntekt-og-refusjon");
-
-type InntektOgRefusjonForm = {
-  korrigertMånedslønn: number;
-  endringsårsak: string;
-  ekstraData: { [key: string]: string }[];
-};
 
 type InntektProps = {
   opplysninger: OpplysningerDto;
@@ -73,24 +67,27 @@ export function Inntekt({ opplysninger }: InntektProps) {
           ))}
         </HGrid>
       </InformasjonsseksjonMedKilde>
-      <BodyShort>Beregnet månedslønn</BodyShort>
-      <strong>{formatKroner(gjennomsnittInntekt(inntekter ?? []))}</strong>
-      <BodyShort>
-        Gjennomsnittet av de siste tre månedene før {førsteDag}
-      </BodyShort>
+
       {isOpen ? (
-        <EndreMånedslønn onClose={onClose} />
+        <EndreMånedslønn onClose={onClose} opplysninger={opplysninger} />
       ) : (
-        <Button
-          className="w-max"
-          icon={<PencilIcon />}
-          onClick={onOpen}
-          size="small"
-          type="button"
-          variant="secondary"
-        >
-          Endre månedslønn
-        </Button>
+        <>
+          <BodyShort>Beregnet månedslønn</BodyShort>
+          <strong>{formatKroner(gjennomsnittInntekt(inntekter ?? []))}</strong>
+          <BodyShort>
+            Gjennomsnittet av de siste tre månedene før {førsteDag}
+          </BodyShort>
+          <Button
+            className="w-max"
+            icon={<PencilIcon />}
+            onClick={onOpen}
+            size="small"
+            type="button"
+            variant="secondary"
+          >
+            Endre månedslønn
+          </Button>
+        </>
       )}
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
@@ -141,29 +138,78 @@ const endringsårsak = [
   },
 ];
 
+const endringsårsak2 = [
+  { value: "Tariffendring", label: "Tariffendring" },
+  { value: "FeilInntekt", label: "Varig FeilInntekt" },
+];
+
+const NØDVENDIGE_FELTER_FOR_ÅRSAK: Record<
+  ÅrsaksType,
+  { fom: boolean; tom: boolean }
+> = {
+  Tariffendring: { fom: true, tom: true },
+  FeilInntekt: { fom: true, tom: false },
+};
+
 type EndreMånedslønnProps = {
   onClose: () => void;
+  opplysninger: OpplysningerDto;
 };
-const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
-  const { startdatoPermisjon } = Route.useLoaderData();
-  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
+  const { startdatoPermisjon } = opplysninger;
+
+  const { register, watch, formState } =
+    useFormContext<InntektOgRefusjonForm>();
+
+  const årsak = watch("inntektEndringsÅrsak.årsak");
+
   return (
     <div>
-      <div className="flex align-center gap-4">
+      <div className="flex items-start gap-4">
         <TextField
+          {...register("månedslønn", {
+            min: { value: 1, message: "Må være mer enn 0" },
+            required: "Må oppgis",
+          })}
+          error={formState.errors.månedslønn?.message}
+          inputMode="numeric"
           label={`Månedsinntekt ${formatDatoKort(new Date(startdatoPermisjon))}`}
         />
-        <Select label="Endringsårsak">
-          {Object.values(endringsårsak).map((årsak) => (
+
+        <Select
+          className="flex-1"
+          error={formState.errors.inntektEndringsÅrsak?.årsak?.message}
+          label="Velg endringsårsak"
+          {...register("inntektEndringsÅrsak.årsak", {
+            required: "Må oppgis",
+          })}
+        >
+          <option value="">Velg endringsårsak</option>
+          {Object.values(endringsårsak2).map((årsak) => (
             <option key={årsak.value} value={årsak.value}>
               {årsak.label}
             </option>
           ))}
         </Select>
-        <Button onClick={onClose} variant="tertiary">
+        <Button className="mt-8" onClick={onClose} variant="tertiary">
           Tilbakestill
         </Button>
-        {/* TODO: Legg til egne felter for  */}
+      </div>
+      <div className="flex gap-4 mt-4">
+        {NØDVENDIGE_FELTER_FOR_ÅRSAK[årsak]?.fom ? (
+          <DatePickerWrapped
+            label="Fra og med"
+            name="inntektEndringsÅrsak.fom"
+            rules={{ required: "Må oppgis" }}
+          />
+        ) : undefined}
+        {NØDVENDIGE_FELTER_FOR_ÅRSAK[årsak]?.tom ? (
+          <DatePickerWrapped
+            label="Til og med"
+            name="inntektEndringsÅrsak.tom"
+            rules={{ required: "Må oppgis" }}
+          />
+        ) : undefined}
       </div>
     </div>
   );

@@ -2,16 +2,17 @@ import type { ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
-import type { Naturalytelsetype } from "~/types/api-models.ts";
+import type { ÅrsaksType, Naturalytelsetype } from "~/types/api-models.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefonnummer: string };
-  månedslønn: {
-    beløp?: number;
-    endringsgrunn?: string; // TODO: Gjøre denne typesikker via en enum eller lignende?
-    ekstraData?: { [key: string]: string }[]; // TODO: Gjøre denne mer typesikker?
+  månedslønn: number;
+  inntektEndringsÅrsak?: {
+    årsak: ÅrsaksType;
+    fom?: string;
+    tom?: string;
   };
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned: number;
