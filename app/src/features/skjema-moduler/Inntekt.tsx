@@ -142,7 +142,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
 
 const endringsårsak2 = [
   { value: "Tariffendring", label: "Tariffendring" },
-  { value: "FeilInntekt", label: "Varig FeilInntekt" },
+  { value: "FeilInntekt", label: "Varig feil inntekt" },
 ];
 
 const NØDVENDIGE_FELTER_FOR_ÅRSAK: Record<
