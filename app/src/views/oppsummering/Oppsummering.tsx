@@ -254,6 +254,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         aktorId: opplysninger.person.aktørId,
         ytelse: opplysninger.ytelse,
         arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
+        // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
         kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
         inntekt: månedsLønn,
