@@ -1,18 +1,9 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
+import { hentOpplysningerData } from "~/api/queries.ts";
 import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
 
-const DineOpplysninger = () => {
-  const opplysninger = useLoaderData({ from: "/$id" });
-
-  return (
-    <PersonOgSelskapsInformasjonSeksjon
-      className="mt-6"
-      opplysninger={opplysninger}
-    />
-  );
-};
-
 export const Route = createFileRoute("/$id/dine-opplysninger")({
-  component: DineOpplysninger,
+  component: PersonOgSelskapsInformasjonSeksjon,
+  loader: ({ params }) => hentOpplysningerData(params.id),
 });
