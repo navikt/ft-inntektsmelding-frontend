@@ -1,7 +1,12 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
-import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
+import {
+  getRouteApi,
+  Link,
+  useLoaderData,
+  useNavigate,
+} from "@tanstack/react-router";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import type { OpplysningerDto } from "~/api/queries";
@@ -26,7 +31,7 @@ import {
 const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
-  const opplysninger = route.useLoaderData();
+  const opplysninger = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   const søknad = {

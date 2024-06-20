@@ -1,10 +1,14 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Link,
+  useLoaderData,
+  useNavigate,
+} from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
-import { hentOpplysningerData } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
@@ -29,7 +33,6 @@ import {
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: InntektOgRefusjon,
-  loader: ({ params }) => hentOpplysningerData(params.id),
 });
 
 type JaNei = "ja" | "nei";
@@ -44,7 +47,7 @@ export type InntektOgRefusjonForm = {
 >;
 
 function InntektOgRefusjon() {
-  const opplysninger = Route.useLoaderData();
+  const opplysninger = useLoaderData({ from: "/$id" });
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
