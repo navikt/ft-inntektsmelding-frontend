@@ -6,7 +6,11 @@ import { useSessionStorageState } from "./usePersistedState";
 
 export type InntektsmeldingSkjemaState = {
   kontaktperson?: { navn: string; telefon: string };
-  korrigertMånedslønn?: number;
+  korrigertMånedslønn?: {
+    beløp?: number;
+    endringsgrunn?: string; // TODO: Gjøre denne typesikker via en enum eller lignende?
+    ekstraData?: { [key: string]: string }[]; // TODO: Gjøre denne mer typesikker?
+  };
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned?: number;
   endringIRefusjon?: boolean;
