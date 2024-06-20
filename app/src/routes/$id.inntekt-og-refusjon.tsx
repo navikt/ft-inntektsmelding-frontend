@@ -46,7 +46,7 @@ export type InntektOgRefusjonForm = {
   | "naturalytelserSomMistes"
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
-  | "månedslønn"
+  | "inntekt"
   | "inntektEndringsÅrsak"
 >;
 
@@ -57,8 +57,8 @@ function InntektOgRefusjon() {
     useInntektsmeldingSkjema();
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
-      månedslønn:
-        inntektsmeldingSkjemaState.månedslønn ||
+      inntekt:
+        inntektsmeldingSkjemaState.inntekt ||
         gjennomsnittInntekt(opplysninger.inntekter ?? []),
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
@@ -96,7 +96,7 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjonsbeløpPerMåned, månedslønn } = skjemadata;
+    const { refusjonsbeløpPerMåned, inntekt } = skjemadata;
     const skalRefunderes = skjemadata.skalRefunderes === "ja";
     const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
     const refusjonsendringer = endringIRefusjon
@@ -110,7 +110,7 @@ function InntektOgRefusjon() {
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
-      månedslønn,
+      inntekt,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       endringIRefusjon,

@@ -50,6 +50,7 @@ export type SendInntektsmeldingRequestDto = {
 export type ÅrsaksType = "Tariffendring" | "FeilInntekt";
 
 type InntektEndretÅrsakDto = {
+  korrigertInntekt: number;
   årsak: ÅrsaksType;
   fom?: string;
   tom?: string;

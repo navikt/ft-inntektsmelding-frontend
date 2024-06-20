@@ -118,25 +118,25 @@ export function Inntekt({ opplysninger }: InntektProps) {
   );
 }
 
-const endringsårsak = [
-  { value: "FERIE", label: "Ferie" },
-  { value: "VARIG_LØNNSENDRING", label: "Varig lønnsendring" },
-  { value: "PERMISJON", label: "Permisjon" },
-  { value: "PERMITTERING", label: "Permittering" },
-  { value: "NY_STILLING", label: "Ny stilling" },
-  { value: "NY_STILLINGSPROSENT", label: "Ny stillingsprosent" },
-  { value: "BONUS", label: "Bonus" },
-  { value: "NYANSATT", label: "Nyansatt" },
-  { value: "SYKEFRAVÆR", label: "Sykefravær" },
-  {
-    value: "FERIETREKK_UTBETALING_AV_FERIEPENGER",
-    label: "Ferietrekk / utbetaling av feriepenger",
-  },
-  {
-    value: "MANGELFULL_ELLER_URIKTIG_RAPPORTERING_TIL_AORDNINGEN",
-    label: "Mangelfull eller uriktig rapportering til A-ordningen",
-  },
-];
+// const endringsårsak = [
+//   { value: "FERIE", label: "Ferie" },
+//   { value: "VARIG_LØNNSENDRING", label: "Varig lønnsendring" },
+//   { value: "PERMISJON", label: "Permisjon" },
+//   { value: "PERMITTERING", label: "Permittering" },
+//   { value: "NY_STILLING", label: "Ny stilling" },
+//   { value: "NY_STILLINGSPROSENT", label: "Ny stillingsprosent" },
+//   { value: "BONUS", label: "Bonus" },
+//   { value: "NYANSATT", label: "Nyansatt" },
+//   { value: "SYKEFRAVÆR", label: "Sykefravær" },
+//   {
+//     value: "FERIETREKK_UTBETALING_AV_FERIEPENGER",
+//     label: "Ferietrekk / utbetaling av feriepenger",
+//   },
+//   {
+//     value: "MANGELFULL_ELLER_URIKTIG_RAPPORTERING_TIL_AORDNINGEN",
+//     label: "Mangelfull eller uriktig rapportering til A-ordningen",
+//   },
+// ];
 
 const endringsårsak2 = [
   { value: "Tariffendring", label: "Tariffendring" },
@@ -167,11 +167,13 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
     <div>
       <div className="flex items-start gap-4">
         <TextField
-          {...register("månedslønn", {
+          {...register("inntektEndringsÅrsak.korrigertInntekt", {
             min: { value: 1, message: "Må være mer enn 0" },
             required: "Må oppgis",
           })}
-          error={formState.errors.månedslønn?.message}
+          error={
+            formState.errors.inntektEndringsÅrsak?.korrigertInntekt?.message
+          }
           inputMode="numeric"
           label={`Månedsinntekt ${formatDatoKort(new Date(startdatoPermisjon))}`}
         />
