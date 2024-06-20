@@ -36,6 +36,7 @@ type InntektsmeldingSkjemaStateProviderProps = {
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
+  // TODO: 1. cleare sessionStorage når en IM er sendt. 2. skjemadata basert på forspørsel-ID?
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
     {
