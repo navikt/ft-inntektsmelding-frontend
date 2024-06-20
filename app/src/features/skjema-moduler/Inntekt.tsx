@@ -39,7 +39,9 @@ type InntektProps = {
 };
 export function Inntekt({ opplysninger }: InntektProps) {
   const { startdatoPermisjon, person, inntekter } = opplysninger;
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const inntektEndringsÅrsak = watch("inntektEndringsÅrsak");
+  const { isOpen, onOpen, onClose } = useDisclosure(!!inntektEndringsÅrsak);
 
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {
@@ -158,13 +160,11 @@ type EndreMånedslønnProps = {
 const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
   const { startdatoPermisjon } = opplysninger;
 
-  const { register, watch, formState, resetField } =
+  const { register, watch, formState, unregister } =
     useFormContext<InntektOgRefusjonForm>();
 
-  // Formålet her er å unregister alle verdier i inntektEndringsÅrsak.
-  // Gjør det som en resetField når denne komponenten unmountes, istedenfor å putte shouldUnregister på hver individuelle input.
   const tilbakestillOgLukk = () => {
-    resetField("inntektEndringsÅrsak");
+    unregister("inntektEndringsÅrsak");
     onClose();
   };
 

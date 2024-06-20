@@ -65,7 +65,7 @@ function InntektOgRefusjon() {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt:
         inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning,
-      // inntektEndringsÅrsak: {}
+      inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
@@ -102,7 +102,8 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjonsbeløpPerMåned, inntekt } = skjemadata;
+    const { refusjonsbeløpPerMåned, inntekt, inntektEndringsÅrsak } =
+      skjemadata;
     const skalRefunderes = skjemadata.skalRefunderes === "ja";
     const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
     const refusjonsendringer = endringIRefusjon
@@ -117,6 +118,7 @@ function InntektOgRefusjon() {
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       inntekt,
+      inntektEndringsÅrsak,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       endringIRefusjon,
