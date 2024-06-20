@@ -14,7 +14,6 @@ import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
-import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import type { Naturalytelsetype } from "~/types/api-models.ts";
@@ -22,7 +21,7 @@ import type { Naturalytelsetype } from "~/types/api-models.ts";
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fraOgMed: "",
   beløp: 0,
-  navn: "",
+  navn: "" as const,
 };
 
 export function Naturalytelser() {
@@ -89,16 +88,16 @@ const naturalytelser: Record<Naturalytelsetype, string> = {
   ANNET: "Annet",
 };
 
-type FormType = Pick<InntektsmeldingSkjemaState, "naturalytelserSomMistes">;
 function MisterNaturalytelser() {
-  const { control, register, formState } = useFormContext<FormType>();
+  const { control, register, formState } =
+    useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "naturalytelserSomMistes",
   });
 
   return (
-    <div className="grid grid-cols-[1fr_min-content_min-content_max-content] gap-4 items-start">
+    <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <Select

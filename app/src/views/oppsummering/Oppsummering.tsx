@@ -1,6 +1,5 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
-import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { useMutation } from "@tanstack/react-query";
 import {
   getRouteApi,
@@ -8,17 +7,21 @@ import {
   useLoaderData,
   useNavigate,
 } from "@tanstack/react-router";
-import { useEffect } from "react";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import type { OpplysningerDto } from "~/api/queries";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
+import type {
+  NaturalytelseRequestDto,
+  RefusjonsperiodeRequestDto,
+  SendInntektsmeldingRequestDto,
+} from "~/types/api-models.ts";
 import {
   formatDatoLang,
   formatFødselsnummer,
+  formatIsoDatostempel,
   formatKroner,
   formatYtelsesnavn,
   slåSammenTilFulltNavn,
@@ -27,26 +30,8 @@ import {
 const route = getRouteApi("/$id/oppsummering");
 
 export const Oppsummering = () => {
-  const { id } = route.useParams();
   const opplysninger = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
-
-  useEffect(() => {
-    setBreadcrumbs([
-      {
-        title: "Min side – Arbeidsgiver",
-        url: "/",
-      },
-      {
-        title: "Inntektsmelding",
-        url: `/${id}`,
-      },
-      {
-        title: "Oppsummering",
-        url: `/${id}/oppsummering`,
-      },
-    ]);
-  }, [id]);
 
   const søknad = {
     ytelseType: "Foreldrepenger",
@@ -245,7 +230,7 @@ const formatterKontaktperson = (
   if (!kontaktperson) {
     return "";
   }
-  return `${kontaktperson.navn}, ${kontaktperson.telefon}`;
+  return `${kontaktperson.navn}, ${kontaktperson.telefonnummer}`;
 };
 
 type SendInnInntektsmeldingProps = {
@@ -253,25 +238,35 @@ type SendInnInntektsmeldingProps = {
 };
 function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
+  const { id } = route.useParams();
 
-  const DUMMY_IM = {
-    foresporselUuid: "123", // TODO
-    aktorId: opplysninger.person.aktørId,
-    ytelse: opplysninger.ytelse,
-    arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-    telefonnummer: "12345678",
-    startdato: opplysninger.startdatoPermisjon,
-    inntekt: 30_000,
-    refusjonsperioder: [],
-    bortfaltNaturaltytelsePerioder: [],
-  };
+  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
-  const { mutate, error, isPending } = useMutation<
-    unknown,
-    unknown,
-    SendInntektsmeldingRequestDto
-  >({
-    mutationFn: sendInntektsmelding,
+  const { mutate, error, isPending } = useMutation({
+    mutationFn: async () => {
+      const inntektsmelding: SendInntektsmeldingRequestDto = {
+        foresporselUuid: id,
+        aktorId: opplysninger.person.aktørId,
+        ytelse: opplysninger.ytelse,
+        arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
+        // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
+        kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
+        startdato: opplysninger.startdatoPermisjon,
+        inntekt: inntektsmeldingSkjemaState.månedslønn,
+        refusjonsperioder: utledRefusjonsPerioder([
+          ...inntektsmeldingSkjemaState.refusjonsendringer,
+          {
+            beløp: inntektsmeldingSkjemaState.månedslønn,
+            fraOgMed: opplysninger.startdatoPermisjon,
+          },
+        ]),
+        bortfaltNaturaltytelsePerioder: konverterNaturalytelsePerioder(
+          inntektsmeldingSkjemaState.naturalytelserSomMistes,
+        ),
+      };
+
+      return sendInntektsmelding(inntektsmelding);
+    },
     onSuccess: () => {
       navigate({
         from: "/$id/oppsummering",
@@ -296,7 +291,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         <Button
           icon={<PaperplaneIcon />}
           loading={isPending}
-          onClick={() => mutate(DUMMY_IM)}
+          onClick={() => mutate()}
           variant="primary"
         >
           Send inn
@@ -304,4 +299,37 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       </div>
     </>
   );
+}
+
+function konverterNaturalytelsePerioder(
+  naturalytelsePerioder: InntektsmeldingSkjemaState["naturalytelserSomMistes"],
+): NaturalytelseRequestDto[] {
+  // TODO: hvordan skille mellom optional typer og
+  // @ts-expect-error --  se TODO
+  return naturalytelsePerioder.map((periode) => ({
+    naturalytelsetype: periode.navn,
+    fom: formatIsoDatostempel(new Date(periode.fraOgMed)),
+    beløp: periode.beløp,
+    erBortfalt: true,
+    tom: undefined, // Gjelder hele permisjonen
+  }));
+}
+
+function utledRefusjonsPerioder(
+  refusjonsPerioder: InntektsmeldingSkjemaState["refusjonsendringer"],
+): RefusjonsperiodeRequestDto[] {
+  const perioderSynkende = [...refusjonsPerioder].sort(
+    (a, b) => new Date(b.fraOgMed).getTime() - new Date(a.fraOgMed).getTime(),
+  );
+
+  return perioderSynkende.map((currentValue, index, array) => {
+    const forrigePeriode = array[index - 1];
+    return {
+      fom: formatIsoDatostempel(new Date(currentValue.fraOgMed)),
+      beløp: currentValue.beløp,
+      tom: forrigePeriode
+        ? formatIsoDatostempel(new Date(forrigePeriode.fraOgMed))
+        : undefined,
+    };
+  });
 }

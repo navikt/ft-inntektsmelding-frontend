@@ -20,7 +20,7 @@ export const NyInntektsmelding = () => {
     setBreadcrumbs([
       {
         title: "Min side – Arbeidsgiver",
-        url: "/",
+        url: "/min-side-arbeidsgiver",
       },
       {
         title: "Inntektsmelding",

@@ -79,11 +79,11 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               />
               <TextField
                 className="w-full md:w-1/2"
-                {...register("telefon", {
+                {...register("telefonnummer", {
                   required: "Telefonnummer er påkrevd",
                   // TODO: Legg til mer avansert validering for telefonnumre
                 })}
-                error={formState.errors.telefon?.message}
+                error={formState.errors.telefonnummer?.message}
                 label="Telefon innsender"
                 size="medium"
               />
