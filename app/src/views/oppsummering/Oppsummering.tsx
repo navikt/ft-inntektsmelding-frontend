@@ -7,7 +7,6 @@ import {
   useLoaderData,
   useNavigate,
 } from "@tanstack/react-router";
-import { Fragment } from "react/jsx-runtime";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import type { OpplysningerDto } from "~/api/queries";
@@ -15,6 +14,7 @@ import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjem
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type {
+  ÅrsaksType,
   NaturalytelseRequestDto,
   RefusjonsperiodeRequestDto,
   SendInntektsmeldingRequestDto,
@@ -141,7 +141,9 @@ export const Oppsummering = () => {
                 <FormSummary.Answer>
                   <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
                   <FormSummary.Value>
-                    {inntektsmeldingSkjemaState.inntektEndringsÅrsak.årsak}
+                    {formatInntektsendrignsGrunn(
+                      inntektsmeldingSkjemaState.inntektEndringsÅrsak.årsak,
+                    )}
                   </FormSummary.Value>
                 </FormSummary.Answer>
                 {inntektsmeldingSkjemaState.inntektEndringsÅrsak.fom && (
@@ -295,6 +297,20 @@ const formatterKontaktperson = (
     return "";
   }
   return `${kontaktperson.navn}, ${kontaktperson.telefonnummer}`;
+};
+
+const formatInntektsendrignsGrunn = (årsak: ÅrsaksType) => {
+  switch (årsak) {
+    case "Tariffendring": {
+      return "Tariffendring";
+    }
+    case "FeilInntekt": {
+      return "Varig feil inntekt";
+    }
+    default: {
+      return årsak;
+    }
+  }
 };
 
 type SendInnInntektsmeldingProps = {
