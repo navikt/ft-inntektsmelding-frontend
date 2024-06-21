@@ -7,6 +7,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "@tanstack/react-router";
+import { Fragment } from "react/jsx-runtime";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import type { OpplysningerDto } from "~/api/queries";
@@ -209,6 +210,30 @@ export const Oppsummering = () => {
                 {inntektsmeldingSkjemaState.endringIRefusjon ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
+            {inntektsmeldingSkjemaState.endringIRefusjon && (
+              <FormSummary.Answer>
+                <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
+                <FormSummary.Value>
+                  <FormSummary.Answers>
+                    {inntektsmeldingSkjemaState.refusjonsendringer.map(
+                      (endring) => (
+                        <FormSummary.Answer
+                          key={endring.fraOgMed + endring.beløp}
+                        >
+                          <FormSummary.Label>
+                            Refusjonsbeløp per måned
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {formatKroner(endring.beløp)} (fra og med{" "}
+                            {formatDatoLang(new Date(endring.fraOgMed))})
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      ),
+                    )}
+                  </FormSummary.Answers>
+                </FormSummary.Value>
+              </FormSummary.Answer>
+            )}
           </FormSummary.Answers>
         </FormSummary>
 
@@ -230,28 +255,31 @@ export const Oppsummering = () => {
                 {inntektsmeldingSkjemaState.misterNaturalytelser ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
-            <FormSummary.Answer>
-              <FormSummary.Label>
-                Naturalytelser som faller bort
-              </FormSummary.Label>
-              <FormSummary.Value>
-                <FormSummary.Answers>
-                  {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
-                    (naturalytelse) => (
-                      <FormSummary.Answer key={naturalytelse.navn}>
-                        <FormSummary.Label>
-                          {formatYtelsesnavn(naturalytelse.navn, true)}
-                        </FormSummary.Label>
-                        <FormSummary.Value>
-                          Verdi {formatKroner(naturalytelse.beløp)} (fra og med{" "}
-                          {formatDatoKort(new Date(naturalytelse.fraOgMed))})
-                        </FormSummary.Value>
-                      </FormSummary.Answer>
-                    ),
-                  )}
-                </FormSummary.Answers>
-              </FormSummary.Value>
-            </FormSummary.Answer>
+            {inntektsmeldingSkjemaState.misterNaturalytelser && (
+              <FormSummary.Answer>
+                <FormSummary.Label>
+                  Naturalytelser som faller bort
+                </FormSummary.Label>
+                <FormSummary.Value>
+                  <FormSummary.Answers>
+                    {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
+                      (naturalytelse) => (
+                        <FormSummary.Answer key={naturalytelse.navn}>
+                          <FormSummary.Label>
+                            {formatYtelsesnavn(naturalytelse.navn, true)}
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            Verdi {formatKroner(naturalytelse.beløp)} (fra og
+                            med{" "}
+                            {formatDatoKort(new Date(naturalytelse.fraOgMed))})
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      ),
+                    )}
+                  </FormSummary.Answers>
+                </FormSummary.Value>
+              </FormSummary.Answer>
+            )}
           </FormSummary.Answers>
         </FormSummary>
         <SendInnInntektsmelding opplysninger={opplysninger} />
