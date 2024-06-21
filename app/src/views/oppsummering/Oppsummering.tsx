@@ -19,6 +19,7 @@ import type {
   SendInntektsmeldingRequestDto,
 } from "~/types/api-models.ts";
 import {
+  formatDatoKort,
   formatDatoLang,
   formatFødselsnummer,
   formatIsoDatostempel,
@@ -184,6 +185,28 @@ export const Oppsummering = () => {
               </FormSummary.Label>
               <FormSummary.Value>
                 {inntektsmeldingSkjemaState.misterNaturalytelser ? "Ja" : "Nei"}
+              </FormSummary.Value>
+            </FormSummary.Answer>
+            <FormSummary.Answer>
+              <FormSummary.Label>
+                Naturalytelser som faller bort
+              </FormSummary.Label>
+              <FormSummary.Value>
+                <FormSummary.Answers>
+                  {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
+                    (naturalytelse) => (
+                      <FormSummary.Answer key={naturalytelse.navn}>
+                        <FormSummary.Label>
+                          {formatYtelsesnavn(naturalytelse.navn, true)}
+                        </FormSummary.Label>
+                        <FormSummary.Value>
+                          Verdi {formatKroner(naturalytelse.beløp)} (fra og med{" "}
+                          {formatDatoKort(new Date(naturalytelse.fraOgMed))})
+                        </FormSummary.Value>
+                      </FormSummary.Answer>
+                    ),
+                  )}
+                </FormSummary.Answers>
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
