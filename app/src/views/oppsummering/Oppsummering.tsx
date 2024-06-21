@@ -27,39 +27,11 @@ import {
   slåSammenTilFulltNavn,
 } from "~/utils";
 
-const route = getRouteApi("/$id/oppsummering");
+const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
   const opplysninger = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
-
-  const søknad = {
-    ytelseType: "Foreldrepenger",
-    oppstart: new Date("2024-01-01"),
-  };
-
-  const skjemadata = {
-    dineOpplysninger: {
-      arbeidsgiver: {
-        virksomhetsnavn: "Eksempelhuset AS",
-        orgnrForUnderenhet: "123 456 789",
-        kontaktperson: [{ navn: "Test Personesen", telefon: "815 49 300" }],
-      },
-      arbeidstaker: {
-        fornavn: "Ansa",
-        etternavn: "Tesen",
-        identitetsnummer: "01010123456",
-      },
-    },
-    inntektOgRefusjon: {
-      månedslønn: 45_000,
-      refusjon: {
-        refusjonBeløpPerMåned: 30_000,
-        endringIRefusjon: false,
-      },
-      naturalytelser: false,
-    },
-  };
 
   return (
     <section>
@@ -122,14 +94,14 @@ export const Oppsummering = () => {
         <FormSummary>
           <FormSummary.Header>
             <FormSummary.Heading level="3">
-              Første dag med {formatYtelsesnavn(søknad.ytelseType)}
+              Første dag med {formatYtelsesnavn(opplysninger.ytelse)}
             </FormSummary.Heading>
           </FormSummary.Header>
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>Fra og med</FormSummary.Label>
               <FormSummary.Value>
-                {formatDatoLang(søknad.oppstart)}
+                {formatDatoLang(new Date(opplysninger.startdatoPermisjon))}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -147,10 +119,10 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
-                {formatYtelsesnavn(søknad.ytelseType)}
+                {formatYtelsesnavn(opplysninger.ytelse)}
               </FormSummary.Label>
               <FormSummary.Value>
-                {formatKroner(skjemadata.inntektOgRefusjon.månedslønn)}
+                {formatKroner(inntektsmeldingSkjemaState.inntekt)}
               </FormSummary.Value>
             </FormSummary.Answer>
           </FormSummary.Answers>
@@ -167,20 +139,19 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Skal dere betale lønn til{" "}
-                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} og ha
+                Skal dere betale lønn til {opplysninger.person.fornavn} og ha
                 refusjon fra NAV?
               </FormSummary.Label>
               <FormSummary.Value>
                 {inntektsmeldingSkjemaState.skalRefunderes ? "Ja" : "Nei"}
               </FormSummary.Value>
             </FormSummary.Answer>
-            {skjemadata.inntektOgRefusjon.refusjon && (
+            {inntektsmeldingSkjemaState.skalRefunderes && (
               <FormSummary.Answer>
                 <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
                 <FormSummary.Value>
                   {formatKroner(
-                    skjemadata.inntektOgRefusjon.refusjon.refusjonBeløpPerMåned,
+                    inntektsmeldingSkjemaState.refusjonsbeløpPerMåned,
                   )}
                 </FormSummary.Value>
               </FormSummary.Answer>
@@ -188,8 +159,7 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>
                 Vil det være endringer i refusjon i løpet av perioden{" "}
-                {skjemadata.dineOpplysninger.arbeidstaker.fornavn} er i
-                permisjon?
+                {opplysninger.person.fornavn} er i permisjon?
               </FormSummary.Label>
               <FormSummary.Value>
                 {inntektsmeldingSkjemaState.endringIRefusjon ? "Ja" : "Nei"}
@@ -209,8 +179,8 @@ export const Oppsummering = () => {
           <FormSummary.Answers>
             <FormSummary.Answer>
               <FormSummary.Label>
-                Har {skjemadata.dineOpplysninger.arbeidstaker.fornavn}{" "}
-                naturalytelser som faller bort ved fraværet?
+                Har {opplysninger.person.fornavn} naturalytelser som faller bort
+                ved fraværet?
               </FormSummary.Label>
               <FormSummary.Value>
                 {inntektsmeldingSkjemaState.misterNaturalytelser ? "Ja" : "Nei"}

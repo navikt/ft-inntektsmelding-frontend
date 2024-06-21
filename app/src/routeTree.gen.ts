@@ -61,51 +61,30 @@ const IdDineOpplysningerRoute = IdDineOpplysningerImport.update({
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
     '/$id': {
-      id: '/$id'
-      path: '/$id'
-      fullPath: '/$id'
       preLoaderRoute: typeof IdImport
       parentRoute: typeof rootRoute
     }
     '/$id/dine-opplysninger': {
-      id: '/$id/dine-opplysninger'
-      path: '/dine-opplysninger'
-      fullPath: '/$id/dine-opplysninger'
       preLoaderRoute: typeof IdDineOpplysningerImport
       parentRoute: typeof IdImport
     }
     '/$id/inntekt-og-refusjon': {
-      id: '/$id/inntekt-og-refusjon'
-      path: '/inntekt-og-refusjon'
-      fullPath: '/$id/inntekt-og-refusjon'
       preLoaderRoute: typeof IdInntektOgRefusjonImport
       parentRoute: typeof IdImport
     }
     '/$id/kvittering': {
-      id: '/$id/kvittering'
-      path: '/kvittering'
-      fullPath: '/$id/kvittering'
       preLoaderRoute: typeof IdKvitteringImport
       parentRoute: typeof IdImport
     }
     '/$id/oppsummering': {
-      id: '/$id/oppsummering'
-      path: '/oppsummering'
-      fullPath: '/$id/oppsummering'
       preLoaderRoute: typeof IdOppsummeringImport
       parentRoute: typeof IdImport
     }
     '/endre/$id': {
-      id: '/endre/$id'
-      path: '/endre/$id'
-      fullPath: '/endre/$id'
       preLoaderRoute: typeof EndreIdImport
       parentRoute: typeof rootRoute
     }
     '/$id/': {
-      id: '/$id/'
-      path: '/'
-      fullPath: '/$id/'
       preLoaderRoute: typeof IdIndexImport
       parentRoute: typeof IdImport
     }
@@ -114,62 +93,15 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IdRoute: IdRoute.addChildren({
+export const routeTree = rootRoute.addChildren([
+  IdRoute.addChildren([
     IdDineOpplysningerRoute,
     IdInntektOgRefusjonRoute,
     IdKvitteringRoute,
     IdOppsummeringRoute,
     IdIndexRoute,
-  }),
+  ]),
   EndreIdRoute,
-})
+])
 
 /* prettier-ignore-end */
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/$id",
-        "/endre/$id"
-      ]
-    },
-    "/$id": {
-      "filePath": "$id.tsx",
-      "children": [
-        "/$id/dine-opplysninger",
-        "/$id/inntekt-og-refusjon",
-        "/$id/kvittering",
-        "/$id/oppsummering",
-        "/$id/"
-      ]
-    },
-    "/$id/dine-opplysninger": {
-      "filePath": "$id.dine-opplysninger.tsx",
-      "parent": "/$id"
-    },
-    "/$id/inntekt-og-refusjon": {
-      "filePath": "$id.inntekt-og-refusjon.tsx",
-      "parent": "/$id"
-    },
-    "/$id/kvittering": {
-      "filePath": "$id.kvittering.tsx",
-      "parent": "/$id"
-    },
-    "/$id/oppsummering": {
-      "filePath": "$id.oppsummering.tsx",
-      "parent": "/$id"
-    },
-    "/endre/$id": {
-      "filePath": "endre.$id.tsx"
-    },
-    "/$id/": {
-      "filePath": "$id.index.tsx",
-      "parent": "/$id"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
