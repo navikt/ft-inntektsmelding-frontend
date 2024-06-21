@@ -126,6 +126,49 @@ export const Oppsummering = () => {
                 {formatKroner(inntektsmeldingSkjemaState.inntekt)}
               </FormSummary.Value>
             </FormSummary.Answer>
+            {inntektsmeldingSkjemaState.inntektEndringsÅrsak && (
+              <>
+                <FormSummary.Answer>
+                  <FormSummary.Label>Korrigert månedslønn</FormSummary.Label>
+                  <FormSummary.Value>
+                    {formatKroner(
+                      inntektsmeldingSkjemaState.inntektEndringsÅrsak
+                        .korrigertInntekt,
+                    )}
+                  </FormSummary.Value>
+                </FormSummary.Answer>
+                <FormSummary.Answer>
+                  <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
+                  <FormSummary.Value>
+                    {inntektsmeldingSkjemaState.inntektEndringsÅrsak.årsak}
+                  </FormSummary.Value>
+                </FormSummary.Answer>
+                {inntektsmeldingSkjemaState.inntektEndringsÅrsak.fom && (
+                  <FormSummary.Answer>
+                    <FormSummary.Label>Fra og med</FormSummary.Label>
+                    <FormSummary.Value>
+                      {formatDatoLang(
+                        new Date(
+                          inntektsmeldingSkjemaState.inntektEndringsÅrsak.fom,
+                        ),
+                      )}
+                    </FormSummary.Value>
+                  </FormSummary.Answer>
+                )}
+                {inntektsmeldingSkjemaState.inntektEndringsÅrsak.tom && (
+                  <FormSummary.Answer>
+                    <FormSummary.Label>Til og med</FormSummary.Label>
+                    <FormSummary.Value>
+                      {formatDatoLang(
+                        new Date(
+                          inntektsmeldingSkjemaState.inntektEndringsÅrsak.tom,
+                        ),
+                      )}
+                    </FormSummary.Value>
+                  </FormSummary.Answer>
+                )}
+              </>
+            )}
           </FormSummary.Answers>
         </FormSummary>
 
