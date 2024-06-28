@@ -71,8 +71,12 @@ export function formatFødselsnummer(fødselsnummer: string) {
   return `${fødselsnummer.slice(0, 6)} ${fødselsnummer.slice(6)}`;
 }
 
-export function formatYtelsesnavn(ytelsesnavn: string) {
-  return ytelsesnavn.toLowerCase().replace("_", " ");
+export function formatYtelsesnavn(ytelsesnavn: string, storForbokstav = false) {
+  const formattert = ytelsesnavn.toLowerCase().replace("_", " ");
+  if (storForbokstav) {
+    return capitalize(formattert);
+  }
+  return formattert;
 }
 
 export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {

@@ -19,7 +19,11 @@ import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
-import { formatFødselsnummer, slåSammenTilFulltNavn } from "~/utils";
+import {
+  formatFødselsnummer,
+  formatYtelsesnavn,
+  slåSammenTilFulltNavn,
+} from "~/utils";
 
 import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
 import { Fremgangsindikator } from "./Fremgangsindikator";
@@ -148,8 +152,8 @@ const Intro = ({ opplysninger }: IntroProps) => {
             {fulltNavn} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
           som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
-          søkt om foreldrepenger. NAV trenger derfor informasjon om inntekten
-          til {fornavn}.
+          søkt om {formatYtelsesnavn(opplysninger.ytelse)}. NAV trenger derfor
+          informasjon om inntekten til {fornavn}.
         </BodyLong>
         <BodyLong>
           Vi har forhåndsutfylt skjema med opplysninger fra søknaden til{" "}
