@@ -8,7 +8,6 @@ import {
   GuidePanel,
   Heading,
   HGrid,
-  Label,
   TextField,
 } from "@navikt/ds-react";
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
@@ -20,6 +19,7 @@ import {
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
 import {
+  capitalizeSetning,
   formatFødselsnummer,
   formatYtelsesnavn,
   slåSammenTilFulltNavn,
@@ -36,10 +36,22 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
   const opplysninger = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
+
+  const innsenderNavn = capitalizeSetning(
+    slåSammenTilFulltNavn(
+      opplysninger.innsender.fornavn,
+      opplysninger.innsender.mellomnavn,
+      opplysninger.innsender.etternavn,
+    ),
+  );
+
   const { register, handleSubmit, formState } =
     useForm<PersonOgSelskapsInformasjonForm>({
       defaultValues: {
-        ...inntektsmeldingSkjemaState.kontaktperson,
+        ...(inntektsmeldingSkjemaState.kontaktperson ?? {
+          navn: innsenderNavn,
+          telefonnummer: opplysninger.innsender.telefon,
+        }),
       },
     });
   const navigate = useNavigate();
@@ -61,22 +73,18 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
           <Fremgangsindikator aktivtSteg={1} />
 
           <Intro opplysninger={opplysninger} />
-          <div className="flex flex-col sm:flex-row gap-6">
-            <ArbeidsgiverInformasjon opplysninger={opplysninger} />
-            <Personinformasjon opplysninger={opplysninger} />
-          </div>
-
+          <Personinformasjon opplysninger={opplysninger} />
           <InformasjonsseksjonMedKilde
             className="col-span-2"
             kilde="Fra Altinn"
-            tittel="Innsender og kontaktperson"
+            tittel={`Kontaktinformasjon for ${innsenderNavn}`}
           >
             <HGrid align="start" columns={{ sm: 1, md: 2 }} gap="5">
               <TextField
                 className="w-full"
                 {...register("navn", { required: "Navn er påkrevd" })}
                 error={formState.errors.navn?.message}
-                label="Navn innsender"
+                label="Navn"
                 size="medium"
               />
               <TextField
@@ -86,18 +94,19 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
                   // TODO: Legg til mer avansert validering for telefonnumre
                 })}
                 error={formState.errors.telefonnummer?.message}
-                label="Telefon innsender"
+                label="Telefon"
                 size="medium"
               />
             </HGrid>
             <Alert variant="info">
-              <Heading level="3" size="small">
-                Stemmer informasjonen?
+              <Heading level="3" size="xsmall" spacing>
+                Stemmer opplysningene?
               </Heading>
               <BodyShort>
                 Har vi spørsmål til inntektsmeldingen er det viktig at vi når
-                rett person. Legg til ekstra kontaktperson dersom du vet du vil
-                være utilgjengelig fremover.
+                rett person, bruk derfor direktenummer fremfor
+                sentralbordnummer. Hvis du vet at du vil være utilgjengelig i
+                fremtiden, kan du bytte til en annen kontaktperson.
               </BodyShort>
             </Alert>
           </InformasjonsseksjonMedKilde>
@@ -132,32 +141,35 @@ type IntroProps = {
 };
 const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
-  const fulltNavn = slåSammenTilFulltNavn(
+  const fulltNavnSøker = slåSammenTilFulltNavn(
     person.fornavn,
     person.mellomnavn,
     person.etternavn,
   );
-  const fornavn = person.fornavn;
+  const fornavnSøker = person.fornavn;
 
   return (
     <GuidePanel className="mb-4 col-span-2">
       <div className="flex flex-col gap-4">
         <Heading level="3" size="medium">
-          Hei {fornavn}!
+          Hei {capitalizeSetning(opplysninger.innsender.fornavn)}!
         </Heading>
         <BodyLong>
           <strong>
-            {fulltNavn} ({formatFødselsnummer(person.fødselsnummer)})
+            {fulltNavnSøker} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
-          som jobber på <strong>{arbeidsgiver.organisasjonNavn}</strong> har
-          søkt om {formatYtelsesnavn(opplysninger.ytelse)}. NAV trenger derfor
-          informasjon om inntekten til {fornavn}.
+          har søkt om {formatYtelsesnavn(opplysninger.ytelse)}. For å behandle
+          søknaden, trenger vi informasjon om {fornavnSøker} sin inntekt fra{" "}
+          <strong>{arbeidsgiver.organisasjonNavn}</strong>.
         </BodyLong>
         <BodyLong>
-          Vi har forhåndsutfylt skjema med opplysninger fra søknaden til{" "}
-          {fornavn} og A-ordningen. Bekreft om opplysningene om den ansatte
-          stemmer eller endre hvis noe er feil. Den ansatte vil få tilgang til å
-          se innsendt inntektsmelding under «Min side» på nav.no.
+          Vi har forhåndsutfylt skjema med opplysninger fra {fornavnSøker} sin
+          søknad og fra A-ordningen. Du må vurdere om informasjonen om den
+          ansatte er riktig, og gjøre endringer hvis noe er galt.
+        </BodyLong>
+        <BodyLong>
+          Den ansatte har rett til å se sin egen sak, og kan be om å se
+          informasjonen du sender til NAV.
         </BodyLong>
       </div>
     </GuidePanel>
@@ -178,48 +190,13 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
 
   return (
     <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
-      <LabelOgVerdi label="Navn">{fulltNavn}</LabelOgVerdi>
-      <LabelOgVerdi label="Fødselsdato">
+      <div>
+        <span>{fulltNavn}</span>
         <div className="flex items-center gap-2">
           {formatFødselsnummer(person.fødselsnummer)}{" "}
           <CopyButton copyText={person.fødselsnummer} size="small" />
         </div>
-      </LabelOgVerdi>
+      </div>
     </InformasjonsseksjonMedKilde>
-  );
-};
-
-type ArbeidsgiverInformasjonProps = {
-  opplysninger: OpplysningerDto;
-};
-const ArbeidsgiverInformasjon = ({
-  opplysninger,
-}: ArbeidsgiverInformasjonProps) => {
-  const { arbeidsgiver } = opplysninger;
-
-  return (
-    <InformasjonsseksjonMedKilde kilde="Fra Altinn" tittel="Arbeidsgiver">
-      <LabelOgVerdi label="Virksomhetsnavn">
-        {arbeidsgiver.organisasjonNavn}
-      </LabelOgVerdi>
-      <LabelOgVerdi label="Org. nr. for underenhet">
-        {arbeidsgiver.organisasjonNummer}
-      </LabelOgVerdi>
-    </InformasjonsseksjonMedKilde>
-  );
-};
-
-type LabelOgVerdiProps = {
-  label: string;
-  children: React.ReactNode;
-};
-const LabelOgVerdi = ({ label, children }: LabelOgVerdiProps) => {
-  return (
-    <div>
-      <Label as="p" size="small">
-        {label}
-      </Label>
-      <BodyShort as="div">{children}</BodyShort>
-    </div>
   );
 };

@@ -42,6 +42,12 @@ const opplysningerSchema = z.object({
       .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || "")),
     etternavn: z.string().transform(navnMedStorBokstav),
   }),
+  innsender: z.object({
+    fornavn: z.string(),
+    mellomnavn: z.string().optional(),
+    etternavn: z.string(),
+    telefon: z.string().optional(),
+  }),
   arbeidsgiver: z.object({
     organisasjonNavn: z.string(),
     organisasjonNummer: z.string(),
