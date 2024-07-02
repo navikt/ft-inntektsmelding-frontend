@@ -82,11 +82,7 @@ export const Oppsummering = () => {
             <FormSummary.Answer>
               <FormSummary.Label>Den ansatte</FormSummary.Label>
               <FormSummary.Value>
-                {slåSammenTilFulltNavn(
-                  opplysninger.person.fornavn,
-                  opplysninger.person.mellomnavn,
-                  opplysninger.person.etternavn,
-                )}
+                {slåSammenTilFulltNavn(opplysninger.person)}
                 {", "}({formatFødselsnummer(opplysninger.person.fødselsnummer)})
               </FormSummary.Value>
             </FormSummary.Answer>

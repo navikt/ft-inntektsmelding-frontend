@@ -38,11 +38,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
     useInntektsmeldingSkjema();
 
   const innsenderNavn = capitalizeSetning(
-    slåSammenTilFulltNavn(
-      opplysninger.innsender.fornavn,
-      opplysninger.innsender.mellomnavn,
-      opplysninger.innsender.etternavn,
-    ),
+    slåSammenTilFulltNavn(opplysninger.innsender),
   );
 
   const { register, handleSubmit, formState } =
@@ -141,11 +137,7 @@ type IntroProps = {
 };
 const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
-  const fulltNavnSøker = slåSammenTilFulltNavn(
-    person.fornavn,
-    person.mellomnavn,
-    person.etternavn,
-  );
+  const fulltNavnSøker = slåSammenTilFulltNavn(person);
   const fornavnSøker = person.fornavn;
 
   return (
@@ -182,11 +174,7 @@ type PersoninformasjonProps = {
 
 const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
   const { person } = opplysninger;
-  const fulltNavn = slåSammenTilFulltNavn(
-    person.fornavn,
-    person.mellomnavn,
-    person.etternavn,
-  );
+  const fulltNavn = slåSammenTilFulltNavn(person);
 
   return (
     <InformasjonsseksjonMedKilde
