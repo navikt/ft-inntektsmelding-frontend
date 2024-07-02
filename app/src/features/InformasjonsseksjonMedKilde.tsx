@@ -16,7 +16,7 @@ export const InformasjonsseksjonMedKilde = ({
   return (
     <div
       className={clsx(
-        "bg-bg-subtle p-4 flex flex-col gap-4 rounded-md",
+        "bg-bg-subtle p-4 flex flex-col gap-4 rounded-md flex-1",
         className,
       )}
     >

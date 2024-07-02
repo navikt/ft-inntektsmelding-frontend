@@ -54,19 +54,17 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
   return (
     <section className="mt-6">
       <form onSubmit={onSubmit}>
-        <HGrid
-          className="bg-bg-default px-5 py-6 rounded-md"
-          columns={{ xs: 1, md: 2 }}
-          gap="6"
-        >
+        <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
           <Heading level="3" size="large">
             Dine opplysninger
           </Heading>
           <Fremgangsindikator aktivtSteg={1} />
 
           <Intro opplysninger={opplysninger} />
-          <ArbeidsgiverInformasjon opplysninger={opplysninger} />
-          <Personinformasjon opplysninger={opplysninger} />
+          <div className="flex flex-col sm:flex-row gap-6">
+            <ArbeidsgiverInformasjon opplysninger={opplysninger} />
+            <Personinformasjon opplysninger={opplysninger} />
+          </div>
 
           <InformasjonsseksjonMedKilde
             className="col-span-2"
@@ -114,7 +112,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               Bekreft og gå videre
             </Button>
           </div>
-        </HGrid>
+        </div>
         <div className="flex justify-center mt-3">
           <Button
             icon={<FloppydiskIcon />}
