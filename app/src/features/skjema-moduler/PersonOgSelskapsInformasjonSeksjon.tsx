@@ -189,7 +189,10 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
   );
 
   return (
-    <InformasjonsseksjonMedKilde kilde="Fra søknad" tittel="Den ansatte">
+    <InformasjonsseksjonMedKilde
+      kilde={`Fra søknaden til ${person.fornavn}`}
+      tittel="Den ansatte"
+    >
       <div>
         <span>{fulltNavn}</span>
         <div className="flex items-center gap-2">
