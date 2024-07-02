@@ -14,6 +14,7 @@ import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries";
+import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
@@ -139,6 +140,12 @@ const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
   const fulltNavnSøker = slåSammenTilFulltNavn(person);
   const fornavnSøker = person.fornavn;
+
+  const { visHjelpetekster } = useHjelpetekst();
+
+  if (!visHjelpetekster) {
+    return null;
+  }
 
   return (
     <GuidePanel className="mb-4 col-span-2">
