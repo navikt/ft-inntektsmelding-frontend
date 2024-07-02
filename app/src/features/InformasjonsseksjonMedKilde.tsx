@@ -1,4 +1,4 @@
-import {BodyShort, Detail} from "@navikt/ds-react";
+import { Detail, Label } from "@navikt/ds-react";
 import clsx from "clsx";
 
 type InformasjonsseksjonMedKildeProps = {
@@ -21,9 +21,7 @@ export const InformasjonsseksjonMedKilde = ({
       )}
     >
       <div className="flex justify-between items-center">
-        <BodyShort size="small">
-          <strong>{tittel}</strong>
-        </BodyShort>
+        <Label size="small">{tittel}</Label>
         <Detail className="uppercase flex items-center">{kilde}</Detail>
       </div>
       {children}
