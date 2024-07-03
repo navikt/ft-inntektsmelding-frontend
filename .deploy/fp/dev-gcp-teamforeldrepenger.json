@@ -1,6 +1,7 @@
 {
   "ingresses": [
-    "https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog"
+    "https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog",
+    "https://arbeidsgiver.ansatt.dev.nav.no/fp-im-dialog"
   ],
   "minReplicas": "1",
   "maxReplicas": "2",
