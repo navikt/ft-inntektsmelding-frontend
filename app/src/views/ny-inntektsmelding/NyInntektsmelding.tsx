@@ -3,11 +3,7 @@ import { getRouteApi, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
-import {
-  capitalizeSetning,
-  formatYtelsesnavn,
-  slåSammenTilFulltNavn,
-} from "~/utils.ts";
+import { formatYtelsesnavn } from "~/utils.ts";
 
 const route = getRouteApi("/$id");
 
@@ -36,15 +32,7 @@ export const NyInntektsmelding = () => {
         <div className="flex gap-3">
           <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
           <span>|</span>
-          <span>
-            {capitalizeSetning(
-              slåSammenTilFulltNavn(
-                opplysninger.person.fornavn,
-                opplysninger.person.mellomnavn,
-                opplysninger.person.etternavn,
-              ),
-            )}
-          </span>
+          <span>{opplysninger.arbeidsgiver.organisasjonNummer}</span>
         </div>
       }
     >

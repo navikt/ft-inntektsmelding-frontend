@@ -8,11 +8,15 @@ export function leggTilGenitiv(navn: string) {
   return `${navn}s`;
 }
 
-export function slåSammenTilFulltNavn(
-  fornavn: string,
-  mellomnavn: string | undefined,
-  etternavn: string,
-) {
+export function slåSammenTilFulltNavn({
+  fornavn,
+  mellomnavn,
+  etternavn,
+}: {
+  fornavn: string;
+  mellomnavn?: string;
+  etternavn: string;
+}) {
   return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
 }
 
