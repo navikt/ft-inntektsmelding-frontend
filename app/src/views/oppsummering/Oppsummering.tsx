@@ -26,6 +26,7 @@ import {
   formatIsoDatostempel,
   formatKroner,
   formatYtelsesnavn,
+  leggTilDagerPåDato,
   slåSammenTilFulltNavn,
 } from "~/utils";
 
@@ -408,7 +409,9 @@ function utledRefusjonsPerioder(
       fom: formatIsoDatostempel(new Date(currentValue.fraOgMed)),
       beløp: currentValue.beløp,
       tom: forrigePeriode
-        ? formatIsoDatostempel(new Date(forrigePeriode.fraOgMed))
+        ? formatIsoDatostempel(
+            leggTilDagerPåDato(new Date(forrigePeriode.fraOgMed), -1),
+          )
         : undefined,
     };
   });

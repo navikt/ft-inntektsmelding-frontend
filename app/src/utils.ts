@@ -61,6 +61,11 @@ export function formatDatoKort(dato: Date) {
   }).format(dato);
 }
 
+export function leggTilDagerPåDato(dato: Date, antallDager: number) {
+  dato.setDate(dato.getDate() + antallDager);
+  return dato;
+}
+
 export function formatIsoDatostempel(dato: Date) {
   const år = dato.getFullYear();
   const måned = (dato.getMonth() + 1).toString().padStart(2, "0");
