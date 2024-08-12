@@ -7,9 +7,11 @@ import {
   HGrid,
   Label,
   Link,
+  List,
   Select,
   TextField,
 } from "@navikt/ds-react";
+import { ListItem } from "@navikt/ds-react/List";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
@@ -109,11 +111,66 @@ export function Inntekt({ opplysninger }: InntektProps) {
         </BodyLong>
       </HjelpetekstAlert>
       <div className="flex flex-col gap-2">
-        <HjelpetekstReadMore header="Hvordan beregne ved fravær i beregningsperioden?">
-          TODO
+        <HjelpetekstReadMore header="Har den ansatte hatt ferie eller fravær de siste tre månedene?">
+          <div className="flex flex-col gap-2">
+            <BodyLong>
+              Hvis den ansatte har hatt ferietrekk i en lønnsutbetaling skal
+              dette inngå som en del av gjennomsnittet for tre måneder. Du må da
+              endre månedslønnen, slik at den representerer et snitt av lønnen
+              den ansatte ville hatt uten ferietrekket.
+            </BodyLong>
+            <BodyLong>
+              <strong>Spesielt om de som har vært borte minst 14 dager</strong>
+              <br />
+              Hvis den ansatte har vært borte fra jobb i mer enn 14 dager,
+              regnes arbeidsforholdet som avbrutt. Hvis den ansatte ikke har
+              vært tilbake på jobb, skal du oppgi 0,- i inntekt. NAV vurderer da
+              søknaden ut fra opplysninger i A-meldingen. Du kan fortsatt søke
+              refusjon, men risikerer å ikke få hele refusjonskravet dekket.
+            </BodyLong>
+            <BodyLong>
+              Hvis den ansatte har vært tilbake i mindre enn 3 måneder, må du
+              fastsette månedsinntekten ut fra perioden den ansatte var tilbake:
+            </BodyLong>
+            <List>
+              <ListItem>
+                Hvis den ansatte har fast månedslønn, bruker du denne i
+                inntektsmeldingen
+              </ListItem>
+              <ListItem>
+                Hvis den ansatte har hatt lovlig fravær, skal du bruke den
+                inntekten den ansatte ville hatt hvis han eller hun var på jobb.
+                Lovlig fravær kan for eksempel være på grunn av ferie,
+                sykefravær, foreldrepermisjon eller perioder med pleiepenger.
+              </ListItem>
+            </List>
+          </div>
         </HjelpetekstReadMore>
-        <HjelpetekstReadMore header="Hvordan beregne ved turnusarbeid eller deltidsstilling?">
-          TODO
+        <HjelpetekstReadMore header="Jobber den ansatte skift eller har timelønn?">
+          <div className="flex flex-col gap-2">
+            <BodyLong>
+              Hvis den ansatte jobber skift eller har timelønn, må du finne
+              månedslønn ut fra hva den ansatte har tjent og hvor mange dager
+              han eller hun har jobbet. <br />
+              Du må da:
+            </BodyLong>
+            <List>
+              <ListItem>
+                Finne ut hvor mange arbeidsdager den ansatte har jobbet i løpet
+                av de tre månedene før første dag med foreldrepenger
+              </ListItem>
+              <ListItem>
+                Finne ut hvor mye den ansatte tjente i samme periode
+              </ListItem>
+              <ListItem>
+                Regne ut en dagsats ved å dele inntekten på antall arbeidsdager
+              </ListItem>
+              <ListItem>
+                Denne dagsatsen ganges med 260, og deles på 12. Da får du en
+                gjennomsnittlig månedsinntekt som du oppgir i inntektsmeldingen.
+              </ListItem>
+            </List>
+          </div>
         </HjelpetekstReadMore>
       </div>
     </div>
