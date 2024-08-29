@@ -17,8 +17,8 @@ export default tseslint.config(
   {
     ignores: [
       "postcss.config.cjs",
-      "/src/vite-env.d.ts",
-      "/src/routeTree.gen.ts",
+      "src/vite-env.d.ts",
+      "src/routeTree.gen.ts",
       "dist/*",
     ],
   },
@@ -42,7 +42,7 @@ export default tseslint.config(
     },
   },
   ...pluginQuery.configs["flat/recommended"],
-  eslintPluginUnicorn.configs['flat/recommended'],
+  eslintPluginUnicorn.configs["flat/recommended"],
   {
     rules: {
       eqeqeq: ["error", "always"],
