@@ -25,8 +25,14 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
-  reactLint.configs.flat.recommended,
-  reactLint.configs.flat["jsx-runtime"],
+  {
+    ...reactLint.configs.flat.recommended,
+    settings: {
+      react: {
+        version: "detect", // Fjerner warning om at React version ikke er satt i eslint-plugin-react
+      },
+    },
+  },
   {
     plugins: {
       "simple-import-sort": simpleImportSort,
