@@ -4,7 +4,6 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import reactLint from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
-import globals from "globals";
 import tseslint from "typescript-eslint";
 
 const IGNORED_UNICORN_RULES = {
