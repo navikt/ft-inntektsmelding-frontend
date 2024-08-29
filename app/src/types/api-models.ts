@@ -43,7 +43,7 @@ export type SendInntektsmeldingRequestDto = {
   startdato: string;
   inntekt: number;
   inntektEndringsÅrsak?: InntektEndretÅrsakDto;
-  refusjonsperioder: RefusjonsperiodeRequestDto[];
+  refusjonEndringer: RefusjonsendringRequestDto[];
   bortfaltNaturaltytelsePerioder: NaturalytelseRequestDto[];
 };
 
@@ -61,9 +61,8 @@ type KontaktpersonDto = {
   navn: string;
 };
 
-export type RefusjonsperiodeRequestDto = {
+export type RefusjonsendringRequestDto = {
   fom: string;
-  tom?: string;
   beløp: number;
 };
 
@@ -72,5 +71,4 @@ export type NaturalytelseRequestDto = {
   tom?: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
-  erBortfalt: boolean;
 };

@@ -20,6 +20,7 @@ import type { Naturalytelsetype } from "~/types/api-models.ts";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fraOgMed: "",
+  tilOgMed: "",
   beløp: 0,
   navn: "" as const,
 };
@@ -97,7 +98,7 @@ function MisterNaturalytelser() {
   });
 
   return (
-    <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
+    <div className="grid grid-cols-[1fr_min-content_min-content_80px_max-content] gap-4 items-start">
       {fields.map((field, index) => (
         <Fragment key={field.id}>
           <Select
@@ -123,10 +124,16 @@ function MisterNaturalytelser() {
             name={`naturalytelserSomMistes.${index}.fraOgMed` as const}
             rules={{ required: "Må oppgis" }}
           />
+          <DatePickerWrapped
+            hideLabel={index > 0}
+            label="Til og med"
+            name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
+          />
           <TextField
             {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
               min: { value: 1, message: "Må være mer enn 0" },
             })}
+            autoComplete="off"
             error={
               formState.errors?.naturalytelserSomMistes?.[index]?.beløp?.message
             }

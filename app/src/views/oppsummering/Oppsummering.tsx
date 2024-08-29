@@ -16,7 +16,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
-  RefusjonsperiodeRequestDto,
+  RefusjonsendringRequestDto,
   SendInntektsmeldingRequestDto,
 } from "~/types/api-models.ts";
 import {
@@ -333,7 +333,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
         // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsperioder: utledRefusjonsPerioder([
+        refusjonsendringer: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
@@ -390,26 +390,15 @@ function konverterNaturalytelsePerioder(
     naturalytelsetype: periode.navn,
     fom: formatIsoDatostempel(new Date(periode.fraOgMed)),
     beløp: periode.beløp,
-    erBortfalt: true,
-    tom: undefined, // Gjelder hele permisjonen
+    tom: periode.tilOgMed,
   }));
 }
 
 function utledRefusjonsPerioder(
-  refusjonsPerioder: InntektsmeldingSkjemaState["refusjonsendringer"],
-): RefusjonsperiodeRequestDto[] {
-  const perioderSynkende = [...refusjonsPerioder].sort(
-    (a, b) => new Date(b.fraOgMed).getTime() - new Date(a.fraOgMed).getTime(),
-  );
-
-  return perioderSynkende.map((currentValue, index, array) => {
-    const forrigePeriode = array[index - 1];
-    return {
-      fom: formatIsoDatostempel(new Date(currentValue.fraOgMed)),
-      beløp: currentValue.beløp,
-      tom: forrigePeriode
-        ? formatIsoDatostempel(new Date(forrigePeriode.fraOgMed))
-        : undefined,
-    };
-  });
+  refusjonsendringer: InntektsmeldingSkjemaState["refusjonsendringer"],
+): RefusjonsendringRequestDto[] {
+  return refusjonsendringer.map((endring) => ({
+    fom: endring.fraOgMed,
+    beløp: endring.beløp,
+  }));
 }
