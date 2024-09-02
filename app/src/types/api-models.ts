@@ -42,26 +42,26 @@ export type SendInntektsmeldingRequestDto = {
   kontaktperson: KontaktpersonDto;
   startdato: string;
   inntekt: number;
-  inntektEndringsÅrsak?: InntektEndretÅrsakDto;
-  refusjonEndringer: RefusjonsendringRequestDto[];
-  bortfaltNaturaltytelsePerioder: NaturalytelseRequestDto[];
+  refusjon: number;
+  refusjonEndringer: RefusjonsEndringRequestDto[];
+  bortfaltNaturalytelsePerioder: NaturalytelseRequestDto[];
 };
 
 export type ÅrsaksType = "Tariffendring" | "FeilInntekt";
 
-type InntektEndretÅrsakDto = {
-  korrigertInntekt: number;
-  årsak: ÅrsaksType;
-  fom?: string;
-  tom?: string;
-};
+// type InntektEndretÅrsakDto = {
+//   korrigertInntekt: number;
+//   årsak: ÅrsaksType;
+//   fom?: string;
+//   tom?: string;
+// };
 
 type KontaktpersonDto = {
   telefonnummer: string;
   navn: string;
 };
 
-export type RefusjonsendringRequestDto = {
+export type RefusjonsEndringRequestDto = {
   fom: string;
   beløp: number;
 };

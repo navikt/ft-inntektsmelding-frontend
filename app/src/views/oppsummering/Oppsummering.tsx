@@ -16,7 +16,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
-  RefusjonsendringRequestDto,
+  RefusjonsEndringRequestDto,
   SendInntektsmeldingRequestDto,
 } from "~/types/api-models.ts";
 import {
@@ -396,7 +396,7 @@ function konverterNaturalytelsePerioder(
 
 function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaState["refusjonsendringer"],
-): RefusjonsendringRequestDto[] {
+): RefusjonsEndringRequestDto[] {
   return refusjonsendringer.map((endring) => ({
     fom: endring.fraOgMed,
     beløp: endring.beløp,

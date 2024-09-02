@@ -25,6 +25,7 @@ export type InntektsmeldingSkjemaState = {
     beløp: number;
     fraOgMed: string;
     tilOgMed?: string;
+    inkluderTom: boolean;
   }[];
 };
 

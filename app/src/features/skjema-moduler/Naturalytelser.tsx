@@ -2,6 +2,7 @@ import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
   BodyLong,
   Button,
+  Checkbox,
   Heading,
   Radio,
   RadioGroup,
@@ -23,6 +24,7 @@ export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   tilOgMed: "",
   beløp: 0,
   navn: "" as const,
+  inkluderTom: false,
 };
 
 export function Naturalytelser() {
@@ -90,7 +92,7 @@ const naturalytelser: Record<Naturalytelsetype, string> = {
 };
 
 function MisterNaturalytelser() {
-  const { control, register, formState } =
+  const { control, register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -98,60 +100,77 @@ function MisterNaturalytelser() {
   });
 
   return (
-    <div className="grid grid-cols-[1fr_min-content_min-content_80px_max-content] gap-4 items-start">
-      {fields.map((field, index) => (
-        <Fragment key={field.id}>
-          <Select
-            hideLabel={index > 0}
-            label="Naturalytelse som faller bort"
-            {...register(`naturalytelserSomMistes.${index}.navn` as const, {
-              required: "Må oppgis",
-            })}
-            error={
-              formState.errors?.naturalytelserSomMistes?.[index]?.navn?.message
-            }
-          >
-            <option value="">Velg naturalytelse</option>
-            {Object.entries(naturalytelser).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
-          <DatePickerWrapped
-            hideLabel={index > 0}
-            label="Fra og med"
-            name={`naturalytelserSomMistes.${index}.fraOgMed` as const}
-            rules={{ required: "Må oppgis" }}
-          />
-          <DatePickerWrapped
-            hideLabel={index > 0}
-            label="Til og med"
-            name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
-          />
-          <TextField
-            {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
-              min: { value: 1, message: "Må være mer enn 0" },
-            })}
-            autoComplete="off"
-            error={
-              formState.errors?.naturalytelserSomMistes?.[index]?.beløp?.message
-            }
-            hideLabel={index > 0}
-            inputMode="numeric"
-            label={<span>Verdi&nbsp;pr. måned</span>}
-            size="medium"
-          />
-          <Button
-            aria-label="fjern naturalytelse"
-            className={clsx({ "mt-8": index === 0 })}
-            disabled={index === 0}
-            icon={<TrashIcon />}
-            onClick={() => remove(index)}
-            variant="tertiary"
-          />
-        </Fragment>
-      ))}
+    <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
+      {fields.map((field, index) => {
+        console.log(field);
+        return (
+          <Fragment key={field.id}>
+            <Select
+              hideLabel={index > 0}
+              label="Naturalytelse som faller bort"
+              {...register(`naturalytelserSomMistes.${index}.navn` as const, {
+                required: "Må oppgis",
+              })}
+              error={
+                formState.errors?.naturalytelserSomMistes?.[index]?.navn
+                  ?.message
+              }
+            >
+              <option value="">Velg naturalytelse</option>
+              {Object.entries(naturalytelser).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+            <DatePickerWrapped
+              hideLabel={index > 0}
+              label="Fra og med"
+              name={`naturalytelserSomMistes.${index}.fraOgMed` as const}
+              rules={{ required: "Må oppgis" }}
+            />
+
+            <TextField
+              {...register(`naturalytelserSomMistes.${index}.beløp` as const, {
+                min: { value: 1, message: "Må være mer enn 0" },
+              })}
+              autoComplete="off"
+              error={
+                formState.errors?.naturalytelserSomMistes?.[index]?.beløp
+                  ?.message
+              }
+              hideLabel={index > 0}
+              inputMode="numeric"
+              label={<span>Verdi&nbsp;pr. måned</span>}
+              size="medium"
+            />
+            <Button
+              aria-label="fjern naturalytelse"
+              className={clsx({ "mt-8": index === 0 })}
+              disabled={index === 0}
+              icon={<TrashIcon />}
+              onClick={() => remove(index)}
+              variant="tertiary"
+            />
+            <Checkbox
+              {...register(
+                `naturalytelserSomMistes.${index}.inkluderTom` as const,
+              )}
+            >
+              Legg til til og med dato?
+            </Checkbox>
+            <div className="col-span-3">
+              {watch(`naturalytelserSomMistes.${index}.inkluderTom`) && (
+                <DatePickerWrapped
+                  hideLabel={index > 0}
+                  label="Til og med"
+                  name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
+                />
+              )}
+            </div>
+          </Fragment>
+        );
+      })}
       <Button
         className="w-fit"
         icon={<PlusIcon />}
