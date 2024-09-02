@@ -159,6 +159,10 @@ function MisterNaturalytelser() {
               </Button>
               <RadioGroup
                 className="col-span-4"
+                error={
+                  formState.errors.naturalytelserSomMistes?.[index]?.inkluderTom
+                    ?.message
+                }
                 legend="Vil naturalytelsen komme tilbake i løpet av fraværet?"
                 name={name}
               >
@@ -173,7 +177,6 @@ function MisterNaturalytelser() {
                 {watch(`naturalytelserSomMistes.${index}.inkluderTom`) ===
                   "ja" && (
                   <DatePickerWrapped
-                    hideLabel={index > 0}
                     label="Til og med"
                     name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
                   />
