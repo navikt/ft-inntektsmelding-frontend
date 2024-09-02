@@ -23,6 +23,7 @@ import {
   ENDRING_I_REFUSJON_TEMPLATE,
   UtbetalingOgRefusjon,
 } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
+import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
   formatDatoLang,
@@ -41,14 +42,22 @@ export type InntektOgRefusjonForm = {
   skalRefunderes: JaNei;
   endringIRefusjon: JaNei;
   misterNaturalytelser: JaNei;
+  naturalytelserSomMistes: NaturalytelserSomMistesForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
-  | "naturalytelserSomMistes"
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
   | "inntekt"
   | "inntektEndringsÅrsak"
 >;
+
+type NaturalytelserSomMistesForm = {
+  navn: Naturalytelsetype | "";
+  beløp: number;
+  fraOgMed: string;
+  tilOgMed?: string;
+  inkluderTom?: JaNei;
+};
 
 function InntektOgRefusjon() {
   const opplysninger = useLoaderData({ from: "/$id" });
@@ -90,7 +99,17 @@ function InntektOgRefusjon() {
       naturalytelserSomMistes:
         inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
           ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
-          : inntektsmeldingSkjemaState.naturalytelserSomMistes,
+          : inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
+              (naturalYtelse) => ({
+                ...naturalYtelse,
+                inkluderTom:
+                  naturalYtelse === undefined
+                    ? undefined
+                    : naturalYtelse
+                      ? "ja"
+                      : "nei",
+              }),
+            ),
       refusjonsendringer:
         inntektsmeldingSkjemaState.refusjonsendringer.length === 0
           ? [ENDRING_I_REFUSJON_TEMPLATE]
@@ -111,7 +130,10 @@ function InntektOgRefusjon() {
 
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const naturalytelserSomMistes = misterNaturalytelser
-      ? skjemadata.naturalytelserSomMistes
+      ? skjemadata.naturalytelserSomMistes.map((naturalYtelse) => ({
+          ...naturalYtelse,
+          inkluderTom: naturalYtelse.inkluderTom === "ja",
+        }))
       : [];
 
     setInntektsmeldingSkjemaState((prev) => ({
