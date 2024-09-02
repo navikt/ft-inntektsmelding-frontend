@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-top-level-await */
 import { createFileRoute } from "@tanstack/react-router";
 
 import { hentOpplysningerData } from "~/api/queries";
