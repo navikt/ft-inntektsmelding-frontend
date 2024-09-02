@@ -42,7 +42,7 @@ export type SendInntektsmeldingRequestDto = {
   kontaktperson: KontaktpersonDto;
   startdato: string;
   inntekt: number;
-  refusjon: number;
+  refusjon?: number;
   refusjonEndringer: RefusjonsEndringRequestDto[];
   bortfaltNaturalytelsePerioder: NaturalytelseRequestDto[];
 };

@@ -17,7 +17,6 @@ import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
   RefusjonsEndringRequestDto,
-  SendInntektsmeldingRequestDto,
 } from "~/types/api-models.ts";
 import {
   formatDatoKort,
@@ -323,24 +322,24 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       const gjeldendeInntekt =
         inntektsmeldingSkjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
         inntektsmeldingSkjemaState.inntekt;
-      const inntektsmelding: SendInntektsmeldingRequestDto = {
+      const inntektsmelding = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
         ytelse: opplysninger.ytelse,
         arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-        // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
-        kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
+        kontaktperson: inntektsmeldingSkjemaState.kontaktperson!, // TODO: håndter undefined state
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
+        refusjon: inntektsmeldingSkjemaState.refusjonsbeløpPerMåned,
         // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsendringer: utledRefusjonsPerioder([
+        refusjonEndringer: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
             fraOgMed: opplysninger.startdatoPermisjon,
           },
         ]),
-        bortfaltNaturaltytelsePerioder: konverterNaturalytelsePerioder(
+        bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           inntektsmeldingSkjemaState.naturalytelserSomMistes,
         ),
       };
