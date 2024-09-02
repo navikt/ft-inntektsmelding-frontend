@@ -260,18 +260,23 @@ export const Oppsummering = () => {
                 <FormSummary.Value>
                   <FormSummary.Answers>
                     {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
-                      (naturalytelse) => (
-                        <FormSummary.Answer key={naturalytelse.navn}>
-                          <FormSummary.Label>
-                            {formatYtelsesnavn(naturalytelse.navn, true)}
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            Verdi {formatKroner(naturalytelse.beløp)} (fra og
-                            med{" "}
-                            {formatDatoKort(new Date(naturalytelse.fraOgMed))})
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      ),
+                      (naturalytelse) => {
+                        const fraOgMedStreng = `fra og med ${formatDatoKort(new Date(naturalytelse.fraOgMed))}`;
+                        const tilOgMedStreng = naturalytelse.tilOgMed
+                          ? `til og med ${formatDatoKort(new Date(naturalytelse.tilOgMed))}`
+                          : "";
+
+                        return (
+                          <FormSummary.Answer key={naturalytelse.navn}>
+                            <FormSummary.Label>
+                              {formatYtelsesnavn(naturalytelse.navn, true)}
+                            </FormSummary.Label>
+                            <FormSummary.Value>
+                              {`Verdi ${formatKroner(naturalytelse.beløp)} (${[fraOgMedStreng, tilOgMedStreng].filter(Boolean).join(", ")}) `}
+                            </FormSummary.Value>
+                          </FormSummary.Answer>
+                        );
+                      },
                     )}
                   </FormSummary.Answers>
                 </FormSummary.Value>
