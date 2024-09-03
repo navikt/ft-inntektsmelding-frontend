@@ -203,7 +203,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
 //   },
 // ];
 
-const endringsårsak2 = [
+const endringsårsak = [
   { value: "Tariffendring", label: "Tariffendring" },
   { value: "FeilInntekt", label: "Varig feil inntekt" },
 ];
@@ -261,7 +261,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
           })}
         >
           <option value="">Velg endringsårsak</option>
-          {Object.values(endringsårsak2).map((årsak) => (
+          {Object.values(endringsårsak).map((årsak) => (
             <option key={årsak.value} value={årsak.value}>
               {årsak.label}
             </option>
