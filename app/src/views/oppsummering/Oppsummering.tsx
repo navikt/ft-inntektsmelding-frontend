@@ -261,18 +261,13 @@ export const Oppsummering = () => {
                   <FormSummary.Answers>
                     {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
                       (naturalytelse) => {
-                        const fraOgMedStreng = `fra og med ${formatDatoKort(new Date(naturalytelse.fraOgMed))}`;
-                        const tilOgMedStreng = naturalytelse.tilOgMed
-                          ? `til og med ${formatDatoKort(new Date(naturalytelse.tilOgMed))}`
-                          : "";
-
                         return (
                           <FormSummary.Answer key={naturalytelse.navn}>
                             <FormSummary.Label>
                               {formatYtelsesnavn(naturalytelse.navn, true)}
                             </FormSummary.Label>
                             <FormSummary.Value>
-                              {`Verdi ${formatKroner(naturalytelse.beløp)} (${[fraOgMedStreng, tilOgMedStreng].filter(Boolean).join(", ")}) `}
+                              {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
                             </FormSummary.Value>
                           </FormSummary.Answer>
                         );
@@ -289,6 +284,26 @@ export const Oppsummering = () => {
     </section>
   );
 };
+
+/**
+ * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
+ */
+function formaterPeriodeStreng({
+  fraOgMed,
+  tilOgMed,
+}: {
+  fraOgMed?: string;
+  tilOgMed?: string;
+}) {
+  const fraOgMedStreng = fraOgMed
+    ? `fra og med ${formatDatoKort(new Date(fraOgMed))}`
+    : "";
+  const tilOgMedStreng = tilOgMed
+    ? `til og med ${formatDatoKort(new Date(tilOgMed))}`
+    : "";
+
+  return [fraOgMedStreng, tilOgMedStreng].filter(Boolean).join(", ");
+}
 
 const formatterKontaktperson = (
   kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
