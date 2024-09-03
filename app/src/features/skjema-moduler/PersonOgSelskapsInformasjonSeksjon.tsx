@@ -88,7 +88,8 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
                 className="w-full md:w-1/2"
                 {...register("telefonnummer", {
                   required: "Telefonnummer er påkrevd",
-                  // TODO: Legg til mer avansert validering for telefonnumre
+                  // Sjekke 8 siffer, eller landskode og vilkårlig antall siffer
+                  validate: (data) => /^(\d{8}|\+\d+)$/.test(data),
                 })}
                 error={formState.errors.telefonnummer?.message}
                 label="Telefon"
