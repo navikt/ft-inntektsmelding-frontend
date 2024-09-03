@@ -52,7 +52,7 @@ createRoot(document.querySelector("#root")!).render(
 function NotFoundComponent() {
   return (
     <Page>
-      <Page.Block as="main" width="xl" gutters>
+      <Page.Block as="main" gutters width="xl">
         <Box data-aksel-template="404-v2" paddingBlock="20 16">
           <VStack align="start" gap="12">
             <div>
