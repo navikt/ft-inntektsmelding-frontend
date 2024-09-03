@@ -215,14 +215,14 @@ export const Oppsummering = () => {
                     {inntektsmeldingSkjemaState.refusjonsendringer.map(
                       (endring) => (
                         <FormSummary.Answer
-                          key={endring.fraOgMed + endring.beløp}
+                          key={endring.fom + endring.beløp}
                         >
                           <FormSummary.Label>
                             Refusjonsbeløp per måned
                           </FormSummary.Label>
                           <FormSummary.Value>
                             {formatKroner(endring.beløp)} (fra og med{" "}
-                            {formatDatoLang(new Date(endring.fraOgMed))})
+                            {formatDatoLang(new Date(endring.fom))})
                           </FormSummary.Value>
                         </FormSummary.Answer>
                       ),
@@ -289,20 +289,20 @@ export const Oppsummering = () => {
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
  */
 function formaterPeriodeStreng({
-  fraOgMed,
-  tilOgMed,
+  fom,
+  tom,
 }: {
-  fraOgMed?: string;
-  tilOgMed?: string;
+  fom?: string;
+  tom?: string;
 }) {
-  const fraOgMedStreng = fraOgMed
-    ? `fra og med ${formatDatoKort(new Date(fraOgMed))}`
+  const fomStreng = fom
+    ? `fra og med ${formatDatoKort(new Date(fom))}`
     : "";
-  const tilOgMedStreng = tilOgMed
-    ? `til og med ${formatDatoKort(new Date(tilOgMed))}`
+  const tomStreng = tom
+    ? `til og med ${formatDatoKort(new Date(tom))}`
     : "";
 
-  return [fraOgMedStreng, tilOgMedStreng].filter(Boolean).join(", ");
+  return [fomStreng, tomStreng].filter(Boolean).join(", ");
 }
 
 const formatterKontaktperson = (
@@ -356,7 +356,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
-            fraOgMed: opplysninger.startdatoPermisjon,
+            fom: opplysninger.startdatoPermisjon,
           },
         ]),
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
@@ -407,9 +407,9 @@ function konverterNaturalytelsePerioder(
   // @ts-expect-error --  se TODO
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
-    fom: formatIsoDatostempel(new Date(periode.fraOgMed)),
+    fom: formatIsoDatostempel(new Date(periode.fom)),
     beløp: periode.beløp,
-    tom: periode.tilOgMed,
+    tom: periode.tom,
   }));
 }
 
@@ -417,7 +417,7 @@ function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaState["refusjonsendringer"],
 ): RefusjonsendringRequestDto[] {
   return refusjonsendringer.map((endring) => ({
-    fom: endring.fraOgMed,
+    fom: endring.fom,
     beløp: endring.beløp,
   }));
 }

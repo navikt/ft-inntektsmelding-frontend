@@ -53,8 +53,8 @@ export type InntektOgRefusjonForm = {
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";
   beløp: number;
-  fraOgMed: string;
-  tilOgMed?: string;
+  fom: string;
+  tom?: string;
   inkluderTom?: JaNei;
 };
 

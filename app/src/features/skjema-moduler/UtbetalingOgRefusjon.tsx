@@ -187,7 +187,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
 }
 
 export const ENDRING_I_REFUSJON_TEMPLATE = {
-  fraOgMed: "",
+  fom: "",
   beløp: 0,
 };
 function RefusjonsPerioder() {
@@ -215,7 +215,7 @@ function RefusjonsPerioder() {
           <DatePickerWrapped
             hideLabel={index > 0}
             label="Dato for endring"
-            name={`refusjonsendringer.${index}.fraOgMed` as const}
+            name={`refusjonsendringer.${index}.fom` as const}
             rules={{ required: "Må oppgis" }}
           />
           <Button

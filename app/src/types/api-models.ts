@@ -69,7 +69,7 @@ export type RefusjonsendringRequestDto = {
 };
 
 export type NaturalytelseRequestDto = {
-  fom: string; // TODO: omdøp i BE til "fraOgMed"
+  fom: string;
   tom?: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;

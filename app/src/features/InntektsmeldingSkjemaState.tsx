@@ -18,13 +18,13 @@ export type InntektsmeldingSkjemaState = {
   skalRefunderes?: boolean;
   refusjonsbeløpPerMåned: number;
   endringIRefusjon?: boolean;
-  refusjonsendringer: { fraOgMed: string; beløp: number }[];
+  refusjonsendringer: { fom: string; beløp: number }[];
   misterNaturalytelser?: boolean;
   naturalytelserSomMistes: {
     navn: Naturalytelsetype | "";
     beløp: number;
-    fraOgMed: string;
-    tilOgMed?: string;
+    fom: string;
+    tom?: string;
     inkluderTom: boolean;
   }[];
 };

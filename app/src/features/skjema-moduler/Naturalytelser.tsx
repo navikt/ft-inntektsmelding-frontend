@@ -18,8 +18,8 @@ import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx
 import type { Naturalytelsetype } from "~/types/api-models.ts";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
-  fraOgMed: "",
-  tilOgMed: "",
+  fom: "",
+  tom: "",
   beløp: 0,
   navn: "" as const,
   inkluderTom: undefined,
@@ -137,7 +137,7 @@ function MisterNaturalytelser() {
               </Select>
               <DatePickerWrapped
                 label="Fra og med"
-                name={`naturalytelserSomMistes.${index}.fraOgMed` as const}
+                name={`naturalytelserSomMistes.${index}.fom` as const}
                 rules={{ required: "Må oppgis" }}
               />
 
@@ -187,7 +187,7 @@ function MisterNaturalytelser() {
                 {skalInkludereTom && (
                   <DatePickerWrapped
                     label="Til og med"
-                    name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
+                    name={`naturalytelserSomMistes.${index}.tom` as const}
                   />
                 )}
               </div>
