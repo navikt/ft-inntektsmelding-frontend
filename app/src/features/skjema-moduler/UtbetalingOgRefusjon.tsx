@@ -41,7 +41,7 @@ export function UtbetalingOgRefusjon({
         Utbetaling og refusjon
       </Heading>
       <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
-        <div className="flex flex-col gap-2">
+        <Stack gap="2">
           <BodyLong>
             Refusjon er når arbeidsgiver utbetaler lønn som vanlig til den
             ansatte, og får tilbakebetalt stønaden direkte fra NAV. Dette kalles
@@ -54,7 +54,7 @@ export function UtbetalingOgRefusjon({
             slik ordning. Hvis dere velger å forskuttere lønn, er det viktig at
             dere har en god dialog med arbeidstakeren om utfallet av søknaden.
           </BodyLong>
-        </div>
+        </Stack>
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.skalRefunderes?.message}
@@ -159,6 +159,28 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
           Nei
         </Radio>
       </RadioGroup>
+      <HjelpetekstReadMore header="Hvilke endringer må du informere NAV om?">
+        <Stack gap="2">
+          <BodyLong>
+            Her skal du registrere endringer som påvirker refusjonen fra NAV.
+          </BodyLong>
+          <BodyLong>
+            Dette kan være på grunn av endret stillingsprosent som gjør at
+            lønnen dere forskutterer endrer seg i perioden
+          </BodyLong>
+          <BodyLong>
+            Hvis dere skal slutte å forskuttere lønn i perioden, registrerer du
+            det som en endring her. Dette kan være fordi arbeidsforholdet
+            opphører, eller fordi dere kun forskutterer en begrenset periode. Du
+            skriver da 0,- i refusjon fra den datoen dere ikke lengre
+            forskutterer lønn.
+          </BodyLong>
+          <BodyLong>
+            Du trenger ikke å informere om endringer fordi den ansatte jobber
+            mer eller mindre i en periode.
+          </BodyLong>
+        </Stack>
+      </HjelpetekstReadMore>
       {endringIRefusjon === "ja" ? <RefusjonsPerioder /> : undefined}
     </div>
   );
