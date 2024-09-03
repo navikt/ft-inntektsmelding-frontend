@@ -1,8 +1,8 @@
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { getRouteApi, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSkjemaState";
 
+import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSkjemaState";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
