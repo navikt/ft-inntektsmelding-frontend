@@ -1,8 +1,44 @@
+import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
+
+export function hentGrunnbeløpOptions() {
+  return queryOptions({
+    queryKey: ["GRUNNBELØP"],
+    queryFn: hentGrunnbeløp,
+  });
+}
+
+async function hentGrunnbeløp() {
+  try {
+    const response = await fetch("https://g.nav.no/api/v1/grunnbel%C3%B8p");
+    if (!response.ok) {
+      return 0;
+    }
+
+    const json = await response.json();
+    const parsedJson = grunnbeløpSchema.safeParse(json);
+
+    if (!parsedJson.success) {
+      return 0;
+    }
+    return parsedJson.data.grunnbeløp;
+  } catch {
+    return 0;
+  }
+}
+
+const grunnbeløpSchema = z.object({
+  dato: z.string(),
+  grunnbeløp: z.number(),
+  grunnbeløpPerMåned: z.number(),
+  gjennomsnittPerÅr: z.number(),
+  omregningsfaktor: z.number(),
+  virkningstidspunktForMinsteinntekt: z.string(),
+});
 
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(

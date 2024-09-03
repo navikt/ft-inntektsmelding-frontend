@@ -11,11 +11,12 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import type { OpplysningerDto } from "~/api/queries.ts";
+import { hentGrunnbeløpOptions, OpplysningerDto } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
@@ -89,9 +90,8 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
 
   const endringIRefusjon = watch("endringIRefusjon");
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
-
+  const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data || Infinity;
   const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
-  const GRUNNBELØP = 124_028; // TODO: Hent fra https://g.nav.no/api/v1/grunnbel%C3%B8p
   const erRefusjonOver6G =
     !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
     refusjonsbeløpPerMånedSomNummer > 6 * GRUNNBELØP;
