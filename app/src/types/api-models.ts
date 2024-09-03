@@ -49,12 +49,14 @@ export type SendInntektsmeldingRequestDto = {
 
 export type ÅrsaksType = "Tariffendring" | "FeilInntekt";
 
-// type InntektEndretÅrsakDto = {
-//   korrigertInntekt: number;
-//   årsak: ÅrsaksType;
-//   fom?: string;
-//   tom?: string;
-// };
+// @ts-expect-error -- Taes i bruk senere når backend støtter endretårsak
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type InntektEndretÅrsakDto = {
+  korrigertInntekt: number;
+  årsak: ÅrsaksType;
+  fom?: string;
+  tom?: string;
+};
 
 type KontaktpersonDto = {
   telefonnummer: string;
