@@ -1,4 +1,4 @@
-import type { ReactNode } from "@tanstack/react-router";
+import { getRouteApi, type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 
@@ -44,9 +44,11 @@ type InntektsmeldingSkjemaStateProviderProps = {
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  // TODO: 1. cleare sessionStorage når en IM er sendt. 2. skjemadata basert på forspørsel-ID?
+  const route = getRouteApi("/$id");
+  const { id } = route.useParams();
+
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
-    "skjemadata",
+    `skjemadata-${id}`,
     {
       inntekt: 0,
       refusjonsbeløpPerMåned: 0,
