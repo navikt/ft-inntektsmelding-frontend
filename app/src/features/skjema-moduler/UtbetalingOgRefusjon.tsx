@@ -91,7 +91,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
 
   const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
-  const GRUNNBELØP = 124_028; // TODO: Hent fra et API
+  const GRUNNBELØP = 124_028; // TODO: Hent fra https://g.nav.no/api/v1/grunnbel%C3%B8p
   const erRefusjonOver6G =
     !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
     refusjonsbeløpPerMånedSomNummer > 6 * GRUNNBELØP;
