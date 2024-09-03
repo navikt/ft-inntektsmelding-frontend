@@ -10,48 +10,88 @@ import {
 
 import { useSessionStorageState } from "./usePersistedState";
 
-const kontaktpersonSchema = z.object({
-  navn: z.string(),
-  telefonnummer: z.string(),
-});
-
-const inntektEndringsÅrsakSchema = z.object({
-  årsak: ÅrsaksTypeSchema,
-  korrigertInntekt: z.number(),
-  fom: z.string().optional(),
-  tom: z.string().optional(),
-});
-
-const refusjonsendringerSchema = z.object({
-  fom: z.string(),
-  beløp: z.number(),
-});
-
-const naturalytelserSomMistesSchema = z.object({
-  navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-  beløp: z.number(),
-  fom: z.string(),
-  tom: z.string().optional(),
-  inkluderTom: z.boolean(),
-});
-
 export const InntektsmeldingSkjemaStateSchema = z.object({
-  kontaktperson: kontaktpersonSchema.optional(),
+  kontaktperson: z
+    .object({
+      navn: z.string(),
+      telefonnummer: z.string(),
+    })
+    .optional(),
   inntekt: z.number(),
-  inntektEndringsÅrsak: inntektEndringsÅrsakSchema.optional(),
+  inntektEndringsÅrsak: z
+    .object({
+      årsak: ÅrsaksTypeSchema,
+      korrigertInntekt: z.number(),
+      fom: z.string().optional(),
+      tom: z.string().optional(),
+    })
+    .optional(),
   skalRefunderes: z.boolean().optional(),
   refusjonsbeløpPerMåned: z.number(),
   endringIRefusjon: z.boolean().optional(),
-  refusjonsendringer: z.array(refusjonsendringerSchema),
+  refusjonsendringer: z.array(
+    z.object({
+      fom: z.string(),
+      beløp: z.number(),
+    }),
+  ),
   misterNaturalytelser: z.boolean().optional(),
-  naturalytelserSomMistes: z.array(naturalytelserSomMistesSchema),
+  naturalytelserSomMistes: z.array(
+    z.object({
+      navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
+      beløp: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
+});
+
+export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
+  kontaktperson: z.object({
+    navn: z.string(),
+    telefonnummer: z.string(),
+  }),
+  inntekt: z.number(),
+  inntektEndringsÅrsak: z
+    .object({
+      årsak: ÅrsaksTypeSchema,
+      korrigertInntekt: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+    })
+    .optional(),
+  skalRefunderes: z.boolean(),
+  refusjonsbeløpPerMåned: z.number(),
+  endringIRefusjon: z.boolean().optional(),
+  refusjonsendringer: z.array(
+    z.object({
+      fom: z.string(),
+      beløp: z.number(),
+    }),
+  ),
+  misterNaturalytelser: z.boolean(),
+  naturalytelserSomMistes: z.array(
+    z.object({
+      navn: NaturalytelseTypeSchema,
+      beløp: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
 });
 
 export type InntektsmeldingSkjemaState = z.infer<
   typeof InntektsmeldingSkjemaStateSchema
 >;
 
+export type InntektsmeldingSkjemaStateValid = z.infer<
+  typeof InntektsmeldingSkjemaStateSchemaValidated
+>;
+
 type InntektsmeldingSkjemaStateContextType = {
+  gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
   setInntektsmeldingSkjemaState: Dispatch<
     SetStateAction<InntektsmeldingSkjemaState>
@@ -63,24 +103,29 @@ const InntektsmeldingSkjemaStateContext =
 type InntektsmeldingSkjemaStateProviderProps = {
   children: ReactNode;
 };
+
+const defaultSkjemaState = {
+  inntekt: 0,
+  refusjonsbeløpPerMåned: 0,
+  refusjonsendringer: [],
+  naturalytelserSomMistes: [],
+};
+
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
   // TODO: 1. cleare sessionStorage når en IM er sendt. 2. skjemadata basert på forspørsel-ID?
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
     "skjemadata",
-    {
-      inntekt: 0,
-      refusjonsbeløpPerMåned: 0,
-      refusjonsendringer: [],
-      naturalytelserSomMistes: [],
-    },
+    defaultSkjemaState,
     InntektsmeldingSkjemaStateSchema,
   );
   return (
     <InntektsmeldingSkjemaStateContext.Provider
       value={{
         inntektsmeldingSkjemaState: state,
+        gyldigInntektsmeldingSkjemaState:
+          InntektsmeldingSkjemaStateSchemaValidated.safeParse(state).data,
         setInntektsmeldingSkjemaState: setState,
       }}
     >
