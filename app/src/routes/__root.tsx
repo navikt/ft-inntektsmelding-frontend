@@ -8,7 +8,6 @@ import React from "react";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { VisHjelpeteksterStateProvider } from "~/features/Hjelpetekst.tsx";
-import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSkjemaState";
 
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null // Render nothing in production
@@ -34,9 +33,7 @@ export const Route = createRootRouteWithContext<{
           <TanStackRouterDevtools position="bottom-right" />
         </React.Suspense>
         <VisHjelpeteksterStateProvider>
-          <InntektsmeldingSkjemaStateProvider>
-            <Outlet />
-          </InntektsmeldingSkjemaStateProvider>
+          <Outlet />
         </VisHjelpeteksterStateProvider>
         <ScrollRestoration />
       </>
