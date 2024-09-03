@@ -16,8 +16,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
-  RefusjonsperiodeRequestDto,
-  SendInntektsmeldingRequestDto,
+  RefusjonsendringRequestDto,
 } from "~/types/api-models.ts";
 import {
   formatDatoKort,
@@ -261,18 +260,18 @@ export const Oppsummering = () => {
                 <FormSummary.Value>
                   <FormSummary.Answers>
                     {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
-                      (naturalytelse) => (
-                        <FormSummary.Answer key={naturalytelse.navn}>
-                          <FormSummary.Label>
-                            {formatYtelsesnavn(naturalytelse.navn, true)}
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            Verdi {formatKroner(naturalytelse.beløp)} (fra og
-                            med{" "}
-                            {formatDatoKort(new Date(naturalytelse.fraOgMed))})
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      ),
+                      (naturalytelse) => {
+                        return (
+                          <FormSummary.Answer key={naturalytelse.navn}>
+                            <FormSummary.Label>
+                              {formatYtelsesnavn(naturalytelse.navn, true)}
+                            </FormSummary.Label>
+                            <FormSummary.Value>
+                              {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
+                            </FormSummary.Value>
+                          </FormSummary.Answer>
+                        );
+                      },
                     )}
                   </FormSummary.Answers>
                 </FormSummary.Value>
@@ -285,6 +284,26 @@ export const Oppsummering = () => {
     </section>
   );
 };
+
+/**
+ * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
+ */
+function formaterPeriodeStreng({
+  fraOgMed,
+  tilOgMed,
+}: {
+  fraOgMed?: string;
+  tilOgMed?: string;
+}) {
+  const fraOgMedStreng = fraOgMed
+    ? `fra og med ${formatDatoKort(new Date(fraOgMed))}`
+    : "";
+  const tilOgMedStreng = tilOgMed
+    ? `til og med ${formatDatoKort(new Date(tilOgMed))}`
+    : "";
+
+  return [fraOgMedStreng, tilOgMedStreng].filter(Boolean).join(", ");
+}
 
 const formatterKontaktperson = (
   kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
@@ -323,24 +342,24 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       const gjeldendeInntekt =
         inntektsmeldingSkjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
         inntektsmeldingSkjemaState.inntekt;
-      const inntektsmelding: SendInntektsmeldingRequestDto = {
+      const inntektsmelding = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
         ytelse: opplysninger.ytelse,
         arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-        // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
-        kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
+        kontaktperson: inntektsmeldingSkjemaState.kontaktperson!, // TODO: håndter undefined state
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
+        refusjon: inntektsmeldingSkjemaState.refusjonsbeløpPerMåned,
         // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsperioder: utledRefusjonsPerioder([
+        refusjonsendringer: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
             fraOgMed: opplysninger.startdatoPermisjon,
           },
         ]),
-        bortfaltNaturaltytelsePerioder: konverterNaturalytelsePerioder(
+        bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           inntektsmeldingSkjemaState.naturalytelserSomMistes,
         ),
       };
@@ -390,26 +409,15 @@ function konverterNaturalytelsePerioder(
     naturalytelsetype: periode.navn,
     fom: formatIsoDatostempel(new Date(periode.fraOgMed)),
     beløp: periode.beløp,
-    erBortfalt: true,
-    tom: undefined, // Gjelder hele permisjonen
+    tom: periode.tilOgMed,
   }));
 }
 
 function utledRefusjonsPerioder(
-  refusjonsPerioder: InntektsmeldingSkjemaState["refusjonsendringer"],
-): RefusjonsperiodeRequestDto[] {
-  const perioderSynkende = [...refusjonsPerioder].sort(
-    (a, b) => new Date(b.fraOgMed).getTime() - new Date(a.fraOgMed).getTime(),
-  );
-
-  return perioderSynkende.map((currentValue, index, array) => {
-    const forrigePeriode = array[index - 1];
-    return {
-      fom: formatIsoDatostempel(new Date(currentValue.fraOgMed)),
-      beløp: currentValue.beløp,
-      tom: forrigePeriode
-        ? formatIsoDatostempel(new Date(forrigePeriode.fraOgMed))
-        : undefined,
-    };
-  });
+  refusjonsendringer: InntektsmeldingSkjemaState["refusjonsendringer"],
+): RefusjonsendringRequestDto[] {
+  return refusjonsendringer.map((endring) => ({
+    fom: endring.fraOgMed,
+    beløp: endring.beløp,
+  }));
 }

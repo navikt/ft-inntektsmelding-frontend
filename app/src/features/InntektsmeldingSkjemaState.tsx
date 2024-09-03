@@ -24,6 +24,8 @@ export type InntektsmeldingSkjemaState = {
     navn: Naturalytelsetype | "";
     beløp: number;
     fraOgMed: string;
+    tilOgMed?: string;
+    inkluderTom: boolean;
   }[];
 };
 

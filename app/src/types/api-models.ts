@@ -42,13 +42,15 @@ export type SendInntektsmeldingRequestDto = {
   kontaktperson: KontaktpersonDto;
   startdato: string;
   inntekt: number;
-  inntektEndringsÅrsak?: InntektEndretÅrsakDto;
-  refusjonsperioder: RefusjonsperiodeRequestDto[];
-  bortfaltNaturaltytelsePerioder: NaturalytelseRequestDto[];
+  refusjon?: number;
+  refusjonsendringer: RefusjonsendringRequestDto[];
+  bortfaltNaturalytelsePerioder: NaturalytelseRequestDto[];
 };
 
 export type ÅrsaksType = "Tariffendring" | "FeilInntekt";
 
+// @ts-expect-error -- Taes i bruk senere når backend støtter endretårsak
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type InntektEndretÅrsakDto = {
   korrigertInntekt: number;
   årsak: ÅrsaksType;
@@ -61,9 +63,8 @@ type KontaktpersonDto = {
   navn: string;
 };
 
-export type RefusjonsperiodeRequestDto = {
+export type RefusjonsendringRequestDto = {
   fom: string;
-  tom?: string;
   beløp: number;
 };
 
@@ -72,5 +73,4 @@ export type NaturalytelseRequestDto = {
   tom?: string;
   beløp: number;
   naturalytelsetype: Naturalytelsetype;
-  erBortfalt: boolean;
 };
