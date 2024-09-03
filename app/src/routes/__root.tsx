@@ -23,7 +23,7 @@ export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
 }>()({
   loader: ({ context }) => {
-      // Bruker prefetch for å ikke vente på dette nettverkskallet, men gjøre det klar i cache så fort som mulig
+    // Bruker prefetch for å ikke vente på dette nettverkskallet, men gjøre det klar i cache så fort som mulig
     context.queryClient.prefetchQuery(hentGrunnbeløpOptions());
   },
 
