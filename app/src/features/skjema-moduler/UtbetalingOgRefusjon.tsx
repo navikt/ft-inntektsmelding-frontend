@@ -86,7 +86,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
     shouldUnregister: true,
   });
 
-  const [skalEndreBeløp, setSkalEndreBeløp] = useState(false); // TODO: dynamisk default
+  const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
   const endringIRefusjon = watch("endringIRefusjon");
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
