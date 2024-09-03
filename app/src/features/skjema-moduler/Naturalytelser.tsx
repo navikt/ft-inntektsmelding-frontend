@@ -105,6 +105,10 @@ function MisterNaturalytelser() {
             required: "Du må svare på dette spørsmålet",
           },
         );
+
+        const skalInkludereTom =
+          watch(`naturalytelserSomMistes.${index}.inkluderTom`) === "ja";
+
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
             <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
@@ -174,8 +178,7 @@ function MisterNaturalytelser() {
                 </Radio>
               </RadioGroup>
               <div className="col-span-4">
-                {watch(`naturalytelserSomMistes.${index}.inkluderTom`) ===
-                  "ja" && (
+                {skalInkludereTom && (
                   <DatePickerWrapped
                     label="Til og med"
                     name={`naturalytelserSomMistes.${index}.tilOgMed` as const}
