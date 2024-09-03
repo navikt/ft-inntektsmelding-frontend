@@ -11,8 +11,8 @@ import { routeTree } from "./routeTree.gen.ts";
 
 export const queryClient = new QueryClient();
 
-// TODO not found route
 const router = createRouter({
+  defaultNotFoundComponent: NotFoundComponent,
   routeTree,
   basepath: import.meta.env.BASE_URL,
   context: {
@@ -40,3 +40,11 @@ createRoot(document.querySelector("#root")!).render(
     </QueryClientProvider>
   </React.StrictMode>,
 );
+
+function NotFoundComponent() {
+  return (
+    <div>
+      <span>Fant ikke siden</span>
+    </div>
+  );
+}
