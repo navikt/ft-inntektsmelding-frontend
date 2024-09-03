@@ -7,11 +7,6 @@ const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(
     `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${uuid}`,
-    {
-      headers: {
-        "nav-consumer-id": "ft-inntektsmelding-frontend", // TODO: Kan fjernes når backend har skrudd på auth
-      },
-    },
   );
   if (response.status === 404) {
     throw new Error("Forespørsel ikke funnet");
