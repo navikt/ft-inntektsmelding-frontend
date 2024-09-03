@@ -16,7 +16,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
-  RefusjonsEndringRequestDto,
+  RefusjonsendringRequestDto,
 } from "~/types/api-models.ts";
 import {
   formatDatoKort,
@@ -337,7 +337,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         inntekt: gjeldendeInntekt,
         refusjon: inntektsmeldingSkjemaState.refusjonsbeløpPerMåned,
         // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonEndringer: utledRefusjonsPerioder([
+        refusjonsendringer: utledRefusjonsPerioder([
           ...inntektsmeldingSkjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
@@ -400,7 +400,7 @@ function konverterNaturalytelsePerioder(
 
 function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaState["refusjonsendringer"],
-): RefusjonsEndringRequestDto[] {
+): RefusjonsendringRequestDto[] {
   return refusjonsendringer.map((endring) => ({
     fom: endring.fraOgMed,
     beløp: endring.beløp,
