@@ -106,7 +106,7 @@ function MisterNaturalytelser() {
           },
         );
         return (
-          <div className="border-l-4 border-[#eceef0] p-4" key={field.id}>
+          <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
             <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
               <Select
                 label="Naturalytelse som faller bort"
