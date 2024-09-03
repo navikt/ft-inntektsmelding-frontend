@@ -120,28 +120,51 @@ export function Inntekt({ opplysninger }: InntektProps) {
               den ansatte ville hatt uten ferietrekket.
             </BodyLong>
             <BodyLong>
-              <strong>Spesielt om de som har vært borte minst 14 dager</strong>
+              <strong>Har den ansatte vært borte mer enn 14 dager?</strong>
               <br />
               Hvis den ansatte har vært borte fra jobb i mer enn 14 dager,
-              regnes arbeidsforholdet som avbrutt. Hvis den ansatte ikke har
-              vært tilbake på jobb, skal du oppgi 0,- i inntekt. NAV vurderer da
-              søknaden ut fra opplysninger i A-meldingen. Du kan fortsatt søke
-              refusjon, men risikerer å ikke få hele refusjonskravet dekket.
-            </BodyLong>
-            <BodyLong>
-              Hvis den ansatte har vært tilbake i mindre enn 3 måneder, må du
-              fastsette månedsinntekten ut fra perioden den ansatte var tilbake:
+              regnes arbeidsforholdet som avbrutt. Hvilken inntekt du oppgir
+              avhenger av om den ansatte var tilbake fra jobb etter fraværet:
             </BodyLong>
             <List>
               <ListItem>
-                Hvis den ansatte har fast månedslønn, bruker du denne i
-                inntektsmeldingen
+                Hvis den ansatte ikke har vært tilbake på jobb, skal du oppgi
+                0,- i inntekt. NAV vurderer da søknaden ut fra opplysninger i
+                A-meldingen.
               </ListItem>
               <ListItem>
-                Hvis den ansatte har hatt lovlig fravær, skal du bruke den
-                inntekten den ansatte ville hatt hvis han eller hun var på jobb.
-                Lovlig fravær kan for eksempel være på grunn av ferie,
-                sykefravær, foreldrepermisjon eller perioder med pleiepenger.
+                Hvis den ansatte har vært tilbake i mindre enn 3 måneder, må du
+                fastsette månedsinntekten ut fra perioden den ansatte var
+                tilbake:
+                <List>
+                  <ListItem>
+                    Hvis den ansatte har fast månedslønn, er det denne du skal
+                    bruke
+                  </ListItem>
+                  <ListItem>
+                    Hvis den ansatte har hatt lovlig fravær, skal du bruke
+                    inntekten som den ansatte ville hatt hvis han eller hun var
+                    på jobb. Lovlig fravær kan for eksempel være på grunn av
+                    ferie, sykefravær, foreldrepermisjon eller perioder med
+                    pleiepenger.
+                  </ListItem>
+                  <ListItem>
+                    Hvis den ansatte har varierende lønn, og ikke rakk å jobbe
+                    tre hele måneder, må du fastsette inntekten for delvise
+                    måneder slik: Utbetalt lønn / utførte arbeidsdager x avtalte
+                    arbeidsdager for måneden.
+                    <br />
+                    <em>
+                      Eks: Den ansatte skal ha stønad fra 17. november. Det var
+                      avtalt 22 arbeidsdager for hele november, og den ansatte
+                      jobbet 12 dager frem til første fraværsdag. På disse 12
+                      dagene tjente den ansatte 22 000,-. Beregnet inntekt: 22
+                      000 / 12 x 22 = 40 333,- månedslønn i november. Denne
+                      inntekten tas med i snittet av tre måneder, sammen med
+                      september og oktober.
+                    </em>
+                  </ListItem>
+                </List>
               </ListItem>
             </List>
           </div>
@@ -149,27 +172,11 @@ export function Inntekt({ opplysninger }: InntektProps) {
         <HjelpetekstReadMore header="Jobber den ansatte skift eller har timelønn?">
           <div className="flex flex-col gap-2">
             <BodyLong>
-              Hvis den ansatte jobber skift eller har timelønn, må du finne
-              månedslønn ut fra hva den ansatte har tjent og hvor mange dager
-              han eller hun har jobbet. <br />
-              Du må da:
+              Hvis den ansatte jobber skift eller har timelønn, skal fastsettes
+              etter de samme reglene som arbeidstakere med fastlønn. Det betyr
+              at du som hovedregel skal bruke et gjennomsnitt av inntekten fra
+              de siste tre kalendermånedene.
             </BodyLong>
-            <List>
-              <ListItem>
-                Finne ut hvor mange arbeidsdager den ansatte har jobbet i løpet
-                av de tre månedene før første dag med foreldrepenger
-              </ListItem>
-              <ListItem>
-                Finne ut hvor mye den ansatte tjente i samme periode
-              </ListItem>
-              <ListItem>
-                Regne ut en dagsats ved å dele inntekten på antall arbeidsdager
-              </ListItem>
-              <ListItem>
-                Denne dagsatsen ganges med 260, og deles på 12. Da får du en
-                gjennomsnittlig månedsinntekt som du oppgir i inntektsmeldingen.
-              </ListItem>
-            </List>
           </div>
         </HjelpetekstReadMore>
       </div>
