@@ -58,7 +58,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
-      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd*/}
+      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd. Løse dette i BE ved at beløp er null*/}
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
@@ -203,7 +203,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
 //   },
 // ];
 
-const endringsårsak2 = [
+const endringsårsak = [
   { value: "Tariffendring", label: "Tariffendring" },
   { value: "FeilInntekt", label: "Varig feil inntekt" },
 ];
@@ -261,7 +261,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
           })}
         >
           <option value="">Velg endringsårsak</option>
-          {Object.values(endringsårsak2).map((årsak) => (
+          {Object.values(endringsårsak).map((årsak) => (
             <option key={årsak.value} value={årsak.value}>
               {årsak.label}
             </option>

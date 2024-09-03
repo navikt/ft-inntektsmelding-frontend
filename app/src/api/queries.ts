@@ -1,17 +1,49 @@
+import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
+export function hentGrunnbeløpOptions() {
+  return queryOptions({
+    queryKey: ["GRUNNBELØP"],
+    queryFn: hentGrunnbeløp,
+    initialData: Infinity,
+  });
+}
+
+async function hentGrunnbeløp() {
+  try {
+    const response = await fetch("https://g.nav.no/api/v1/grunnbel%C3%B8p");
+    if (!response.ok) {
+      return Infinity;
+    }
+
+    const json = await response.json();
+    const parsedJson = grunnbeløpSchema.safeParse(json);
+
+    if (!parsedJson.success) {
+      return Infinity;
+    }
+    return parsedJson.data.grunnbeløp;
+  } catch {
+    return Infinity;
+  }
+}
+
+const grunnbeløpSchema = z.object({
+  dato: z.string(),
+  grunnbeløp: z.number(),
+  grunnbeløpPerMåned: z.number(),
+  gjennomsnittPerÅr: z.number(),
+  omregningsfaktor: z.number(),
+  virkningstidspunktForMinsteinntekt: z.string(),
+});
+
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(
     `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${uuid}`,
-    {
-      headers: {
-        "nav-consumer-id": "ft-inntektsmelding-frontend", // TODO: Kan fjernes når backend har skrudd på auth
-      },
-    },
   );
   if (response.status === 404) {
     throw new Error("Forespørsel ikke funnet");
