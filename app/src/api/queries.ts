@@ -9,6 +9,7 @@ export function hentGrunnbeløpOptions() {
   return queryOptions({
     queryKey: ["GRUNNBELØP"],
     queryFn: hentGrunnbeløp,
+    initialData: Infinity,
   });
 }
 
@@ -16,18 +17,18 @@ async function hentGrunnbeløp() {
   try {
     const response = await fetch("https://g.nav.no/api/v1/grunnbel%C3%B8p");
     if (!response.ok) {
-      return 0;
+      return Infinity;
     }
 
     const json = await response.json();
     const parsedJson = grunnbeløpSchema.safeParse(json);
 
     if (!parsedJson.success) {
-      return 0;
+      return Infinity;
     }
     return parsedJson.data.grunnbeløp;
   } catch {
-    return 0;
+    return Infinity;
   }
 }
 

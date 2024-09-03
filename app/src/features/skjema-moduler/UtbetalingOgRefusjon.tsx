@@ -90,7 +90,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
 
   const endringIRefusjon = watch("endringIRefusjon");
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
-  const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data || Infinity;
+  const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data;
   const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
   const erRefusjonOver6G =
     !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
