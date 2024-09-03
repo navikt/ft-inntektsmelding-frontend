@@ -14,7 +14,7 @@
   "license": "MIT",
   "dependencies": {
     "@navikt/backend-for-frontend-utils": "0.8.0",
-    "@navikt/nav-dekoratoren-moduler": "2.1.6",
+    "@navikt/nav-dekoratoren-moduler": "3.0.0",
     "@navikt/oasis": "3.4.0",
     "cookie-parser": "1.4.6",
     "express": "4.19.2",
