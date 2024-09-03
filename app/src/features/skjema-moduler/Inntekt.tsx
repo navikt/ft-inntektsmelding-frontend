@@ -9,6 +9,7 @@ import {
   Link,
   List,
   Select,
+  Stack,
   TextField,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
@@ -112,7 +113,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       </HjelpetekstAlert>
       <div className="flex flex-col gap-2">
         <HjelpetekstReadMore header="Har den ansatte hatt ferie eller fravær de siste tre månedene?">
-          <div className="flex flex-col gap-2">
+          <Stack gap="2">
             <BodyLong>
               Hvis den ansatte har hatt ferietrekk i en lønnsutbetaling skal
               dette inngå som en del av gjennomsnittet for tre måneder. Du må da
@@ -167,17 +168,15 @@ export function Inntekt({ opplysninger }: InntektProps) {
                 </List>
               </ListItem>
             </List>
-          </div>
+          </Stack>
         </HjelpetekstReadMore>
         <HjelpetekstReadMore header="Jobber den ansatte skift eller har timelønn?">
-          <div className="flex flex-col gap-2">
-            <BodyLong>
-              Hvis den ansatte jobber skift eller har timelønn, skal fastsettes
-              etter de samme reglene som arbeidstakere med fastlønn. Det betyr
-              at du som hovedregel skal bruke et gjennomsnitt av inntekten fra
-              de siste tre kalendermånedene.
-            </BodyLong>
-          </div>
+          <BodyLong>
+            Hvis den ansatte jobber skift eller har timelønn, skal fastsettes
+            etter de samme reglene som arbeidstakere med fastlønn. Det betyr at
+            du som hovedregel skal bruke et gjennomsnitt av inntekten fra de
+            siste tre kalendermånedene.
+          </BodyLong>
         </HjelpetekstReadMore>
       </div>
     </div>
