@@ -6,6 +6,7 @@ import {
   Radio,
   RadioGroup,
   Select,
+  Stack,
   TextField,
   VStack,
 } from "@navikt/ds-react";
@@ -39,13 +40,18 @@ export function Naturalytelser() {
         Naturalytelser
       </Heading>
       <HjelpetekstReadMore header="Hva er naturalytelser?">
-        <BodyLong>
-          Naturalytelser er skattepliktige goder eller fordeler en ansatt får
-          fra arbeidsgiver på toppen av vanlig lønn.
-          <br />
-          Eksempler på naturalytelser er: Forsikring, bruk av firmabil,
-          mobiltelefon og internett-abonnement.
-        </BodyLong>
+        <Stack gap="2">
+          <BodyLong>
+            Naturalytelser er goder som den ansatte får i tillegg til vanlig
+            lønn. Dette kan være firmabil, elektronisk kommunikasjon
+            (mobiltelefon/internett) eller personlig medlemskap på
+            treningssenter.
+          </BodyLong>
+          <BodyLong>
+            Naturalytelser skal beregnes til samme verdi som benyttes ved
+            forskuddstrekk av skatt.
+          </BodyLong>
+        </Stack>
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.misterNaturalytelser?.message}

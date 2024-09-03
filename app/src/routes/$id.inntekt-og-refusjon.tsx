@@ -9,7 +9,6 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
-import { HjelpetekstReadMore } from "~/features/Hjelpetekst";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
@@ -214,9 +213,6 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </InformasjonsseksjonMedKilde>
-      <HjelpetekstReadMore header="Hva hvis datoen ikke stemmer?">
-        TODO
-      </HjelpetekstReadMore>
     </VStack>
   );
 }

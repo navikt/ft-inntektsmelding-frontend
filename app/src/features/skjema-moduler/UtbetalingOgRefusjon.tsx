@@ -1,10 +1,13 @@
 import { PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
+  BodyLong,
   Button,
   Heading,
   HStack,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
   VStack,
 } from "@navikt/ds-react";
@@ -38,7 +41,20 @@ export function UtbetalingOgRefusjon({
         Utbetaling og refusjon
       </Heading>
       <HjelpetekstReadMore header="Hva vil det si å ha refusjon?">
-        TODO
+        <Stack gap="2">
+          <BodyLong>
+            Refusjon er når arbeidsgiver utbetaler lønn som vanlig til den
+            ansatte, og får tilbakebetalt stønaden direkte fra NAV. Dette kalles
+            ofte å forskuttere lønn, som man krever refundert fra NAV. Vi
+            utbetaler da stønaden til kontonummeret som er registrert i Altinn.
+          </BodyLong>
+          <BodyLong>
+            Noen arbeidsgivere er forpliktet til å forskuttere ut fra
+            tariffavtaler, mens andre arbeidsgivere velger selv om de ønsker en
+            slik ordning. Hvis dere velger å forskuttere lønn, er det viktig at
+            dere har en god dialog med arbeidstakeren om utfallet av søknaden.
+          </BodyLong>
+        </Stack>
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.skalRefunderes?.message}
@@ -74,24 +90,37 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
   const endringIRefusjon = watch("endringIRefusjon");
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
 
+  const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
+  const GRUNNBELØP = 124_028; // TODO: Hent fra https://g.nav.no/api/v1/grunnbel%C3%B8p
+  const erRefusjonOver6G =
+    !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
+    refusjonsbeløpPerMånedSomNummer > 6 * GRUNNBELØP;
+
   return (
     <div className="bg-bg-subtle p-4 flex flex-col gap-4 rounded-md">
       {skalEndreBeløp ? (
-        <HStack gap="4">
-          <TextField
-            autoFocus
-            {...register("refusjonsbeløpPerMåned")}
-            label="Refusjonsbeløp pr. måned"
-          />
-          <Button
-            className="mt-8"
-            onClick={() => setSkalEndreBeløp(false)}
-            variant="tertiary"
-          >
-            Tilbakestill
-          </Button>
-          {/*TODO: Alert dersom over 6G*/}
-        </HStack>
+        <Stack gap="4">
+          <HStack gap="4">
+            <TextField
+              {...register("refusjonsbeløpPerMåned")}
+              autoFocus
+              label="Refusjonsbeløp pr. måned"
+            />
+            <Button
+              className="mt-8"
+              onClick={() => setSkalEndreBeløp(false)}
+              variant="tertiary"
+            >
+              Tilbakestill
+            </Button>
+          </HStack>
+          {erRefusjonOver6G && (
+            <Alert variant="info">
+              NAV utbetaler opptil 6G av årslønnen. Du skal likevel føre opp den
+              lønnen dere utbetaler til den ansatte i sin helhet.
+            </Alert>
+          )}
+        </Stack>
       ) : (
         <>
           <span>Refusjonsbeløp per måned</span>
@@ -110,6 +139,14 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
           </Button>
         </>
       )}
+      <HjelpetekstReadMore header="Har den ansatte delvis fravær i perioden?">
+        <BodyLong>
+          Hvis den ansatte skal kombinere stønad fra NAV med arbeid, vil NAV
+          redusere utbetalingen ut fra opplysningene fra den ansatte. Du oppgir
+          derfor den månedslønnen dere utbetaler til den ansatte, uavhengig av
+          hvor mye den ansatte skal jobbe.
+        </BodyLong>
+      </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.endringIRefusjon?.message}
         legend="Vil det være endringer i refusjon i løpet av perioden Ola er i permisjon?"
@@ -122,6 +159,28 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
           Nei
         </Radio>
       </RadioGroup>
+      <HjelpetekstReadMore header="Hvilke endringer må du informere NAV om?">
+        <Stack gap="2">
+          <BodyLong>
+            Her skal du registrere endringer som påvirker refusjonen fra NAV.
+          </BodyLong>
+          <BodyLong>
+            Dette kan være på grunn av endret stillingsprosent som gjør at
+            lønnen dere forskutterer endrer seg i perioden
+          </BodyLong>
+          <BodyLong>
+            Hvis dere skal slutte å forskuttere lønn i perioden, registrerer du
+            det som en endring her. Dette kan være fordi arbeidsforholdet
+            opphører, eller fordi dere kun forskutterer en begrenset periode. Du
+            skriver da 0,- i refusjon fra den datoen dere ikke lengre
+            forskutterer lønn.
+          </BodyLong>
+          <BodyLong>
+            Du trenger ikke å informere om endringer fordi den ansatte jobber
+            mer eller mindre i en periode.
+          </BodyLong>
+        </Stack>
+      </HjelpetekstReadMore>
       {endringIRefusjon === "ja" ? <RefusjonsPerioder /> : undefined}
     </div>
   );

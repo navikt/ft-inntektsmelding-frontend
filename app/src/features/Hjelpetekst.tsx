@@ -57,7 +57,7 @@ export function HjelpetekstToggle() {
       checked={visHjelpetekster}
       onChange={(e) => setVisHjelpetekster(e.target.checked)}
     >
-      Vis hjelpetekster i skjema
+      Vis hjelpetekster
     </Switch>
   );
 }
