@@ -85,11 +85,13 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
                 size="medium"
               />
               <TextField
-                className="w-full md:w-1/2"
+                className="w-full"
                 {...register("telefonnummer", {
                   required: "Telefonnummer er påkrevd",
                   // Sjekke 8 siffer, eller landskode og vilkårlig antall siffer
-                  validate: (data) => /^(\d{8}|\+\d+)$/.test(data),
+                  validate: (data) =>
+                    /^(\d{8}|\+\d+)$/.test(data) ||
+                    "Telefonnummer må være 8 siffer eller ha landskode",
                 })}
                 error={formState.errors.telefonnummer?.message}
                 label="Telefon"
