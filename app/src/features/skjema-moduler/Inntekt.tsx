@@ -58,7 +58,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
-      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd*/}
+      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd. Løse dette i BE ved at beløp er null*/}
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
