@@ -150,7 +150,7 @@ function konverterNaturalytelsePerioder(
 ): NaturalytelseRequestDto[] {
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
-    fom: formatIsoDatostempel(new Date(periode.fom)),
+    fom: formatIsoDatostempel(new Date(periode.fom)), // TODO: kan vi fjerne format
     beløp: periode.beløp,
     tom: periode.tom,
   }));
