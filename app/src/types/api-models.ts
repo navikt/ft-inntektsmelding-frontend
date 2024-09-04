@@ -15,7 +15,6 @@ export const YtelsetypeSchema = z.enum([
   "OPPLÆRINGSPENGER",
   "OMSORGSPENGER",
 ]);
-export type Ytelsetype = z.infer<typeof YtelsetypeSchema>;
 
 export const NaturalytelseTypeSchema = z.enum([
   "ELEKTRISK_KOMMUNIKASJON",
@@ -88,16 +87,4 @@ type InntektEndretÅrsakDto = {
   årsak: ÅrsaksType;
   fom?: string;
   tom?: string;
-};
-
-export type RefusjonsendringRequestDto = {
-  fom: string;
-  beløp: number;
-};
-
-export type NaturalytelseRequestDto = {
-  fom: string;
-  tom?: string;
-  beløp: number;
-  naturalytelsetype: Naturalytelsetype;
 };

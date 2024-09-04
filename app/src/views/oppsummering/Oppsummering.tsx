@@ -15,11 +15,9 @@ import {
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
-import type {
-  NaturalytelseRequestDto,
-  RefusjonsendringRequestDto,
-} from "~/types/api-models.ts";
+import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { formatIsoDatostempel } from "~/utils";
+
 import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
 
 const route = getRouteApi("/$id");
@@ -147,7 +145,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
 function konverterNaturalytelsePerioder(
   naturalytelsePerioder: InntektsmeldingSkjemaStateValid["naturalytelserSomMistes"],
-): NaturalytelseRequestDto[] {
+): SendInntektsmeldingRequestDto["bortfaltNaturalytelsePerioder"] {
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
     fom: formatIsoDatostempel(new Date(periode.fom)), // TODO: kan vi fjerne format
@@ -158,7 +156,7 @@ function konverterNaturalytelsePerioder(
 
 function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaStateValid["refusjonsendringer"],
-): RefusjonsendringRequestDto[] {
+): SendInntektsmeldingRequestDto["refusjonsendringer"] {
   return refusjonsendringer.map((endring) => ({
     fom: endring.fom,
     beløp: endring.beløp,
