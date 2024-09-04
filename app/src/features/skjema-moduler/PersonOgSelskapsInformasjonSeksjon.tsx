@@ -80,16 +80,21 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               <TextField
                 className="w-full"
                 {...register("navn", { required: "Navn er påkrevd" })}
+                autoComplete="name"
                 error={formState.errors.navn?.message}
                 label="Navn"
                 size="medium"
               />
               <TextField
-                className="w-full md:w-1/2"
+                className="w-full"
                 {...register("telefonnummer", {
                   required: "Telefonnummer er påkrevd",
-                  // TODO: Legg til mer avansert validering for telefonnumre
+                  // Sjekke 8 siffer, eller landskode og vilkårlig antall siffer
+                  validate: (data) =>
+                    /^(\d{8}|\+\d+)$/.test(data) ||
+                    "Telefonnummer må være 8 siffer eller ha landskode",
                 })}
+                autoComplete="tel"
                 error={formState.errors.telefonnummer?.message}
                 label="Telefon"
                 size="medium"

@@ -1,33 +1,97 @@
-import type { ReactNode } from "@tanstack/react-router";
+import { getRouteApi, type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
+import { z } from "zod";
 
-import type { ÅrsaksType, Naturalytelsetype } from "~/types/api-models.ts";
+import {
+  ÅrsaksTypeSchema,
+  NaturalytelseTypeSchema,
+} from "~/types/api-models.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
-export type InntektsmeldingSkjemaState = {
-  kontaktperson?: { navn: string; telefonnummer: string };
-  inntekt: number;
-  inntektEndringsÅrsak?: {
-    årsak: ÅrsaksType;
-    korrigertInntekt: number;
-    fom?: string;
-    tom?: string;
-  };
-  skalRefunderes?: boolean;
-  refusjonsbeløpPerMåned: number;
-  endringIRefusjon?: boolean;
-  refusjonsendringer: { fraOgMed: string; beløp: number }[];
-  misterNaturalytelser?: boolean;
-  naturalytelserSomMistes: {
-    navn: Naturalytelsetype | "";
-    beløp: number;
-    fraOgMed: string;
-  }[];
-};
+export const InntektsmeldingSkjemaStateSchema = z.object({
+  kontaktperson: z
+    .object({
+      navn: z.string(),
+      telefonnummer: z.string(),
+    })
+    .optional(),
+  inntekt: z.number(),
+  inntektEndringsÅrsak: z
+    .object({
+      årsak: ÅrsaksTypeSchema,
+      korrigertInntekt: z.number(),
+      fom: z.string().optional(),
+      tom: z.string().optional(),
+    })
+    .optional(),
+  skalRefunderes: z.boolean().optional(),
+  refusjonsbeløpPerMåned: z.number(),
+  endringIRefusjon: z.boolean().optional(),
+  refusjonsendringer: z.array(
+    z.object({
+      fom: z.string(),
+      beløp: z.number(),
+    }),
+  ),
+  misterNaturalytelser: z.boolean().optional(),
+  naturalytelserSomMistes: z.array(
+    z.object({
+      navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
+      beløp: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
+});
+
+export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
+  kontaktperson: z.object({
+    navn: z.string(),
+    telefonnummer: z.string(),
+  }),
+  inntekt: z.number(),
+  inntektEndringsÅrsak: z
+    .object({
+      årsak: ÅrsaksTypeSchema,
+      korrigertInntekt: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+    })
+    .optional(),
+  skalRefunderes: z.boolean(),
+  refusjonsbeløpPerMåned: z.number(),
+  endringIRefusjon: z.boolean().optional(),
+  refusjonsendringer: z.array(
+    z.object({
+      fom: z.string(),
+      beløp: z.number(),
+    }),
+  ),
+  misterNaturalytelser: z.boolean(),
+  naturalytelserSomMistes: z.array(
+    z.object({
+      navn: NaturalytelseTypeSchema,
+      beløp: z.number(),
+      fom: z.string(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
+});
+
+export type InntektsmeldingSkjemaState = z.infer<
+  typeof InntektsmeldingSkjemaStateSchema
+>;
+
+export type InntektsmeldingSkjemaStateValid = z.infer<
+  typeof InntektsmeldingSkjemaStateSchemaValidated
+>;
 
 type InntektsmeldingSkjemaStateContextType = {
+  gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
   setInntektsmeldingSkjemaState: Dispatch<
     SetStateAction<InntektsmeldingSkjemaState>
@@ -39,23 +103,31 @@ const InntektsmeldingSkjemaStateContext =
 type InntektsmeldingSkjemaStateProviderProps = {
   children: ReactNode;
 };
+
+const defaultSkjemaState = {
+  inntekt: 0,
+  refusjonsbeløpPerMåned: 0,
+  refusjonsendringer: [],
+  naturalytelserSomMistes: [],
+};
+
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  // TODO: 1. cleare sessionStorage når en IM er sendt. 2. skjemadata basert på forspørsel-ID?
+  const route = getRouteApi("/$id");
+  const { id } = route.useParams();
+
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
-    "skjemadata",
-    {
-      inntekt: 0,
-      refusjonsbeløpPerMåned: 0,
-      refusjonsendringer: [],
-      naturalytelserSomMistes: [],
-    },
+    `skjemadata-${id}`,
+    defaultSkjemaState,
+    InntektsmeldingSkjemaStateSchema,
   );
   return (
     <InntektsmeldingSkjemaStateContext.Provider
       value={{
         inntektsmeldingSkjemaState: state,
+        gyldigInntektsmeldingSkjemaState:
+          InntektsmeldingSkjemaStateSchemaValidated.safeParse(state).data,
         setInntektsmeldingSkjemaState: setState,
       }}
     >

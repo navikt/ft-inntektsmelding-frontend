@@ -76,7 +76,7 @@ export function formatFødselsnummer(fødselsnummer: string) {
 }
 
 export function formatYtelsesnavn(ytelsesnavn: string, storForbokstav = false) {
-  const formattert = ytelsesnavn.toLowerCase().replace("_", " ");
+  const formattert = ytelsesnavn.toLowerCase().replaceAll("_", " ");
   if (storForbokstav) {
     return capitalize(formattert);
   }

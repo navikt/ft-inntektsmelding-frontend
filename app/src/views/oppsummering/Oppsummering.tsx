@@ -1,5 +1,12 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
-import { Alert, Button, FormSummary, Heading } from "@navikt/ds-react";
+import {
+  Alert,
+  BodyLong,
+  Button,
+  FormSummary,
+  Heading,
+  Stack,
+} from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import {
   getRouteApi,
@@ -10,14 +17,16 @@ import {
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import type { OpplysningerDto } from "~/api/queries";
-import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
-import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
+import {
+  InntektsmeldingSkjemaState,
+  InntektsmeldingSkjemaStateValid,
+  useInntektsmeldingSkjema,
+} from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type {
   ÅrsaksType,
   NaturalytelseRequestDto,
-  RefusjonsperiodeRequestDto,
-  SendInntektsmeldingRequestDto,
+  RefusjonsendringRequestDto,
 } from "~/types/api-models.ts";
 import {
   formatDatoKort,
@@ -33,7 +42,32 @@ const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
   const opplysninger = useLoaderData({ from: "/$id" });
-  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  const { id } = route.useParams();
+
+  const { inntektsmeldingSkjemaState, gyldigInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
+
+  if (!gyldigInntektsmeldingSkjemaState) {
+    return (
+      <Alert variant="error">
+        <Stack gap="4">
+          <BodyLong>
+            Noe gikk galt med utfyllingen av inntektsmeldingen din. Du må
+            dessverre begynne på nytt.
+          </BodyLong>
+          <Button
+            as={Link}
+            params={{ id }}
+            size="small"
+            to="/$id"
+            variant="secondary-neutral"
+          >
+            Start på nytt
+          </Button>
+        </Stack>
+      </Alert>
+    );
+  }
 
   return (
     <section>
@@ -215,15 +249,13 @@ export const Oppsummering = () => {
                   <FormSummary.Answers>
                     {inntektsmeldingSkjemaState.refusjonsendringer.map(
                       (endring) => (
-                        <FormSummary.Answer
-                          key={endring.fraOgMed + endring.beløp}
-                        >
+                        <FormSummary.Answer key={endring.fom + endring.beløp}>
                           <FormSummary.Label>
                             Refusjonsbeløp per måned
                           </FormSummary.Label>
                           <FormSummary.Value>
                             {formatKroner(endring.beløp)} (fra og med{" "}
-                            {formatDatoLang(new Date(endring.fraOgMed))})
+                            {formatDatoLang(new Date(endring.fom))})
                           </FormSummary.Value>
                         </FormSummary.Answer>
                       ),
@@ -261,18 +293,18 @@ export const Oppsummering = () => {
                 <FormSummary.Value>
                   <FormSummary.Answers>
                     {inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
-                      (naturalytelse) => (
-                        <FormSummary.Answer key={naturalytelse.navn}>
-                          <FormSummary.Label>
-                            {formatYtelsesnavn(naturalytelse.navn, true)}
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            Verdi {formatKroner(naturalytelse.beløp)} (fra og
-                            med{" "}
-                            {formatDatoKort(new Date(naturalytelse.fraOgMed))})
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      ),
+                      (naturalytelse) => {
+                        return (
+                          <FormSummary.Answer key={naturalytelse.navn}>
+                            <FormSummary.Label>
+                              {formatYtelsesnavn(naturalytelse.navn, true)}
+                            </FormSummary.Label>
+                            <FormSummary.Value>
+                              {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
+                            </FormSummary.Value>
+                          </FormSummary.Answer>
+                        );
+                      },
                     )}
                   </FormSummary.Answers>
                 </FormSummary.Value>
@@ -285,6 +317,16 @@ export const Oppsummering = () => {
     </section>
   );
 };
+
+/**
+ * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
+ */
+function formaterPeriodeStreng({ fom, tom }: { fom?: string; tom?: string }) {
+  const fomStreng = fom ? `fra og med ${formatDatoKort(new Date(fom))}` : "";
+  const tomStreng = tom ? `til og med ${formatDatoKort(new Date(tom))}` : "";
+
+  return [fomStreng, tomStreng].filter(Boolean).join(", ");
+}
 
 const formatterKontaktperson = (
   kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
@@ -316,32 +358,33 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
   const { id } = route.useParams();
 
-  const { inntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   const { mutate, error, isPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
       const gjeldendeInntekt =
-        inntektsmeldingSkjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
-        inntektsmeldingSkjemaState.inntekt;
-      const inntektsmelding: SendInntektsmeldingRequestDto = {
+        skjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
+        skjemaState.inntekt;
+
+      const inntektsmelding = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
         ytelse: opplysninger.ytelse,
         arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-        // @ts-expect-error -- Fiks når vi har løst overgang med undefined i skjema til en safe payload for IM.
-        kontaktperson: inntektsmeldingSkjemaState.kontaktperson,
+        kontaktperson: skjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
-        // inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsperioder: utledRefusjonsPerioder([
-          ...inntektsmeldingSkjemaState.refusjonsendringer,
+        refusjon: skjemaState.refusjonsbeløpPerMåned,
+        // inntektEndringsÅrsak: skjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
+        refusjonsendringer: utledRefusjonsPerioder([
+          ...skjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
-            fraOgMed: opplysninger.startdatoPermisjon,
+            fom: opplysninger.startdatoPermisjon,
           },
         ]),
-        bortfaltNaturaltytelsePerioder: konverterNaturalytelsePerioder(
-          inntektsmeldingSkjemaState.naturalytelserSomMistes,
+        bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
+          skjemaState.naturalytelserSomMistes,
         ),
       };
 
@@ -354,6 +397,9 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       });
     },
   });
+  if (!gyldigInntektsmeldingSkjemaState) {
+    return null;
+  }
 
   return (
     <>
@@ -371,7 +417,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         <Button
           icon={<PaperplaneIcon />}
           loading={isPending}
-          onClick={() => mutate()}
+          onClick={() => mutate(gyldigInntektsmeldingSkjemaState)}
           variant="primary"
         >
           Send inn
@@ -382,34 +428,21 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 }
 
 function konverterNaturalytelsePerioder(
-  naturalytelsePerioder: InntektsmeldingSkjemaState["naturalytelserSomMistes"],
+  naturalytelsePerioder: InntektsmeldingSkjemaStateValid["naturalytelserSomMistes"],
 ): NaturalytelseRequestDto[] {
-  // TODO: hvordan skille mellom optional typer og
-  // @ts-expect-error --  se TODO
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
-    fom: formatIsoDatostempel(new Date(periode.fraOgMed)),
+    fom: formatIsoDatostempel(new Date(periode.fom)),
     beløp: periode.beløp,
-    erBortfalt: true,
-    tom: undefined, // Gjelder hele permisjonen
+    tom: periode.tom,
   }));
 }
 
 function utledRefusjonsPerioder(
-  refusjonsPerioder: InntektsmeldingSkjemaState["refusjonsendringer"],
-): RefusjonsperiodeRequestDto[] {
-  const perioderSynkende = [...refusjonsPerioder].sort(
-    (a, b) => new Date(b.fraOgMed).getTime() - new Date(a.fraOgMed).getTime(),
-  );
-
-  return perioderSynkende.map((currentValue, index, array) => {
-    const forrigePeriode = array[index - 1];
-    return {
-      fom: formatIsoDatostempel(new Date(currentValue.fraOgMed)),
-      beløp: currentValue.beløp,
-      tom: forrigePeriode
-        ? formatIsoDatostempel(new Date(forrigePeriode.fraOgMed))
-        : undefined,
-    };
-  });
+  refusjonsendringer: InntektsmeldingSkjemaStateValid["refusjonsendringer"],
+): RefusjonsendringRequestDto[] {
+  return refusjonsendringer.map((endring) => ({
+    fom: endring.fom,
+    beløp: endring.beløp,
+  }));
 }

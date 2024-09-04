@@ -9,9 +9,12 @@ import { useLocalStorageState } from "~/features/usePersistedState.tsx";
 
 export const VIS_HJELPETEKSTER_KEY = "vis-hjelpetekster";
 
+type VisHjelpetekser = {
+  vis: boolean;
+};
 type HjelpeteksterContextType = {
-  visHjelpetekster: boolean;
-  setVisHjelpetekster: Dispatch<SetStateAction<boolean>>;
+  visHjelpetekster: VisHjelpetekser;
+  setVisHjelpetekster: Dispatch<SetStateAction<VisHjelpetekser>>;
 };
 const VisHjelpeteksterStateContext =
   createContext<HjelpeteksterContextType | null>(null);
@@ -21,11 +24,14 @@ export const VisHjelpeteksterStateProvider = ({
 }: {
   children: ReactNode;
 }) => {
-  const [visHjelpetekster, setVisHjelpetekster] = useLocalStorageState<boolean>(
-    VIS_HJELPETEKSTER_KEY,
-    true,
-    z.string().transform((value) => value === "true"),
-  );
+  const [visHjelpetekster, setVisHjelpetekster] =
+    useLocalStorageState<VisHjelpetekser>(
+      VIS_HJELPETEKSTER_KEY,
+      { vis: true },
+      z.object({
+        vis: z.boolean(),
+      }),
+    );
   return (
     <VisHjelpeteksterStateContext.Provider
       value={{
@@ -54,10 +60,10 @@ export function HjelpetekstToggle() {
 
   return (
     <Switch
-      checked={visHjelpetekster}
-      onChange={(e) => setVisHjelpetekster(e.target.checked)}
+      checked={visHjelpetekster.vis}
+      onChange={(e) => setVisHjelpetekster({ vis: e.target.checked })}
     >
-      Vis hjelpetekster i skjema
+      Vis hjelpetekster
     </Switch>
   );
 }

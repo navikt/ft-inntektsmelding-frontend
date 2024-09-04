@@ -13,5 +13,9 @@ export async function sendInntektsmelding(
     body: JSON.stringify(sendInntektsmeldingRequest),
   });
 
+  if (!response.ok) {
+    throw new Error("Noe gikk galt.");
+  }
+
   return (await response.json()) as unknown;
 }
