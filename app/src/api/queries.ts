@@ -41,6 +41,14 @@ const grunnbeløpSchema = z.object({
   virkningstidspunktForMinsteinntekt: z.string(),
 });
 
+export async function hentEksisterendeInntektsmeldinger(uuid: string) {
+  const response = await fetch(
+    `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
+  );
+
+  return response;
+}
+
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(
     `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${uuid}`,
