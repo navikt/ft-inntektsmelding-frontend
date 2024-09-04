@@ -1,5 +1,7 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/$id/vis')({
-  component: () => <div>Hello /$id/vis!</div>
-})
+import { VisInntektsmelding } from "~/views/vis/VisInntektsmelding.tsx";
+
+export const Route = createFileRoute("/$id/vis")({
+  component: VisInntektsmelding,
+});

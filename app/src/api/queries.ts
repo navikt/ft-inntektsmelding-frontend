@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
-import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 
+import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models";
 import { navnMedStorBokstav } from "~/utils.ts";
 
@@ -70,6 +70,8 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
         kontaktperson: nyesteInntektsmelding.kontaktperson,
         refusjonsbeløpPerMåned: nyesteInntektsmelding.refusjon ?? 0,
         refusjonsendringer: nyesteInntektsmelding.refusjonsendringer ?? [],
+        endringIRefusjon:
+          (nyesteInntektsmelding.refusjonsendringer ?? []).length > 0,
         naturalytelserSomMistes:
           nyesteInntektsmelding.bortfaltNaturalytelsePerioder?.map(
             (periode) => ({

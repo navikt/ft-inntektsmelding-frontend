@@ -1,4 +1,6 @@
-import { FormSummary, Link, Stack, VStack } from "@navikt/ds-react";
+import { FormSummary, VStack } from "@navikt/ds-react";
+import { Link } from "@tanstack/react-router";
+
 import { OpplysningerDto } from "~/api/queries";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { ÅrsaksType } from "~/types/api-models";
