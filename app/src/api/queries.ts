@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
+import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models";
 import { navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
@@ -46,7 +47,23 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
   );
 
-  return response;
+  if (response.status === 404) {
+    throw new Error("Forespørsel ikke funnet");
+  }
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente forespørsel");
+  }
+  const json = await response.json();
+  const parsedJson = z
+    .array(SendInntektsmeldingRequestDtoSchema)
+    .safeParse(json);
+
+  if (!parsedJson.success) {
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  return parsedJson.data;
 }
 
 export async function hentOpplysningerData(uuid: string) {

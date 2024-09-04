@@ -41,7 +41,7 @@ import {
 const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
-  const opplysninger = useLoaderData({ from: "/$id" });
+  const { opplysninger } = useLoaderData({ from: "/$id" });
   const { id } = route.useParams();
 
   const { inntektsmeldingSkjemaState, gyldigInntektsmeldingSkjemaState } =

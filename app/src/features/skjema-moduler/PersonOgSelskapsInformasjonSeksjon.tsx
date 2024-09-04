@@ -34,7 +34,7 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 >;
 
 export const PersonOgSelskapsInformasjonSeksjon = () => {
-  const opplysninger = useLoaderData({ from: "/$id" });
+  const { opplysninger } = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 

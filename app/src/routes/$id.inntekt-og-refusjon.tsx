@@ -59,7 +59,7 @@ type NaturalytelserSomMistesForm = {
 };
 
 function InntektOgRefusjon() {
-  const opplysninger = useLoaderData({ from: "/$id" });
+  const { opplysninger } = useLoaderData({ from: "/$id" });
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();

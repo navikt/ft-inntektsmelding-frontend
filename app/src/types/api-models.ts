@@ -41,18 +41,41 @@ export const NaturalytelseTypeSchema = z.enum([
 
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
 
-export type SendInntektsmeldingRequestDto = {
-  foresporselUuid: string;
-  aktorId: string;
-  ytelse: Ytelsetype;
-  arbeidsgiverIdent: string;
-  kontaktperson: KontaktpersonDto;
-  startdato: string;
-  inntekt: number;
-  refusjon?: number;
-  refusjonsendringer: RefusjonsendringRequestDto[];
-  bortfaltNaturalytelsePerioder: NaturalytelseRequestDto[];
-};
+export const SendInntektsmeldingRequestDtoSchema = z.object({
+  foresporselUuid: z.string(),
+  aktorId: z.string(),
+  ytelse: YtelsetypeSchema,
+  arbeidsgiverIdent: z.string(),
+  kontaktperson: z.object({
+    telefonnummer: z.string(),
+    navn: z.string(),
+  }),
+  startdato: z.string(),
+  inntekt: z.number(),
+  refusjon: z.number().optional(),
+  refusjonsendringer: z
+    .array(
+      z.object({
+        fom: z.string(),
+        beløp: z.number(),
+      }),
+    )
+    .optional(),
+  bortfaltNaturalytelsePerioder: z
+    .array(
+      z.object({
+        fom: z.string(),
+        tom: z.string().optional(),
+        beløp: z.number(),
+        naturalytelsetype: NaturalytelseTypeSchema,
+      }),
+    )
+    .optional(), // TODO: Når databasen er wipet, kan vi fjerne optional her.
+});
+
+export type SendInntektsmeldingRequestDto = z.infer<
+  typeof SendInntektsmeldingRequestDtoSchema
+>;
 
 export const ÅrsaksTypeSchema = z.enum(["Tariffendring", "FeilInntekt"]);
 
@@ -65,11 +88,6 @@ type InntektEndretÅrsakDto = {
   årsak: ÅrsaksType;
   fom?: string;
   tom?: string;
-};
-
-type KontaktpersonDto = {
-  telefonnummer: string;
-  navn: string;
 };
 
 export type RefusjonsendringRequestDto = {
