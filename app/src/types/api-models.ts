@@ -79,12 +79,3 @@ export type SendInntektsmeldingRequestDto = z.infer<
 export const ÅrsaksTypeSchema = z.enum(["Tariffendring", "FeilInntekt"]);
 
 export type ÅrsaksType = z.infer<typeof ÅrsaksTypeSchema>;
-
-// @ts-expect-error -- Taes i bruk senere når backend støtter endretårsak
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type InntektEndretÅrsakDto = {
-  korrigertInntekt: number;
-  årsak: ÅrsaksType;
-  fom?: string;
-  tom?: string;
-};

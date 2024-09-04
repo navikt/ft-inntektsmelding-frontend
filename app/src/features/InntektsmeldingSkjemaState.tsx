@@ -52,29 +52,29 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     navn: z.string(),
     telefonnummer: z.string(),
   }),
-  inntekt: z.number(),
+  inntekt: z.number().or(z.string()),
   inntektEndringsÅrsak: z
     .object({
       årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: z.number(),
+      korrigertInntekt: z.number().or(z.string()),
       fom: z.string(),
       tom: z.string().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean(),
-  refusjonsbeløpPerMåned: z.number(),
+  refusjonsbeløpPerMåned: z.number().or(z.string()),
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
       fom: z.string(),
-      beløp: z.number(),
+      beløp: z.number().or(z.string()),
     }),
   ),
   misterNaturalytelser: z.boolean(),
   naturalytelserSomMistes: z.array(
     z.object({
       navn: NaturalytelseTypeSchema,
-      beløp: z.number(),
+      beløp: z.number().or(z.string()),
       fom: z.string(),
       tom: z.string().optional(),
       inkluderTom: z.boolean(),
