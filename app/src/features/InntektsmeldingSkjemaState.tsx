@@ -122,12 +122,23 @@ export const InntektsmeldingSkjemaStateProvider = ({
     defaultSkjemaState,
     InntektsmeldingSkjemaStateSchema,
   );
+
+  const gyldigInntektsmeldingSkjemaState =
+    InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
+
+  // TODO: Fjern før produksjon
+  if (!gyldigInntektsmeldingSkjemaState.success) {
+    console.error(
+      "InntektsmeldingSkjemaState er ikke gyldig",
+      gyldigInntektsmeldingSkjemaState.error,
+    );
+  }
+
   return (
     <InntektsmeldingSkjemaStateContext.Provider
       value={{
         inntektsmeldingSkjemaState: state,
-        gyldigInntektsmeldingSkjemaState:
-          InntektsmeldingSkjemaStateSchemaValidated.safeParse(state).data,
+        gyldigInntektsmeldingSkjemaState: gyldigInntektsmeldingSkjemaState.data,
         setInntektsmeldingSkjemaState: setState,
       }}
     >

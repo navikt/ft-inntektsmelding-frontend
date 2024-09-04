@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IdImport } from './routes/$id'
 import { Route as IdIndexImport } from './routes/$id.index'
 import { Route as EndreIdImport } from './routes/endre.$id'
+import { Route as IdVisImport } from './routes/$id.vis'
 import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
 import { Route as IdKvitteringImport } from './routes/$id.kvittering'
 import { Route as IdInntektOgRefusjonImport } from './routes/$id.inntekt-og-refusjon'
@@ -34,6 +35,11 @@ const IdIndexRoute = IdIndexImport.update({
 const EndreIdRoute = EndreIdImport.update({
   path: '/endre/$id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const IdVisRoute = IdVisImport.update({
+  path: '/vis',
+  getParentRoute: () => IdRoute,
 } as any)
 
 const IdOppsummeringRoute = IdOppsummeringImport.update({
@@ -95,6 +101,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IdOppsummeringImport
       parentRoute: typeof IdImport
     }
+    '/$id/vis': {
+      id: '/$id/vis'
+      path: '/vis'
+      fullPath: '/$id/vis'
+      preLoaderRoute: typeof IdVisImport
+      parentRoute: typeof IdImport
+    }
     '/endre/$id': {
       id: '/endre/$id'
       path: '/endre/$id'
@@ -120,6 +133,7 @@ export const routeTree = rootRoute.addChildren({
     IdInntektOgRefusjonRoute,
     IdKvitteringRoute,
     IdOppsummeringRoute,
+    IdVisRoute,
     IdIndexRoute,
   }),
   EndreIdRoute,
@@ -144,6 +158,7 @@ export const routeTree = rootRoute.addChildren({
         "/$id/inntekt-og-refusjon",
         "/$id/kvittering",
         "/$id/oppsummering",
+        "/$id/vis",
         "/$id/"
       ]
     },
@@ -161,6 +176,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/$id/oppsummering": {
       "filePath": "$id.oppsummering.tsx",
+      "parent": "/$id"
+    },
+    "/$id/vis": {
+      "filePath": "$id.vis.tsx",
       "parent": "/$id"
     },
     "/endre/$id": {

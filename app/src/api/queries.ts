@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
+import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 
 import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models";
 import { navnMedStorBokstav } from "~/utils.ts";
@@ -63,7 +64,30 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 
-  return parsedJson.data;
+  return parsedJson.data.map(
+    (nyesteInntektsmelding) =>
+      ({
+        kontaktperson: nyesteInntektsmelding.kontaktperson,
+        refusjonsbeløpPerMåned: nyesteInntektsmelding.refusjon ?? 0,
+        refusjonsendringer: nyesteInntektsmelding.refusjonsendringer ?? [],
+        naturalytelserSomMistes:
+          nyesteInntektsmelding.bortfaltNaturalytelsePerioder?.map(
+            (periode) => ({
+              navn: periode.naturalytelsetype,
+              fom: periode.fom,
+              beløp: periode.beløp,
+              inkluderTom: periode.tom !== undefined,
+              tom: periode.tom,
+            }),
+          ) ?? [],
+        inntektEndringsÅrsak: undefined, // TODO: Send inn når BE har støtte for det
+        inntekt: nyesteInntektsmelding.inntekt,
+        skalRefunderes: Boolean(nyesteInntektsmelding.refusjon),
+        misterNaturalytelser:
+          (nyesteInntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) >
+          0,
+      }) satisfies InntektsmeldingSkjemaStateValid,
+  );
 }
 
 export async function hentOpplysningerData(uuid: string) {
