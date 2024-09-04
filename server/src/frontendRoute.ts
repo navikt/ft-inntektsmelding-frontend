@@ -3,6 +3,7 @@ import path from "node:path";
 import {
   buildCspHeader,
   fetchDecoratorHtml,
+  injectDecoratorServerSide,
 } from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
 import { addLocalViteServerHandler } from "@navikt/vite-mode";
 import express, { Express } from "express";
@@ -10,6 +11,10 @@ import express, { Express } from "express";
 import config from "./config.js";
 
 const csp = await buildCspHeader({}, { env: config.app.env });
+const dekoratørProps = {
+  env: config.app.env,
+  params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
+} as const;
 
 export function setupStaticRoutes(router: Express) {
   router.use(express.static("./public", { index: false }));
@@ -33,17 +38,28 @@ export function setupStaticRoutes(router: Express) {
       return response.send(await injectViteModeHtml(viteModeHtml));
     }
 
-    const html = await injectDecorator(spaFilePath);
+    const html = await injectDecoratorServerSide({
+      filePath: spaFilePath,
+      ...dekoratørProps,
+    });
 
     return response.send(html);
   });
 }
 
 async function injectViteModeHtml(html: string) {
-  const dekoratørFragmenter = await fetchDecoratorHtml({
-    env: config.app.env,
-    params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
-  });
+  const {
+    DECORATOR_HEADER,
+    DECORATOR_STYLES,
+    DECORATOR_SCRIPTS,
+    DECORATOR_FOOTER,
+  } = await fetchDecoratorHtml(dekoratørProps);
 
-  return ``;
+  return [
+    DECORATOR_HEADER,
+    DECORATOR_STYLES,
+    DECORATOR_SCRIPTS,
+    html,
+    DECORATOR_FOOTER,
+  ].join("");
 }
