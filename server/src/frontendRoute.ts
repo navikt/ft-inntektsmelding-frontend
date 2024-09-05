@@ -21,14 +21,16 @@ export function setupStaticRoutes(router: Router) {
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
 
-  router.get("*", (request, response, next) => {
+  router.use((request, response, next) => {
     response.setHeader("Content-Security-Policy", csp);
     return next();
   });
 
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
-    addLocalViteServerHandler(router, {});
+    addLocalViteServerHandler(router, {
+      port: `5173${config.app.nestedPath}`,
+    });
   }
 
   router.get("*", async (request, response) => {

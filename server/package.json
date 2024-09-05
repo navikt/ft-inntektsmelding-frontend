@@ -15,7 +15,7 @@
   "dependencies": {
     "@navikt/nav-dekoratoren-moduler": "3.0.0",
     "@navikt/oasis": "3.4.0",
-    "@navikt/vite-mode": "0.10.1",
+    "@navikt/vite-mode": "0.10.2",
     "express": "4.19.2",
     "http-proxy-middleware": "3.0.2"
   },
