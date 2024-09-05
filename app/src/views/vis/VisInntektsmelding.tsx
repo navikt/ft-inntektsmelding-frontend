@@ -57,7 +57,14 @@ export const VisInntektsmelding = () => {
       <HStack gap="4" justify="space-between">
         <HStack gap="4">
           {endreKnapp}
-          <Button variant="tertiary">Lukk</Button>
+
+          <Button
+            as="a"
+            href="https://arbeidsgiver.nav.no/min-side-arbeidsgiver"
+            variant="tertiary"
+          >
+            Lukk
+          </Button>
         </HStack>
         <Button icon={<DownloadIcon />} variant="tertiary">
           Last ned PDF
