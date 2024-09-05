@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { beløpSchema } from "~/utils.ts";
+
 export type MånedsinntektResponsDto = {
   fom: string;
   tom: string;
@@ -50,13 +52,13 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
     navn: z.string(),
   }),
   startdato: z.string(),
-  inntekt: z.number(),
-  refusjon: z.number().optional(),
+  inntekt: beløpSchema,
+  refusjon: beløpSchema.optional(),
   refusjonsendringer: z
     .array(
       z.object({
         fom: z.string(),
-        beløp: z.number(),
+        beløp: beløpSchema,
       }),
     )
     .optional(),
@@ -65,7 +67,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
       z.object({
         fom: z.string(),
         tom: z.string().optional(),
-        beløp: z.number(),
+        beløp: beløpSchema,
         naturalytelsetype: NaturalytelseTypeSchema,
       }),
     )

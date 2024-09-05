@@ -125,7 +125,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
         <>
           <span>Refusjonsbeløp per måned</span>
           <Heading level="3" size="medium">
-            {formatKroner(refusjonsbeløpPerMåned)}
+            {formatKroner(Number(refusjonsbeløpPerMåned))}
           </Heading>
           <Button
             className="w-fit"

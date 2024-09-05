@@ -7,6 +7,7 @@ import {
   ÅrsaksTypeSchema,
   NaturalytelseTypeSchema,
 } from "~/types/api-models.ts";
+import { beløpSchema } from "~/utils.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
@@ -17,29 +18,29 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       telefonnummer: z.string(),
     })
     .optional(),
-  inntekt: z.number(),
+  inntekt: beløpSchema,
   inntektEndringsÅrsak: z
     .object({
       årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: z.number(),
+      korrigertInntekt: beløpSchema,
       fom: z.string().optional(),
       tom: z.string().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean().optional(),
-  refusjonsbeløpPerMåned: z.number(),
+  refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
       fom: z.string(),
-      beløp: z.number(),
+      beløp: beløpSchema,
     }),
   ),
   misterNaturalytelser: z.boolean().optional(),
   naturalytelserSomMistes: z.array(
     z.object({
       navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-      beløp: z.number(),
+      beløp: beløpSchema,
       fom: z.string(),
       tom: z.string().optional(),
       inkluderTom: z.boolean(),
@@ -52,29 +53,29 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     navn: z.string(),
     telefonnummer: z.string(),
   }),
-  inntekt: z.number().or(z.string()),
+  inntekt: beløpSchema,
   inntektEndringsÅrsak: z
     .object({
       årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: z.number().or(z.string()),
+      korrigertInntekt: beløpSchema,
       fom: z.string(),
       tom: z.string().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean(),
-  refusjonsbeløpPerMåned: z.number().or(z.string()),
+  refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
       fom: z.string(),
-      beløp: z.number().or(z.string()),
+      beløp: beløpSchema,
     }),
   ),
   misterNaturalytelser: z.boolean(),
   naturalytelserSomMistes: z.array(
     z.object({
       navn: NaturalytelseTypeSchema,
-      beløp: z.number().or(z.string()),
+      beløp: beløpSchema,
       fom: z.string(),
       tom: z.string().optional(),
       inkluderTom: z.boolean(),

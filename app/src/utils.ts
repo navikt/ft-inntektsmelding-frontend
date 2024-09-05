@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 
 export function leggTilGenitiv(navn: string) {
@@ -36,12 +38,12 @@ export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export function formatKroner(kroner: number) {
+export function formatKroner(kroner: number | string) {
   return Intl.NumberFormat("nb-no", {
     style: "currency",
     currency: "NOK",
     maximumFractionDigits: 0,
-  }).format(kroner);
+  }).format(Number(kroner));
 }
 
 export function formatDatoLang(dato: Date) {
@@ -105,3 +107,5 @@ export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
 
   return summerteInntekter / (inntekter.length || 1);
 }
+
+export const beløpSchema = z.union([z.string(), z.number()]);
