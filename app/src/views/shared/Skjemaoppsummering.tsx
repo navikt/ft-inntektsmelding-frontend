@@ -21,6 +21,7 @@ export const Skjemaoppsummering = ({
   opplysninger,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
+  // TODO: bør vurdere noe cache av preload av routes ved hover. Fører til at hover på hver "Endre svar" trigger alle netterkskall på ny.
   return (
     <VStack gap="4">
       <FormSummary>
