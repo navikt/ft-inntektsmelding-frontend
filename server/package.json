@@ -15,10 +15,10 @@
   "dependencies": {
     "@navikt/nav-dekoratoren-moduler": "3.0.0",
     "@navikt/oasis": "3.4.0",
-    "@navikt/vite-mode": "0.9.3",
+    "@navikt/vite-mode": "0.9.4",
     "cookie-parser": "1.4.6",
     "express": "4.19.2",
-    "http-proxy-middleware": "3.0.1"
+    "http-proxy-middleware": "3.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.1.0",

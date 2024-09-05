@@ -32,7 +32,7 @@ export function setupStaticRoutes(router: Express) {
   }
 
   router.get("*", async (request, response) => {
-    const viteModeHtml = response.viteModeHtml as string;
+    const viteModeHtml = response.viteModeHtml;
 
     if (viteModeHtml) {
       return response.send(await injectViteModeHtml(viteModeHtml));
@@ -50,14 +50,14 @@ export function setupStaticRoutes(router: Express) {
 async function injectViteModeHtml(html: string) {
   const {
     DECORATOR_HEADER,
-    DECORATOR_STYLES,
+    DECORATOR_HEAD_ASSETS,
     DECORATOR_SCRIPTS,
     DECORATOR_FOOTER,
   } = await fetchDecoratorHtml(dekoratørProps);
 
   return [
     DECORATOR_HEADER,
-    DECORATOR_STYLES,
+    DECORATOR_HEAD_ASSETS,
     DECORATOR_SCRIPTS,
     html,
     DECORATOR_FOOTER,
