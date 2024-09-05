@@ -94,13 +94,9 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         inntekt: gjeldendeInntekt,
         refusjon: skjemaState.refusjonsbeløpPerMåned,
         // inntektEndringsÅrsak: skjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsendringer: utledRefusjonsPerioder([
-          ...skjemaState.refusjonsendringer,
-          {
-            beløp: gjeldendeInntekt,
-            fom: new Date(opplysninger.startdatoPermisjon),
-          },
-        ]),
+        refusjonsendringer: utledRefusjonsPerioder(
+          skjemaState.refusjonsendringer,
+        ),
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
