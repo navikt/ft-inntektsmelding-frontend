@@ -1,6 +1,10 @@
-import { getRouteApi } from "@tanstack/react-router";
+import { DownloadIcon, PencilIcon } from "@navikt/aksel-icons";
+import { Button, Detail, Heading, HStack, VStack } from "@navikt/ds-react";
+import { getRouteApi, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
+import { formatDatoTidKort } from "~/utils.ts";
 import { Skjemaoppsummering } from "~/views/shared/Skjemaoppsummering.tsx";
 
 const route = getRouteApi("/$id");
@@ -11,18 +15,54 @@ export const VisInntektsmelding = () => {
 
   const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
 
+  // Sett IM i skjemaStaten hvis den finnes
+  useEffect(() => {
+    if (sisteInntektsmelding) {
+      setInntektsmeldingSkjemaState(sisteInntektsmelding);
+    }
+  }, [sisteInntektsmelding]);
+
   if (!sisteInntektsmelding) {
     return null;
   }
 
-  setInntektsmeldingSkjemaState(sisteInntektsmelding);
+  const endreKnapp = (
+    <Button
+      as={Link}
+      className="w-fit"
+      icon={<PencilIcon />}
+      to="../dine-opplysninger"
+      variant="secondary"
+    >
+      Endre
+    </Button>
+  );
 
   return (
-    <div>
+    <VStack className="bg-white py-7 px-6" gap="6">
+      <HStack gap="2" justify="space-between">
+        <VStack>
+          <Heading level="1" size="medium">
+            Innsendt inntektsmelding
+          </Heading>
+          {/*// TODO: trenger at data fra BE inneholder innsendt tidspunkt*/}
+          <Detail uppercase>sendt inn {formatDatoTidKort(new Date())}</Detail>
+        </VStack>
+        {endreKnapp}
+      </HStack>
       <Skjemaoppsummering
         opplysninger={opplysninger}
         skjemaState={sisteInntektsmelding}
       />
-    </div>
+      <HStack gap="4" justify="space-between">
+        <HStack gap="4">
+          {endreKnapp}
+          <Button variant="tertiary">Lukk</Button>
+        </HStack>
+        <Button icon={<DownloadIcon />} variant="tertiary">
+          Last ned PDF
+        </Button>
+      </HStack>
+    </VStack>
   );
 };

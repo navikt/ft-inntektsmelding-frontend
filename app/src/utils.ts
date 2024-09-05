@@ -61,6 +61,18 @@ export function formatDatoKort(dato: Date) {
   }).format(dato);
 }
 
+export function formatDatoTidKort(dato: Date) {
+  return new Intl.DateTimeFormat("nb-no", {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+    .format(dato)
+    .replace(", ", " kl ");
+}
+
 export function formatIsoDatostempel(dato: Date) {
   const år = dato.getFullYear();
   const måned = (dato.getMonth() + 1).toString().padStart(2, "0");
