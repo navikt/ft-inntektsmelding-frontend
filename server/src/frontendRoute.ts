@@ -6,7 +6,7 @@ import {
   injectDecoratorServerSide,
 } from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
 import { addLocalViteServerHandler } from "@navikt/vite-mode";
-import express, { Express } from "express";
+import express, { Router } from "express";
 
 import config from "./config.js";
 
@@ -16,7 +16,7 @@ const dekoratørProps = {
   params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
 } as const;
 
-export function setupStaticRoutes(router: Express) {
+export function setupStaticRoutes(router: Router) {
   router.use(express.static("./public", { index: false }));
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
