@@ -1,4 +1,5 @@
-import { FormSummary, VStack } from "@navikt/ds-react";
+import { FormSummary, List, VStack } from "@navikt/ds-react";
+import { ListItem } from "@navikt/ds-react/List";
 import { Link } from "@tanstack/react-router";
 
 import { OpplysningerDto } from "~/api/queries";
@@ -15,13 +16,17 @@ import {
 
 type SkjemaoppsummeringProps = {
   opplysninger: OpplysningerDto;
+  forrigeSkjemaState?: InntektsmeldingSkjemaStateValid;
   skjemaState: InntektsmeldingSkjemaStateValid;
 };
 export const Skjemaoppsummering = ({
   opplysninger,
+  forrigeSkjemaState,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   // TODO: bør vurdere noe cache av preload av routes ved hover. Fører til at hover på hver "Endre svar" trigger alle netterkskall på ny.
+  // TODO: bør vi ha en deepEquals mellom current og forrige, og ikke tillate submit dersom ikke faktisk har gjort en endring.
+
   return (
     <VStack gap="4">
       <FormSummary>
@@ -248,6 +253,19 @@ export const Skjemaoppsummering = ({
     </VStack>
   );
 };
+
+function EndretVerdi({ før, etter }: { før: string; etter: string }) {
+  return (
+    <List>
+      <ListItem>
+        Fra før: <span>{før}</span>
+      </ListItem>
+      <ListItem>
+        Endret til: <span>{etter}</span>
+      </ListItem>
+    </List>
+  );
+}
 
 /**
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.

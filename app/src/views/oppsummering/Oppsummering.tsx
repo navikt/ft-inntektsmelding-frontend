@@ -23,10 +23,14 @@ import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
 const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
-  const { opplysninger } = useLoaderData({ from: "/$id" });
+  const { opplysninger, eksisterendeInntektsmeldinger } = useLoaderData({
+    from: "/$id",
+  });
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+
+  const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
 
   if (!gyldigInntektsmeldingSkjemaState) {
     return (
@@ -58,6 +62,7 @@ export const Oppsummering = () => {
         </Heading>
         <Fremgangsindikator aktivtSteg={3} />
         <Skjemaoppsummering
+          forrigeSkjemaState={sisteInntektsmelding}
           opplysninger={opplysninger}
           skjemaState={gyldigInntektsmeldingSkjemaState}
         />
