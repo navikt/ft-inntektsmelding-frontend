@@ -61,8 +61,8 @@ export const Oppsummering = () => {
           opplysninger={opplysninger}
           skjemaState={gyldigInntektsmeldingSkjemaState}
         />
+        <SendInnInntektsmelding opplysninger={opplysninger} />
       </div>
-      <SendInnInntektsmelding opplysninger={opplysninger} />
     </section>
   );
 };
