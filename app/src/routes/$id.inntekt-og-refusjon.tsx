@@ -53,8 +53,8 @@ export type InntektOgRefusjonForm = {
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";
   beløp: number | string;
-  fom: string;
-  tom?: string;
+  fom?: Date;
+  tom?: Date;
   inkluderTom?: JaNei;
 };
 
@@ -165,7 +165,7 @@ function InntektOgRefusjon() {
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode opplysninger={opplysninger} />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon opplysninger={opplysninger} />
+          <UtbetalingOgRefusjon />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button

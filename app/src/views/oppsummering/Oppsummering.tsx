@@ -16,21 +16,19 @@ import {
 } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import { formatIsoDatostempel } from "~/utils";
+import { formatIsoDatostempel } from "~/utils.ts";
 
 import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
 
 const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
-  const { opplysninger, eksisterendeInntektsmeldinger } = useLoaderData({
+  const { opplysninger } = useLoaderData({
     from: "/$id",
   });
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
-
-  const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
 
   if (!gyldigInntektsmeldingSkjemaState) {
     return (
@@ -62,7 +60,6 @@ export const Oppsummering = () => {
         </Heading>
         <Fremgangsindikator aktivtSteg={3} />
         <Skjemaoppsummering
-          forrigeSkjemaState={sisteInntektsmelding}
           opplysninger={opplysninger}
           skjemaState={gyldigInntektsmeldingSkjemaState}
         />
@@ -101,7 +98,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
           ...skjemaState.refusjonsendringer,
           {
             beløp: gjeldendeInntekt,
-            fom: opplysninger.startdatoPermisjon,
+            fom: new Date(opplysninger.startdatoPermisjon),
           },
         ]),
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
@@ -153,9 +150,9 @@ function konverterNaturalytelsePerioder(
 ): SendInntektsmeldingRequestDto["bortfaltNaturalytelsePerioder"] {
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
-    fom: formatIsoDatostempel(new Date(periode.fom)), // TODO: kan vi fjerne format
+    fom: formatIsoDatostempel(periode.fom),
     beløp: periode.beløp,
-    tom: periode.tom,
+    tom: periode.tom ? formatIsoDatostempel(periode.tom) : undefined,
   }));
 }
 
@@ -163,7 +160,7 @@ function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaStateValid["refusjonsendringer"],
 ): SendInntektsmeldingRequestDto["refusjonsendringer"] {
   return refusjonsendringer.map((endring) => ({
-    fom: endring.fom,
+    fom: formatIsoDatostempel(endring.fom),
     beløp: endring.beløp,
   }));
 }

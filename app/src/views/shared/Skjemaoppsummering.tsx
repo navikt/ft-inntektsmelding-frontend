@@ -1,5 +1,4 @@
-import { FormSummary, List, VStack } from "@navikt/ds-react";
-import { ListItem } from "@navikt/ds-react/List";
+import { FormSummary, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
 import { OpplysningerDto } from "~/api/queries";
@@ -16,12 +15,10 @@ import {
 
 type SkjemaoppsummeringProps = {
   opplysninger: OpplysningerDto;
-  forrigeSkjemaState?: InntektsmeldingSkjemaStateValid;
   skjemaState: InntektsmeldingSkjemaStateValid;
 };
 export const Skjemaoppsummering = ({
   opplysninger,
-  forrigeSkjemaState,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   // TODO: bør vurdere noe cache av preload av routes ved hover. Fører til at hover på hver "Endre svar" trigger alle netterkskall på ny.
@@ -190,7 +187,9 @@ export const Skjemaoppsummering = ({
               <FormSummary.Value>
                 <FormSummary.Answers>
                   {skjemaState.refusjonsendringer.map((endring) => (
-                    <FormSummary.Answer key={endring.fom + endring.beløp}>
+                    <FormSummary.Answer
+                      key={endring.fom.toString() + endring.beløp}
+                    >
                       <FormSummary.Label>
                         Refusjonsbeløp per måned
                       </FormSummary.Label>
@@ -254,23 +253,10 @@ export const Skjemaoppsummering = ({
   );
 };
 
-function EndretVerdi({ før, etter }: { før: string; etter: string }) {
-  return (
-    <List>
-      <ListItem>
-        Fra før: <span>{før}</span>
-      </ListItem>
-      <ListItem>
-        Endret til: <span>{etter}</span>
-      </ListItem>
-    </List>
-  );
-}
-
 /**
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
  */
-function formaterPeriodeStreng({ fom, tom }: { fom?: string; tom?: string }) {
+function formaterPeriodeStreng({ fom, tom }: { fom?: Date; tom?: Date }) {
   const fomStreng = fom ? `fra og med ${formatDatoKort(new Date(fom))}` : "";
   const tomStreng = tom ? `til og med ${formatDatoKort(new Date(tom))}` : "";
 

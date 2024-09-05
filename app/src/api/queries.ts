@@ -61,6 +61,8 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
     .safeParse(json);
 
   if (!parsedJson.success) {
+    // TODO: Fjern før produksjon
+    console.log(parsedJson.error);
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 
@@ -69,17 +71,22 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
       ({
         kontaktperson: nyesteInntektsmelding.kontaktperson,
         refusjonsbeløpPerMåned: nyesteInntektsmelding.refusjon ?? 0,
-        refusjonsendringer: nyesteInntektsmelding.refusjonsendringer ?? [],
+        refusjonsendringer: (
+          nyesteInntektsmelding.refusjonsendringer ?? []
+        ).map((periode) => ({
+          ...periode,
+          fom: new Date(periode.fom),
+        })),
         endringIRefusjon:
           (nyesteInntektsmelding.refusjonsendringer ?? []).length > 0,
         naturalytelserSomMistes:
           nyesteInntektsmelding.bortfaltNaturalytelsePerioder?.map(
             (periode) => ({
               navn: periode.naturalytelsetype,
-              fom: periode.fom,
+              fom: new Date(periode.fom),
               beløp: periode.beløp,
               inkluderTom: periode.tom !== undefined,
-              tom: periode.tom,
+              tom: periode.tom ? new Date(periode.tom) : undefined,
             }),
           ) ?? [],
         inntektEndringsÅrsak: undefined, // TODO: Send inn når BE har støtte for det

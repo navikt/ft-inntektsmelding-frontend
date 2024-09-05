@@ -16,18 +16,13 @@ import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { hentGrunnbeløpOptions, OpplysningerDto } from "~/api/queries.ts";
+import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import { formatKroner } from "~/utils.ts";
 
-type UtbetalingOgRefusjonProps = {
-  opplysninger: OpplysningerDto;
-};
-export function UtbetalingOgRefusjon({
-  opplysninger,
-}: UtbetalingOgRefusjonProps) {
+export function UtbetalingOgRefusjon() {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {
@@ -69,16 +64,12 @@ export function UtbetalingOgRefusjon({
           Nei
         </Radio>
       </RadioGroup>
-      {skalRefunderes === "ja" ? (
-        <Refusjon opplysninger={opplysninger} />
-      ) : undefined}
+      {skalRefunderes === "ja" ? <Refusjon /> : undefined}
     </VStack>
   );
 }
 
-// @ts-expect-error -- trenger kanskje senere
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
+function Refusjon() {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("endringIRefusjon", {
@@ -187,9 +178,10 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
 }
 
 export const ENDRING_I_REFUSJON_TEMPLATE = {
-  fom: "",
+  fom: undefined,
   beløp: 0,
 };
+
 function RefusjonsPerioder() {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
