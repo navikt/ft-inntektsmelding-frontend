@@ -13,25 +13,23 @@
   "author": "NAV",
   "license": "MIT",
   "dependencies": {
-    "@navikt/backend-for-frontend-utils": "0.8.0",
-    "@navikt/nav-dekoratoren-moduler": "2.1.6",
+    "@navikt/nav-dekoratoren-moduler": "3.0.0",
     "@navikt/oasis": "3.4.0",
-    "cookie-parser": "1.4.6",
+    "@navikt/vite-mode": "0.10.1",
     "express": "4.19.2",
-    "http-proxy-middleware": "3.0.0"
+    "http-proxy-middleware": "3.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.1.0",
     "@eslint/js": "9.9.1",
-    "@types/cookie-parser": "1.4.7",
     "@types/express": "4.17.21",
-    "@typescript-eslint/eslint-plugin": "8.3.0",
+    "@typescript-eslint/eslint-plugin": "8.4.0",
     "eslint": "9.9.1",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-simple-import-sort": "12.1.1",
     "eslint-plugin-unicorn": "55.0.0",
     "prettier": "3.3.3",
     "typescript": "5.5.4",
-    "typescript-eslint": "8.3.0"
+    "typescript-eslint": "8.4.0"
   }
 }
