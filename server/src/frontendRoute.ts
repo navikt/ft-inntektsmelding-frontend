@@ -29,7 +29,9 @@ export function setupStaticRoutes(router: Router) {
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
     addLocalViteServerHandler(router, {
-      port: `5173${config.app.nestedPath}`,
+      subpath: config.app.nestedPath,
+      port: "5173",
+      useNonce: false,
     });
   }
 
