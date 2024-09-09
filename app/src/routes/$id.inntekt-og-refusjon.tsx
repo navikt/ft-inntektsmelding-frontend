@@ -165,7 +165,7 @@ function InntektOgRefusjon() {
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode opplysninger={opplysninger} />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon />
+          <UtbetalingOgRefusjon opplysninger={opplysninger} />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button
