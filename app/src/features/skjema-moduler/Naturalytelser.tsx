@@ -117,7 +117,7 @@ function MisterNaturalytelser() {
 
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
-            <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-start">
+            <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-end">
               <Select
                 label="Naturalytelse som faller bort"
                 {...register(`naturalytelserSomMistes.${index}.navn` as const, {
