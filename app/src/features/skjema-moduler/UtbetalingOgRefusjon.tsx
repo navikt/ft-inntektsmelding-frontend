@@ -16,13 +16,18 @@ import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { hentGrunnbeløpOptions } from "~/api/queries.ts";
+import { hentGrunnbeløpOptions, OpplysningerDto } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import { formatKroner } from "~/utils.ts";
 
-export function UtbetalingOgRefusjon() {
+type UtbetalingOgRefusjonProps = {
+  opplysninger: OpplysningerDto;
+};
+export function UtbetalingOgRefusjon({
+  opplysninger,
+}: UtbetalingOgRefusjonProps) {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {
@@ -64,12 +69,14 @@ export function UtbetalingOgRefusjon() {
           Nei
         </Radio>
       </RadioGroup>
-      {skalRefunderes === "ja" ? <Refusjon /> : undefined}
+      {skalRefunderes === "ja" ? (
+        <Refusjon opplysninger={opplysninger} />
+      ) : undefined}
     </VStack>
   );
 }
 
-function Refusjon() {
+function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("endringIRefusjon", {
@@ -140,7 +147,7 @@ function Refusjon() {
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.endringIRefusjon?.message}
-        legend="Vil det være endringer i refusjon i løpet av perioden Ola er i permisjon?"
+        legend={`Vil det være endringer i refusjon i løpet av perioden ${opplysninger.person.fornavn} er i permisjon?`}
         name={name}
       >
         <Radio value="ja" {...radioGroupProps}>

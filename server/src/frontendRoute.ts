@@ -2,83 +2,68 @@ import path from "node:path";
 
 import {
   buildCspHeader,
+  fetchDecoratorHtml,
   injectDecoratorServerSide,
 } from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
-import cookieParser from "cookie-parser";
-import express, { Response, Router } from "express";
+import { addLocalViteServerHandler } from "@navikt/vite-mode";
+import express, { Router } from "express";
 
 import config from "./config.js";
 
-const csp =
-  config.app.env === "prod"
-    ? await buildCspHeader({}, { env: config.app.env })
-    : await buildCspHeader(
-        {
-          "script-src-elem": ["http://localhost:5173"],
-          "connect-src": ["ws://localhost:5173"],
-        },
-        { env: config.app.env },
-      );
+const csp = await buildCspHeader({}, { env: config.app.env });
+const dekoratørProps = {
+  env: config.app.env,
+  params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
+} as const;
 
 export function setupStaticRoutes(router: Router) {
   router.use(express.static("./public", { index: false }));
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
 
+  router.use((request, response, next) => {
+    response.setHeader("Content-Security-Policy", csp);
+    return next();
+  });
+
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
-    addLocalViteServerHandlerWithDecorator(router);
+    addLocalViteServerHandler(router, {
+      subpath: config.app.nestedPath,
+      port: "5173",
+      useNonce: false,
+    });
   }
 
   router.get("*", async (request, response) => {
-    const html = await injectDecorator(spaFilePath);
-    response.setHeader("Content-Security-Policy", csp);
+    const viteModeHtml = response.viteModeHtml;
+
+    if (viteModeHtml) {
+      return response.send(await injectViteModeHtml(viteModeHtml));
+    }
+
+    const html = await injectDecoratorServerSide({
+      filePath: spaFilePath,
+      ...dekoratørProps,
+    });
 
     return response.send(html);
   });
 }
 
-function addLocalViteServerHandlerWithDecorator(router: Router) {
-  const viteDevelopmentServerPath = path.resolve(".", "vite-dev-server.html");
+async function injectViteModeHtml(html: string) {
+  const {
+    DECORATOR_HEADER,
+    DECORATOR_HEAD_ASSETS,
+    DECORATOR_SCRIPTS,
+    DECORATOR_FOOTER,
+  } = await fetchDecoratorHtml(dekoratørProps);
 
-  router.use(cookieParser());
-  router.get("/vite-on", (request, response) => {
-    setViteCookie(response, true);
-    return response.redirect(`${config.app.nestedPath}`);
-  });
-  router.get("/vite-off", (request, response) => {
-    setViteCookie(response, false);
-    return response.redirect(`${config.app.nestedPath}`);
-  });
-  router.get("*", async (request, response, next) => {
-    const localViteServerIsEnabled =
-      request.cookies["use-local-vite-server"] === "true";
-    if (localViteServerIsEnabled) {
-      const html = await injectDecorator(viteDevelopmentServerPath);
-      const modifiedHtml = html.replaceAll(
-        "http://localhost:5173",
-        `http://localhost:5173${config.app.nestedPath}`,
-      );
-      response.setHeader("Content-Security-Policy", csp);
-
-      return response.send(modifiedHtml);
-    }
-    return next();
-  });
-}
-
-async function injectDecorator(filePath: string) {
-  return injectDecoratorServerSide({
-    env: config.app.env,
-    filePath,
-    params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
-  });
-}
-
-function setViteCookie(response: Response, cookieValue: boolean) {
-  response.cookie("use-local-vite-server", cookieValue, {
-    httpOnly: false,
-    secure: false,
-    sameSite: "lax",
-  });
+  return [
+    DECORATOR_HEADER,
+    DECORATOR_HEAD_ASSETS,
+    DECORATOR_SCRIPTS,
+    html,
+    DECORATOR_FOOTER,
+  ].join("");
 }
