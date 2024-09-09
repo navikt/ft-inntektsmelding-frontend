@@ -62,6 +62,7 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
 
   if (!parsedJson.success) {
     // TODO: Fjern før produksjon
+    // eslint-disable-next-line no-console
     console.log(parsedJson.error);
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }

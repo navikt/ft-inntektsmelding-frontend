@@ -129,6 +129,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
 
   // TODO: Fjern før produksjon
   if (!gyldigInntektsmeldingSkjemaState.success) {
+    // eslint-disable-next-line no-console
     console.error(
       "InntektsmeldingSkjemaState er ikke gyldig",
       gyldigInntektsmeldingSkjemaState.error,
