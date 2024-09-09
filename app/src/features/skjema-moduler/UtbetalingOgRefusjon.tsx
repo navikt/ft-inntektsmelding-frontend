@@ -76,8 +76,6 @@ export function UtbetalingOgRefusjon({
   );
 }
 
-// @ts-expect-error -- trenger kanskje senere
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
@@ -149,7 +147,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.endringIRefusjon?.message}
-        legend="Vil det være endringer i refusjon i løpet av perioden Ola er i permisjon?"
+        legend={`Vil det være endringer i refusjon i løpet av perioden ${opplysninger.person.fornavn} er i permisjon?`}
         name={name}
       >
         <Radio value="ja" {...radioGroupProps}>
