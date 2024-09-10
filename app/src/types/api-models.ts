@@ -77,6 +77,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
 export const InntektsmeldingResponseDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
     opprettetTidspunkt: z.string(),
+    inntektsmeldingId: z.string(),
   });
 
 export type SendInntektsmeldingRequestDto = z.infer<

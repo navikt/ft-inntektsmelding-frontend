@@ -7,8 +7,7 @@ import { logDev, navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
-export const hentInntektsmeldingPdfUrl = (inntektsmeldingId: string) =>
-  `${SERVER_URL}/inntektsmeldinger/${inntektsmeldingId}/pdf`;
+export const hentInntektsmeldingPdfUrl = `${SERVER_URL}/inntektsmelding-pdf`;
 
 export function hentGrunnbeløpOptions() {
   return queryOptions({
@@ -93,6 +92,7 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
         misterNaturalytelser:
           (inntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) > 0,
         opprettetTidspunkt: new Date(inntektsmelding.opprettetTidspunkt),
+        inntektsmeldingId: inntektsmelding.inntektsmeldingId,
       }) satisfies InntektsmeldingSkjemaStateValid,
   );
 }

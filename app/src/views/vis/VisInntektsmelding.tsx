@@ -3,8 +3,9 @@ import { Button, Detail, Heading, HStack, VStack } from "@navikt/ds-react";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
-import { formatDatoTidKort } from "~/utils.ts";
+import { formatDatoTidKort, logDev } from "~/utils.ts";
 import { Skjemaoppsummering } from "~/views/shared/Skjemaoppsummering.tsx";
 
 const route = getRouteApi("/$id");
@@ -69,7 +70,42 @@ export const VisInntektsmelding = () => {
             Last ned PDF
           </Button>
         </HStack>
-        <Button icon={<DownloadIcon />} variant="tertiary">
+        <Button
+          icon={<DownloadIcon />}
+          onClick={async () => {
+            try {
+              const response = await fetch(hentInntektsmeldingPdfUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  inntektsmeldingsId: sisteInntektsmelding.inntektsmeldingId,
+                }),
+              });
+
+              if (!response.ok) {
+                throw new Error("Failed to fetch PDF");
+              }
+
+              const blob = await response.blob();
+              const url = URL.createObjectURL(blob);
+
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "document.pdf";
+              document.body.append(a);
+              a.click();
+
+              URL.revokeObjectURL(url); // Clean up
+              a.remove();
+            } catch (error) {
+              logDev("error", "Error downloading PDF:", error);
+            }
+          }}
+          type="submit"
+          variant="tertiary"
+        >
           Last ned
         </Button>
       </VStack>
