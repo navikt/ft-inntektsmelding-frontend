@@ -71,39 +71,10 @@ export const VisInntektsmelding = () => {
           </Button>
         </HStack>
         <Button
+          as="a"
+          download={`inntektsmelding-${sisteInntektsmelding.inntektsmeldingId}.pdf`}
+          href={hentInntektsmeldingPdfUrl}
           icon={<DownloadIcon />}
-          onClick={async () => {
-            try {
-              const response = await fetch(hentInntektsmeldingPdfUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  inntektsmeldingsId: sisteInntektsmelding.inntektsmeldingId,
-                }),
-              });
-
-              if (!response.ok) {
-                throw new Error("Failed to fetch PDF");
-              }
-
-              const blob = await response.blob();
-              const url = URL.createObjectURL(blob);
-
-              const a = document.createElement("a");
-              a.href = url;
-              a.download = "document.pdf";
-              document.body.append(a);
-              a.click();
-
-              URL.revokeObjectURL(url); // Clean up
-              a.remove();
-            } catch (error) {
-              logDev("error", "Error downloading PDF:", error);
-            }
-          }}
-          type="submit"
           variant="tertiary"
         >
           Last ned
