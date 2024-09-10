@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
-import { formatDatoTidKort, logDev } from "~/utils.ts";
+import { formatDatoTidKort } from "~/utils.ts";
 import { Skjemaoppsummering } from "~/views/shared/Skjemaoppsummering.tsx";
 
 const route = getRouteApi("/$id");
@@ -73,7 +73,9 @@ export const VisInntektsmelding = () => {
         <Button
           as="a"
           download={`inntektsmelding-${sisteInntektsmelding.inntektsmeldingId}.pdf`}
-          href={hentInntektsmeldingPdfUrl}
+          href={hentInntektsmeldingPdfUrl(
+            sisteInntektsmelding.inntektsmeldingId,
+          )}
           icon={<DownloadIcon />}
           variant="tertiary"
         >
