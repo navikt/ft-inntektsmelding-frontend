@@ -61,7 +61,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
     });
   });
   return (
-    <section className="mt-6">
+    <section className="mt-2">
       <form onSubmit={onSubmit}>
         <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
           <Heading level="3" size="large">

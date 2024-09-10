@@ -39,35 +39,37 @@ export const VisInntektsmelding = () => {
   );
 
   return (
-    <VStack className="bg-white py-7 px-6" gap="6">
-      <HStack gap="2" justify="space-between">
-        <VStack>
-          <Heading level="1" size="medium">
-            Innsendt inntektsmelding
-          </Heading>
-          <Detail uppercase>
-            sendt inn{" "}
-            {formatDatoTidKort(sisteInntektsmelding.opprettetTidspunkt)}
-          </Detail>
-        </VStack>
-        {endreKnapp}
-      </HStack>
-      <Skjemaoppsummering
-        opplysninger={opplysninger}
-        skjemaState={sisteInntektsmelding}
-      />
-      <HStack gap="4" justify="space-between">
-        <HStack gap="4">
+    <section className="mt-4">
+      <VStack className="bg-bg-default px-5 py-6 rounded-md" gap="6">
+        <HStack gap="2" justify="space-between">
+          <VStack>
+            <Heading level="1" size="medium">
+              Innsendt inntektsmelding
+            </Heading>
+            <Detail uppercase>
+              sendt inn{" "}
+              {formatDatoTidKort(sisteInntektsmelding.opprettetTidspunkt)}
+            </Detail>
+          </VStack>
           {endreKnapp}
+        </HStack>
+        <Skjemaoppsummering
+          opplysninger={opplysninger}
+          skjemaState={sisteInntektsmelding}
+        />
+        <HStack gap="4" justify="space-between">
+          <HStack gap="4">
+            {endreKnapp}
 
-          <Button as="a" href="/min-side-arbeidsgiver" variant="tertiary">
-            Lukk
+            <Button as="a" href="/min-side-arbeidsgiver" variant="tertiary">
+              Lukk
+            </Button>
+          </HStack>
+          <Button icon={<DownloadIcon />} variant="tertiary">
+            Last ned PDF
           </Button>
         </HStack>
-        <Button icon={<DownloadIcon />} variant="tertiary">
-          Last ned PDF
-        </Button>
-      </HStack>
-    </VStack>
+      </VStack>
+    </section>
   );
 };

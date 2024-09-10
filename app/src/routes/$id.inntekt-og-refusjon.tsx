@@ -9,6 +9,7 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 
 import type { OpplysningerDto } from "~/api/queries.ts";
+import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
@@ -32,7 +33,12 @@ import {
 } from "~/utils.ts";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
-  component: InntektOgRefusjon,
+  component: () => (
+    <>
+      <HjelpetekstToggle />
+      <InntektOgRefusjon />
+    </>
+  ),
 });
 
 type JaNei = "ja" | "nei";
@@ -154,7 +160,7 @@ function InntektOgRefusjon() {
 
   return (
     <FormProvider {...formMethods}>
-      <section className="mt-4">
+      <section className="mt-2">
         <form
           className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col"
           onSubmit={onSubmit}

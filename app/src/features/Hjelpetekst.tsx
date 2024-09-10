@@ -1,4 +1,4 @@
-import type { AlertProps, ReadMoreProps } from "@navikt/ds-react";
+import { AlertProps, Page, ReadMoreProps } from "@navikt/ds-react";
 import { Alert, ReadMore, Switch } from "@navikt/ds-react";
 import { type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
@@ -59,12 +59,14 @@ export function HjelpetekstToggle() {
   const { visHjelpetekster, setVisHjelpetekster } = useHjelpetekst();
 
   return (
-    <Switch
-      checked={visHjelpetekster.vis}
-      onChange={(e) => setVisHjelpetekster({ vis: e.target.checked })}
-    >
-      Vis hjelpetekster
-    </Switch>
+    <Page.Block className="mt-2" width="md">
+      <Switch
+        checked={visHjelpetekster.vis}
+        onChange={(e) => setVisHjelpetekster({ vis: e.target.checked })}
+      >
+        Vis hjelpetekster
+      </Switch>
+    </Page.Block>
   );
 }
 
