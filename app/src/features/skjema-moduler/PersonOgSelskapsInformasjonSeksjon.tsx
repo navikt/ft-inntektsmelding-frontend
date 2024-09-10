@@ -146,9 +146,9 @@ const Intro = ({ opplysninger }: IntroProps) => {
   const fulltNavnSøker = slåSammenTilFulltNavn(person);
   const fornavnSøker = person.fornavn;
 
-  const { visHjelpetekster } = useHjelpetekst();
+  const { vis } = useHjelpetekst().visHjelpetekster;
 
-  if (!visHjelpetekster) {
+  if (!vis) {
     return null;
   }
 

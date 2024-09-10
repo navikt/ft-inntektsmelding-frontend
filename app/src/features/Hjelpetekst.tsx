@@ -72,8 +72,8 @@ export function HjelpetekstReadMore({
   header,
   children,
 }: Pick<ReadMoreProps, "header" | "children">) {
-  const { visHjelpetekster } = useHjelpetekst();
-  if (!visHjelpetekster) {
+  const { vis } = useHjelpetekst().visHjelpetekster;
+  if (!vis) {
     return null;
   }
 
@@ -81,9 +81,9 @@ export function HjelpetekstReadMore({
 }
 
 export function HjelpetekstAlert({ children }: Pick<AlertProps, "children">) {
-  const { visHjelpetekster } = useHjelpetekst();
+  const { vis } = useHjelpetekst().visHjelpetekster;
 
-  if (!visHjelpetekster) {
+  if (!vis) {
     return null;
   }
 
