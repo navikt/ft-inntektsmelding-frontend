@@ -15,10 +15,14 @@ import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { getRouteApi } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-const route = getRouteApi("/$id/kvittering");
+import { hentInntektsmeldingPdfUrl } from "~/api/queries";
+import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
+
+const route = getRouteApi("/$id");
 
 export const Kvittering = () => {
   const { id } = route.useParams();
+  const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
   useEffect(() => {
     setBreadcrumbs([
       {
@@ -31,6 +35,8 @@ export const Kvittering = () => {
       },
     ]);
   }, [id]);
+
+  const inntektsmeldingsId = gyldigInntektsmeldingSkjemaState?.id;
   return (
     <div className="mx-4">
       <div className="mt-12 p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
@@ -77,14 +83,18 @@ export const Kvittering = () => {
       </ExpansionCard>
       <HStack gap="2" justify="center" wrap={true}>
         <Button variant="primary">Gå til min side – arbeidsgiver</Button>
-        <Button
-          icon={<DownloadIcon />}
-          iconPosition="left"
-          onClick={() => alert("Denne funksjonen er ikke laget enda.")}
-          variant="secondary"
-        >
-          Last ned som PDF
-        </Button>
+        {inntektsmeldingsId && (
+          <Button
+            as="a"
+            download={`inntektsmelding-${id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(inntektsmeldingsId)}
+            icon={<DownloadIcon />}
+            iconPosition="left"
+            variant="secondary"
+          >
+            Last ned
+          </Button>
+        )}
       </HStack>
     </div>
   );

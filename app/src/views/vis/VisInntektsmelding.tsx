@@ -3,6 +3,7 @@ import { Button, Detail, Heading, HStack, VStack } from "@navikt/ds-react";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
+import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { formatDatoTidKort } from "~/utils.ts";
 import { Skjemaoppsummering } from "~/views/shared/Skjemaoppsummering.tsx";
@@ -11,6 +12,7 @@ const route = getRouteApi("/$id");
 
 export const VisInntektsmelding = () => {
   const { opplysninger, eksisterendeInntektsmeldinger } = route.useLoaderData();
+  const { id } = route.useParams();
   const { setInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
@@ -65,8 +67,14 @@ export const VisInntektsmelding = () => {
               Lukk
             </Button>
           </HStack>
-          <Button icon={<DownloadIcon />} variant="tertiary">
-            Last ned PDF
+          <Button
+            as="a"
+            download={`inntektsmelding-${id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(sisteInntektsmelding.id)}
+            icon={<DownloadIcon />}
+            variant="tertiary"
+          >
+            Last ned
           </Button>
         </HStack>
       </VStack>
