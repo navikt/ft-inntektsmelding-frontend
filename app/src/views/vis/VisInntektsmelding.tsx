@@ -45,8 +45,10 @@ export const VisInntektsmelding = () => {
           <Heading level="1" size="medium">
             Innsendt inntektsmelding
           </Heading>
-          {/*// TODO: trenger at data fra BE inneholder innsendt tidspunkt*/}
-          <Detail uppercase>sendt inn {formatDatoTidKort(new Date())}</Detail>
+          <Detail uppercase>
+            sendt inn{" "}
+            {formatDatoTidKort(sisteInntektsmelding.opprettetTidspunkt)}
+          </Detail>
         </VStack>
         {endreKnapp}
       </HStack>

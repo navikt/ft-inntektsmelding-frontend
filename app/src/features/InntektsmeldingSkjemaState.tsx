@@ -81,6 +81,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
       inkluderTom: z.boolean(),
     }),
   ),
+  opprettetTidspunkt: z.date().optional(),
 });
 
 export type InntektsmeldingSkjemaState = z.infer<

@@ -74,6 +74,11 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
     .optional(), // TODO: Når databasen er wipet, kan vi fjerne optional her.
 });
 
+export const InntektsmeldingResponseDtoSchema =
+  SendInntektsmeldingRequestDtoSchema.extend({
+    opprettetTidspunkt: z.string(),
+  });
+
 export type SendInntektsmeldingRequestDto = z.infer<
   typeof SendInntektsmeldingRequestDtoSchema
 >;
