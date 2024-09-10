@@ -67,19 +67,16 @@ export const VisInntektsmelding = () => {
               Lukk
             </Button>
           </HStack>
-          <Button icon={<DownloadIcon />} variant="tertiary">
-            Last ned PDF
+          <Button
+            as="a"
+            download={`inntektsmelding-${id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(sisteInntektsmelding.id)}
+            icon={<DownloadIcon />}
+            variant="tertiary"
+          >
+            Last ned
           </Button>
         </HStack>
-        <Button
-          as="a"
-          download={`inntektsmelding-${id}.pdf`}
-          href={hentInntektsmeldingPdfUrl(sisteInntektsmelding.id)}
-          icon={<DownloadIcon />}
-          variant="tertiary"
-        >
-          Last ned
-        </Button>
       </VStack>
     </section>
   );
