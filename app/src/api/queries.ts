@@ -7,6 +7,9 @@ import { logDev, navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
+export const hentInntektsmeldingPdfUrl = (inntektsmeldingId: string) =>
+  `${SERVER_URL}/inntektsmeldinger/${inntektsmeldingId}/pdf`;
+
 export function hentGrunnbeløpOptions() {
   return queryOptions({
     queryKey: ["GRUNNBELØP"],
@@ -108,9 +111,7 @@ export async function hentOpplysningerData(uuid: string) {
   const parsedJson = opplysningerSchema.safeParse(json);
 
   if (!parsedJson.success) {
-    // TODO: Har med en error-logger her, bør fjernes før vi går i prod
-    // eslint-disable-next-line no-console
-    console.error(parsedJson.error);
+    logDev("error", parsedJson.error);
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
   return parsedJson.data;
