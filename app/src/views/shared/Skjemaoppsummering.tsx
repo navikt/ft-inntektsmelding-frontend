@@ -21,7 +21,6 @@ export const Skjemaoppsummering = ({
   opplysninger,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
-  // TODO: bør vurdere noe cache av preload av routes ved hover. Fører til at hover på hver "Endre svar" trigger alle netterkskall på ny.
   // TODO: bør vi ha en deepEquals mellom current og forrige, og ikke tillate submit dersom ikke faktisk har gjort en endring.
 
   return (
