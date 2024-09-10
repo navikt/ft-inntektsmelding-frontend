@@ -83,7 +83,7 @@ export const Kvittering = () => {
           onClick={() => alert("Denne funksjonen er ikke laget enda.")}
           variant="secondary"
         >
-          Last ned som PDF
+          Last ned
         </Button>
       </HStack>
     </div>

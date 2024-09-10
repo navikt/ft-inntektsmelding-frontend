@@ -69,6 +69,9 @@ export const VisInntektsmelding = () => {
             Last ned PDF
           </Button>
         </HStack>
+        <Button icon={<DownloadIcon />} variant="tertiary">
+          Last ned
+        </Button>
       </VStack>
     </section>
   );
