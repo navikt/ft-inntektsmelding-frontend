@@ -12,6 +12,7 @@ const route = getRouteApi("/$id");
 
 export const VisInntektsmelding = () => {
   const { opplysninger, eksisterendeInntektsmeldinger } = route.useLoaderData();
+  const { id } = route.useParams();
   const { setInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
@@ -72,7 +73,7 @@ export const VisInntektsmelding = () => {
         </HStack>
         <Button
           as="a"
-          download={`inntektsmelding-${sisteInntektsmelding.id}.pdf`}
+          download={`inntektsmelding-${id}.pdf`}
           href={hentInntektsmeldingPdfUrl(sisteInntektsmelding.id)}
           icon={<DownloadIcon />}
           variant="tertiary"

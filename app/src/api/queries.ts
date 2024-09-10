@@ -7,7 +7,7 @@ import { logDev, navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
-export const hentInntektsmeldingPdfUrl = (id: string) =>
+export const hentInntektsmeldingPdfUrl = (id: number) =>
   `${SERVER_URL}/imdialog//last-ned-pdf?id=${id}`;
 
 export function hentGrunnbeløpOptions() {
