@@ -113,3 +113,15 @@ export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
 }
 
 export const beløpSchema = z.union([z.string(), z.number()]);
+
+export const isDev = import.meta.env.DEV;
+
+export function logDev(
+  level: "info" | "warn" | "error",
+  ...message: unknown[]
+) {
+  if (isDev) {
+    // eslint-disable-next-line no-console
+    console[level](...message);
+  }
+}

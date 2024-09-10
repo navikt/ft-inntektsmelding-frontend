@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models";
-import { navnMedStorBokstav } from "~/utils.ts";
+import { logDev, navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
@@ -61,9 +61,8 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
     .safeParse(json);
 
   if (!parsedJson.success) {
-    // TODO: Fjern før produksjon
-    // eslint-disable-next-line no-console
-    console.log(parsedJson.error);
+    logDev("error", parsedJson.error);
+
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 

@@ -7,7 +7,7 @@ import {
   ÅrsaksTypeSchema,
   NaturalytelseTypeSchema,
 } from "~/types/api-models.ts";
-import { beløpSchema } from "~/utils.ts";
+import { beløpSchema, logDev } from "~/utils.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
@@ -127,13 +127,8 @@ export const InntektsmeldingSkjemaStateProvider = ({
   const gyldigInntektsmeldingSkjemaState =
     InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
 
-  // TODO: Fjern før produksjon
   if (!gyldigInntektsmeldingSkjemaState.success) {
-    // eslint-disable-next-line no-console
-    console.error(
-      "InntektsmeldingSkjemaState er ikke gyldig",
-      gyldigInntektsmeldingSkjemaState.error,
-    );
+    logDev("error", gyldigInntektsmeldingSkjemaState.error);
   }
 
   return (
