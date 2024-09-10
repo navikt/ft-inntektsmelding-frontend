@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
 
 export function leggTilGenitiv(navn: string) {
@@ -36,12 +38,16 @@ export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export function formatKroner(kroner: number) {
+export function formatKroner(kroner: number | string | undefined) {
+  if (kroner === undefined) {
+    return "";
+  }
+
   return Intl.NumberFormat("nb-no", {
     style: "currency",
     currency: "NOK",
     maximumFractionDigits: 0,
-  }).format(kroner);
+  }).format(Number(kroner));
 }
 
 export function formatDatoLang(dato: Date) {
@@ -59,6 +65,18 @@ export function formatDatoKort(dato: Date) {
     month: "2-digit",
     day: "2-digit",
   }).format(dato);
+}
+
+export function formatDatoTidKort(dato: Date) {
+  return new Intl.DateTimeFormat("nb-no", {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  })
+    .format(dato)
+    .replace(", ", " kl ");
 }
 
 export function formatIsoDatostempel(dato: Date) {
@@ -92,4 +110,18 @@ export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
   }, 0);
 
   return summerteInntekter / (inntekter.length || 1);
+}
+
+export const beløpSchema = z.union([z.string(), z.number()]);
+
+export const isDev = import.meta.env.DEV;
+
+export function logDev(
+  level: "info" | "warn" | "error",
+  ...message: unknown[]
+) {
+  if (isDev) {
+    // eslint-disable-next-line no-console
+    console[level](...message);
+  }
 }

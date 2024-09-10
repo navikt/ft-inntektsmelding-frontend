@@ -1,7 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
-import { navnMedStorBokstav } from "~/utils.ts";
+import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
+import { InntektsmeldingResponseDtoSchema } from "~/types/api-models";
+import { logDev, navnMedStorBokstav } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
@@ -40,6 +42,57 @@ const grunnbeløpSchema = z.object({
   omregningsfaktor: z.number(),
   virkningstidspunktForMinsteinntekt: z.string(),
 });
+
+export async function hentEksisterendeInntektsmeldinger(uuid: string) {
+  const response = await fetch(
+    `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
+  );
+
+  if (response.status === 404) {
+    throw new Error("Forespørsel ikke funnet");
+  }
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente forespørsel");
+  }
+  const json = await response.json();
+  const parsedJson = z.array(InntektsmeldingResponseDtoSchema).safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  return parsedJson.data.map(
+    (inntektsmelding) =>
+      ({
+        kontaktperson: inntektsmelding.kontaktperson,
+        refusjonsbeløpPerMåned: inntektsmelding.refusjon ?? 0,
+        refusjonsendringer: (inntektsmelding.refusjonsendringer ?? []).map(
+          (periode) => ({
+            ...periode,
+            fom: new Date(periode.fom),
+          }),
+        ),
+        endringIRefusjon: (inntektsmelding.refusjonsendringer ?? []).length > 0,
+        naturalytelserSomMistes:
+          inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
+            navn: periode.naturalytelsetype,
+            fom: new Date(periode.fom),
+            beløp: periode.beløp,
+            inkluderTom: periode.tom !== undefined,
+            tom: periode.tom ? new Date(periode.tom) : undefined,
+          })) ?? [],
+        inntektEndringsÅrsak: undefined, // TODO: Send inn når BE har støtte for det
+        inntekt: inntektsmelding.inntekt,
+        skalRefunderes: Boolean(inntektsmelding.refusjon),
+        misterNaturalytelser:
+          (inntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) > 0,
+        opprettetTidspunkt: new Date(inntektsmelding.opprettetTidspunkt),
+      }) satisfies InntektsmeldingSkjemaStateValid,
+  );
+}
 
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(

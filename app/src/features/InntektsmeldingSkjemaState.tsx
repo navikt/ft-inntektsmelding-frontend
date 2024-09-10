@@ -7,6 +7,7 @@ import {
   ÅrsaksTypeSchema,
   NaturalytelseTypeSchema,
 } from "~/types/api-models.ts";
+import { beløpSchema, logDev } from "~/utils.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
@@ -17,31 +18,31 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       telefonnummer: z.string(),
     })
     .optional(),
-  inntekt: z.number(),
+  inntekt: beløpSchema,
   inntektEndringsÅrsak: z
     .object({
       årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: z.number(),
-      fom: z.string().optional(),
-      tom: z.string().optional(),
+      korrigertInntekt: beløpSchema,
+      fom: z.date().optional(),
+      tom: z.date().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean().optional(),
-  refusjonsbeløpPerMåned: z.number(),
+  refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
-      fom: z.string(),
-      beløp: z.number(),
+      fom: z.date().optional(),
+      beløp: beløpSchema,
     }),
   ),
   misterNaturalytelser: z.boolean().optional(),
   naturalytelserSomMistes: z.array(
     z.object({
       navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-      beløp: z.number(),
-      fom: z.string(),
-      tom: z.string().optional(),
+      beløp: beløpSchema,
+      fom: z.date().optional(),
+      tom: z.date().optional(),
       inkluderTom: z.boolean(),
     }),
   ),
@@ -52,34 +53,35 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     navn: z.string(),
     telefonnummer: z.string(),
   }),
-  inntekt: z.number(),
+  inntekt: beløpSchema,
   inntektEndringsÅrsak: z
     .object({
       årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: z.number(),
-      fom: z.string(),
-      tom: z.string().optional(),
+      korrigertInntekt: beløpSchema,
+      fom: z.date(),
+      tom: z.date().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean(),
-  refusjonsbeløpPerMåned: z.number(),
+  refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
-      fom: z.string(),
-      beløp: z.number(),
+      fom: z.date(),
+      beløp: beløpSchema,
     }),
   ),
   misterNaturalytelser: z.boolean(),
   naturalytelserSomMistes: z.array(
     z.object({
       navn: NaturalytelseTypeSchema,
-      beløp: z.number(),
-      fom: z.string(),
-      tom: z.string().optional(),
+      beløp: beløpSchema,
+      fom: z.date(),
+      tom: z.date().optional(),
       inkluderTom: z.boolean(),
     }),
   ),
+  opprettetTidspunkt: z.date().optional(),
 });
 
 export type InntektsmeldingSkjemaState = z.infer<
@@ -122,12 +124,19 @@ export const InntektsmeldingSkjemaStateProvider = ({
     defaultSkjemaState,
     InntektsmeldingSkjemaStateSchema,
   );
+
+  const gyldigInntektsmeldingSkjemaState =
+    InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
+
+  if (!gyldigInntektsmeldingSkjemaState.success) {
+    logDev("error", gyldigInntektsmeldingSkjemaState.error);
+  }
+
   return (
     <InntektsmeldingSkjemaStateContext.Provider
       value={{
         inntektsmeldingSkjemaState: state,
-        gyldigInntektsmeldingSkjemaState:
-          InntektsmeldingSkjemaStateSchemaValidated.safeParse(state).data,
+        gyldigInntektsmeldingSkjemaState: gyldigInntektsmeldingSkjemaState.data,
         setInntektsmeldingSkjemaState: setState,
       }}
     >

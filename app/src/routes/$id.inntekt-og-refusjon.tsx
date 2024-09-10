@@ -52,14 +52,14 @@ export type InntektOgRefusjonForm = {
 
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";
-  beløp: number;
-  fom: string;
-  tom?: string;
+  beløp: number | string;
+  fom?: Date;
+  tom?: Date;
   inkluderTom?: JaNei;
 };
 
 function InntektOgRefusjon() {
-  const opplysninger = useLoaderData({ from: "/$id" });
+  const { opplysninger } = useLoaderData({ from: "/$id" });
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();

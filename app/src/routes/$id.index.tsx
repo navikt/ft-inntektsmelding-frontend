@@ -1,11 +1,21 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, getRouteApi } from "@tanstack/react-router";
+
+const route = getRouteApi("/$id");
 
 export const Route = createFileRoute("/$id/")({
-  loader: () => {
-    throw redirect({
-      from: "/$id",
-      to: "/$id/dine-opplysninger",
-      replace: true,
-    });
+  component: () => {
+    const params = route.useParams();
+    const navigate = route.useNavigate();
+    const { eksisterendeInntektsmeldinger } = route.useLoaderData();
+
+    if (eksisterendeInntektsmeldinger[0] === undefined) {
+      return navigate({
+        from: "/$id",
+        to: "/$id/dine-opplysninger",
+        replace: true,
+      });
+    }
+
+    return navigate({ to: "/$id/vis", params, replace: true });
   },
 });

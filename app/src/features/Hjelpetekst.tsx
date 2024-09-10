@@ -73,7 +73,6 @@ export function HjelpetekstReadMore({
   children,
 }: Pick<ReadMoreProps, "header" | "children">) {
   const { vis } = useHjelpetekst().visHjelpetekster;
-
   if (!vis) {
     return null;
   }

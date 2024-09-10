@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { beløpSchema } from "~/utils.ts";
+
 export type MånedsinntektResponsDto = {
   fom: string;
   tom: string;
@@ -15,7 +17,6 @@ export const YtelsetypeSchema = z.enum([
   "OPPLÆRINGSPENGER",
   "OMSORGSPENGER",
 ]);
-export type Ytelsetype = z.infer<typeof YtelsetypeSchema>;
 
 export const NaturalytelseTypeSchema = z.enum([
   "ELEKTRISK_KOMMUNIKASJON",
@@ -41,45 +42,47 @@ export const NaturalytelseTypeSchema = z.enum([
 
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
 
-export type SendInntektsmeldingRequestDto = {
-  foresporselUuid: string;
-  aktorId: string;
-  ytelse: Ytelsetype;
-  arbeidsgiverIdent: string;
-  kontaktperson: KontaktpersonDto;
-  startdato: string;
-  inntekt: number;
-  refusjon?: number;
-  refusjonsendringer: RefusjonsendringRequestDto[];
-  bortfaltNaturalytelsePerioder: NaturalytelseRequestDto[];
-};
+export const SendInntektsmeldingRequestDtoSchema = z.object({
+  foresporselUuid: z.string(),
+  aktorId: z.string(),
+  ytelse: YtelsetypeSchema,
+  arbeidsgiverIdent: z.string(),
+  kontaktperson: z.object({
+    telefonnummer: z.string(),
+    navn: z.string(),
+  }),
+  startdato: z.string(),
+  inntekt: beløpSchema,
+  refusjon: beløpSchema.optional(),
+  refusjonsendringer: z
+    .array(
+      z.object({
+        fom: z.string(),
+        beløp: beløpSchema,
+      }),
+    )
+    .optional(),
+  bortfaltNaturalytelsePerioder: z
+    .array(
+      z.object({
+        fom: z.string(),
+        tom: z.string().optional(),
+        beløp: beløpSchema,
+        naturalytelsetype: NaturalytelseTypeSchema,
+      }),
+    )
+    .optional(), // TODO: Når databasen er wipet, kan vi fjerne optional her.
+});
+
+export const InntektsmeldingResponseDtoSchema =
+  SendInntektsmeldingRequestDtoSchema.extend({
+    opprettetTidspunkt: z.string(),
+  });
+
+export type SendInntektsmeldingRequestDto = z.infer<
+  typeof SendInntektsmeldingRequestDtoSchema
+>;
 
 export const ÅrsaksTypeSchema = z.enum(["Tariffendring", "FeilInntekt"]);
 
 export type ÅrsaksType = z.infer<typeof ÅrsaksTypeSchema>;
-
-// @ts-expect-error -- Taes i bruk senere når backend støtter endretårsak
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type InntektEndretÅrsakDto = {
-  korrigertInntekt: number;
-  årsak: ÅrsaksType;
-  fom?: string;
-  tom?: string;
-};
-
-type KontaktpersonDto = {
-  telefonnummer: string;
-  navn: string;
-};
-
-export type RefusjonsendringRequestDto = {
-  fom: string;
-  beløp: number;
-};
-
-export type NaturalytelseRequestDto = {
-  fom: string;
-  tom?: string;
-  beløp: number;
-  naturalytelsetype: Naturalytelsetype;
-};

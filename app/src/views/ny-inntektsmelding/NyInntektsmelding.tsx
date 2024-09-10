@@ -10,7 +10,7 @@ const route = getRouteApi("/$id");
 
 export const NyInntektsmelding = () => {
   const { id } = route.useParams();
-  const opplysninger = route.useLoaderData();
+  const { opplysninger } = route.useLoaderData();
   const location = useLocation();
 
   useEffect(() => {

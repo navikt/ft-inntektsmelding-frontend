@@ -18,8 +18,8 @@ import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx
 import type { Naturalytelsetype } from "~/types/api-models.ts";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
-  fom: "",
-  tom: "",
+  fom: undefined,
+  tom: undefined,
   beløp: 0,
   navn: "" as const,
   inkluderTom: undefined,

@@ -185,9 +185,10 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
 }
 
 export const ENDRING_I_REFUSJON_TEMPLATE = {
-  fom: "",
+  fom: undefined,
   beløp: 0,
 };
+
 function RefusjonsPerioder() {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
