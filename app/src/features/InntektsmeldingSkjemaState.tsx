@@ -83,7 +83,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
   ),
   // TODO: Disse burde flyttes til en egen schema for eksisterende inntektsmeldinger
   opprettetTidspunkt: z.date().optional(),
-  inntektsmeldingId: z.string().optional(),
+  id: z.number().optional(),
 });
 
 export type InntektsmeldingSkjemaState = z.infer<

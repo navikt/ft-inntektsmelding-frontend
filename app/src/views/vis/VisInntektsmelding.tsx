@@ -72,10 +72,8 @@ export const VisInntektsmelding = () => {
         </HStack>
         <Button
           as="a"
-          download={`inntektsmelding-${sisteInntektsmelding.inntektsmeldingId}.pdf`}
-          href={hentInntektsmeldingPdfUrl(
-            sisteInntektsmelding.inntektsmeldingId,
-          )}
+          download={`inntektsmelding-${sisteInntektsmelding.id}.pdf`}
+          href={hentInntektsmeldingPdfUrl(sisteInntektsmelding.id)}
           icon={<DownloadIcon />}
           variant="tertiary"
         >
