@@ -17,11 +17,13 @@ import { useEffect } from "react";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
+import { formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils";
 
 const route = getRouteApi("/$id");
 
 export const Kvittering = () => {
   const { id } = route.useParams();
+  const { opplysninger } = route.useLoaderData();
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
   useEffect(() => {
     setBreadcrumbs([
@@ -43,21 +45,22 @@ export const Kvittering = () => {
         <CheckmarkIcon aria-hidden fontSize="2.5em" />
       </div>
       <Heading className="mt-6 mb-12 text-center" level="2" size="small">
-        Inntektsmelding for FULLT NAVN er sendt
+        Inntektsmelding for {slåSammenTilFulltNavn(opplysninger.person)} er
+        sendt.
       </Heading>
       <Alert className="mb-12" variant="success">
         <Heading className="mb-2" level="3" size="medium">
           Vi har mottatt inntektsmeldingen
         </Heading>
         <BodyLong>
-          TODO: Saksbehandler vil nå se på inntektsmeldingen for å
-          viderebehandle søknaden om YTELSE. Vi tar kontakt om vi trenger mer
-          informasjon fra dere.
+          Saksbehandler vil nå se på inntektsmeldingen for å viderebehandle
+          søknaden om {formatYtelsesnavn(opplysninger.ytelse)}. Vi tar kontakt
+          om vi trenger mer informasjon fra dere.
         </BodyLong>
       </Alert>
       <BodyLong className="mb-12">
-        TODO: Du kan laste ned kvitteringen som en PDF-fil. Denne kan du lagre
-        og dele med den ansatte.
+        Du kan laste ned kvitteringen som en PDF-fil. Denne kan du lagre og dele
+        med den ansatte.
       </BodyLong>
       <ExpansionCard aria-labelledby="prosessen-videre" className="mb-12">
         <ExpansionCard.Header>
@@ -75,14 +78,16 @@ export const Kvittering = () => {
         </ExpansionCard.Header>
         <ExpansionCard.Content>
           <BodyLong>
-            TODO: Saksbehandler vil nå se på inntektsmeldingen for å
-            viderebehandle søknaden om YTELSE. Vi tar kontakt om vi trenger mer
-            informasjon fra dere.
+            Saksbehandler vil nå se på inntektsmeldingen for å viderebehandle
+            søknaden om {formatYtelsesnavn(opplysninger.ytelse)}. Vi tar kontakt
+            om vi trenger mer informasjon fra dere.
           </BodyLong>
         </ExpansionCard.Content>
       </ExpansionCard>
       <HStack gap="2" justify="center" wrap={true}>
-        <Button variant="primary">Gå til min side – arbeidsgiver</Button>
+        <Button as="a" href="/min-side-arbeidsgiver" variant="primary">
+          Gå til min side – arbeidsgiver
+        </Button>
         {inntektsmeldingsId && (
           <Button
             as="a"
