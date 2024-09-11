@@ -5,7 +5,7 @@ import { beløpSchema } from "~/utils.ts";
 export type MånedsinntektResponsDto = {
   fom: string;
   tom: string;
-  beløp: number;
+  beløp?: number;
   arbeidsgiverIdent: string;
 };
 

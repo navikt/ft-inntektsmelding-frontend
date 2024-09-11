@@ -1,5 +1,6 @@
 import { PencilIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
   BodyLong,
   BodyShort,
   Button,
@@ -58,7 +59,6 @@ export function Inntekt({ opplysninger }: InntektProps) {
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
-      {/*TODO: Hva skal vi vise når man ikke finner inntekt siste 3mnd. Løse dette i BE ved at beløp er null*/}
       <InformasjonsseksjonMedKilde
         kilde="Fra A-Ordningen"
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
@@ -67,18 +67,31 @@ export function Inntekt({ opplysninger }: InntektProps) {
           {inntekter?.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}:</span>
-              <Label as="span">{formatKroner(inntekt.beløp)}</Label>
+              <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
             </Fragment>
           ))}
         </HGrid>
       </InformasjonsseksjonMedKilde>
+
+      {inntekter.some((inntekt) => inntekt.beløp === undefined) && (
+        <Alert variant="warning">
+          <Heading size="xsmall" spacing>
+            Lønnsopplysnigene inneholder måneder uten rapportert inntekt
+          </Heading>
+          <BodyShort>
+            Vi estimerer beregnet månedslønn til et snitt av innrapportert
+            inntekt for de siste tre månedene. Hvis dere ser at det skal være en
+            annen beregnet månedslønn, må dere endre dette manuelt.
+          </BodyShort>
+        </Alert>
+      )}
 
       {isOpen ? (
         <EndreMånedslønn onClose={onClose} opplysninger={opplysninger} />
       ) : (
         <>
           <BodyShort>Beregnet månedslønn</BodyShort>
-          <strong>{formatKroner(gjennomsnittInntekt(inntekter ?? []))}</strong>
+          <strong>{formatKroner(gjennomsnittInntekt(inntekter))}</strong>
           <BodyShort>
             Gjennomsnittet av de siste tre månedene før {førsteDag}
           </BodyShort>

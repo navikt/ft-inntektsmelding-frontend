@@ -71,7 +71,7 @@ function InntektOgRefusjon() {
     useInntektsmeldingSkjema();
 
   const gjennomsnikkInntektFraAOrdning = gjennomsnittInntekt(
-    opplysninger.inntekter ?? [],
+    opplysninger.inntekter,
   );
 
   const formMethods = useForm<InntektOgRefusjonForm>({

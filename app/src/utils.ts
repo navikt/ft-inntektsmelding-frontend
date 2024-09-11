@@ -106,7 +106,7 @@ export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
     return 0;
   }
   const summerteInntekter = inntekter.reduce((sum, inntekt) => {
-    return sum + inntekt.beløp;
+    return sum + (inntekt?.beløp || 0);
   }, 0);
 
   return summerteInntekter / (inntekter.length || 1);
