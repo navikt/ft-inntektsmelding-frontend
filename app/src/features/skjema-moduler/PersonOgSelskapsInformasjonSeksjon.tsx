@@ -1,4 +1,4 @@
-import { ArrowRightIcon, FloppydiskIcon } from "@navikt/aksel-icons";
+import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -113,24 +113,14 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
             </Alert>
           </InformasjonsseksjonMedKilde>
 
-          <div className="flex justify-center col-span-2">
-            <Button
-              icon={<ArrowRightIcon />}
-              iconPosition="right"
-              type="submit"
-              variant="primary"
-            >
-              Bekreft og gå videre
-            </Button>
-          </div>
-        </div>
-        <div className="flex justify-center mt-3">
           <Button
-            icon={<FloppydiskIcon />}
-            iconPosition="left"
-            variant="tertiary"
+            className="w-fit self-center"
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            type="submit"
+            variant="primary"
           >
-            Fortsett senere
+            Bekreft og gå videre
           </Button>
         </div>
       </form>
