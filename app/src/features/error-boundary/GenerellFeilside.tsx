@@ -20,9 +20,6 @@ export const GenerellFeilside = () => {
             <VStack gap="16">
               <VStack align="start" gap="12">
                 <div>
-                  <BodyShort size="small" textColor="subtle">
-                    Statuskode 500
-                  </BodyShort>
                   <Heading level="1" size="large" spacing>
                     Beklager, noe gikk galt.
                   </Heading>
