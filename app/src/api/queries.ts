@@ -139,16 +139,14 @@ const opplysningerSchema = z.object({
     organisasjonNavn: z.string(),
     organisasjonNummer: z.string(),
   }),
-  inntekter: z
-    .array(
-      z.object({
-        fom: z.string(),
-        tom: z.string(),
-        beløp: z.number(),
-        arbeidsgiverIdent: z.string(),
-      }),
-    )
-    .optional(),
+  inntekter: z.array(
+    z.object({
+      fom: z.string(),
+      tom: z.string(),
+      beløp: z.number().optional(),
+      arbeidsgiverIdent: z.string(),
+    }),
+  ),
   startdatoPermisjon: z.string(),
   ytelse: z.enum([
     "FORELDREPENGER",
