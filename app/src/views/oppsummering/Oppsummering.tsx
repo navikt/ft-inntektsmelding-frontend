@@ -100,7 +100,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
-      };
+      } satisfies SendInntektsmeldingRequestDto;
 
       return sendInntektsmelding(inntektsmelding);
     },

@@ -1,35 +1,36 @@
 export const enkeltGrunnlagResponse = {
   person: {
-    aktørId: "1234567890123",
-    fødselsnummer: "12345678901",
-    fornavn: "Ola",
-    mellomnavn: "Normann",
-    etternavn: "Hansen",
-  },
-  innsender: {
-    fornavn: "Kari",
-    mellomnavn: "Normann",
-    etternavn: "Hansen",
-    telefon: "12345678",
+    fornavn: "UNDERFUNDIG",
+    etternavn: "DYREFLOKK",
+    fødselsnummer: "27527827812",
+    aktørId: "2715347149890",
   },
   arbeidsgiver: {
-    organisasjonNavn: "Bedrift AS",
-    organisasjonNummer: "123456789",
+    organisasjonNavn: "Papir- og pappvareproduksjon el.",
+    organisasjonNummer: "810007842",
+  },
+  innsender: {
+    fornavn: "BERØMT",
+    etternavn: "FLYTTELASS",
   },
   inntekter: [
     {
-      fom: "2023-01-01",
-      tom: "2023-12-31",
-      beløp: 500_000,
-      arbeidsgiverIdent: "123456789",
+      fom: "2024-02-01",
+      tom: "2024-02-29",
+      arbeidsgiverIdent: "810007842",
     },
     {
-      fom: "2022-01-01",
-      tom: "2022-12-31",
-      beløp: 480_000,
-      arbeidsgiverIdent: "123456789",
+      fom: "2024-03-01",
+      tom: "2024-03-31",
+      arbeidsgiverIdent: "810007842",
+    },
+    {
+      fom: "2024-04-01",
+      tom: "2024-04-30",
+      arbeidsgiverIdent: "810007842",
     },
   ],
-  startdatoPermisjon: "2024-03-01",
+  startdatoPermisjon: "2024-05-30",
   ytelse: "FORELDREPENGER" as const,
+  forespørselUuid: "1",
 };

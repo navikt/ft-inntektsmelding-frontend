@@ -1,6 +1,7 @@
 import { Page } from "@playwright/test";
 
 import { OpplysningerDto } from "~/api/queries";
+import { logDev } from "~/utils";
 
 import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";

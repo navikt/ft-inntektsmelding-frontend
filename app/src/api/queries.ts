@@ -125,8 +125,8 @@ const opplysningerSchema = z.object({
     fornavn: z.string().transform(navnMedStorBokstav),
     mellomnavn: z
       .string()
-      .optional()
-      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || "")),
+      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || ""))
+      .optional(),
     etternavn: z.string().transform(navnMedStorBokstav),
   }),
   innsender: z.object({
