@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { ingenEksisterendeInntektsmeldinger } from "tests/mocks/eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "tests/mocks/grunnbeløp";
 import { enkeltGrunnlagResponse } from "tests/mocks/grunnlag";
 
-test("should load inntektsmelding page", async ({ page }) => {
+test('burde vise "dine opplysninger" riktig', async ({ page }) => {
   await page.route(
     "**/*/imdialog/grunnlag?foresporselUuid=1",
     async (route) => {
@@ -15,7 +16,7 @@ test("should load inntektsmelding page", async ({ page }) => {
   await page.route(
     "**/*/imdialog/inntektsmeldinger?foresporselUuid=1",
     async (route) => {
-      await route.fulfill({ json: [] });
+      await route.fulfill({ json: ingenEksisterendeInntektsmeldinger });
     },
   );
 
