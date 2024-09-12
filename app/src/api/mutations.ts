@@ -1,4 +1,9 @@
-import type { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
+import { mapInntektsmeldingResponseTilValidState } from "~/api/queries.ts";
+import {
+  InntektsmeldingResponseDtoSchema,
+  SendInntektsmeldingRequestDto,
+} from "~/types/api-models.ts";
+import { logDev } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
@@ -17,5 +22,14 @@ export async function sendInntektsmelding(
     throw new Error("Noe gikk galt.");
   }
 
-  return (await response.json()) as unknown;
+  const json = await response.json();
+  const parsedJson = InntektsmeldingResponseDtoSchema.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  return mapInntektsmeldingResponseTilValidState(parsedJson.data);
 }
