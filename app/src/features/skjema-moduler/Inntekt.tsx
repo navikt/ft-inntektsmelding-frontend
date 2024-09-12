@@ -76,7 +76,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       {inntekter.some((inntekt) => inntekt.beløp === undefined) && (
         <Alert variant="warning">
           <Heading size="xsmall" spacing>
-            Lønnsopplysnigene inneholder måneder uten rapportert inntekt
+            Lønnsopplysningene inneholder måneder uten rapportert inntekt
           </Heading>
           <BodyShort>
             Vi estimerer beregnet månedslønn til et snitt av innrapportert
