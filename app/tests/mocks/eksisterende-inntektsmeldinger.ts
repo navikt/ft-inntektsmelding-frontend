@@ -1,1 +1,1 @@
-export const ingenEksisterendeInntektsmeldinger = [];
+export const ingenEksisterendeInntektsmeldingerResponse = [];

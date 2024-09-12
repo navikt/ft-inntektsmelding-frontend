@@ -1,24 +1,14 @@
 import { expect, test } from "@playwright/test";
-import { ingenEksisterendeInntektsmeldinger } from "tests/mocks/eksisterende-inntektsmeldinger";
-import { grunnbeløpResponse } from "tests/mocks/grunnbeløp";
-import { enkeltGrunnlagResponse } from "tests/mocks/grunnlag";
+import {
+  mockGrunnbeløp,
+  mockGrunnlag,
+  mockInntektsmeldinger,
+} from "tests/mocks/utils";
 
 test('burde vise "dine opplysninger" riktig', async ({ page }) => {
-  await page.route(
-    "**/*/imdialog/grunnlag?foresporselUuid=1",
-    async (route) => {
-      await route.fulfill({ json: enkeltGrunnlagResponse });
-    },
-  );
-  await page.route("https://g.nav.no/api/v1/grunnbel%C3%B8p", async (route) => {
-    await route.fulfill({ json: grunnbeløpResponse });
-  });
-  await page.route(
-    "**/*/imdialog/inntektsmeldinger?foresporselUuid=1",
-    async (route) => {
-      await route.fulfill({ json: ingenEksisterendeInntektsmeldinger });
-    },
-  );
+  await mockGrunnlag({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
 
   await page.goto("/fp-im-dialog/1/dine-opplysninger");
 

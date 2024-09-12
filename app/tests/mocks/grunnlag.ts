@@ -31,5 +31,5 @@ export const enkeltGrunnlagResponse = {
     },
   ],
   startdatoPermisjon: "2024-03-01",
-  ytelse: "FORELDREPENGER",
-} as const;
+  ytelse: "FORELDREPENGER" as const,
+};
