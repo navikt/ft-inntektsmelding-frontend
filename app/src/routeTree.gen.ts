@@ -127,17 +127,105 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IdRoute: IdRoute.addChildren({
-    IdDineOpplysningerRoute,
-    IdInntektOgRefusjonRoute,
-    IdKvitteringRoute,
-    IdOppsummeringRoute,
-    IdVisRoute,
-    IdIndexRoute,
-  }),
-  EndreIdRoute,
-})
+interface IdRouteChildren {
+  IdDineOpplysningerRoute: typeof IdDineOpplysningerRoute
+  IdInntektOgRefusjonRoute: typeof IdInntektOgRefusjonRoute
+  IdKvitteringRoute: typeof IdKvitteringRoute
+  IdOppsummeringRoute: typeof IdOppsummeringRoute
+  IdVisRoute: typeof IdVisRoute
+  IdIndexRoute: typeof IdIndexRoute
+}
+
+const IdRouteChildren: IdRouteChildren = {
+  IdDineOpplysningerRoute: IdDineOpplysningerRoute,
+  IdInntektOgRefusjonRoute: IdInntektOgRefusjonRoute,
+  IdKvitteringRoute: IdKvitteringRoute,
+  IdOppsummeringRoute: IdOppsummeringRoute,
+  IdVisRoute: IdVisRoute,
+  IdIndexRoute: IdIndexRoute,
+}
+
+const IdRouteWithChildren = IdRoute._addFileChildren(IdRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/$id': typeof IdRouteWithChildren
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/$id/': typeof IdIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/$id': typeof IdIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/$id': typeof IdRouteWithChildren
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/$id/': typeof IdIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/$id'
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/$id/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/$id'
+  id:
+    | '__root__'
+    | '/$id'
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/$id/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IdRoute: typeof IdRouteWithChildren
+  EndreIdRoute: typeof EndreIdRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IdRoute: IdRouteWithChildren,
+  EndreIdRoute: EndreIdRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
