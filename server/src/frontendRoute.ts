@@ -5,7 +5,7 @@ import {
   fetchDecoratorHtml,
   injectDecoratorServerSide,
 } from "@navikt/nav-dekoratoren-moduler/ssr/index.js";
-import { addLocalViteServerHandler } from "@navikt/vite-mode";
+import { addViteModeHtmlToResponse } from "@navikt/vite-mode";
 import express, { Router } from "express";
 
 import config from "./config.js";
@@ -28,7 +28,7 @@ export function setupStaticRoutes(router: Router) {
 
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
-    addLocalViteServerHandler(router, {
+    addViteModeHtmlToResponse(router, {
       subpath: config.app.nestedPath,
       port: "5173",
       useNonce: false,
