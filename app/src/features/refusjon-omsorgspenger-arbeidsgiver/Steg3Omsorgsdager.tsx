@@ -17,6 +17,7 @@ import {
   TextField,
   useDatepicker,
   useRangeDatepicker,
+  VStack,
 } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
@@ -46,9 +47,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         <RadioGroup
           legend="Har dere dekket de 10 første omsorgsdagene i år?"
           name="har-dekket-10-første-omsorgsdager"
-          onChange={(event) =>
-            setHarDekket10FørsteOmsorgsdager(event.target.value)
-          }
+          onChange={setHarDekket10FørsteOmsorgsdager}
           value={harDekket10FørsteOmsorgsdager}
         >
           <Radio value="ja">Ja</Radio>
@@ -56,16 +55,19 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         </RadioGroup>
         {harDekket10FørsteOmsorgsdager === "nei" && (
           <Alert variant="info">
-            <BodyLong>
-              Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår for
-              ansatte som har barn under 12 år, eller som fyller 12 år det
-              gjeldende året. Du kan søke om utbetaling fra NAV fra og med den
-              11. dagen.
-            </BodyLong>
-            <BodyLong>
-              Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre
-              barn under 12 år, kan du søke om utbetaling fra første fraværsdag.
-            </BodyLong>
+            <VStack gap="4">
+              <BodyLong>
+                Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår
+                for ansatte som har barn under 12 år, eller som fyller 12 år det
+                gjeldende året. Du kan søke om utbetaling fra NAV fra og med den
+                11. dagen.
+              </BodyLong>
+              <BodyLong>
+                Hvis den ansatte har kronisk sykt barn over 13 år, og ingen
+                andre barn under 12 år, kan du søke om utbetaling fra første
+                fraværsdag.
+              </BodyLong>
+            </VStack>
           </Alert>
         )}
         <FraværHeleDagen />
@@ -107,43 +109,50 @@ const FraværHeleDagen = () => {
   });
 
   return (
-    <div>
+    <VStack gap="4">
       <Heading level="3" size="small">
         Oppgi dager hvor den ansatte har hatt fravær hele dagen
       </Heading>
       {perioder.map((periode) => (
         <DatePicker {...datepickerProps} key={periode.key}>
-          <HStack gap="4" justify="center" wrap>
+          <HStack align="center" gap="4" justify="center" wrap>
             <DatePicker.Input {...fromInputProps} label="Fra og med" />
             <DatePicker.Input {...toInputProps} label="Til og med" />
-            <Button
-              aria-label="Fjern periode"
-              icon={<TrashIcon />}
-              onClick={() => {
-                setPerioder((prev) =>
-                  prev.filter((p) => p.key !== periode.key),
-                );
-              }}
-              variant="tertiary"
-            >
-              Slett
-            </Button>
+            <div>
+              <Button
+                aria-label="Fjern periode"
+                className="mt-8"
+                icon={<TrashIcon />}
+                onClick={() => {
+                  setPerioder((prev) =>
+                    prev.filter((p) => p.key !== periode.key),
+                  );
+                }}
+                size="small"
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            </div>
           </HStack>
         </DatePicker>
       ))}
-      <Button
-        icon={<PlusIcon />}
-        onClick={() => {
-          setPerioder((prev) => [
-            ...prev,
-            { key: (prev.at(-1)?.key ?? 0) + 1 },
-          ]);
-        }}
-        variant="secondary"
-      >
-        Legg til periode
-      </Button>
-    </div>
+      <div>
+        <Button
+          icon={<PlusIcon />}
+          onClick={() => {
+            setPerioder((prev) => [
+              ...prev,
+              { key: (prev.at(-1)?.key ?? 0) + 1 },
+            ]);
+          }}
+          size="small"
+          variant="secondary"
+        >
+          Legg til periode
+        </Button>
+      </div>
+    </VStack>
   );
 };
 
@@ -158,54 +167,49 @@ const FraværDelerAvDagen = () => {
     onDateChange: () => {},
   });
   return (
-    <div>
+    <VStack gap="4">
       <Heading level="3" size="small">
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
       {perioder.map((periode) => (
         <DatePicker {...datepickerProps} key={periode.key}>
-          <HStack gap="4" justify="center" wrap>
+          <HStack align="center" gap="4" justify="center" wrap>
             <DatePicker.Input {...inputProps} label="Dato" />
             <TextField label="Timer fravær" />
-            <Button
-              aria-label="Fjern periode"
-              icon={<TrashIcon />}
-              onClick={() => {
-                setPerioder((prev) =>
-                  prev.filter((p) => p.key !== periode.key),
-                );
-              }}
-              variant="tertiary"
-            >
-              Slett
-            </Button>
+            <div>
+              <Button
+                aria-label="Fjern periode"
+                className="mt-8"
+                icon={<TrashIcon />}
+                onClick={() => {
+                  setPerioder((prev) =>
+                    prev.filter((p) => p.key !== periode.key),
+                  );
+                }}
+                size="small"
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            </div>
           </HStack>
         </DatePicker>
       ))}
-      <Button
-        icon={<PlusIcon />}
-        onClick={() => {
-          setPerioder((prev) => [
-            ...prev,
-            { key: (prev.at(-1)?.key ?? 0) + 1 },
-          ]);
-        }}
-        variant="secondary"
-      >
-        Legg til dag
-      </Button>
-      <div className="flex gap-4">
-        <Button icon={<ArrowLeftIcon />} variant="secondary">
-          Forrige steg
-        </Button>
+      <div>
         <Button
-          icon={<ArrowRightIcon />}
-          iconPosition="right"
-          variant="primary"
+          icon={<PlusIcon />}
+          onClick={() => {
+            setPerioder((prev) => [
+              ...prev,
+              { key: (prev.at(-1)?.key ?? 0) + 1 },
+            ]);
+          }}
+          size="small"
+          variant="secondary"
         >
-          Neste steg
+          Legg til dag
         </Button>
       </div>
-    </div>
+    </VStack>
   );
 };

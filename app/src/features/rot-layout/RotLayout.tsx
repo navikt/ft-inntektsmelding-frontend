@@ -1,4 +1,4 @@
-import { Detail, Heading, HStack, Page } from "@navikt/ds-react";
+import { Detail, Heading, HStack, Page, PageProps } from "@navikt/ds-react";
 
 import { Illustrasjon } from "./Illustrasjon";
 
@@ -9,6 +9,8 @@ type RotLayoutProps = {
   undertittel?: React.ReactNode;
   /** Innholdet i viewet */
   children: React.ReactNode;
+  /** Bakgrunnen til siden */
+  background?: PageProps["background"];
 };
 
 /**
@@ -19,9 +21,10 @@ export const RotLayout = ({
   tittel,
   undertittel,
   children,
+  background = "bg-subtle",
 }: RotLayoutProps) => {
   return (
-    <Page background="bg-subtle">
+    <Page background={background}>
       <Page.Block className="bg-bg-default border-border-focus-on-inverted border-b-4 py-5">
         <Page.Block width="md">
           <HStack align="center">

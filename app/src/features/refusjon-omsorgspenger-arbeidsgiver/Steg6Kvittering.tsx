@@ -13,6 +13,7 @@ import {
   Heading,
   HStack,
   useId,
+  VStack,
 } from "@navikt/ds-react";
 import {
   ExpansionCardContent,
@@ -26,13 +27,16 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 export const Steg6Kvittering = () => {
   return (
-    <RotLayout tittel="Søknad om refusjon for omsorgspenger">
+    <RotLayout
+      background="bg-default"
+      tittel="Søknad om refusjon for omsorgspenger"
+    >
       <div className="mx-4">
         <div className="mt-12 p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
           <CheckmarkIcon aria-hidden fontSize="2.5em" />
         </div>
         <Heading className="mt-6 mb-12 text-center" level="2" size="small">
-          Søknad om refusjon er sendt.
+          Søknad om refusjon er sendt
         </Heading>
         <Alert className="mb-12" variant="success">
           <Heading className="mb-2" level="3" size="medium">
@@ -45,27 +49,29 @@ export const Steg6Kvittering = () => {
           </BodyLong>
         </Alert>
 
-        <Heading level="2" size="small">
+        <Heading className="mb-4" level="2" size="small">
           Ofte stilte spørsmål
         </Heading>
-        <FaqItem
-          icon={<ClockIcon />}
-          question="Hvor lang er saksbehandlingstiden?"
-        >
-          TODO
-        </FaqItem>
-        <FaqItem
-          icon={<SackKronerIcon />}
-          question="Når blir refusjon utbetalt?"
-        >
-          TODO
-        </FaqItem>
-        <FaqItem
-          icon={<DocPencilIcon />}
-          question="Hvordan korrigere hvis noe er feil?"
-        >
-          TODO
-        </FaqItem>
+        <VStack className="mb-12" gap="2">
+          <FaqItem
+            icon={<ClockIcon />}
+            question="Hvor lang er saksbehandlingstiden?"
+          >
+            TODO
+          </FaqItem>
+          <FaqItem
+            icon={<SackKronerIcon />}
+            question="Når blir refusjon utbetalt?"
+          >
+            TODO
+          </FaqItem>
+          <FaqItem
+            icon={<DocPencilIcon />}
+            question="Hvordan korrigere hvis noe er feil?"
+          >
+            TODO
+          </FaqItem>
+        </VStack>
 
         <HStack gap="2" justify="center" wrap={true}>
           <Button as="a" href="/min-side-arbeidsgiver" variant="primary">
@@ -96,13 +102,13 @@ type FaqItemProps = {
 const FaqItem = ({ question, children, icon }: FaqItemProps) => {
   const id = useId();
   return (
-    <ExpansionCard aria-labelledby={`faq-${id}`} className="mb-12">
+    <ExpansionCard aria-labelledby={`faq-${id}`} size="small">
       <ExpansionCardHeader>
         <ExpansionCardTitle id={`faq-${id}`}>
           <HStack align="center" gap="4">
             {icon}
+            {question}
           </HStack>
-          {question}
         </ExpansionCardTitle>
       </ExpansionCardHeader>
       <ExpansionCardContent>{children}</ExpansionCardContent>

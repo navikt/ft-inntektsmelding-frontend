@@ -8,6 +8,7 @@ import {
   Link,
   Radio,
   RadioGroup,
+  VStack,
 } from "@navikt/ds-react";
 import { Link as RouterLink } from "@tanstack/react-router";
 import { useState } from "react";
@@ -29,19 +30,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
         </Heading>
         <Fremgangsindikator aktivtSteg={1} />
         <GuidePanel>
-          <Heading level="2" size="medium">
-            Hei [navn]!
-          </Heading>
-          <BodyLong>
-            Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager
-            opptil tre måneder tilbake i tid, regnet fra måneden før vi mottar
-            søknaden deres.
-          </BodyLong>
-          <BodyLong>
-            Dere kan kun søke om utbetaling for ett og samme år. Det betyr at
-            hvis dere skal søke om utbetaling for både {iFjor} og {iÅr}, må dere
-            sende to separate søknader.
-          </BodyLong>
+          <VStack gap="4">
+            <Heading level="2" size="medium">
+              Hei [navn]!
+            </Heading>
+            <BodyLong>
+              Dere kan søke om refusjon av omsorgspenger for bruk av
+              omsorgsdager opptil tre måneder tilbake i tid, regnet fra måneden
+              før vi mottar søknaden deres.
+            </BodyLong>
+            <BodyLong>
+              Dere kan kun søke om utbetaling for ett og samme år. Det betyr at
+              hvis dere skal søke om utbetaling for både {iFjor} og {iÅr}, må
+              dere sende to separate søknader.
+            </BodyLong>
+          </VStack>
         </GuidePanel>
         <RadioGroup
           legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
