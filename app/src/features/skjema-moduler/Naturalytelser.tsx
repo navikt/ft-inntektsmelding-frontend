@@ -102,6 +102,8 @@ function MisterNaturalytelser() {
     name: "naturalytelserSomMistes",
   });
 
+  console.log(watch().naturalytelserSomMistes);
+
   return (
     <div className="flex flex-col gap-4">
       {fields.map((field, index) => {
@@ -188,6 +190,10 @@ function MisterNaturalytelser() {
                   <DatePickerWrapped
                     label="Til og med"
                     name={`naturalytelserSomMistes.${index}.tom` as const}
+                    rules={{
+                      required: "Må oppgis",
+                    }}
+                    shouldUnregister
                   />
                 )}
               </div>

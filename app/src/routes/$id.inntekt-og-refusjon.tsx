@@ -108,9 +108,9 @@ function InntektOgRefusjon() {
               (naturalYtelse) => ({
                 ...naturalYtelse,
                 inkluderTom:
-                  naturalYtelse === undefined
+                  naturalYtelse.inkluderTom === undefined
                     ? undefined
-                    : naturalYtelse
+                    : naturalYtelse.inkluderTom
                       ? "ja"
                       : "nei",
               }),
