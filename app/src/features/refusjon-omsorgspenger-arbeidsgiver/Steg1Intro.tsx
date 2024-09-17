@@ -1,19 +1,21 @@
+import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
+  Button,
   GuidePanel,
   Heading,
   Link,
   Radio,
   RadioGroup,
 } from "@navikt/ds-react";
+import { Link as RouterLink } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
-import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const [harUtbetaltLønn, setHarUtbetaltLønn] = useState<string | "">("");
@@ -44,7 +46,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
         <RadioGroup
           legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
           name="har-utbetalt-lønn"
-          onChange={(event) => setHarUtbetaltLønn(event.target.value)}
+          onChange={setHarUtbetaltLønn}
           value={harUtbetaltLønn}
         >
           <Radio value="ja">Ja</Radio>
@@ -74,13 +76,22 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           legend="Hvilket år søker dere refusjon for?"
           name="år-for-refusjon"
         >
-          <Radio value="2023">2023</Radio>
-          <Radio value="2024">2024</Radio>
+          <Radio value={iFjor}>{iFjor}</Radio>
+          <Radio value={iÅr}>{iÅr}</Radio>
         </RadioGroup>
-        <Stegnavigasjon
-          isNesteDisabled={harUtbetaltLønn === "nei"}
-          neste="../2-ansatt-og-arbeidsgiver"
-        />
+
+        <div>
+          <Button
+            as={RouterLink}
+            disabled={harUtbetaltLønn === "nei"}
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            to="../2-ansatt-og-arbeidsgiver"
+            variant="primary"
+          >
+            Neste steg
+          </Button>
+        </div>
       </IndreLayout>
     </RotLayout>
   );

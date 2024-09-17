@@ -6,20 +6,20 @@ type FremgangsindikatorProps = {
 };
 export const Fremgangsindikator = ({ aktivtSteg }: FremgangsindikatorProps) => {
   return (
-    <FormProgress activeStep={aktivtSteg} className="col-span-2" totalSteps={3}>
-      <FormProgress.Step as={Link} to="../1">
+    <FormProgress activeStep={aktivtSteg} className="col-span-2" totalSteps={5}>
+      <FormProgress.Step as={Link} to="../1-intro">
         Refusjon
       </FormProgress.Step>
-      <FormProgress.Step as={Link} to="../2">
+      <FormProgress.Step as={Link} to="../2-ansatt-og-arbeidsgiver">
         Den ansatte og arbeidsgiver
       </FormProgress.Step>
-      <FormProgress.Step as={Link} to="../3">
+      <FormProgress.Step as={Link} to="../3-omsorgsdager">
         Omsorgsdager
       </FormProgress.Step>
-      <FormProgress.Step as={Link} to="../4">
+      <FormProgress.Step as={Link} to="../4-refusjon">
         Beregnet månedslønn
       </FormProgress.Step>
-      <FormProgress.Step as={Link} to="../5">
+      <FormProgress.Step as={Link} to="../5-oppsummering">
         Oppsummering
       </FormProgress.Step>
     </FormProgress>
