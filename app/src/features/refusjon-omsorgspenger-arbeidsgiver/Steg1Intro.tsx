@@ -78,7 +78,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
         </RadioGroup>
         <Stegnavigasjon
           isNesteDisabled={harUtbetaltLønn === "nei"}
-          neste="../2"
+          neste="../2-ansatt-og-arbeidsgiver"
         />
       </div>
     </RotLayout>

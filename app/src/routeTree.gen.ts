@@ -14,11 +14,11 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IdImport } from './routes/$id'
 import { Route as IdIndexImport } from './routes/$id.index'
 import { Route as RefusjonOmsorgspengerArbeidsgiver6KvitteringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.6-kvittering'
-import { Route as RefusjonOmsorgspengerArbeidsgiver5Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.5'
-import { Route as RefusjonOmsorgspengerArbeidsgiver4Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.4'
-import { Route as RefusjonOmsorgspengerArbeidsgiver3Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.3'
-import { Route as RefusjonOmsorgspengerArbeidsgiver2Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.2'
-import { Route as RefusjonOmsorgspengerArbeidsgiver1Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.1'
+import { Route as RefusjonOmsorgspengerArbeidsgiver5OppsummeringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.5-oppsummering'
+import { Route as RefusjonOmsorgspengerArbeidsgiver4RefusjonImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.4-refusjon'
+import { Route as RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.3-omsorgsdager'
+import { Route as RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.2-ansatt-og-arbeidsgiver'
+import { Route as RefusjonOmsorgspengerArbeidsgiver1IntroImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.1-intro'
 import { Route as EndreIdImport } from './routes/endre.$id'
 import { Route as IdVisImport } from './routes/$id.vis'
 import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
@@ -44,33 +44,33 @@ const RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute =
     getParentRoute: () => rootRoute,
   } as any)
 
-const RefusjonOmsorgspengerArbeidsgiver5Route =
-  RefusjonOmsorgspengerArbeidsgiver5Import.update({
-    path: '/refusjon-omsorgspenger-arbeidsgiver/5',
+const RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute =
+  RefusjonOmsorgspengerArbeidsgiver5OppsummeringImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering',
     getParentRoute: () => rootRoute,
   } as any)
 
-const RefusjonOmsorgspengerArbeidsgiver4Route =
-  RefusjonOmsorgspengerArbeidsgiver4Import.update({
-    path: '/refusjon-omsorgspenger-arbeidsgiver/4',
+const RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute =
+  RefusjonOmsorgspengerArbeidsgiver4RefusjonImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon',
     getParentRoute: () => rootRoute,
   } as any)
 
-const RefusjonOmsorgspengerArbeidsgiver3Route =
-  RefusjonOmsorgspengerArbeidsgiver3Import.update({
-    path: '/refusjon-omsorgspenger-arbeidsgiver/3',
+const RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute =
+  RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager',
     getParentRoute: () => rootRoute,
   } as any)
 
-const RefusjonOmsorgspengerArbeidsgiver2Route =
-  RefusjonOmsorgspengerArbeidsgiver2Import.update({
-    path: '/refusjon-omsorgspenger-arbeidsgiver/2',
+const RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute =
+  RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver',
     getParentRoute: () => rootRoute,
   } as any)
 
-const RefusjonOmsorgspengerArbeidsgiver1Route =
-  RefusjonOmsorgspengerArbeidsgiver1Import.update({
-    path: '/refusjon-omsorgspenger-arbeidsgiver/1',
+const RefusjonOmsorgspengerArbeidsgiver1IntroRoute =
+  RefusjonOmsorgspengerArbeidsgiver1IntroImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/1-intro',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -157,39 +157,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EndreIdImport
       parentRoute: typeof rootRoute
     }
-    '/refusjon-omsorgspenger-arbeidsgiver/1': {
-      id: '/refusjon-omsorgspenger-arbeidsgiver/1'
-      path: '/refusjon-omsorgspenger-arbeidsgiver/1'
-      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/1'
-      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver1Import
+    '/refusjon-omsorgspenger-arbeidsgiver/1-intro': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver1IntroImport
       parentRoute: typeof rootRoute
     }
-    '/refusjon-omsorgspenger-arbeidsgiver/2': {
-      id: '/refusjon-omsorgspenger-arbeidsgiver/2'
-      path: '/refusjon-omsorgspenger-arbeidsgiver/2'
-      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/2'
-      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver2Import
+    '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverImport
       parentRoute: typeof rootRoute
     }
-    '/refusjon-omsorgspenger-arbeidsgiver/3': {
-      id: '/refusjon-omsorgspenger-arbeidsgiver/3'
-      path: '/refusjon-omsorgspenger-arbeidsgiver/3'
-      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/3'
-      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver3Import
+    '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerImport
       parentRoute: typeof rootRoute
     }
-    '/refusjon-omsorgspenger-arbeidsgiver/4': {
-      id: '/refusjon-omsorgspenger-arbeidsgiver/4'
-      path: '/refusjon-omsorgspenger-arbeidsgiver/4'
-      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/4'
-      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver4Import
+    '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver4RefusjonImport
       parentRoute: typeof rootRoute
     }
-    '/refusjon-omsorgspenger-arbeidsgiver/5': {
-      id: '/refusjon-omsorgspenger-arbeidsgiver/5'
-      path: '/refusjon-omsorgspenger-arbeidsgiver/5'
-      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/5'
-      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver5Import
+    '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringImport
       parentRoute: typeof rootRoute
     }
     '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': {
@@ -221,11 +221,11 @@ export const routeTree = rootRoute.addChildren({
     IdIndexRoute,
   }),
   EndreIdRoute,
-  RefusjonOmsorgspengerArbeidsgiver1Route,
-  RefusjonOmsorgspengerArbeidsgiver2Route,
-  RefusjonOmsorgspengerArbeidsgiver3Route,
-  RefusjonOmsorgspengerArbeidsgiver4Route,
-  RefusjonOmsorgspengerArbeidsgiver5Route,
+  RefusjonOmsorgspengerArbeidsgiver1IntroRoute,
+  RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute,
+  RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute,
+  RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute,
+  RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute,
   RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute,
 })
 
@@ -239,11 +239,11 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/$id",
         "/endre/$id",
-        "/refusjon-omsorgspenger-arbeidsgiver/1",
-        "/refusjon-omsorgspenger-arbeidsgiver/2",
-        "/refusjon-omsorgspenger-arbeidsgiver/3",
-        "/refusjon-omsorgspenger-arbeidsgiver/4",
-        "/refusjon-omsorgspenger-arbeidsgiver/5",
+        "/refusjon-omsorgspenger-arbeidsgiver/1-intro",
+        "/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver",
+        "/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager",
+        "/refusjon-omsorgspenger-arbeidsgiver/4-refusjon",
+        "/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering",
         "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering"
       ]
     },
@@ -281,20 +281,20 @@ export const routeTree = rootRoute.addChildren({
     "/endre/$id": {
       "filePath": "endre.$id.tsx"
     },
-    "/refusjon-omsorgspenger-arbeidsgiver/1": {
-      "filePath": "refusjon-omsorgspenger-arbeidsgiver.1.tsx"
+    "/refusjon-omsorgspenger-arbeidsgiver/1-intro": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.1-intro.tsx"
     },
-    "/refusjon-omsorgspenger-arbeidsgiver/2": {
-      "filePath": "refusjon-omsorgspenger-arbeidsgiver.2.tsx"
+    "/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.2-ansatt-og-arbeidsgiver.tsx"
     },
-    "/refusjon-omsorgspenger-arbeidsgiver/3": {
-      "filePath": "refusjon-omsorgspenger-arbeidsgiver.3.tsx"
+    "/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.3-omsorgsdager.tsx"
     },
-    "/refusjon-omsorgspenger-arbeidsgiver/4": {
-      "filePath": "refusjon-omsorgspenger-arbeidsgiver.4.tsx"
+    "/refusjon-omsorgspenger-arbeidsgiver/4-refusjon": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.4-refusjon.tsx"
     },
-    "/refusjon-omsorgspenger-arbeidsgiver/5": {
-      "filePath": "refusjon-omsorgspenger-arbeidsgiver.5.tsx"
+    "/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.5-oppsummering.tsx"
     },
     "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering": {
       "filePath": "refusjon-omsorgspenger-arbeidsgiver.6-kvittering.tsx"

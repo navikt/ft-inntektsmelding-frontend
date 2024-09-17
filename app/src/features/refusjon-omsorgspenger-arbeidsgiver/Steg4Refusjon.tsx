@@ -62,7 +62,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
           </BodyLong>
         </GuidePanel>
         <Inntekt opplysninger={dummyOpplysninger} />
-        <Stegnavigasjon forrige="../3" neste="../5" />
+        <Stegnavigasjon forrige="../3-omsorgsdager" neste="../5-oppsummering" />
       </div>
     </RotLayout>
   );

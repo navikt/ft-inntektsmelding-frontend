@@ -69,7 +69,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         )}
         <FraværHeleDagen />
         <FraværDelerAvDagen />
-        <Stegnavigasjon forrige="../2" neste="../4" />
+        <Stegnavigasjon
+          forrige="../2-ansatt-og-arbeidsgiver"
+          neste="../4-refusjon"
+        />
       </div>
     </RotLayout>
   );

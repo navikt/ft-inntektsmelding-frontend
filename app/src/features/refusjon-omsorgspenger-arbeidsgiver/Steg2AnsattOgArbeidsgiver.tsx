@@ -60,7 +60,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             </BodyLong>
           </Alert>
         </Informasjonsseksjon>
-        <Stegnavigasjon forrige="../1" neste="../3" />
+        <Stegnavigasjon forrige="../1-intro" neste="../3-omsorgsdager" />
       </div>
     </RotLayout>
   );
