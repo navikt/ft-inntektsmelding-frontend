@@ -1,7 +1,6 @@
 import {
   Alert,
   BodyLong,
-  Button,
   GuidePanel,
   Heading,
   Link,
@@ -13,6 +12,7 @@ import { useState } from "react";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const [harUtbetaltLønn, setHarUtbetaltLønn] = useState<string | "">("");
@@ -76,9 +76,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           <Radio value="2023">2023</Radio>
           <Radio value="2024">2024</Radio>
         </RadioGroup>
-        <Button disabled={harUtbetaltLønn === "nei"} variant="primary">
-          Neste
-        </Button>
+        <Stegnavigasjon
+          isNesteDisabled={harUtbetaltLønn === "nei"}
+          neste="../2"
+        />
       </div>
     </RotLayout>
   );

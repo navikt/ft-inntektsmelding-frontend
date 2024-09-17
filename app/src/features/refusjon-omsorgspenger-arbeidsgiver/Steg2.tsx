@@ -1,9 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
   BodyShort,
-  Button,
   Heading,
   Label,
   TextField,
@@ -13,6 +11,7 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   return (
@@ -61,18 +60,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             </BodyLong>
           </Alert>
         </Informasjonsseksjon>
-        <div className="flex gap-4">
-          <Button icon={<ArrowLeftIcon />} variant="secondary">
-            Forrige steg
-          </Button>
-          <Button
-            icon={<ArrowRightIcon />}
-            iconPosition="right"
-            variant="primary"
-          >
-            Neste steg
-          </Button>
-        </div>
+        <Stegnavigasjon forrige="../1" neste="../3" />
       </div>
     </RotLayout>
   );

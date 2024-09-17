@@ -22,6 +22,7 @@ import { useState } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const [harDekket10FørsteOmsorgsdager, setHarDekket10FørsteOmsorgsdager] =
@@ -68,6 +69,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         )}
         <FraværHeleDagen />
         <FraværDelerAvDagen />
+        <Stegnavigasjon forrige="../2" neste="../4" />
       </div>
     </RotLayout>
   );
