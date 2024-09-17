@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
 
-import { OpplysningerDto } from "~/api/queries";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 
 import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";

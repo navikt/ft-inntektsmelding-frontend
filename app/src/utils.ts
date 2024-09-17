@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { MånedsinntektResponsDto } from "~/types/api-models.ts";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 
 export function leggTilGenitiv(navn: string) {
   if (navn.endsWith("s") || navn.endsWith("x")) {
@@ -101,7 +101,7 @@ export function formatYtelsesnavn(ytelsesnavn: string, storForbokstav = false) {
   return formattert;
 }
 
-export function gjennomsnittInntekt(inntekter: MånedsinntektResponsDto[]) {
+export function gjennomsnittInntekt(inntekter: OpplysningerDto["inntekter"]) {
   if (!inntekter) {
     return 0;
   }

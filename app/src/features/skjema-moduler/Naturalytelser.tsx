@@ -237,10 +237,10 @@ function MisterNaturalytelser() {
                         if (!fom) return true;
                         if (!tom) return "Må oppgis";
 
-                        // TODO: sjekk trøbbel med tidssone
-                        // dato satt i FE har 00:00:00 GMT+2
-                        // dato satt fra BE (streng på format 2024-10-01) gir dato 02:00:00 GMT+2
-                        return tom >= fom || "Kan ikke være før fra dato";
+                        return (
+                          new Date(tom) >= new Date(fom) ||
+                          "Kan ikke være før fra dato"
+                        );
                       },
                     }}
                     shouldUnregister

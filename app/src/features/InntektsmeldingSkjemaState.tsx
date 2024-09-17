@@ -23,8 +23,8 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     .object({
       årsak: ÅrsaksTypeSchema,
       korrigertInntekt: beløpSchema,
-      fom: z.date().optional(),
-      tom: z.date().optional(),
+      fom: z.string().optional(),
+      tom: z.string().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean().optional(),
@@ -32,7 +32,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
-      fom: z.date().optional(),
+      fom: z.string().optional(),
       beløp: beløpSchema,
     }),
   ),
@@ -41,8 +41,8 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     z.object({
       navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
       beløp: beløpSchema,
-      fom: z.date().optional(),
-      tom: z.date().optional(),
+      fom: z.string().optional(),
+      tom: z.string().optional(),
       inkluderTom: z.boolean(),
     }),
   ),
@@ -58,8 +58,8 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     .object({
       årsak: ÅrsaksTypeSchema,
       korrigertInntekt: beløpSchema,
-      fom: z.date(),
-      tom: z.date().optional(),
+      fom: z.string(),
+      tom: z.string().optional(),
     })
     .optional(),
   skalRefunderes: z.boolean(),
@@ -67,7 +67,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
   endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
-      fom: z.date(),
+      fom: z.string(),
       beløp: beløpSchema,
     }),
   ),
@@ -76,13 +76,13 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     z.object({
       navn: NaturalytelseTypeSchema,
       beløp: beløpSchema,
-      fom: z.date(),
-      tom: z.date().optional(),
+      fom: z.string(),
+      tom: z.string().optional(),
       inkluderTom: z.boolean(),
     }),
   ),
   // TODO: Disse burde flyttes til en egen schema for eksisterende inntektsmeldinger
-  opprettetTidspunkt: z.date().optional(),
+  opprettetTidspunkt: z.string().optional(),
   id: z.number().optional(),
 });
 

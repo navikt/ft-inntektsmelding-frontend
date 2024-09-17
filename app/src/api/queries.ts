@@ -3,10 +3,12 @@ import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import {
+  grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
+  opplysningerSchema,
   SendInntektsmeldingResponseDto,
 } from "~/types/api-models";
-import { logDev, navnMedStorBokstav } from "~/utils.ts";
+import { logDev } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
@@ -39,15 +41,6 @@ async function hentGrunnbeløp() {
     return Infinity;
   }
 }
-
-const grunnbeløpSchema = z.object({
-  dato: z.string(),
-  grunnbeløp: z.number(),
-  grunnbeløpPerMåned: z.number(),
-  gjennomsnittPerÅr: z.number(),
-  omregningsfaktor: z.number(),
-  virkningstidspunktForMinsteinntekt: z.string(),
-});
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
   const response = await fetch(
@@ -84,24 +77,24 @@ export function mapInntektsmeldingResponseTilValidState(
     refusjonsendringer: (inntektsmelding.refusjonsendringer ?? []).map(
       (periode) => ({
         ...periode,
-        fom: new Date(periode.fom),
+        fom: periode.fom,
       }),
     ),
     endringIRefusjon: (inntektsmelding.refusjonsendringer ?? []).length > 0,
     naturalytelserSomMistes:
       inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
         navn: periode.naturalytelsetype,
-        fom: new Date(periode.fom),
+        fom: periode.fom,
         beløp: periode.beløp,
         inkluderTom: periode.tom !== undefined,
-        tom: periode.tom ? new Date(periode.tom) : undefined,
+        tom: periode.tom,
       })) ?? [],
     inntektEndringsÅrsak: undefined, // TODO: Send inn når BE har støtte for det
     inntekt: inntektsmelding.inntekt,
     skalRefunderes: Boolean(inntektsmelding.refusjon),
     misterNaturalytelser:
       (inntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) > 0,
-    opprettetTidspunkt: new Date(inntektsmelding.opprettetTidspunkt),
+    opprettetTidspunkt: inntektsmelding.opprettetTidspunkt,
     id: inntektsmelding.id,
   } satisfies InntektsmeldingSkjemaStateValid;
 }
@@ -125,45 +118,3 @@ export async function hentOpplysningerData(uuid: string) {
   }
   return parsedJson.data;
 }
-
-const opplysningerSchema = z.object({
-  person: z.object({
-    aktørId: z.string(),
-    fødselsnummer: z.string(),
-    fornavn: z.string().transform(navnMedStorBokstav),
-    mellomnavn: z
-      .string()
-      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || ""))
-      .optional(),
-    etternavn: z.string().transform(navnMedStorBokstav),
-  }),
-  innsender: z.object({
-    fornavn: z.string(),
-    mellomnavn: z.string().optional(),
-    etternavn: z.string(),
-    telefon: z.string().optional(),
-  }),
-  arbeidsgiver: z.object({
-    organisasjonNavn: z.string(),
-    organisasjonNummer: z.string(),
-  }),
-  inntekter: z.array(
-    z.object({
-      fom: z.string(),
-      tom: z.string(),
-      beløp: z.number().optional(),
-      arbeidsgiverIdent: z.string(),
-    }),
-  ),
-  startdatoPermisjon: z.string(),
-  ytelse: z.enum([
-    "FORELDREPENGER",
-    "SVANGERSKAPSPENGER",
-    "PLEIEPENGER_SYKT_BARN",
-    "PLEIEPENGER_I_LIVETS_SLUTTFASE",
-    "OPPLÆRINGSPENGER",
-    "OMSORGSPENGER",
-  ]),
-});
-
-export type OpplysningerDto = z.infer<typeof opplysningerSchema>;

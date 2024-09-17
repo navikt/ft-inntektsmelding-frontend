@@ -19,13 +19,13 @@ import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 import { useFormContext } from "react-hook-form";
 
-import type { OpplysningerDto } from "~/api/queries";
 import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import type { ÅrsaksType } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
