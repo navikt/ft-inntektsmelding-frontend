@@ -80,6 +80,10 @@ export const InntektsmeldingResponseDtoSchema =
     id: z.number(),
   });
 
+export type SendInntektsmeldingResponseDto = z.infer<
+  typeof InntektsmeldingResponseDtoSchema
+>;
+
 export type SendInntektsmeldingRequestDto = z.infer<
   typeof SendInntektsmeldingRequestDtoSchema
 >;

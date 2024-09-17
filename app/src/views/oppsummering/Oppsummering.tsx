@@ -77,7 +77,8 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
   const { id } = route.useParams();
 
-  const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  const { gyldigInntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
@@ -105,13 +106,15 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
       return sendInntektsmelding(inntektsmelding);
     },
-    onSuccess: () => {
+    onSuccess: (inntektsmeldingState) => {
+      setInntektsmeldingSkjemaState(inntektsmeldingState);
       navigate({
         from: "/$id/oppsummering",
         to: "../kvittering",
       });
     },
   });
+
   if (!gyldigInntektsmeldingSkjemaState) {
     return null;
   }
