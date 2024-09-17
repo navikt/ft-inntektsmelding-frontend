@@ -83,36 +83,22 @@ function InntektOgRefusjon() {
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
-      skalRefunderes:
-        inntektsmeldingSkjemaState.skalRefunderes === undefined
-          ? undefined
-          : inntektsmeldingSkjemaState.skalRefunderes
-            ? "ja"
-            : "nei",
-      endringIRefusjon:
-        inntektsmeldingSkjemaState.endringIRefusjon === undefined
-          ? undefined
-          : inntektsmeldingSkjemaState.endringIRefusjon
-            ? "ja"
-            : "nei",
-      misterNaturalytelser:
-        inntektsmeldingSkjemaState.misterNaturalytelser === undefined
-          ? undefined
-          : inntektsmeldingSkjemaState.misterNaturalytelser
-            ? "ja"
-            : "nei",
+      skalRefunderes: konverterTilRadioValg(
+        inntektsmeldingSkjemaState.skalRefunderes,
+      ),
+      endringIRefusjon: konverterTilRadioValg(
+        inntektsmeldingSkjemaState.endringIRefusjon,
+      ),
+      misterNaturalytelser: konverterTilRadioValg(
+        inntektsmeldingSkjemaState.misterNaturalytelser,
+      ),
       naturalytelserSomMistes:
         inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
           ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
           : inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
               (naturalYtelse) => ({
                 ...naturalYtelse,
-                inkluderTom:
-                  naturalYtelse.inkluderTom === undefined
-                    ? undefined
-                    : naturalYtelse.inkluderTom
-                      ? "ja"
-                      : "nei",
+                inkluderTom: konverterTilRadioValg(naturalYtelse.inkluderTom),
               }),
             ),
       refusjonsendringer:
@@ -195,6 +181,10 @@ function InntektOgRefusjon() {
       </section>
     </FormProvider>
   );
+}
+
+function konverterTilRadioValg(verdi: boolean | undefined) {
+  return verdi === undefined ? undefined : verdi ? "ja" : "nei";
 }
 
 type YtelsesperiodeProps = {
