@@ -13,6 +13,7 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IdImport } from './routes/$id'
 import { Route as IdIndexImport } from './routes/$id.index'
+import { Route as RefusjonOmsorgspengerArbeidsgiver1Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.1'
 import { Route as EndreIdImport } from './routes/endre.$id'
 import { Route as IdVisImport } from './routes/$id.vis'
 import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
@@ -31,6 +32,12 @@ const IdIndexRoute = IdIndexImport.update({
   path: '/',
   getParentRoute: () => IdRoute,
 } as any)
+
+const RefusjonOmsorgspengerArbeidsgiver1Route =
+  RefusjonOmsorgspengerArbeidsgiver1Import.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/1',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 const EndreIdRoute = EndreIdImport.update({
   path: '/endre/$id',
@@ -115,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EndreIdImport
       parentRoute: typeof rootRoute
     }
+    '/refusjon-omsorgspenger-arbeidsgiver/1': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/1'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/1'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/1'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver1Import
+      parentRoute: typeof rootRoute
+    }
     '/$id/': {
       id: '/$id/'
       path: '/'
@@ -127,105 +141,18 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-interface IdRouteChildren {
-  IdDineOpplysningerRoute: typeof IdDineOpplysningerRoute
-  IdInntektOgRefusjonRoute: typeof IdInntektOgRefusjonRoute
-  IdKvitteringRoute: typeof IdKvitteringRoute
-  IdOppsummeringRoute: typeof IdOppsummeringRoute
-  IdVisRoute: typeof IdVisRoute
-  IdIndexRoute: typeof IdIndexRoute
-}
-
-const IdRouteChildren: IdRouteChildren = {
-  IdDineOpplysningerRoute: IdDineOpplysningerRoute,
-  IdInntektOgRefusjonRoute: IdInntektOgRefusjonRoute,
-  IdKvitteringRoute: IdKvitteringRoute,
-  IdOppsummeringRoute: IdOppsummeringRoute,
-  IdVisRoute: IdVisRoute,
-  IdIndexRoute: IdIndexRoute,
-}
-
-const IdRouteWithChildren = IdRoute._addFileChildren(IdRouteChildren)
-
-export interface FileRoutesByFullPath {
-  '/$id': typeof IdRouteWithChildren
-  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
-  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
-  '/$id/kvittering': typeof IdKvitteringRoute
-  '/$id/oppsummering': typeof IdOppsummeringRoute
-  '/$id/vis': typeof IdVisRoute
-  '/endre/$id': typeof EndreIdRoute
-  '/$id/': typeof IdIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
-  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
-  '/$id/kvittering': typeof IdKvitteringRoute
-  '/$id/oppsummering': typeof IdOppsummeringRoute
-  '/$id/vis': typeof IdVisRoute
-  '/endre/$id': typeof EndreIdRoute
-  '/$id': typeof IdIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/$id': typeof IdRouteWithChildren
-  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
-  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
-  '/$id/kvittering': typeof IdKvitteringRoute
-  '/$id/oppsummering': typeof IdOppsummeringRoute
-  '/$id/vis': typeof IdVisRoute
-  '/endre/$id': typeof EndreIdRoute
-  '/$id/': typeof IdIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/$id'
-    | '/$id/dine-opplysninger'
-    | '/$id/inntekt-og-refusjon'
-    | '/$id/kvittering'
-    | '/$id/oppsummering'
-    | '/$id/vis'
-    | '/endre/$id'
-    | '/$id/'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/$id/dine-opplysninger'
-    | '/$id/inntekt-og-refusjon'
-    | '/$id/kvittering'
-    | '/$id/oppsummering'
-    | '/$id/vis'
-    | '/endre/$id'
-    | '/$id'
-  id:
-    | '__root__'
-    | '/$id'
-    | '/$id/dine-opplysninger'
-    | '/$id/inntekt-og-refusjon'
-    | '/$id/kvittering'
-    | '/$id/oppsummering'
-    | '/$id/vis'
-    | '/endre/$id'
-    | '/$id/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IdRoute: typeof IdRouteWithChildren
-  EndreIdRoute: typeof EndreIdRoute
-}
-
-const rootRouteChildren: RootRouteChildren = {
-  IdRoute: IdRouteWithChildren,
-  EndreIdRoute: EndreIdRoute,
-}
-
-export const routeTree = rootRoute
-  ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+export const routeTree = rootRoute.addChildren({
+  IdRoute: IdRoute.addChildren({
+    IdDineOpplysningerRoute,
+    IdInntektOgRefusjonRoute,
+    IdKvitteringRoute,
+    IdOppsummeringRoute,
+    IdVisRoute,
+    IdIndexRoute,
+  }),
+  EndreIdRoute,
+  RefusjonOmsorgspengerArbeidsgiver1Route,
+})
 
 /* prettier-ignore-end */
 
@@ -236,7 +163,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/$id",
-        "/endre/$id"
+        "/endre/$id",
+        "/refusjon-omsorgspenger-arbeidsgiver/1"
       ]
     },
     "/$id": {
@@ -272,6 +200,9 @@ export const routeTree = rootRoute
     },
     "/endre/$id": {
       "filePath": "endre.$id.tsx"
+    },
+    "/refusjon-omsorgspenger-arbeidsgiver/1": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.1.tsx"
     },
     "/$id/": {
       "filePath": "$id.index.tsx",
