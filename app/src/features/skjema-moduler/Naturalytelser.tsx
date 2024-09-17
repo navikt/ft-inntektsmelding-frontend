@@ -119,6 +119,7 @@ function MisterNaturalytelser() {
 
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
+            {/*// TODO: items-end gjør at brekkende legend blir align. items-start gir alignment ved valideringsfeil.... Hvordan få begge pene?*/}
             <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-end">
               <Select
                 label="Naturalytelse som faller bort"
@@ -147,7 +148,8 @@ function MisterNaturalytelser() {
                 {...register(
                   `naturalytelserSomMistes.${index}.beløp` as const,
                   {
-                    min: { value: 1, message: "Må være mer enn 0" },
+                    validate: (value) =>
+                      Number(value) > 0 || "Må være mer enn 0",
                   },
                 )}
                 autoComplete="off"
