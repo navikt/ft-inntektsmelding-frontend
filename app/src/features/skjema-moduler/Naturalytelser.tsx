@@ -1,5 +1,6 @@
 import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
   BodyLong,
   Button,
   Heading,
@@ -15,7 +16,10 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import type { Naturalytelsetype } from "~/types/api-models.ts";
+import {
+  Naturalytelsetype,
+  NaturalytelseTypeSchema,
+} from "~/types/api-models.ts";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fom: undefined,
@@ -100,7 +104,35 @@ function MisterNaturalytelser() {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "naturalytelserSomMistes",
+    rules: {
+      validate: (values) => {
+        const errors = Object.keys(NaturalytelseTypeSchema.Values).flatMap(
+          (type) => {
+            const naturalytelseForType = values.filter((n) => n.navn === type);
+            return naturalytelseForType.flatMap((naturalytelse, index) => {
+              const nesteNaturalytelse = naturalytelseForType[index + 1];
+              if (
+                nesteNaturalytelse?.fom &&
+                naturalytelse.tom &&
+                nesteNaturalytelse.fom < naturalytelse.tom
+              ) {
+                return [type];
+              }
+
+              return [];
+            });
+          },
+        );
+        return (
+          errors.length === 0 ||
+          `Naturalytelse ${naturalytelser[errors[0]]} har overlappende perioder`
+        );
+      },
+    },
   });
+
+  const overlappendePerioderError =
+    formState.errors.naturalytelserSomMistes?.root;
 
   console.log(watch().naturalytelserSomMistes);
 
@@ -116,6 +148,8 @@ function MisterNaturalytelser() {
 
         const skalInkludereTom =
           watch(`naturalytelserSomMistes.${index}.inkluderTom`) === "ja";
+
+        const fom = watch(`naturalytelserSomMistes.${index}.fom`);
 
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
@@ -193,7 +227,15 @@ function MisterNaturalytelser() {
                     label="Til og med"
                     name={`naturalytelserSomMistes.${index}.tom` as const}
                     rules={{
-                      required: "Må oppgis",
+                      validate: (tom: Date | undefined) => {
+                        if (!fom) return true;
+                        if (!tom) return "Må oppgis";
+
+                        // TODO: sjekk trøbbel med tidssone
+                        // dato satt i FE har 00:00:00 GMT+2
+                        // dato satt fra BE (streng på format 2024-10-01) gir dato 02:00:00 GMT+2
+                        return tom >= fom || "Kan ikke være før fra dato";
+                      },
                     }}
                     shouldUnregister
                   />
@@ -214,6 +256,9 @@ function MisterNaturalytelser() {
       >
         Legg til naturalytelse
       </Button>
+      {overlappendePerioderError && (
+        <Alert variant="error">{overlappendePerioderError.message}</Alert>
+      )}
     </div>
   );
 }
