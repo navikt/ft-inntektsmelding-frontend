@@ -1,18 +1,18 @@
 import { Detail, Label } from "@navikt/ds-react";
 import clsx from "clsx";
 
-type InformasjonsseksjonMedKildeProps = {
-  kilde: string;
+type InformasjonsseksjonProps = {
+  kilde?: string;
   tittel: string;
   children: React.ReactNode;
   className?: string;
 };
-export const InformasjonsseksjonMedKilde = ({
+export const Informasjonsseksjon = ({
   children,
   kilde,
   tittel,
   className,
-}: InformasjonsseksjonMedKildeProps) => {
+}: InformasjonsseksjonProps) => {
   return (
     <div
       className={clsx(
@@ -22,7 +22,9 @@ export const InformasjonsseksjonMedKilde = ({
     >
       <div className="flex justify-between items-center">
         <Label size="small">{tittel}</Label>
-        <Detail className="uppercase flex items-center">{kilde}</Detail>
+        {kilde && (
+          <Detail className="uppercase flex items-center">{kilde}</Detail>
+        )}
       </div>
       {children}
     </div>
