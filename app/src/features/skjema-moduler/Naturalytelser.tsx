@@ -110,6 +110,16 @@ function MisterNaturalytelser() {
           const naturalytelseForType = values.filter((n) => n.navn === type);
           return naturalytelseForType.flatMap((naturalytelse, index) => {
             const nesteNaturalytelse = naturalytelseForType[index + 1];
+
+            // Hvis nåværende naturalytelse løper evig, så kan det ikke eksistere et senere innslag. Da vil de overlappe.
+            if (
+              naturalytelse.tom === undefined &&
+              nesteNaturalytelse !== undefined
+            ) {
+              return [type];
+            }
+
+            // Hvis neste periode sin fom er før nåværende har vi overlappende perioder.
             if (
               nesteNaturalytelse?.fom &&
               naturalytelse.tom &&
@@ -131,8 +141,6 @@ function MisterNaturalytelser() {
 
   const overlappendePerioderError =
     formState.errors.naturalytelserSomMistes?.root;
-
-  console.log(watch().naturalytelserSomMistes);
 
   return (
     <div className="flex flex-col gap-4">
