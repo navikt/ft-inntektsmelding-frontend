@@ -22,6 +22,7 @@ import { useState } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { IndreLayout } from "./IndreLayout";
 import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
@@ -29,7 +30,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     useState<string>("");
   return (
     <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <div>
+      <IndreLayout>
         <Heading level="1" size="large">
           Omsorgsdager dere søker utbetaling for
         </Heading>
@@ -73,7 +74,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           forrige="../2-ansatt-og-arbeidsgiver"
           neste="../4-refusjon"
         />
-      </div>
+      </IndreLayout>
     </RotLayout>
   );
 };

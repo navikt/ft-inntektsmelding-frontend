@@ -11,12 +11,13 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { IndreLayout } from "./IndreLayout";
 import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   return (
     <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <div>
+      <IndreLayout>
         <Heading level="1" size="large">
           Den ansatte og arbeidsgiver
         </Heading>
@@ -61,7 +62,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           </Alert>
         </Informasjonsseksjon>
         <Stegnavigasjon forrige="../1-intro" neste="../3-omsorgsdager" />
-      </div>
+      </IndreLayout>
     </RotLayout>
   );
 };

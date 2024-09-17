@@ -5,6 +5,7 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { IndreLayout } from "./IndreLayout";
 import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
@@ -48,7 +49,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   };
   return (
     <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <div>
+      <IndreLayout>
         <Heading level="1" size="large">
           Beregnet månedslønn for refusjon
         </Heading>
@@ -63,7 +64,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
         </GuidePanel>
         <Inntekt opplysninger={dummyOpplysninger} />
         <Stegnavigasjon forrige="../3-omsorgsdager" neste="../5-oppsummering" />
-      </div>
+      </IndreLayout>
     </RotLayout>
   );
 };

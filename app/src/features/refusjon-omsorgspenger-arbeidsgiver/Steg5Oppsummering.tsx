@@ -16,12 +16,13 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { IndreLayout } from "./IndreLayout";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   const navigate = useNavigate();
   return (
     <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <div>
+      <IndreLayout>
         <Heading level="1" size="large">
           Oppsummering
         </Heading>
@@ -54,7 +55,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
             Send inn
           </Button>
         </div>
-      </div>
+      </IndreLayout>
     </RotLayout>
   );
 };

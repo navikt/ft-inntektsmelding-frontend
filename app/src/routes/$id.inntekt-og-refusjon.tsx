@@ -9,7 +9,7 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 
 import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
-import { Informasjonsseksjon } from "~/features/InformasjonsseksjonMedKilde";
+import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";

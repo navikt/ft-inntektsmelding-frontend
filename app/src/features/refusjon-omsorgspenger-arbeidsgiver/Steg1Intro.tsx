@@ -12,6 +12,7 @@ import { useState } from "react";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { IndreLayout } from "./IndreLayout";
 import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
@@ -20,7 +21,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const iFjor = iÅr - 1;
   return (
     <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <div>
+      <IndreLayout>
         <Heading level="1" size="large">
           Refusjon
         </Heading>
@@ -80,7 +81,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           isNesteDisabled={harUtbetaltLønn === "nei"}
           neste="../2-ansatt-og-arbeidsgiver"
         />
-      </div>
+      </IndreLayout>
     </RotLayout>
   );
 };
