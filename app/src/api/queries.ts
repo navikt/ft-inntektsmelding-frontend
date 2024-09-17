@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import {
+  grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
@@ -41,15 +42,6 @@ async function hentGrunnbeløp() {
   }
 }
 
-const grunnbeløpSchema = z.object({
-  dato: z.string(),
-  grunnbeløp: z.number(),
-  grunnbeløpPerMåned: z.number(),
-  gjennomsnittPerÅr: z.number(),
-  omregningsfaktor: z.number(),
-  virkningstidspunktForMinsteinntekt: z.string(),
-});
-
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
   const response = await fetch(
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
@@ -85,24 +77,24 @@ export function mapInntektsmeldingResponseTilValidState(
     refusjonsendringer: (inntektsmelding.refusjonsendringer ?? []).map(
       (periode) => ({
         ...periode,
-        fom: new Date(periode.fom),
+        fom: periode.fom,
       }),
     ),
     endringIRefusjon: (inntektsmelding.refusjonsendringer ?? []).length > 0,
     naturalytelserSomMistes:
       inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
         navn: periode.naturalytelsetype,
-        fom: new Date(periode.fom),
+        fom: periode.fom,
         beløp: periode.beløp,
         inkluderTom: periode.tom !== undefined,
-        tom: periode.tom ? new Date(periode.tom) : undefined,
+        tom: periode.tom,
       })) ?? [],
     inntektEndringsÅrsak: undefined, // TODO: Send inn når BE har støtte for det
     inntekt: inntektsmelding.inntekt,
     skalRefunderes: Boolean(inntektsmelding.refusjon),
     misterNaturalytelser:
       (inntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) > 0,
-    opprettetTidspunkt: new Date(inntektsmelding.opprettetTidspunkt),
+    opprettetTidspunkt: inntektsmelding.opprettetTidspunkt,
     id: inntektsmelding.id,
   } satisfies InntektsmeldingSkjemaStateValid;
 }

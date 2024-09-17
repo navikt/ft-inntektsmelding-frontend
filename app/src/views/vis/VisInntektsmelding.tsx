@@ -50,7 +50,9 @@ export const VisInntektsmelding = () => {
             </Heading>
             <Detail uppercase>
               sendt inn{" "}
-              {formatDatoTidKort(sisteInntektsmelding.opprettetTidspunkt)}
+              {formatDatoTidKort(
+                new Date(sisteInntektsmelding.opprettetTidspunkt),
+              )}
             </Detail>
           </VStack>
           {endreKnapp}

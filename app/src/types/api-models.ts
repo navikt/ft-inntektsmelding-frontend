@@ -126,3 +126,12 @@ export const opplysningerSchema = z.object({
 });
 
 export type OpplysningerDto = z.infer<typeof opplysningerSchema>;
+
+export const grunnbeløpSchema = z.object({
+  dato: z.string(),
+  grunnbeløp: z.number(),
+  grunnbeløpPerMåned: z.number(),
+  gjennomsnittPerÅr: z.number(),
+  omregningsfaktor: z.number(),
+  virkningstidspunktForMinsteinntekt: z.string(),
+});

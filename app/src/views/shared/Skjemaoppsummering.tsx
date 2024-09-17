@@ -257,7 +257,13 @@ export const Skjemaoppsummering = ({
 /**
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
  */
-function formaterPeriodeStreng({ fom, tom }: { fom?: Date; tom?: Date }) {
+function formaterPeriodeStreng({
+  fom,
+  tom,
+}: {
+  fom?: Date | string;
+  tom?: Date | string;
+}) {
   const fomStreng = fom ? `fra og med ${formatDatoKort(new Date(fom))}` : "";
   const tomStreng = tom ? `til og med ${formatDatoKort(new Date(tom))}` : "";
 

@@ -16,7 +16,6 @@ import {
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import { formatIsoDatostempel } from "~/utils.ts";
 
 import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
 
@@ -150,9 +149,9 @@ function konverterNaturalytelsePerioder(
 ): SendInntektsmeldingRequestDto["bortfaltNaturalytelsePerioder"] {
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
-    fom: formatIsoDatostempel(periode.fom),
+    fom: periode.fom,
     beløp: periode.beløp,
-    tom: periode.tom ? formatIsoDatostempel(periode.tom) : undefined,
+    tom: periode.tom,
   }));
 }
 
@@ -160,7 +159,7 @@ function utledRefusjonsPerioder(
   refusjonsendringer: InntektsmeldingSkjemaStateValid["refusjonsendringer"],
 ): SendInntektsmeldingRequestDto["refusjonsendringer"] {
   return refusjonsendringer.map((endring) => ({
-    fom: formatIsoDatostempel(endring.fom),
+    fom: endring.fom,
     beløp: endring.beløp,
   }));
 }
