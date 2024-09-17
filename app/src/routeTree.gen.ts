@@ -13,6 +13,8 @@
 import { Route as rootRoute } from './routes/__root'
 import { Route as IdImport } from './routes/$id'
 import { Route as IdIndexImport } from './routes/$id.index'
+import { Route as RefusjonOmsorgspengerArbeidsgiver6KvitteringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.6-kvittering'
+import { Route as RefusjonOmsorgspengerArbeidsgiver5Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.5'
 import { Route as RefusjonOmsorgspengerArbeidsgiver4Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.4'
 import { Route as RefusjonOmsorgspengerArbeidsgiver3Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.3'
 import { Route as RefusjonOmsorgspengerArbeidsgiver2Import } from './routes/refusjon-omsorgspenger-arbeidsgiver.2'
@@ -35,6 +37,18 @@ const IdIndexRoute = IdIndexImport.update({
   path: '/',
   getParentRoute: () => IdRoute,
 } as any)
+
+const RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute =
+  RefusjonOmsorgspengerArbeidsgiver6KvitteringImport.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering',
+    getParentRoute: () => rootRoute,
+  } as any)
+
+const RefusjonOmsorgspengerArbeidsgiver5Route =
+  RefusjonOmsorgspengerArbeidsgiver5Import.update({
+    path: '/refusjon-omsorgspenger-arbeidsgiver/5',
+    getParentRoute: () => rootRoute,
+  } as any)
 
 const RefusjonOmsorgspengerArbeidsgiver4Route =
   RefusjonOmsorgspengerArbeidsgiver4Import.update({
@@ -171,6 +185,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver4Import
       parentRoute: typeof rootRoute
     }
+    '/refusjon-omsorgspenger-arbeidsgiver/5': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/5'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/5'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/5'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver5Import
+      parentRoute: typeof rootRoute
+    }
+    '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': {
+      id: '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+      path: '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+      fullPath: '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+      preLoaderRoute: typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringImport
+      parentRoute: typeof rootRoute
+    }
     '/$id/': {
       id: '/$id/'
       path: '/'
@@ -197,6 +225,8 @@ export const routeTree = rootRoute.addChildren({
   RefusjonOmsorgspengerArbeidsgiver2Route,
   RefusjonOmsorgspengerArbeidsgiver3Route,
   RefusjonOmsorgspengerArbeidsgiver4Route,
+  RefusjonOmsorgspengerArbeidsgiver5Route,
+  RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute,
 })
 
 /* prettier-ignore-end */
@@ -212,7 +242,9 @@ export const routeTree = rootRoute.addChildren({
         "/refusjon-omsorgspenger-arbeidsgiver/1",
         "/refusjon-omsorgspenger-arbeidsgiver/2",
         "/refusjon-omsorgspenger-arbeidsgiver/3",
-        "/refusjon-omsorgspenger-arbeidsgiver/4"
+        "/refusjon-omsorgspenger-arbeidsgiver/4",
+        "/refusjon-omsorgspenger-arbeidsgiver/5",
+        "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering"
       ]
     },
     "/$id": {
@@ -260,6 +292,12 @@ export const routeTree = rootRoute.addChildren({
     },
     "/refusjon-omsorgspenger-arbeidsgiver/4": {
       "filePath": "refusjon-omsorgspenger-arbeidsgiver.4.tsx"
+    },
+    "/refusjon-omsorgspenger-arbeidsgiver/5": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.5.tsx"
+    },
+    "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering": {
+      "filePath": "refusjon-omsorgspenger-arbeidsgiver.6-kvittering.tsx"
     },
     "/$id/": {
       "filePath": "$id.index.tsx",

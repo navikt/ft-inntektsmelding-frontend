@@ -52,7 +52,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
         <Heading level="1" size="large">
           Beregnet månedslønn for refusjon
         </Heading>
-        <Fremgangsindikator aktivtSteg={5} />
+        <Fremgangsindikator aktivtSteg={4} />
         <GuidePanel>
           <BodyLong>
             Oppgi kun dager dere søker refusjon for. Har det vært en varig
