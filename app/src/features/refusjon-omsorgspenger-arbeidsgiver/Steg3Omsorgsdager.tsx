@@ -74,17 +74,17 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         <div className="flex gap-4">
           <Button
             as={Link}
-            href="../2-ansatt-og-arbeidsgiver"
             icon={<ArrowLeftIcon />}
+            to="../2-ansatt-og-arbeidsgiver"
             variant="secondary"
           >
             Forrige steg
           </Button>
           <Button
             as={Link}
-            href="../4-refusjon"
             icon={<ArrowRightIcon />}
             iconPosition="right"
+            to="../4-refusjon"
             variant="primary"
           >
             Neste steg

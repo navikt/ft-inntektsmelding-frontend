@@ -10,9 +10,9 @@ import {
 } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
+import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
-import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
 
@@ -69,17 +69,17 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
         <div className="flex gap-4">
           <Button
             as={Link}
-            href="../1-intro"
             icon={<ArrowLeftIcon />}
+            to="../1-intro"
             variant="secondary"
           >
             Forrige steg
           </Button>
           <Button
             as={Link}
-            href="../3-omsorgsdager"
             icon={<ArrowRightIcon />}
             iconPosition="right"
+            to="../3-omsorgsdager"
             variant="primary"
           >
             Neste steg
