@@ -4,9 +4,10 @@ import { z } from "zod";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import {
   InntektsmeldingResponseDtoSchema,
+  opplysningerSchema,
   SendInntektsmeldingResponseDto,
 } from "~/types/api-models";
-import { logDev, navnMedStorBokstav } from "~/utils.ts";
+import { logDev } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
@@ -125,45 +126,3 @@ export async function hentOpplysningerData(uuid: string) {
   }
   return parsedJson.data;
 }
-
-const opplysningerSchema = z.object({
-  person: z.object({
-    aktørId: z.string(),
-    fødselsnummer: z.string(),
-    fornavn: z.string().transform(navnMedStorBokstav),
-    mellomnavn: z
-      .string()
-      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || ""))
-      .optional(),
-    etternavn: z.string().transform(navnMedStorBokstav),
-  }),
-  innsender: z.object({
-    fornavn: z.string(),
-    mellomnavn: z.string().optional(),
-    etternavn: z.string(),
-    telefon: z.string().optional(),
-  }),
-  arbeidsgiver: z.object({
-    organisasjonNavn: z.string(),
-    organisasjonNummer: z.string(),
-  }),
-  inntekter: z.array(
-    z.object({
-      fom: z.string(),
-      tom: z.string(),
-      beløp: z.number().optional(),
-      arbeidsgiverIdent: z.string(),
-    }),
-  ),
-  startdatoPermisjon: z.string(),
-  ytelse: z.enum([
-    "FORELDREPENGER",
-    "SVANGERSKAPSPENGER",
-    "PLEIEPENGER_SYKT_BARN",
-    "PLEIEPENGER_I_LIVETS_SLUTTFASE",
-    "OPPLÆRINGSPENGER",
-    "OMSORGSPENGER",
-  ]),
-});
-
-export type OpplysningerDto = z.infer<typeof opplysningerSchema>;

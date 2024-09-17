@@ -9,12 +9,12 @@ import {
 } from "@tanstack/react-router";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
-import type { OpplysningerDto } from "~/api/queries";
 import {
   InntektsmeldingSkjemaStateValid,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { formatIsoDatostempel } from "~/utils.ts";
 

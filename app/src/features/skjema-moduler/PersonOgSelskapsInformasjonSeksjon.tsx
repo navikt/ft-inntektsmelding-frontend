@@ -13,12 +13,12 @@ import {
 import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
-import type { OpplysningerDto } from "~/api/queries";
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
   formatFødselsnummer,

@@ -1,9 +1,9 @@
 import { FormSummary, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
-import { OpplysningerDto } from "~/api/queries";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { ÅrsaksType } from "~/types/api-models";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   formatDatoKort,
   formatDatoLang,

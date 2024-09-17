@@ -1,5 +1,6 @@
 import { z } from "zod";
-import {OpplysningerDto} from "~/api/queries.ts";
+
+import type { OpplysningerDto } from "~/types/api-models.ts";
 
 export function leggTilGenitiv(navn: string) {
   if (navn.endsWith("s") || navn.endsWith("x")) {

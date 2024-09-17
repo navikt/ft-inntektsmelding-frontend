@@ -8,7 +8,6 @@ import {
 } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
-import type { OpplysningerDto } from "~/api/queries.ts";
 import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
 import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
@@ -23,6 +22,7 @@ import {
   ENDRING_I_REFUSJON_TEMPLATE,
   UtbetalingOgRefusjon,
 } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalizeSetning,

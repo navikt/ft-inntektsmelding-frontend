@@ -16,10 +16,11 @@ import clsx from "clsx";
 import { Fragment, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { hentGrunnbeløpOptions, OpplysningerDto } from "~/api/queries.ts";
+import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
+import type { OpplysningerDto } from "~/types/api-models.ts";
 import { formatKroner } from "~/utils.ts";
 
 type UtbetalingOgRefusjonProps = {
