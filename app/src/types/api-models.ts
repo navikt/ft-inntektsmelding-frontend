@@ -2,13 +2,6 @@ import { z } from "zod";
 
 import { beløpSchema } from "~/utils.ts";
 
-export type MånedsinntektResponsDto = {
-  fom: string;
-  tom: string;
-  beløp?: number;
-  arbeidsgiverIdent: string;
-};
-
 export const YtelsetypeSchema = z.enum([
   "FORELDREPENGER",
   "SVANGERSKAPSPENGER",
