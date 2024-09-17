@@ -1,4 +1,6 @@
-import { BodyLong, GuidePanel, Heading } from "@navikt/ds-react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
+import { BodyLong, Button, GuidePanel, Heading } from "@navikt/ds-react";
+import { Link } from "@tanstack/react-router";
 
 import { OpplysningerDto } from "~/api/queries";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
@@ -6,7 +8,6 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
-import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const dummyOpplysninger: OpplysningerDto = {
@@ -63,7 +64,25 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
           </BodyLong>
         </GuidePanel>
         <Inntekt opplysninger={dummyOpplysninger} />
-        <Stegnavigasjon forrige="../3-omsorgsdager" neste="../5-oppsummering" />
+        <div className="flex gap-4">
+          <Button
+            as={Link}
+            href="../3-omsorgsdager"
+            icon={<ArrowLeftIcon />}
+            variant="secondary"
+          >
+            Forrige steg
+          </Button>
+          <Button
+            as={Link}
+            href="../5-oppsummering"
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            variant="primary"
+          >
+            Neste steg
+          </Button>
+        </div>
       </IndreLayout>
     </RotLayout>
   );

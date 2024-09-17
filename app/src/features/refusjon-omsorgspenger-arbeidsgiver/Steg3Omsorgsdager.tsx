@@ -18,12 +18,12 @@ import {
   useDatepicker,
   useRangeDatepicker,
 } from "@navikt/ds-react";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
-import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const [harDekket10FørsteOmsorgsdager, setHarDekket10FørsteOmsorgsdager] =
@@ -70,10 +70,26 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         )}
         <FraværHeleDagen />
         <FraværDelerAvDagen />
-        <Stegnavigasjon
-          forrige="../2-ansatt-og-arbeidsgiver"
-          neste="../4-refusjon"
-        />
+
+        <div className="flex gap-4">
+          <Button
+            as={Link}
+            href="../2-ansatt-og-arbeidsgiver"
+            icon={<ArrowLeftIcon />}
+            variant="secondary"
+          >
+            Forrige steg
+          </Button>
+          <Button
+            as={Link}
+            href="../4-refusjon"
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            variant="primary"
+          >
+            Neste steg
+          </Button>
+        </div>
       </IndreLayout>
     </RotLayout>
   );
