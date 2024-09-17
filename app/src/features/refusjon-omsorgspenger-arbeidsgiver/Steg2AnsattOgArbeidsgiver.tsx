@@ -1,18 +1,20 @@
+import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
   BodyShort,
+  Button,
   Heading,
   Label,
   TextField,
 } from "@navikt/ds-react";
+import { Link } from "@tanstack/react-router";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
-import { Stegnavigasjon } from "./Stegnavigasjon";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   return (
@@ -23,31 +25,34 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
         </Heading>
         <Fremgangsindikator aktivtSteg={2} />
         <Informasjonsseksjon tittel="Den ansatte">
-          <div className="flex flex-col gap-2">
-            <TextField label="Ansattes fødselsnummer (11 siffer)" />
-            <div>
+          <div className="flex gap-4">
+            <TextField
+              className="flex-1"
+              label="Ansattes fødselsnummer (11 siffer)"
+            />
+            <div className="flex-1">
               <Label>Navn</Label>
               <BodyShort>Navnerud Orama</BodyShort>
             </div>
           </div>
         </Informasjonsseksjon>
-        <Informasjonsseksjon tittel="Arbeidsgiver">
+        <Informasjonsseksjon kilde="Fra Altinn" tittel="Arbeidsgiver">
           {/* TODO: Legg til støtte for flere arbeidsforhold */}
-          <div className="flex flex-col gap-2">
-            <div>
+          <div className="flex gap-4">
+            <div className="flex-1">
               <Label>Virksomhetsnavn</Label>
               <BodyShort>Proff Arbeidsgiver AS</BodyShort>
             </div>
-            <div>
+            <div className="flex-1">
               <Label>Org.nr. for underenhet</Label>
               <BodyShort>123456789</BodyShort>
             </div>
           </div>
         </Informasjonsseksjon>
-        <Informasjonsseksjon tittel="Kontaktinformasjon">
-          <div className="flex flex-col gap-2">
-            <TextField label="Navn" />
-            <TextField label="Telefonnummer" type="tel" />
+        <Informasjonsseksjon kilde="Fra Altinn" tittel="Kontaktinformasjon">
+          <div className="flex gap-4 flex-wrap">
+            <TextField className="flex-1" label="Navn" />
+            <TextField className="flex-1" label="Telefonnummer" type="tel" />
           </div>
           <Alert variant="info">
             <Heading level="3" size="small">
@@ -61,7 +66,25 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             </BodyLong>
           </Alert>
         </Informasjonsseksjon>
-        <Stegnavigasjon forrige="../1-intro" neste="../3-omsorgsdager" />
+        <div className="flex gap-4">
+          <Button
+            as={Link}
+            href="../1-intro"
+            icon={<ArrowLeftIcon />}
+            variant="secondary"
+          >
+            Forrige steg
+          </Button>
+          <Button
+            as={Link}
+            href="../3-omsorgsdager"
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            variant="primary"
+          >
+            Neste steg
+          </Button>
+        </div>
       </IndreLayout>
     </RotLayout>
   );
