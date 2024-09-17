@@ -106,23 +106,21 @@ function MisterNaturalytelser() {
     name: "naturalytelserSomMistes",
     rules: {
       validate: (values) => {
-        const errors = Object.keys(NaturalytelseTypeSchema.Values).flatMap(
-          (type) => {
-            const naturalytelseForType = values.filter((n) => n.navn === type);
-            return naturalytelseForType.flatMap((naturalytelse, index) => {
-              const nesteNaturalytelse = naturalytelseForType[index + 1];
-              if (
-                nesteNaturalytelse?.fom &&
-                naturalytelse.tom &&
-                nesteNaturalytelse.fom < naturalytelse.tom
-              ) {
-                return [type];
-              }
+        const errors = NaturalytelseTypeSchema.options.flatMap((type) => {
+          const naturalytelseForType = values.filter((n) => n.navn === type);
+          return naturalytelseForType.flatMap((naturalytelse, index) => {
+            const nesteNaturalytelse = naturalytelseForType[index + 1];
+            if (
+              nesteNaturalytelse?.fom &&
+              naturalytelse.tom &&
+              nesteNaturalytelse.fom < naturalytelse.tom
+            ) {
+              return [type];
+            }
 
-              return [];
-            });
-          },
-        );
+            return [];
+          });
+        });
         return (
           errors.length === 0 ||
           `Naturalytelse ${naturalytelser[errors[0]]} har overlappende perioder`
