@@ -1,5 +1,6 @@
 import { PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
   BodyLong,
   Button,
   Heading,
@@ -15,7 +16,10 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import type { Naturalytelsetype } from "~/types/api-models.ts";
+import {
+  Naturalytelsetype,
+  NaturalytelseTypeSchema,
+} from "~/types/api-models.ts";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fom: undefined,
@@ -100,7 +104,43 @@ function MisterNaturalytelser() {
   const { fields, append, remove } = useFieldArray({
     control,
     name: "naturalytelserSomMistes",
+    rules: {
+      validate: (values) => {
+        const errors = NaturalytelseTypeSchema.options.flatMap((type) => {
+          const naturalytelseForType = values.filter((n) => n.navn === type);
+          return naturalytelseForType.flatMap((naturalytelse, index) => {
+            const nesteNaturalytelse = naturalytelseForType[index + 1];
+
+            // Hvis nåværende naturalytelse løper evig, så kan det ikke eksistere et senere innslag. Da vil de overlappe.
+            if (
+              naturalytelse.tom === undefined &&
+              nesteNaturalytelse !== undefined
+            ) {
+              return [type];
+            }
+
+            // Hvis neste periode sin fom er før nåværende har vi overlappende perioder.
+            if (
+              nesteNaturalytelse?.fom &&
+              naturalytelse.tom &&
+              nesteNaturalytelse.fom < naturalytelse.tom
+            ) {
+              return [type];
+            }
+
+            return [];
+          });
+        });
+        return (
+          errors.length === 0 ||
+          `Naturalytelse ${naturalytelser[errors[0]]} har overlappende perioder`
+        );
+      },
+    },
   });
+
+  const overlappendePerioderError =
+    formState.errors.naturalytelserSomMistes?.root;
 
   return (
     <div className="flex flex-col gap-4">
@@ -115,8 +155,11 @@ function MisterNaturalytelser() {
         const skalInkludereTom =
           watch(`naturalytelserSomMistes.${index}.inkluderTom`) === "ja";
 
+        const fom = watch(`naturalytelserSomMistes.${index}.fom`);
+
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
+            {/*// TODO: items-end gjør at brekkende legend blir align. items-start gir alignment ved valideringsfeil.... Hvordan få begge pene?*/}
             <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-end">
               <Select
                 label="Naturalytelse som faller bort"
@@ -145,7 +188,8 @@ function MisterNaturalytelser() {
                 {...register(
                   `naturalytelserSomMistes.${index}.beløp` as const,
                   {
-                    min: { value: 1, message: "Må være mer enn 0" },
+                    validate: (value) =>
+                      Number(value) > 0 || "Må være mer enn 0",
                   },
                 )}
                 autoComplete="off"
@@ -188,6 +232,18 @@ function MisterNaturalytelser() {
                   <DatePickerWrapped
                     label="Til og med"
                     name={`naturalytelserSomMistes.${index}.tom` as const}
+                    rules={{
+                      validate: (tom: Date | undefined) => {
+                        if (!fom) return true;
+                        if (!tom) return "Må oppgis";
+
+                        // TODO: sjekk trøbbel med tidssone
+                        // dato satt i FE har 00:00:00 GMT+2
+                        // dato satt fra BE (streng på format 2024-10-01) gir dato 02:00:00 GMT+2
+                        return tom >= fom || "Kan ikke være før fra dato";
+                      },
+                    }}
+                    shouldUnregister
                   />
                 )}
               </div>
@@ -206,6 +262,9 @@ function MisterNaturalytelser() {
       >
         Legg til naturalytelse
       </Button>
+      {overlappendePerioderError && (
+        <Alert variant="error">{overlappendePerioderError.message}</Alert>
+      )}
     </div>
   );
 }
