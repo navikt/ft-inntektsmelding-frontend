@@ -1,8 +1,4 @@
-import {
-  AirplaneIcon,
-  ArrowLeftIcon,
-  PaperplaneIcon,
-} from "@navikt/aksel-icons";
+import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Button, Heading, List, VStack } from "@navikt/ds-react";
 import {
   FormSummary,
