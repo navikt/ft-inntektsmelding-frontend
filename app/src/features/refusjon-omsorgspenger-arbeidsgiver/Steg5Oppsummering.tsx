@@ -1,4 +1,8 @@
-import { AirplaneIcon, ArrowLeftIcon } from "@navikt/aksel-icons";
+import {
+  AirplaneIcon,
+  ArrowLeftIcon,
+  PaperplaneIcon,
+} from "@navikt/aksel-icons";
 import { Button, Heading, List, VStack } from "@navikt/ds-react";
 import {
   FormSummary,
@@ -41,7 +45,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           Forrige steg
         </Button>
         <Button
-          icon={<AirplaneIcon />}
+          icon={<PaperplaneIcon />}
+          iconPosition="right"
           onClick={() => {
             alert("Søknad ikke egentlig sendt inn, men vi kan late som");
             navigate({
