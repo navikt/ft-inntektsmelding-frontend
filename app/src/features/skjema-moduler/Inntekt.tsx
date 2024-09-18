@@ -35,7 +35,7 @@ import {
   leggTilGenitiv,
 } from "~/utils.ts";
 
-import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
+import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { useDisclosure } from "../useDisclosure";
 
 type InntektProps = {
@@ -59,7 +59,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
-      <InformasjonsseksjonMedKilde
+      <Informasjonsseksjon
         kilde="Fra A-Ordningen"
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
@@ -71,7 +71,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
             </Fragment>
           ))}
         </HGrid>
-      </InformasjonsseksjonMedKilde>
+      </Informasjonsseksjon>
 
       {inntekter.some((inntekt) => inntekt.beløp === undefined) && (
         <Alert variant="warning">

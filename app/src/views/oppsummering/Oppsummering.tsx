@@ -37,12 +37,10 @@ export const Oppsummering = () => {
             Noe gikk galt med utfyllingen av inntektsmeldingen din. Du må
             dessverre begynne på nytt.
           </BodyLong>
-          {/*@ts-expect-error -- ingen anelse hvorfor dette ikke funker lenger etter oppgradering av tanstack-router*/}
           <Button
             as={Link}
-            params={{ id }}
             size="small"
-            to="/$id"
+            to={`/${id}`}
             variant="secondary-neutral"
           >
             Start på nytt

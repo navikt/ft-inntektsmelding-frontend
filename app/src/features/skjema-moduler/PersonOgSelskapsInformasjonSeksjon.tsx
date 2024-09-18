@@ -26,7 +26,7 @@ import {
   slåSammenTilFulltNavn,
 } from "~/utils";
 
-import { InformasjonsseksjonMedKilde } from "../InformasjonsseksjonMedKilde";
+import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
@@ -71,7 +71,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
 
           <Intro opplysninger={opplysninger} />
           <Personinformasjon opplysninger={opplysninger} />
-          <InformasjonsseksjonMedKilde
+          <Informasjonsseksjon
             className="col-span-2"
             kilde="Fra Altinn"
             tittel={`Kontaktinformasjon for ${innsenderNavn}`}
@@ -111,7 +111,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
                 fremtiden, kan du bytte til en annen kontaktperson.
               </BodyShort>
             </Alert>
-          </InformasjonsseksjonMedKilde>
+          </Informasjonsseksjon>
 
           <Button
             className="w-fit self-center"
@@ -179,7 +179,7 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
   const fulltNavn = slåSammenTilFulltNavn(person);
 
   return (
-    <InformasjonsseksjonMedKilde
+    <Informasjonsseksjon
       kilde={`Fra søknaden til ${person.fornavn}`}
       tittel="Den ansatte"
     >
@@ -190,6 +190,6 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
           <CopyButton copyText={person.fødselsnummer} size="small" />
         </div>
       </div>
-    </InformasjonsseksjonMedKilde>
+    </Informasjonsseksjon>
   );
 };

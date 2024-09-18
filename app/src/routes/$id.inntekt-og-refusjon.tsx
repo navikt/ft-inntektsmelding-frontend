@@ -9,7 +9,7 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 
 import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
-import { InformasjonsseksjonMedKilde } from "~/features/InformasjonsseksjonMedKilde";
+import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
@@ -203,12 +203,12 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
       <Heading level="4" size="medium">
         Periode med {formatYtelsesnavn(ytelse)}
       </Heading>
-      <InformasjonsseksjonMedKilde
+      <Informasjonsseksjon
         kilde={`Fra søknaden til ${person.fornavn}`}
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} første dag med ${formatYtelsesnavn(ytelse)}`}
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
-      </InformasjonsseksjonMedKilde>
+      </Informasjonsseksjon>
     </VStack>
   );
 }
