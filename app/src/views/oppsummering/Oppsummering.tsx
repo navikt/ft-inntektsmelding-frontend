@@ -131,6 +131,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         </Button>
         <Button
           icon={<PaperplaneIcon />}
+          iconPosition="right"
           loading={isPending}
           onClick={() => mutate(gyldigInntektsmeldingSkjemaState)}
           variant="primary"
