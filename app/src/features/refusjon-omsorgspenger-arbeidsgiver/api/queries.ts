@@ -1,3 +1,4 @@
+import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { logDev } from "~/utils";
@@ -17,10 +18,25 @@ const PersondataDtoSchema = z.object({
 export type PersondataDto = z.infer<typeof PersondataDtoSchema>;
 
 export type PersondataFeil =
+  | { feilkode: "fant ingen personer" }
   | { feilkode: "generell feil" } // 5xx respons fra serveren
-  | { feilkode: "uventet respons" }; // Zod-validering feilet
+  | { feilkode: "uventet respons" } // Zod-validering feilet
+  | Error; // Programmeringsfeil
 
-export const slåOppPersondata = async (fødselsnummer: string) => {
+export const slåOppPersondataOptions = (fødselsnummer: string) => {
+  return queryOptions<
+    PersondataDto,
+    PersondataFeil,
+    PersondataDto,
+    ["persondata", string]
+  >({
+    queryKey: ["persondata", fødselsnummer],
+    queryFn: ({ queryKey }) => slåOppPersondata(queryKey[1]),
+    enabled: fødselsnummer.length === 11,
+  });
+};
+
+const slåOppPersondata = async (fødselsnummer: string) => {
   const response = await fetch(
     `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/persondata`,
     {
@@ -36,8 +52,12 @@ export const slåOppPersondata = async (fødselsnummer: string) => {
   const json = await response.json();
 
   if (!response.ok) {
-    logDev("error", "Persondata-oppslag feilet", json);
-    throw { feilkode: "generell feil" } as PersondataFeil;
+    if (response.status === 404) {
+      throw { feilkode: "fant ingen personer" } as PersondataFeil;
+    } else {
+      logDev("error", "Persondata-oppslag feilet", json);
+      throw { feilkode: "generell feil" } as PersondataFeil;
+    }
   }
 
   const parsedResponse = PersondataDtoSchema.safeParse(json);

@@ -22,7 +22,10 @@ export function slåSammenTilFulltNavn({
   return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
 }
 
-export function navnMedStorBokstav(navn: string) {
+export function navnMedStorBokstav(navn?: string) {
+  if (!navn) {
+    return navn;
+  }
   return navn
     .split("-")
     .map((old) => capitalize(old))
