@@ -18,9 +18,9 @@ export function slåSammenTilFulltNavn({
   mellomnavn,
   etternavn,
 }: {
-  fornavn: string;
+  fornavn?: string;
   mellomnavn?: string;
-  etternavn: string;
+  etternavn?: string;
 }) {
   return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
 }
