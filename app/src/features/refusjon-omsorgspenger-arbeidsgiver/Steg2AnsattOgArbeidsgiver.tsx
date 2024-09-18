@@ -6,7 +6,6 @@ import {
   Button,
   Heading,
   Label,
-  Loader,
   Select,
   Skeleton,
   TextField,

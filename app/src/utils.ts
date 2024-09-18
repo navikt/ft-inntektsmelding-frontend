@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
-export function leggTilGenitiv(navn: string) {
+export function leggTilGenitiv(navn?: string) {
+  if (!navn) {
+    return navn;
+  }
   if (navn.endsWith("s") || navn.endsWith("x")) {
     return `${navn}'`;
   }
@@ -32,7 +35,10 @@ export function navnMedStorBokstav(navn?: string) {
     .join("-");
 }
 
-export function capitalizeSetning(setning: string) {
+export function capitalizeSetning(setning?: string) {
+  if (!setning) {
+    return setning;
+  }
   const oppdelteOrd = setning.split(" ");
   return oppdelteOrd.map((ord) => capitalize(ord)).join(" ");
 }
