@@ -6,16 +6,34 @@ import {
   Button,
   Heading,
   Label,
+  Select,
+  Skeleton,
   TextField,
 } from "@navikt/ds-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { navnMedStorBokstav } from "~/utils";
 
+import { slåOppPersondataOptions } from "./api/queries";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
+  const [fødselsnummer, setFødselsnummer] = useState("");
+  const { data, error, isLoading } = useQuery(
+    slåOppPersondataOptions(fødselsnummer),
+  );
+
+  const fantIngenPersoner =
+    error && "feilkode" in error && error.feilkode === "fant ingen personer";
+  const harFlereEnnEttArbeidsforhold =
+    data?.arbeidsforhold && data.arbeidsforhold.length > 1;
+  const harEttArbeidsforhold =
+    data?.arbeidsforhold && data.arbeidsforhold.length === 1;
+
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
       <Heading level="1" size="large">
@@ -27,26 +45,61 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <TextField
             className="flex-1"
             label="Ansattes fødselsnummer (11 siffer)"
+            onChange={(e) => {
+              setFødselsnummer(e.target.value);
+            }}
           />
           <div className="flex-1">
             <Label>Navn</Label>
-            <BodyShort>Navnerud Orama</BodyShort>
+            {isLoading ? (
+              <Skeleton variant="text" width="100%" />
+            ) : fantIngenPersoner ? (
+              <BodyShort>
+                Fant ingen personer som du har tilgang til å se arbeidsforholdet
+                til. Dobbeltsjekk fødselsnummer og prøv igjen.
+              </BodyShort>
+            ) : error ? (
+              <BodyShort>Kunne ikke hente data</BodyShort>
+            ) : (
+              <BodyShort>{navnMedStorBokstav(data?.navn)}</BodyShort>
+            )}
           </div>
         </div>
       </Informasjonsseksjon>
-      <Informasjonsseksjon kilde="Fra Altinn" tittel="Arbeidsgiver">
-        {/* TODO: Legg til støtte for flere arbeidsforhold */}
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <Label>Virksomhetsnavn</Label>
-            <BodyShort>Proff Arbeidsgiver AS</BodyShort>
-          </div>
-          <div className="flex-1">
-            <Label>Org.nr. for underenhet</Label>
-            <BodyShort>123456789</BodyShort>
-          </div>
-        </div>
-      </Informasjonsseksjon>
+      {data && (
+        <Informasjonsseksjon kilde="Fra Altinn" tittel="Arbeidsgiver">
+          {harFlereEnnEttArbeidsforhold ? (
+            <Select label="Velg arbeidsforhold">
+              {data.arbeidsforhold.map((arbeidsforhold) => (
+                <option
+                  key={arbeidsforhold.underenhetId}
+                  value={arbeidsforhold.underenhetId}
+                >
+                  {arbeidsforhold.navn} ({arbeidsforhold.underenhetId})
+                </option>
+              ))}
+            </Select>
+          ) : harEttArbeidsforhold ? (
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <Label>Virksomhetsnavn</Label>
+                <BodyShort>{data.arbeidsforhold[0].navn}</BodyShort>
+              </div>
+              <div className="flex-1">
+                <Label>Org.nr. for underenhet</Label>
+                <BodyShort>{data.arbeidsforhold[0].underenhetId}</BodyShort>
+              </div>
+            </div>
+          ) : (
+            <Alert variant="warning">
+              <BodyLong>
+                Kunne ikke finne noen arbeidsforhold for {data.navn}. Vent litt,
+                og prøv igjen.
+              </BodyLong>
+            </Alert>
+          )}
+        </Informasjonsseksjon>
+      )}
       <Informasjonsseksjon kilde="Fra Altinn" tittel="Kontaktinformasjon">
         <div className="flex gap-4 flex-wrap">
           <TextField className="flex-1" label="Navn" />

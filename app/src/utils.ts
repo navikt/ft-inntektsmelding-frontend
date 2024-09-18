@@ -2,7 +2,10 @@ import { z } from "zod";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
-export function leggTilGenitiv(navn: string) {
+export function leggTilGenitiv(navn?: string) {
+  if (!navn) {
+    return navn;
+  }
   if (navn.endsWith("s") || navn.endsWith("x")) {
     return `${navn}'`;
   }
@@ -15,21 +18,27 @@ export function slåSammenTilFulltNavn({
   mellomnavn,
   etternavn,
 }: {
-  fornavn: string;
+  fornavn?: string;
   mellomnavn?: string;
-  etternavn: string;
+  etternavn?: string;
 }) {
   return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
 }
 
-export function navnMedStorBokstav(navn: string) {
+export function navnMedStorBokstav(navn?: string) {
+  if (!navn) {
+    return navn;
+  }
   return navn
     .split("-")
     .map((old) => capitalize(old))
     .join("-");
 }
 
-export function capitalizeSetning(setning: string) {
+export function capitalizeSetning(setning?: string) {
+  if (!setning) {
+    return setning;
+  }
   const oppdelteOrd = setning.split(" ");
   return oppdelteOrd.map((ord) => capitalize(ord)).join(" ");
 }
