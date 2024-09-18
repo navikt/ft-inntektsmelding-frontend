@@ -53,10 +53,10 @@ const slåOppPersondata = async (fødselsnummer: string) => {
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw { feilkode: "fant ingen personer" } as PersondataFeil;
+      throw { feilkode: "fant ingen personer" } satisfies PersondataFeil;
     } else {
       logDev("error", "Persondata-oppslag feilet", json);
-      throw { feilkode: "generell feil" } as PersondataFeil;
+      throw { feilkode: "generell feil" } satisfies PersondataFeil;
     }
   }
 
@@ -67,7 +67,7 @@ const slåOppPersondata = async (fødselsnummer: string) => {
       "Mottok en uventet respons fra serveren",
       parsedResponse.error,
     );
-    throw { feilkode: "uventet respons" } as PersondataFeil;
+    throw { feilkode: "uventet respons" } satisfies PersondataFeil;
   }
   return parsedResponse.data;
 };
