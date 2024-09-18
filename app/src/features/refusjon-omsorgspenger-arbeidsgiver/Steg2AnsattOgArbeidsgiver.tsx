@@ -30,9 +30,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   const fantIngenPersoner =
     error && "feilkode" in error && error.feilkode === "fant ingen personer";
   const harFlereEnnEttArbeidsforhold =
-    data?.arbeidsforhold && data.arbeidsforhold?.length > 1;
+    data?.arbeidsforhold && data.arbeidsforhold.length > 1;
   const harEttArbeidsforhold =
-    data?.arbeidsforhold && data.arbeidsforhold?.length === 1;
+    data?.arbeidsforhold && data.arbeidsforhold.length === 1;
 
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
