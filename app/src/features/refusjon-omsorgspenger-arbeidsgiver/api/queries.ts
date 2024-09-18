@@ -33,6 +33,10 @@ export const slåOppPersondataOptions = (fødselsnummer: string) => {
     queryKey: ["persondata", fødselsnummer],
     queryFn: ({ queryKey }) => slåOppPersondata(queryKey[1]),
     enabled: fødselsnummer.length === 11,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 };
 
