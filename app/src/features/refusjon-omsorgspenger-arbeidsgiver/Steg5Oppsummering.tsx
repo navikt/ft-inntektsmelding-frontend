@@ -16,46 +16,43 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Fremgangsindikator } from "./Fremgangsindikator";
-import { IndreLayout } from "./IndreLayout";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   const navigate = useNavigate();
   return (
-    <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <IndreLayout>
-        <Heading level="1" size="large">
-          Oppsummering
-        </Heading>
-        <Fremgangsindikator aktivtSteg={5} />
-        <VStack gap="4">
-          <OppsummeringRefusjon />
-          <OppsummeringArbeidsgiverOgAnsatt />
-          <OppsummeringOmsorgsdager />
-          <OppsummeringMånedslønn />
-        </VStack>
-        <div className="flex gap-4">
-          <Button
-            as={Link}
-            icon={<ArrowLeftIcon />}
-            to="../4-refusjon"
-            variant="secondary"
-          >
-            Forrige steg
-          </Button>
-          <Button
-            icon={<AirplaneIcon />}
-            onClick={() => {
-              alert("Søknad ikke egentlig sendt inn, men vi kan late som");
-              navigate({
-                to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
-              });
-            }}
-            variant="primary"
-          >
-            Send inn
-          </Button>
-        </div>
-      </IndreLayout>
+    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+      <Heading level="1" size="large">
+        Oppsummering
+      </Heading>
+      <Fremgangsindikator aktivtSteg={5} />
+      <VStack gap="4">
+        <OppsummeringRefusjon />
+        <OppsummeringArbeidsgiverOgAnsatt />
+        <OppsummeringOmsorgsdager />
+        <OppsummeringMånedslønn />
+      </VStack>
+      <div className="flex gap-4">
+        <Button
+          as={Link}
+          icon={<ArrowLeftIcon />}
+          to="../4-refusjon"
+          variant="secondary"
+        >
+          Forrige steg
+        </Button>
+        <Button
+          icon={<AirplaneIcon />}
+          onClick={() => {
+            alert("Søknad ikke egentlig sendt inn, men vi kan late som");
+            navigate({
+              to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
+            });
+          }}
+          variant="primary"
+        >
+          Send inn
+        </Button>
+      </div>
     </RotLayout>
   );
 };

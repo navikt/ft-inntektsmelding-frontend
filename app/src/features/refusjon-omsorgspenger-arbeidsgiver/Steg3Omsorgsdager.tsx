@@ -24,75 +24,70 @@ import { useState } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
 import { Fremgangsindikator } from "./Fremgangsindikator";
-import { IndreLayout } from "./IndreLayout";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const [harDekket10FørsteOmsorgsdager, setHarDekket10FørsteOmsorgsdager] =
-    useState<string>("");
+    useState("");
   return (
-    <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <IndreLayout>
-        <Heading level="1" size="large">
-          Omsorgsdager dere søker utbetaling for
-        </Heading>
-        <Fremgangsindikator aktivtSteg={3} />
-        <GuidePanel>
-          <BodyLong>
-            Oppgi kun dager dere søker refusjon for. Har det vært en varig
-            lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til,
-            må dere sende inn to søknader med periodene før og etter
-            lønnsendring.
-          </BodyLong>
-        </GuidePanel>
-        <RadioGroup
-          legend="Har dere dekket de 10 første omsorgsdagene i år?"
-          name="har-dekket-10-første-omsorgsdager"
-          onChange={setHarDekket10FørsteOmsorgsdager}
-          value={harDekket10FørsteOmsorgsdager}
-        >
-          <Radio value="ja">Ja</Radio>
-          <Radio value="nei">Nei</Radio>
-        </RadioGroup>
-        {harDekket10FørsteOmsorgsdager === "nei" && (
-          <Alert variant="info">
-            <VStack gap="4">
-              <BodyLong>
-                Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår
-                for ansatte som har barn under 12 år, eller som fyller 12 år det
-                gjeldende året. Du kan søke om utbetaling fra NAV fra og med den
-                11. dagen.
-              </BodyLong>
-              <BodyLong>
-                Hvis den ansatte har kronisk sykt barn over 13 år, og ingen
-                andre barn under 12 år, kan du søke om utbetaling fra første
-                fraværsdag.
-              </BodyLong>
-            </VStack>
-          </Alert>
-        )}
-        <FraværHeleDagen />
-        <FraværDelerAvDagen />
+    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+      <Heading level="1" size="large">
+        Omsorgsdager dere søker utbetaling for
+      </Heading>
+      <Fremgangsindikator aktivtSteg={3} />
+      <GuidePanel>
+        <BodyLong>
+          Oppgi kun dager dere søker refusjon for. Har det vært en varig
+          lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må
+          dere sende inn to søknader med periodene før og etter lønnsendring.
+        </BodyLong>
+      </GuidePanel>
+      <RadioGroup
+        legend="Har dere dekket de 10 første omsorgsdagene i år?"
+        name="har-dekket-10-første-omsorgsdager"
+        onChange={setHarDekket10FørsteOmsorgsdager}
+        value={harDekket10FørsteOmsorgsdager}
+      >
+        <Radio value="ja">Ja</Radio>
+        <Radio value="nei">Nei</Radio>
+      </RadioGroup>
+      {harDekket10FørsteOmsorgsdager === "nei" && (
+        <Alert variant="info">
+          <VStack gap="4">
+            <BodyLong>
+              Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår for
+              ansatte som har barn under 12 år, eller som fyller 12 år det
+              gjeldende året. Du kan søke om utbetaling fra NAV fra og med den
+              11. dagen.
+            </BodyLong>
+            <BodyLong>
+              Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre
+              barn under 12 år, kan du søke om utbetaling fra første fraværsdag.
+            </BodyLong>
+          </VStack>
+        </Alert>
+      )}
+      <FraværHeleDagen />
+      <FraværDelerAvDagen />
 
-        <div className="flex gap-4">
-          <Button
-            as={Link}
-            icon={<ArrowLeftIcon />}
-            to="../2-ansatt-og-arbeidsgiver"
-            variant="secondary"
-          >
-            Forrige steg
-          </Button>
-          <Button
-            as={Link}
-            icon={<ArrowRightIcon />}
-            iconPosition="right"
-            to="../4-refusjon"
-            variant="primary"
-          >
-            Neste steg
-          </Button>
-        </div>
-      </IndreLayout>
+      <div className="flex gap-4">
+        <Button
+          as={Link}
+          icon={<ArrowLeftIcon />}
+          to="../2-ansatt-og-arbeidsgiver"
+          variant="secondary"
+        >
+          Forrige steg
+        </Button>
+        <Button
+          as={Link}
+          icon={<ArrowRightIcon />}
+          iconPosition="right"
+          to="../4-refusjon"
+          variant="primary"
+        >
+          Neste steg
+        </Button>
+      </div>
     </RotLayout>
   );
 };

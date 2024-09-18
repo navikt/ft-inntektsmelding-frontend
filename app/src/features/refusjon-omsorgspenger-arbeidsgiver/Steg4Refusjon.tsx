@@ -8,7 +8,6 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { Fremgangsindikator } from "./Fremgangsindikator";
-import { IndreLayout } from "./IndreLayout";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const dummyOpplysninger: OpplysningerDto = {
@@ -51,43 +50,41 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   };
   const formMethods = useForm();
   return (
-    <RotLayout tittel="Søknad om refusjon for omsorgspenger">
-      <IndreLayout>
-        <FormProvider {...formMethods}>
-          <Heading level="1" size="large">
-            Beregnet månedslønn for refusjon
-          </Heading>
-          <Fremgangsindikator aktivtSteg={4} />
-          <GuidePanel>
-            <BodyLong>
-              Oppgi kun dager dere søker refusjon for. Har det vært en varig
-              lønnsendring mellom perioder som dere ønsker vi skal ta hensyn
-              til, må dere sende inn to søknader med periodene før og etter
-              lønnsendring.
-            </BodyLong>
-          </GuidePanel>
-          <Inntekt opplysninger={dummyOpplysninger} />
-          <div className="flex gap-4">
-            <Button
-              as={Link}
-              icon={<ArrowLeftIcon />}
-              to="../3-omsorgsdager"
-              variant="secondary"
-            >
-              Forrige steg
-            </Button>
-            <Button
-              as={Link}
-              icon={<ArrowRightIcon />}
-              iconPosition="right"
-              to="../5-oppsummering"
-              variant="primary"
-            >
-              Neste steg
-            </Button>
-          </div>
-        </FormProvider>
-      </IndreLayout>
+    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+      <FormProvider {...formMethods}>
+        <Heading level="1" size="large">
+          Beregnet månedslønn for refusjon
+        </Heading>
+        <Fremgangsindikator aktivtSteg={4} />
+        <GuidePanel>
+          <BodyLong>
+            Oppgi kun dager dere søker refusjon for. Har det vært en varig
+            lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til,
+            må dere sende inn to søknader med periodene før og etter
+            lønnsendring.
+          </BodyLong>
+        </GuidePanel>
+        <Inntekt opplysninger={dummyOpplysninger} />
+        <div className="flex gap-4">
+          <Button
+            as={Link}
+            icon={<ArrowLeftIcon />}
+            to="../3-omsorgsdager"
+            variant="secondary"
+          >
+            Forrige steg
+          </Button>
+          <Button
+            as={Link}
+            icon={<ArrowRightIcon />}
+            iconPosition="right"
+            to="../5-oppsummering"
+            variant="primary"
+          >
+            Neste steg
+          </Button>
+        </div>
+      </FormProvider>
     </RotLayout>
   );
 };
