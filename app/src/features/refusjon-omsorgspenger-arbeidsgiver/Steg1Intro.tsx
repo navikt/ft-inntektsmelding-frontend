@@ -19,7 +19,7 @@ import { Fremgangsindikator } from "./Fremgangsindikator";
 import { IndreLayout } from "./IndreLayout";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
-  const [harUtbetaltLønn, setHarUtbetaltLønn] = useState<string | "">("");
+  const [harUtbetaltLønn, setHarUtbetaltLønn] = useState("");
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
   return (
