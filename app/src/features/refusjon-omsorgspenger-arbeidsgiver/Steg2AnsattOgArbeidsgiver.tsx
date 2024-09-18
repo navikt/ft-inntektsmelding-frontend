@@ -56,7 +56,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <div className="flex-1">
             <Label>Navn</Label>
             {isLoading ? (
-              <Loader title="Henter informasjon" />
+              <Loader className="block mt-5" title="Henter informasjon" />
             ) : fantIngenPersoner ? (
               <BodyShort>
                 Fant ingen personer som du har tilgang til å se arbeidsforholdet
