@@ -3,8 +3,8 @@ import { BodyLong, Button, GuidePanel, Heading } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
-import type { OpplysningerDto } from "~/api/queries";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { OpplysningerDto } from "~/types/api-models";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { Fremgangsindikator } from "./Fremgangsindikator";
