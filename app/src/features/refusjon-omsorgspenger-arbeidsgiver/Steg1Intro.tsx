@@ -15,9 +15,11 @@ import { useState } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
+  useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
   const [harUtbetaltLønn, setHarUtbetaltLønn] = useState("");
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;

@@ -6,8 +6,8 @@ import {
   Button,
   Heading,
   Label,
+  Loader,
   Select,
-  Skeleton,
   TextField,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
@@ -18,10 +18,14 @@ import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { navnMedStorBokstav } from "~/utils";
 
+import { useDocumentTitle } from "../useDocumentTitle";
 import { slåOppPersondataOptions } from "./api/queries";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
+  useDocumentTitle(
+    "Ansatt og arbeidsgiver – søknad om refusjon av omsorgspenger for arbeidsgiver",
+  );
   const [fødselsnummer, setFødselsnummer] = useState("");
   const { data, error, isLoading } = useQuery(
     slåOppPersondataOptions(fødselsnummer),
@@ -52,7 +56,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <div className="flex-1">
             <Label>Navn</Label>
             {isLoading ? (
-              <Skeleton variant="text" width="100%" />
+              <Loader title="Henter informasjon" />
             ) : fantIngenPersoner ? (
               <BodyShort>
                 Fant ingen personer som du har tilgang til å se arbeidsforholdet

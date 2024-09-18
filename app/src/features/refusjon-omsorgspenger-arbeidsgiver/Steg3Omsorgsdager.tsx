@@ -23,9 +23,13 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
+  useDocumentTitle(
+    "Omsorgsdager – søknad om refusjon av omsorgspenger for arbeidsgiver",
+  );
   const [harDekket10FørsteOmsorgsdager, setHarDekket10FørsteOmsorgsdager] =
     useState("");
   return (

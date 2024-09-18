@@ -15,9 +15,13 @@ import { Link, useNavigate } from "@tanstack/react-router";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
+  useDocumentTitle(
+    "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
+  );
   const navigate = useNavigate();
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
