@@ -7,9 +7,13 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { OpplysningerDto } from "~/types/api-models";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
+  useDocumentTitle(
+    "Refusjon – søknad om refusjon av omsorgspenger for arbeidsgiver",
+  );
   const dummyOpplysninger: OpplysningerDto = {
     startdatoPermisjon: new Date().toString(),
     person: {

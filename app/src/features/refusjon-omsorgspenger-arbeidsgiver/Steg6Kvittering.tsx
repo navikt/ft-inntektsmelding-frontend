@@ -25,7 +25,12 @@ import { ReactNode } from "react";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
+import { useDocumentTitle } from "../useDocumentTitle";
+
 export const Steg6Kvittering = () => {
+  useDocumentTitle(
+    "Kvittering – søknad om refusjon av omsorgspenger for arbeidsgiver",
+  );
   return (
     <RotLayout
       background="bg-default"
