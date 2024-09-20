@@ -48,7 +48,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       </GuidePanel>
       <RadioGroup
         legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
-        name="har-utbetalt-lønn"
+        name="harUtbetaltLønn"
         onChange={setHarUtbetaltLønn}
         value={harUtbetaltLønn}
       >
@@ -77,7 +77,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       )}
       <RadioGroup
         legend="Hvilket år søker dere refusjon for?"
-        name="år-for-refusjon"
+        name="årForRefusjon"
       >
         <Radio value={iFjor}>{iFjor}</Radio>
         <Radio value={iÅr}>{iÅr}</Radio>

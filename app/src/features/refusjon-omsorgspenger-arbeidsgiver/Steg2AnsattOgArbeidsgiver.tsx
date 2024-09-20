@@ -49,6 +49,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <TextField
             className="flex-1"
             label="Ansattes fødselsnummer (11 siffer)"
+            name="ansattesFødselsnummer"
             onChange={(e) => {
               setFødselsnummer(e.target.value);
             }}
@@ -73,7 +74,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
       {data && (
         <Informasjonsseksjon kilde="Fra Altinn" tittel="Arbeidsgiver">
           {harFlereEnnEttArbeidsforhold ? (
-            <Select label="Velg arbeidsforhold">
+            <Select label="Velg arbeidsforhold" name="valgtArbeidsforhold">
               {data.arbeidsforhold.map((arbeidsforhold) => (
                 <option
                   key={arbeidsforhold.underenhetId}
