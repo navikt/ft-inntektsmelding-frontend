@@ -47,7 +47,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       </GuidePanel>
       <RadioGroup
         legend="Har dere dekket de 10 første omsorgsdagene i år?"
-        name="har-dekket-10-første-omsorgsdager"
+        name="harDekket10FørsteOmsorgsdager"
         onChange={setHarDekket10FørsteOmsorgsdager}
         value={harDekket10FørsteOmsorgsdager}
       >

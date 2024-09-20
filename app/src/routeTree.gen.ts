@@ -211,23 +211,159 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren({
-  IdRoute: IdRoute.addChildren({
-    IdDineOpplysningerRoute,
-    IdInntektOgRefusjonRoute,
-    IdKvitteringRoute,
-    IdOppsummeringRoute,
-    IdVisRoute,
-    IdIndexRoute,
-  }),
-  EndreIdRoute,
-  RefusjonOmsorgspengerArbeidsgiver1IntroRoute,
-  RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute,
-  RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute,
-  RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute,
-  RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute,
-  RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute,
-})
+interface IdRouteChildren {
+  IdDineOpplysningerRoute: typeof IdDineOpplysningerRoute
+  IdInntektOgRefusjonRoute: typeof IdInntektOgRefusjonRoute
+  IdKvitteringRoute: typeof IdKvitteringRoute
+  IdOppsummeringRoute: typeof IdOppsummeringRoute
+  IdVisRoute: typeof IdVisRoute
+  IdIndexRoute: typeof IdIndexRoute
+}
+
+const IdRouteChildren: IdRouteChildren = {
+  IdDineOpplysningerRoute: IdDineOpplysningerRoute,
+  IdInntektOgRefusjonRoute: IdInntektOgRefusjonRoute,
+  IdKvitteringRoute: IdKvitteringRoute,
+  IdOppsummeringRoute: IdOppsummeringRoute,
+  IdVisRoute: IdVisRoute,
+  IdIndexRoute: IdIndexRoute,
+}
+
+const IdRouteWithChildren = IdRoute._addFileChildren(IdRouteChildren)
+
+export interface FileRoutesByFullPath {
+  '/$id': typeof IdRouteWithChildren
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon': typeof RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
+  '/$id/': typeof IdIndexRoute
+}
+
+export interface FileRoutesByTo {
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon': typeof RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
+  '/$id': typeof IdIndexRoute
+}
+
+export interface FileRoutesById {
+  __root__: typeof rootRoute
+  '/$id': typeof IdRouteWithChildren
+  '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
+  '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
+  '/$id/kvittering': typeof IdKvitteringRoute
+  '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/vis': typeof IdVisRoute
+  '/endre/$id': typeof EndreIdRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon': typeof RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
+  '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
+  '/$id/': typeof IdIndexRoute
+}
+
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/$id'
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+    | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+    | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+    | '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+    | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+    | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+    | '/$id/'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+    | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+    | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+    | '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+    | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+    | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+    | '/$id'
+  id:
+    | '__root__'
+    | '/$id'
+    | '/$id/dine-opplysninger'
+    | '/$id/inntekt-og-refusjon'
+    | '/$id/kvittering'
+    | '/$id/oppsummering'
+    | '/$id/vis'
+    | '/endre/$id'
+    | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
+    | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
+    | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
+    | '/refusjon-omsorgspenger-arbeidsgiver/4-refusjon'
+    | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
+    | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
+    | '/$id/'
+  fileRoutesById: FileRoutesById
+}
+
+export interface RootRouteChildren {
+  IdRoute: typeof IdRouteWithChildren
+  EndreIdRoute: typeof EndreIdRoute
+  RefusjonOmsorgspengerArbeidsgiver1IntroRoute: typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
+  RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute: typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
+  RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute: typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
+  RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute: typeof RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute
+  RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute: typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
+  RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute: typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  IdRoute: IdRouteWithChildren,
+  EndreIdRoute: EndreIdRoute,
+  RefusjonOmsorgspengerArbeidsgiver1IntroRoute:
+    RefusjonOmsorgspengerArbeidsgiver1IntroRoute,
+  RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute:
+    RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute,
+  RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute:
+    RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute,
+  RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute:
+    RefusjonOmsorgspengerArbeidsgiver4RefusjonRoute,
+  RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute:
+    RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute,
+  RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute:
+    RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute,
+}
+
+export const routeTree = rootRoute
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>()
 
 /* prettier-ignore-end */
 
