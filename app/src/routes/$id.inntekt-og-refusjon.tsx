@@ -44,7 +44,7 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
 type JaNei = "ja" | "nei";
 
 export type InntektOgRefusjonForm = {
-  skalRefunderes: JaNei;
+  skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   endringIRefusjon: JaNei;
   misterNaturalytelser: JaNei;
   naturalytelserSomMistes: NaturalytelserSomMistesForm[];

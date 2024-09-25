@@ -5,6 +5,7 @@ import {
   Button,
   Heading,
   HStack,
+  Label,
   Radio,
   RadioGroup,
   Stack,
@@ -63,17 +64,91 @@ export function UtbetalingOgRefusjon({
         legend="Betaler dere lønn under fraværet og krever refusjon?"
         name={name}
       >
-        <Radio value="ja" {...radioGroupProps}>
-          Ja
+        <Radio value="JA_LIK_REFUSJON" {...radioGroupProps}>
+          Ja, likt beløp i hele perioden
         </Radio>
-        <Radio value="nei" {...radioGroupProps}>
+        <Radio value="JA_VARIERENDE_REFUSJON" {...radioGroupProps}>
+          Ja, men kun deler av perioden eller varierende beløp
+        </Radio>
+        <Radio value="NEI" {...radioGroupProps}>
           Nei
         </Radio>
       </RadioGroup>
-      {skalRefunderes === "ja" ? (
+      {skalRefunderes === "JA_LIK_REFUSJON" ? <LikRefusjon /> : undefined}
+      {skalRefunderes === "JA_VARIERENDE_REFUSJON" ? (
         <Refusjon opplysninger={opplysninger} />
       ) : undefined}
     </VStack>
+  );
+}
+
+function Over6GAlert() {
+  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data;
+
+  const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
+  const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
+  const erRefusjonOver6G =
+    !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
+    refusjonsbeløpPerMånedSomNummer > 6 * GRUNNBELØP;
+
+  if (erRefusjonOver6G) {
+    return (
+      <Alert variant="info">
+        NAV utbetaler opptil 6G av årslønnen. Du skal likevel føre opp den
+        lønnen dere utbetaler til den ansatte i sin helhet.
+      </Alert>
+    );
+  }
+  return null;
+}
+
+function LikRefusjon() {
+  const { register, watch } = useFormContext<InntektOgRefusjonForm>();
+  const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
+
+  const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
+
+  return (
+    <div>
+      {skalEndreBeløp ? (
+        <Stack gap="4">
+          <HStack gap="4">
+            <TextField
+              {...register("refusjonsbeløpPerMåned")}
+              autoFocus
+              label="Refusjonsbeløp per måned"
+            />
+            <Button
+              className="mt-8"
+              onClick={() => setSkalEndreBeløp(false)}
+              size="small"
+              variant="tertiary"
+            >
+              Tilbakestill
+            </Button>
+          </HStack>
+          <Over6GAlert />
+        </Stack>
+      ) : (
+        <>
+          <Label>Refusjonsbeløp per måned</Label>
+          <BodyLong className="mb-2" size="medium">
+            {formatKroner(refusjonsbeløpPerMåned)}
+          </BodyLong>
+          <Button
+            className="w-fit"
+            icon={<PencilIcon />}
+            iconPosition="left"
+            onClick={() => setSkalEndreBeløp(true)} //TODO: proper reset
+            size="small"
+            variant="secondary"
+          >
+            Endre refusjonsbeløp
+          </Button>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -103,7 +178,7 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
             <TextField
               {...register("refusjonsbeløpPerMåned")}
               autoFocus
-              label="Refusjonsbeløp pr. måned"
+              label="Refusjonsbeløp per måned"
             />
             <Button
               className="mt-8"
@@ -148,11 +223,14 @@ function Refusjon({ opplysninger }: UtbetalingOgRefusjonProps) {
       </HjelpetekstReadMore>
       <RadioGroup
         error={formState.errors.endringIRefusjon?.message}
-        legend={`Vil det være endringer i refusjon i løpet av perioden ${opplysninger.person.fornavn} er i permisjon?`}
+        legend="Betaler dere lønn under fraværet og krever refusjon?"
         name={name}
       >
-        <Radio value="ja" {...radioGroupProps}>
-          Ja
+        <Radio value="JA_LIK_REFUSJON" {...radioGroupProps}>
+          Ja, likt beløp i hele perioden
+        </Radio>
+        <Radio value="JA_VARIERENDE_REFUSJON" {...radioGroupProps}>
+          Ja, men kun deler av perioden eller varierende beløp
         </Radio>
         <Radio value="nei" {...radioGroupProps}>
           Nei
