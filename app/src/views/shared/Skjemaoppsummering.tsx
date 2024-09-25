@@ -22,7 +22,7 @@ export const Skjemaoppsummering = ({
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   // TODO: bør vi ha en deepEquals mellom current og forrige, og ikke tillate submit dersom ikke faktisk har gjort en endring.
-  console.log(skjemaState)
+  console.log(skjemaState);
   return (
     <VStack gap="4">
       <FormSummary>
@@ -110,32 +110,44 @@ export const Skjemaoppsummering = ({
                   {formatKroner(skjemaState.korrigertInntekt)}
                 </FormSummary.Value>
               </FormSummary.Answer>
-              {skjemaState.endringsårsaker.map(({ årsak, fom, tom }) => (
-                <>
-                  <FormSummary.Answer>
-                    <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
-                    <FormSummary.Value>
-                      {endringsårsak.find((a) => a.value === årsak)?.value}
-                    </FormSummary.Value>
-                  </FormSummary.Answer>
-                  {fom && (
+              {skjemaState.endringsårsaker.map(
+                ({ årsak, fom, tom, bleKjentFra }) => (
+                  <>
                     <FormSummary.Answer>
-                      <FormSummary.Label>Fra og med</FormSummary.Label>
+                      <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
                       <FormSummary.Value>
-                        {formatDatoLang(new Date(fom))}
+                        {endringsårsak.find((a) => a.value === årsak)?.label}
                       </FormSummary.Value>
                     </FormSummary.Answer>
-                  )}
-                  {tom && (
-                    <FormSummary.Answer>
-                      <FormSummary.Label>Til og med</FormSummary.Label>
-                      <FormSummary.Value>
-                        {formatDatoLang(new Date(tom))}
-                      </FormSummary.Value>
-                    </FormSummary.Answer>
-                  )}
-                </>
-              ))}
+                    {fom && (
+                      <FormSummary.Answer>
+                        <FormSummary.Label>Fra og med</FormSummary.Label>
+                        <FormSummary.Value>
+                          {formatDatoLang(new Date(fom))}
+                        </FormSummary.Value>
+                      </FormSummary.Answer>
+                    )}
+                    {tom && (
+                      <FormSummary.Answer>
+                        <FormSummary.Label>Til og med</FormSummary.Label>
+                        <FormSummary.Value>
+                          {formatDatoLang(new Date(tom))}
+                        </FormSummary.Value>
+                      </FormSummary.Answer>
+                    )}
+                    {bleKjentFra && (
+                      <FormSummary.Answer>
+                        <FormSummary.Label>
+                          Ble kjent fra og med
+                        </FormSummary.Label>
+                        <FormSummary.Value>
+                          {formatDatoLang(new Date(bleKjentFra))}
+                        </FormSummary.Value>
+                      </FormSummary.Answer>
+                    )}
+                  </>
+                ),
+              )}
             </>
           )}
         </FormSummary.Answers>

@@ -143,7 +143,8 @@ function InntektOgRefusjon() {
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
-      inntekt: korrigertInntekt || inntekt,
+      inntekt,
+      korrigertInntekt,
       endringsårsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
