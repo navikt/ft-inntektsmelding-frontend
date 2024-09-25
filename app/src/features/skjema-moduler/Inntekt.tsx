@@ -225,11 +225,11 @@ type EndreMånedslønnProps = {
 const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
   const { startdatoPermisjon } = opplysninger;
 
-  const { register, watch, formState } =
+  const { register, watch, formState, unregister } =
     useFormContext<InntektOgRefusjonForm>();
-  console.log(watch());
   const tilbakestillOgLukk = () => {
-    // unregister("inntektEndringsÅrsak");
+    unregister("korrigertInntekt");
+    unregister("endringsårsaker");
     onClose();
   };
 
@@ -243,7 +243,6 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
             min: { value: 1, message: "Må være mer enn 0" },
             required: "Må oppgis",
             value: inntekt,
-            shouldUnregister: true,
           })}
           error={formState.errors.korrigertInntekt?.message}
           inputMode="numeric"

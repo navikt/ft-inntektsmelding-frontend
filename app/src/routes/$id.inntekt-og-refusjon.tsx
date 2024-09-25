@@ -117,6 +117,8 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.refusjonsendringer,
     },
   });
+  console.log(formMethods.watch());
+
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
