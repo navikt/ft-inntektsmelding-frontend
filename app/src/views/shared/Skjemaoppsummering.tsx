@@ -176,11 +176,10 @@ export const Skjemaoppsummering = ({
               Vil det være endringer i refusjon i løpet av perioden{" "}
               {opplysninger.person.fornavn} er i permisjon?
             </FormSummary.Label>
-            <FormSummary.Value>
-              {skjemaState.endringIRefusjon ? "Ja" : "Nei"}
-            </FormSummary.Value>
+            <FormSummary.Value>{skjemaState.skalRefunderes}</FormSummary.Value>{" "}
+            {/*// TODO: map*/}
           </FormSummary.Answer>
-          {skjemaState.endringIRefusjon && (
+          {skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON" && (
             <FormSummary.Answer>
               <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
               <FormSummary.Value>
