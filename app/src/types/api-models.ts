@@ -33,6 +33,24 @@ export const NaturalytelseTypeSchema = z.enum([
   "INNBETALING_TIL_UTENLANDSK_PENSJONSORDNING",
 ]);
 
+export const EndringAvInntektÅrsakerSchema = z.enum([
+  "PERMITTERING",
+  "NY_STILLING",
+  "NY_STILLINGSPROSENT",
+  "SYKEFRAVÆR",
+  "BONUS",
+  "FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER",
+  "NYANSATT",
+  "MANGELFULL_RAPPORTERING_AORDNING",
+  "TARIFFENDRING",
+  "FERIE",
+  "VARIG_LØNNSENDRING",
+  "PERMISJON",
+]);
+
+export type EndringAvInntektÅrsaker = z.infer<
+  typeof EndringAvInntektÅrsakerSchema
+>;
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
 
 export const SendInntektsmeldingRequestDtoSchema = z.object({
@@ -55,6 +73,16 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
       }),
     )
     .optional(),
+  endringsårsaker: z
+    .array(
+      z.object({
+        årsak: EndringAvInntektÅrsakerSchema,
+        fom: z.string().optional(),
+        tom: z.string().optional(),
+        bleKjentFra: z.string().optional(),
+      }),
+    )
+    .optional(), //TODO: midlertidig optional
   bortfaltNaturalytelsePerioder: z
     .array(
       z.object({
@@ -80,10 +108,6 @@ export type SendInntektsmeldingResponseDto = z.infer<
 export type SendInntektsmeldingRequestDto = z.infer<
   typeof SendInntektsmeldingRequestDtoSchema
 >;
-
-export const ÅrsaksTypeSchema = z.enum(["Tariffendring", "FeilInntekt"]);
-
-export type ÅrsaksType = z.infer<typeof ÅrsaksTypeSchema>;
 
 export const opplysningerSchema = z.object({
   person: z.object({

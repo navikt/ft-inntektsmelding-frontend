@@ -2,7 +2,7 @@ import { FormSummary, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
-import { ÅrsaksType } from "~/types/api-models";
+import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   formatDatoKort,
@@ -102,44 +102,40 @@ export const Skjemaoppsummering = ({
               {formatKroner(skjemaState.inntekt)}
             </FormSummary.Value>
           </FormSummary.Answer>
-          {skjemaState.inntektEndringsÅrsak && (
+          {skjemaState.korrigertInntekt && (
             <>
               <FormSummary.Answer>
                 <FormSummary.Label>Korrigert månedslønn</FormSummary.Label>
                 <FormSummary.Value>
-                  {formatKroner(
-                    skjemaState.inntektEndringsÅrsak.korrigertInntekt,
-                  )}
+                  {formatKroner(skjemaState.korrigertInntekt)}
                 </FormSummary.Value>
               </FormSummary.Answer>
-              <FormSummary.Answer>
-                <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
-                <FormSummary.Value>
-                  {formatInntektsendrignsGrunn(
-                    skjemaState.inntektEndringsÅrsak.årsak,
+              {skjemaState.endringsårsaker.map(({ årsak, fom, tom }) => (
+                <>
+                  <FormSummary.Answer>
+                    <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
+                    <FormSummary.Value>
+                      {endringsårsak.find((a) => a.value === årsak)?.value}
+                    </FormSummary.Value>
+                  </FormSummary.Answer>
+                  {fom && (
+                    <FormSummary.Answer>
+                      <FormSummary.Label>Fra og med</FormSummary.Label>
+                      <FormSummary.Value>
+                        {formatDatoLang(new Date(fom))}
+                      </FormSummary.Value>
+                    </FormSummary.Answer>
                   )}
-                </FormSummary.Value>
-              </FormSummary.Answer>
-              {skjemaState.inntektEndringsÅrsak.fom && (
-                <FormSummary.Answer>
-                  <FormSummary.Label>Fra og med</FormSummary.Label>
-                  <FormSummary.Value>
-                    {formatDatoLang(
-                      new Date(skjemaState.inntektEndringsÅrsak.fom),
-                    )}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-              )}
-              {skjemaState.inntektEndringsÅrsak.tom && (
-                <FormSummary.Answer>
-                  <FormSummary.Label>Til og med</FormSummary.Label>
-                  <FormSummary.Value>
-                    {formatDatoLang(
-                      new Date(skjemaState.inntektEndringsÅrsak.tom),
-                    )}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-              )}
+                  {tom && (
+                    <FormSummary.Answer>
+                      <FormSummary.Label>Til og med</FormSummary.Label>
+                      <FormSummary.Value>
+                        {formatDatoLang(new Date(tom))}
+                      </FormSummary.Value>
+                    </FormSummary.Answer>
+                  )}
+                </>
+              ))}
             </>
           )}
         </FormSummary.Answers>
@@ -277,18 +273,4 @@ const formatterKontaktperson = (
     return "";
   }
   return `${kontaktperson.navn}, ${kontaktperson.telefonnummer}`;
-};
-
-const formatInntektsendrignsGrunn = (årsak: ÅrsaksType) => {
-  switch (årsak) {
-    case "Tariffendring": {
-      return "Tariffendring";
-    }
-    case "FeilInntekt": {
-      return "Varig feil inntekt";
-    }
-    default: {
-      return årsak;
-    }
-  }
 };

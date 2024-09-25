@@ -80,8 +80,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
       const gjeldendeInntekt =
-        skjemaState.inntektEndringsÅrsak?.korrigertInntekt ??
-        skjemaState.inntekt;
+        skjemaState.korrigertInntekt ?? skjemaState.inntekt;
 
       const inntektsmelding = {
         foresporselUuid: id,
@@ -99,6 +98,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
+        endringsårsaker: skjemaState.endringsårsaker
       } satisfies SendInntektsmeldingRequestDto;
 
       return sendInntektsmelding(inntektsmelding);

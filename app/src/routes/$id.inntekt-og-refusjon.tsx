@@ -22,7 +22,10 @@ import {
   ENDRING_I_REFUSJON_TEMPLATE,
   UtbetalingOgRefusjon,
 } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
-import type { OpplysningerDto } from "~/types/api-models.ts";
+import type {
+  EndringAvInntektÅrsaker,
+  OpplysningerDto,
+} from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
@@ -48,14 +51,21 @@ export type InntektOgRefusjonForm = {
   endringIRefusjon: JaNei;
   misterNaturalytelser: JaNei;
   naturalytelserSomMistes: NaturalytelserSomMistesForm[];
+  endringsårsaker: EndringsÅrsakerForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
   | "inntekt"
-  | "inntektEndringsÅrsak"
+  | "korrigertInntekt"
 >;
 
+type EndringsÅrsakerForm = {
+  årsak: EndringAvInntektÅrsaker | "";
+  fom?: string;
+  tom?: string;
+  bleKjentFra?: string;
+};
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";
   beløp: number | string;
@@ -79,7 +89,7 @@ function InntektOgRefusjon() {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt:
         inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning,
-      inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak,
+      endringsårsaker: inntektsmeldingSkjemaState.endringsårsaker,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
@@ -111,8 +121,7 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjonsbeløpPerMåned, inntekt, inntektEndringsÅrsak } =
-      skjemadata;
+    const { refusjonsbeløpPerMåned, inntekt, endringsårsaker } = skjemadata;
     const skalRefunderes = skjemadata.skalRefunderes === "ja";
     const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
     const refusjonsendringer = endringIRefusjon
@@ -130,7 +139,7 @@ function InntektOgRefusjon() {
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       inntekt,
-      inntektEndringsÅrsak,
+      endringsårsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       endringIRefusjon,

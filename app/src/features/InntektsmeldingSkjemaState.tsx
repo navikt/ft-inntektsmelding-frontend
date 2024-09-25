@@ -4,13 +4,16 @@ import { createContext, useContext } from "react";
 import { z } from "zod";
 
 import {
-  ÅrsaksTypeSchema,
+  EndringAvInntektÅrsakerSchema,
   NaturalytelseTypeSchema,
 } from "~/types/api-models.ts";
 import { beløpSchema, logDev } from "~/utils.ts";
 
 import { useSessionStorageState } from "./usePersistedState";
 
+/**
+ * Minst streng skjema-state. Denne brukes underveis der mange av feltene er optional fordi de ikke er utfylt enda.
+ */
 export const InntektsmeldingSkjemaStateSchema = z.object({
   kontaktperson: z
     .object({
@@ -19,14 +22,15 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     })
     .optional(),
   inntekt: beløpSchema,
-  inntektEndringsÅrsak: z
-    .object({
-      årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: beløpSchema,
+  korrigertInntekt: beløpSchema.optional(),
+  endringsårsaker: z.array(
+    z.object({
+      årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
       fom: z.string().optional(),
       tom: z.string().optional(),
-    })
-    .optional(),
+      bleKjentFra: z.string().optional(),
+    }),
+  ),
   skalRefunderes: z.boolean().optional(),
   refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
@@ -48,20 +52,24 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
   ),
 });
 
+/**
+ * En strengere skjema state. Her er alle verdiene validert mot skjema-logikken.
+ */
 export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
   kontaktperson: z.object({
     navn: z.string(),
     telefonnummer: z.string(),
   }),
   inntekt: beløpSchema,
-  inntektEndringsÅrsak: z
-    .object({
-      årsak: ÅrsaksTypeSchema,
-      korrigertInntekt: beløpSchema,
-      fom: z.string(),
+  korrigertInntekt: beløpSchema.optional(),
+  endringsårsaker: z.array(
+    z.object({
+      årsak: EndringAvInntektÅrsakerSchema,
+      fom: z.string().optional(),
       tom: z.string().optional(),
-    })
-    .optional(),
+      bleKjentFra: z.string().optional(),
+    }),
+  ),
   skalRefunderes: z.boolean(),
   refusjonsbeløpPerMåned: beløpSchema,
   endringIRefusjon: z.boolean().optional(),
@@ -113,7 +121,8 @@ const defaultSkjemaState = {
   refusjonsbeløpPerMåned: 0,
   refusjonsendringer: [],
   naturalytelserSomMistes: [],
-};
+  endringsårsaker: [],
+} satisfies InntektsmeldingSkjemaState;
 
 export const InntektsmeldingSkjemaStateProvider = ({
   children,
