@@ -271,7 +271,7 @@ export const ENDRINGS_ÅRSAK_TEMPLATE = {
 };
 
 function EndringsÅrsaker() {
-  const { control, register, formState } =
+  const { control, register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -281,12 +281,11 @@ function EndringsÅrsaker() {
   return (
     <div className="flex flex-col gap-4">
       {fields.map((field, index) => {
-        const årsak = field.årsak;
+        const årsak = watch(`endringsårsaker.${index}.årsak`);
         return (
           <div className="flex flex-row gap-4" key={field.id}>
             <Select
               className="flex-1"
-              // error={formState.errors.inntektEndringsÅrsak?.årsak?.message}
               error={formState.errors?.endringsårsaker?.[index]?.årsak?.message}
               label="Velg endringsårsak"
               {...register(`endringsårsaker.${index}.årsak`, {

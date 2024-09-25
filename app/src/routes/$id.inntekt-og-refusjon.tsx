@@ -121,7 +121,12 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjonsbeløpPerMåned, inntekt, endringsårsaker } = skjemadata;
+    const {
+      refusjonsbeløpPerMåned,
+      inntekt,
+      endringsårsaker,
+      korrigertInntekt,
+    } = skjemadata;
     const skalRefunderes = skjemadata.skalRefunderes === "ja";
     const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
     const refusjonsendringer = endringIRefusjon
@@ -138,7 +143,7 @@ function InntektOgRefusjon() {
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
-      inntekt,
+      inntekt: korrigertInntekt || inntekt,
       endringsårsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
