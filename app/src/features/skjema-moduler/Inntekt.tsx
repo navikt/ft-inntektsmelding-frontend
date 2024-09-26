@@ -236,7 +236,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
   const inntekt = watch("inntekt");
 
   return (
-    <div>
+    <>
       <div className="flex items-start gap-4">
         <TextField
           {...register("korrigertInntekt", {
@@ -258,7 +258,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
         </Button>
       </div>
       <EndringsÅrsaker />
-    </div>
+    </>
   );
 };
 
@@ -270,7 +270,7 @@ export const ENDRINGS_ÅRSAK_TEMPLATE = {
 };
 
 function EndringsÅrsaker() {
-  const { control, register, formState, watch } =
+  const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -278,13 +278,11 @@ function EndringsÅrsaker() {
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <HGrid columns="1fr max-content max-content max-content" gap="4">
       {fields.map((field, index) => {
-        const årsak = watch(`endringsårsaker.${index}.årsak`);
         return (
-          <div className="flex flex-row gap-4" key={field.id}>
+          <Fragment key={field.id}>
             <Select
-              className="flex-1"
               error={formState.errors?.endringsårsaker?.[index]?.årsak?.message}
               label="Velg endringsårsak"
               {...register(`endringsårsaker.${index}.årsak`, {
@@ -298,38 +296,21 @@ function EndringsÅrsaker() {
                 </option>
               ))}
             </Select>
-            {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].fom && (
-              <DatePickerWrapped
-                label="Fra og med"
-                name={`endringsårsaker.${index}.fom`}
-                rules={{ required: "Må oppgis" }}
-              />
+            <ÅrsaksPerioder index={index} />
+            {index > 0 ? (
+              <Button
+                aria-label="fjern naturalytelse"
+                className="mt-8"
+                icon={<TrashIcon />}
+                onClick={() => remove(index)}
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            ) : (
+              <div />
             )}
-            {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].tom && (
-              <DatePickerWrapped
-                label="Til og med"
-                name={`endringsårsaker.${index}.tom`}
-                rules={{ required: "Må oppgis" }}
-              />
-            )}
-            {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].bleKjentFra && (
-              <DatePickerWrapped
-                label="Ble kjent fra"
-                name={`endringsårsaker.${index}.bleKjentFra`}
-                rules={{ required: "Må oppgis" }}
-              />
-            )}
-            <Button
-              aria-label="fjern naturalytelse"
-              className="mt-8"
-              disabled={index === 0}
-              icon={<TrashIcon />}
-              onClick={() => remove(index)}
-              variant="tertiary"
-            >
-              Slett
-            </Button>
-          </div>
+          </Fragment>
         );
       })}
       <Button
@@ -343,7 +324,53 @@ function EndringsÅrsaker() {
       >
         Legg til årsak
       </Button>
-    </div>
+    </HGrid>
+  );
+}
+
+function ÅrsaksPerioder({ index }: { index: number }) {
+  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const årsak = watch(`endringsårsaker.${index}.årsak`);
+
+  // Spesialhåndtering av tariffendring
+  if (årsak === "TARIFFENDRING") {
+    return (
+      <>
+        <DatePickerWrapped
+          label="Fra og med"
+          name={`endringsårsaker.${index}.fom`}
+          rules={{ required: "Må oppgis" }}
+        />
+        <DatePickerWrapped
+          label="Ble kjent fra"
+          name={`endringsårsaker.${index}.bleKjentFra`}
+          rules={{ required: "Må oppgis" }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].fom ? (
+        <DatePickerWrapped
+          label="Fra og med"
+          name={`endringsårsaker.${index}.fom`}
+          rules={{ required: "Må oppgis" }}
+        />
+      ) : (
+        <div />
+      )}
+      {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].tom ? (
+        <DatePickerWrapped
+          label="Til og med"
+          name={`endringsårsaker.${index}.tom`}
+          rules={{ required: "Må oppgis" }}
+        />
+      ) : (
+        <div />
+      )}
+    </>
   );
 }
 
