@@ -105,11 +105,11 @@ function Over6GAlert() {
 }
 
 function LikRefusjon() {
-  const { register, watch } = useFormContext<InntektOgRefusjonForm>();
+  const { register, watch, resetField } =
+    useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
   const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
-
   return (
     <>
       <div>
@@ -117,13 +117,16 @@ function LikRefusjon() {
           <Stack gap="4">
             <HStack gap="4">
               <TextField
-                {...register("refusjonsbeløpPerMåned")}
+                {...register("refusjonsbeløpPerMåned", {})}
                 autoFocus
                 label="Refusjonsbeløp per måned"
               />
               <Button
                 className="mt-8"
-                onClick={() => setSkalEndreBeløp(false)}
+                onClick={() => {
+                  resetField("refusjonsbeløpPerMåned");
+                  setSkalEndreBeløp(false);
+                }}
                 size="small"
                 variant="tertiary"
               >
@@ -142,7 +145,9 @@ function LikRefusjon() {
               className="w-fit"
               icon={<PencilIcon />}
               iconPosition="left"
-              onClick={() => setSkalEndreBeløp(true)} //TODO: proper reset
+              onClick={() => {
+                setSkalEndreBeløp(true);
+              }}
               size="small"
               variant="secondary"
             >
