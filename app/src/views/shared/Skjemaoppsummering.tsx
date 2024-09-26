@@ -102,7 +102,7 @@ export const Skjemaoppsummering = ({
               {formatKroner(skjemaState.inntekt)}
             </FormSummary.Value>
           </FormSummary.Answer>
-          {skjemaState.korrigertInntekt && (
+          {skjemaState.korrigertInntekt === undefined && (
             <>
               <FormSummary.Answer>
                 <FormSummary.Label>Korrigert månedslønn</FormSummary.Label>

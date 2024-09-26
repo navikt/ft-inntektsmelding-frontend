@@ -48,7 +48,6 @@ export function Inntekt({ opplysninger }: InntektProps) {
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const inntektEndringsÅrsak = watch("korrigertInntekt"); // TODO: ikke sikkert ritkgi
   const { isOpen, onOpen, onClose } = useDisclosure(!!inntektEndringsÅrsak);
-
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {
       locale: nb,
@@ -229,7 +228,6 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
     useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
-    unregister("endringsårsaker");
     onClose();
   };
 
