@@ -2,7 +2,6 @@ import { PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
-  BodyShort,
   Button,
   Heading,
   HStack,
@@ -168,10 +167,10 @@ function VarierendeRefusjon() {
         <Heading level="2" size="small">
           Refusjonsbeløp dere krever per måned
         </Heading>
-        <BodyShort size="medium" spacing textColor="subtle">
-          Skal dere slutte å forskuttere lønn underveis i perioden, skriver du
-          0,- i refusjon fra datoen dere ikke lengre forskutterer lønn.
-        </BodyShort>
+        <Alert className="mb-4" inline variant="info">
+          Skal dere slutte å forskuttere lønn i perioden, skriver du 0,- i
+          refusjonsbeløp fra den datoen dere ikke lengre forskutterer lønn.
+        </Alert>
         <RefusjonsPerioder />
       </VStack>
       <VStack gap="2">
@@ -242,11 +241,13 @@ function RefusjonsPerioder() {
           <Button
             aria-label="fjern refusjonsendring"
             className="mt-8"
-            disabled={index === 0}
+            disabled={index < 2}
             icon={<TrashIcon />}
             onClick={() => remove(index)}
             variant="tertiary"
-          />
+          >
+            Slett
+          </Button>
         </Fragment>
       ))}
       <Button
