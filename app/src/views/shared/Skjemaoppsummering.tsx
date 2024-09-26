@@ -23,7 +23,6 @@ export const Skjemaoppsummering = ({
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   // TODO: bør vi ha en deepEquals mellom current og forrige, og ikke tillate submit dersom ikke faktisk har gjort en endring.
-  console.log(skjemaState);
   return (
     <VStack gap="4">
       <FormSummary>

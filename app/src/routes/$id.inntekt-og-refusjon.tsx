@@ -87,7 +87,7 @@ function InntektOgRefusjon() {
     defaultValues: {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt,
-        endringsårsaker: inntektsmeldingSkjemaState.endringsårsaker,
+      endringsårsaker: inntektsmeldingSkjemaState.endringsårsaker,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
@@ -110,18 +110,13 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.refusjonsendringer,
     },
   });
-  console.log(formMethods.watch());
 
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const {
-      refusjonsbeløpPerMåned,
-      inntekt,
-        endringsårsaker,
-      skalRefunderes,
-    } = skjemadata;
+    const { refusjonsbeløpPerMåned, inntekt, endringsårsaker, skalRefunderes } =
+      skjemadata;
 
     const refusjonsendringer =
       skalRefunderes === "JA_VARIERENDE_REFUSJON"
