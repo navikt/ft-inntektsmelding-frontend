@@ -25,7 +25,7 @@ test.describe("Happy path", () => {
     await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
 
     // Nå er vi på "inntekt og refusjon" steget
-    await page.locator('input[name="skalRefunderes"][value="nei"]').click();
+    await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
 
     await page
       .locator('input[name="misterNaturalytelser"][value="nei"]')

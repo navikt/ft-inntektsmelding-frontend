@@ -31,9 +31,14 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       bleKjentFra: z.string().optional(),
     }),
   ),
-  skalRefunderes: z.boolean().optional(),
+  skalRefunderes: z
+    .union([
+      z.literal("JA_LIK_REFUSJON"),
+      z.literal("JA_VARIERENDE_REFUSJON"),
+      z.literal("NEI"),
+    ])
+    .optional(),
   refusjonsbeløpPerMåned: beløpSchema,
-  endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
       fom: z.string().optional(),
@@ -70,9 +75,12 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
       bleKjentFra: z.string().optional(),
     }),
   ),
-  skalRefunderes: z.boolean(),
+  skalRefunderes: z.union([
+    z.literal("JA_LIK_REFUSJON"),
+    z.literal("JA_VARIERENDE_REFUSJON"),
+    z.literal("NEI"),
+  ]),
   refusjonsbeløpPerMåned: beløpSchema,
-  endringIRefusjon: z.boolean().optional(),
   refusjonsendringer: z.array(
     z.object({
       fom: z.string(),

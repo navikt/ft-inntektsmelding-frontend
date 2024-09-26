@@ -80,7 +80,6 @@ export function mapInntektsmeldingResponseTilValidState(
         fom: periode.fom,
       }),
     ),
-    endringIRefusjon: (inntektsmelding.refusjonsendringer ?? []).length > 0,
     naturalytelserSomMistes:
       inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
         navn: periode.naturalytelsetype,
@@ -91,7 +90,13 @@ export function mapInntektsmeldingResponseTilValidState(
       })) ?? [],
     endringsårsaker: [], // TODO: Send inn når BE har støtte for det
     inntekt: inntektsmelding.inntekt,
-    skalRefunderes: Boolean(inntektsmelding.refusjon),
+    // TODO: denne ble stygg
+    skalRefunderes:
+      (inntektsmelding.refusjonsendringer ?? []).length > 0
+        ? "JA_VARIERENDE_REFUSJON"
+        : inntektsmelding.refusjon
+          ? "JA_LIK_REFUSJON"
+          : "NEI",
     misterNaturalytelser:
       (inntektsmelding.bortfaltNaturalytelsePerioder?.length ?? 0) > 0,
     opprettetTidspunkt: inntektsmelding.opprettetTidspunkt,

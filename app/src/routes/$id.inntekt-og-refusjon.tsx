@@ -18,10 +18,7 @@ import {
   NATURALYTELSE_SOM_MISTES_TEMPLATE,
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
-import {
-  ENDRING_I_REFUSJON_TEMPLATE,
-  UtbetalingOgRefusjon,
-} from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
+import { UtbetalingOgRefusjon } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
 import type {
   EndringAvInntektÅrsaker,
   OpplysningerDto,
@@ -47,8 +44,7 @@ export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
 type JaNei = "ja" | "nei";
 
 export type InntektOgRefusjonForm = {
-  skalRefunderes: JaNei;
-  endringIRefusjon: JaNei;
+  skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   misterNaturalytelser: JaNei;
   naturalytelserSomMistes: NaturalytelserSomMistesForm[];
   endringsårsaker: EndringsÅrsakerForm[];
@@ -84,21 +80,18 @@ function InntektOgRefusjon() {
     opplysninger.inntekter,
   );
 
+  const inntekt =
+    inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning;
+
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
       // Denne ligger i formet, men brukes ikke annet enn for submit
-      inntekt:
-        inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning,
-      endringsårsaker: inntektsmeldingSkjemaState.endringsårsaker,
+      inntekt,
+        endringsårsaker: inntektsmeldingSkjemaState.endringsårsaker,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
-      skalRefunderes: konverterTilRadioValg(
-        inntektsmeldingSkjemaState.skalRefunderes,
-      ),
-      endringIRefusjon: konverterTilRadioValg(
-        inntektsmeldingSkjemaState.endringIRefusjon,
-      ),
+      skalRefunderes: inntektsmeldingSkjemaState.skalRefunderes,
       misterNaturalytelser: konverterTilRadioValg(
         inntektsmeldingSkjemaState.misterNaturalytelser,
       ),
@@ -113,7 +106,7 @@ function InntektOgRefusjon() {
             ),
       refusjonsendringer:
         inntektsmeldingSkjemaState.refusjonsendringer.length === 0
-          ? [ENDRING_I_REFUSJON_TEMPLATE]
+          ? [{ fom: opplysninger.startdatoPermisjon, beløp: inntekt }]
           : inntektsmeldingSkjemaState.refusjonsendringer,
     },
   });
@@ -126,14 +119,14 @@ function InntektOgRefusjon() {
     const {
       refusjonsbeløpPerMåned,
       inntekt,
-      endringsårsaker,
-      korrigertInntekt,
+        endringsårsaker,
+      skalRefunderes,
     } = skjemadata;
-    const skalRefunderes = skjemadata.skalRefunderes === "ja";
-    const endringIRefusjon = skjemadata.endringIRefusjon === "ja";
-    const refusjonsendringer = endringIRefusjon
-      ? skjemadata.refusjonsendringer
-      : [];
+
+    const refusjonsendringer =
+      skalRefunderes === "JA_VARIERENDE_REFUSJON"
+        ? skjemadata.refusjonsendringer
+        : [];
 
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const naturalytelserSomMistes = misterNaturalytelser
@@ -146,11 +139,9 @@ function InntektOgRefusjon() {
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       inntekt,
-      korrigertInntekt,
       endringsårsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
-      endringIRefusjon,
       refusjonsendringer,
       misterNaturalytelser,
       naturalytelserSomMistes,
@@ -174,7 +165,7 @@ function InntektOgRefusjon() {
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode opplysninger={opplysninger} />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon opplysninger={opplysninger} />
+          <UtbetalingOgRefusjon />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button

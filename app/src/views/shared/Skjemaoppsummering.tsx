@@ -2,6 +2,7 @@ import { FormSummary, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
+import { REFUSJON_RADIO_VALG } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
@@ -164,14 +165,13 @@ export const Skjemaoppsummering = ({
         <FormSummary.Answers>
           <FormSummary.Answer>
             <FormSummary.Label>
-              Skal dere betale lønn til {opplysninger.person.fornavn} og ha
-              refusjon fra NAV?
+              Betaler dere lønn under fraværet og krever refusjon?
             </FormSummary.Label>
             <FormSummary.Value>
-              {skjemaState.skalRefunderes ? "Ja" : "Nei"}
+              {REFUSJON_RADIO_VALG[skjemaState.skalRefunderes]}
             </FormSummary.Value>
           </FormSummary.Answer>
-          {skjemaState.skalRefunderes && (
+          {skjemaState.skalRefunderes === "JA_LIK_REFUSJON" && (
             <FormSummary.Answer>
               <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
               <FormSummary.Value>
@@ -179,16 +179,7 @@ export const Skjemaoppsummering = ({
               </FormSummary.Value>
             </FormSummary.Answer>
           )}
-          <FormSummary.Answer>
-            <FormSummary.Label>
-              Vil det være endringer i refusjon i løpet av perioden{" "}
-              {opplysninger.person.fornavn} er i permisjon?
-            </FormSummary.Label>
-            <FormSummary.Value>
-              {skjemaState.endringIRefusjon ? "Ja" : "Nei"}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          {skjemaState.endringIRefusjon && (
+          {skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON" && (
             <FormSummary.Answer>
               <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
               <FormSummary.Value>
