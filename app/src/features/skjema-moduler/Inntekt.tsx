@@ -279,6 +279,7 @@ function EndringsÅrsaker() {
     name: "endringAvInntektÅrsaker",
   });
 
+  // Tariffendring skal kun være tilgjengelig dersom man endrer en IM, ikke for førstegangs-innsendelse
   const muligeÅrsakerValg =
     eksisterendeInntektsmeldinger.length > 0
       ? Object.values(endringsårsak)
