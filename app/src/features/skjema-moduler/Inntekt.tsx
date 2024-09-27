@@ -1,4 +1,9 @@
-import { ArrowUndoIcon, PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import {
+  ArrowUndoIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -250,6 +255,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
         />
         <Button
           className="mt-8"
+          icon={<ArrowUndoIcon aria-hidden />}
           onClick={tilbakestillOgLukk}
           type="button"
           variant="tertiary"
@@ -315,8 +321,7 @@ function EndringsÅrsaker() {
                 aria-label="fjern naturalytelse"
                 className="mt-8"
                 icon={<TrashIcon />}
-                icon={<ArrowUndoIcon aria-hidden />}
-          onClick={() => remove(index)}
+                onClick={() => remove(index)}
                 variant="tertiary"
               >
                 Slett
