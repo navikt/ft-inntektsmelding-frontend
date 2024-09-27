@@ -60,7 +60,7 @@ type EndringsÅrsakerForm = {
   årsak: EndringAvInntektÅrsaker | "";
   fom?: string;
   tom?: string;
-  bleKjentFra?: string;
+  bleKjentFom?: string;
 };
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";

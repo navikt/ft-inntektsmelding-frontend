@@ -28,7 +28,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
       fom: z.string().optional(),
       tom: z.string().optional(),
-      bleKjentFra: z.string().optional(),
+      bleKjentFom: z.string().optional(),
     }),
   ),
   skalRefunderes: z
@@ -72,7 +72,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
       årsak: EndringAvInntektÅrsakerSchema,
       fom: z.string().optional(),
       tom: z.string().optional(),
-      bleKjentFra: z.string().optional(),
+      bleKjentFom: z.string().optional(),
     }),
   ),
   skalRefunderes: z.union([

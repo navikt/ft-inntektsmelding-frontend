@@ -265,7 +265,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
 export const ENDRINGS_ÅRSAK_TEMPLATE = {
   fom: undefined,
   tom: undefined,
-  bleKjentFra: undefined,
+  bleKjentFom: undefined,
   årsak: "" as const,
 };
 
@@ -356,7 +356,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
         />
         <DatePickerWrapped
           label="Ble kjent fra"
-          name={`endringAvInntektÅrsaker.${index}.bleKjentFra`}
+          name={`endringAvInntektÅrsaker.${index}.bleKjentFom`}
           rules={{ required: "Må oppgis" }}
         />
       </>
@@ -389,34 +389,34 @@ function ÅrsaksPerioder({ index }: { index: number }) {
 
 const PÅKREVDE_ENDRING_ÅRSAK_FELTER = {
   // Før man har valgt
-  "": { fom: false, tom: false, bleKjentFra: false },
+  "": { fom: false, tom: false, bleKjentFom: false },
   // Har ingen ekstra felter
-  BONUS: { fom: false, tom: false, bleKjentFra: false },
-  NYANSATT: { fom: false, tom: false, bleKjentFra: false },
+  BONUS: { fom: false, tom: false, bleKjentFom: false },
+  NYANSATT: { fom: false, tom: false, bleKjentFom: false },
   FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER: {
     fom: false,
     tom: false,
-    bleKjentFra: false,
+    bleKjentFom: false,
   },
   MANGELFULL_RAPPORTERING_AORDNING: {
     fom: false,
     tom: false,
-    bleKjentFra: false,
+    bleKjentFom: false,
   },
   // Kun fom
-  VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFra: false },
-  NY_STILLING: { fom: true, tom: false, bleKjentFra: false },
-  NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFra: false },
+  VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFom: false },
+  NY_STILLING: { fom: true, tom: false, bleKjentFom: false },
+  NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFom: false },
   // fom + tom
-  FERIE: { fom: true, tom: true, bleKjentFra: false },
-  PERMISJON: { fom: true, tom: true, bleKjentFra: false },
-  PERMITTERING: { fom: true, tom: true, bleKjentFra: false },
-  SYKEFRAVÆR: { fom: true, tom: true, bleKjentFra: false },
+  FERIE: { fom: true, tom: true, bleKjentFom: false },
+  PERMISJON: { fom: true, tom: true, bleKjentFom: false },
+  PERMITTERING: { fom: true, tom: true, bleKjentFom: false },
+  SYKEFRAVÆR: { fom: true, tom: true, bleKjentFom: false },
   // Tariffendring er noe for seg selv
-  TARIFFENDRING: { fom: true, tom: false, bleKjentFra: true },
+  TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
 } satisfies Record<
   EndringAvInntektÅrsaker & "",
-  { fom: boolean; tom: boolean; bleKjentFra: boolean }
+  { fom: boolean; tom: boolean; bleKjentFom: boolean }
 >;
 
 function navnPåMåned(date: string) {

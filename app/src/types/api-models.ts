@@ -79,7 +79,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
         årsak: EndringAvInntektÅrsakerSchema,
         fom: z.string().optional(),
         tom: z.string().optional(),
-        bleKjentFra: z.string().optional(),
+        bleKjentFom: z.string().optional(),
       }),
     )
     .optional(), //TODO: midlertidig optional
