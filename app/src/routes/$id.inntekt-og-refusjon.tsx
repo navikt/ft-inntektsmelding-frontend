@@ -87,7 +87,11 @@ function InntektOgRefusjon() {
     defaultValues: {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt,
-      korrigertInntekt: inntektsmeldingSkjemaState.korrigertInntekt,
+      korrigertInntekt:
+        (inntektsmeldingSkjemaState.korrigertInntekt ??
+        inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length > 0)
+          ? inntektsmeldingSkjemaState.inntekt
+          : undefined,
       endringAvInntektÅrsaker:
         inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
           ? [{ årsak: "" }]
@@ -138,7 +142,9 @@ function InntektOgRefusjon() {
           inkluderTom: naturalYtelse.inkluderTom === "ja",
         }))
       : [];
-    const endringAvInntektÅrsaker = korrigertInntekt ? skjemadata.endringAvInntektÅrsaker : [];
+    const endringAvInntektÅrsaker = korrigertInntekt
+      ? skjemadata.endringAvInntektÅrsaker
+      : [];
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,

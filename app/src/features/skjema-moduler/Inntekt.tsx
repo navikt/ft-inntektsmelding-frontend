@@ -390,6 +390,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
 const PÅKREVDE_ENDRING_ÅRSAK_FELTER = {
   // Før man har valgt
   "": { fom: false, tom: false, bleKjentFom: false },
+
   // Har ingen ekstra felter
   BONUS: { fom: false, tom: false, bleKjentFom: false },
   NYANSATT: { fom: false, tom: false, bleKjentFom: false },
@@ -403,15 +404,18 @@ const PÅKREVDE_ENDRING_ÅRSAK_FELTER = {
     tom: false,
     bleKjentFom: false,
   },
+
   // Kun fom
   VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFom: false },
   NY_STILLING: { fom: true, tom: false, bleKjentFom: false },
   NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFom: false },
+
   // fom + tom
   FERIE: { fom: true, tom: true, bleKjentFom: false },
   PERMISJON: { fom: true, tom: true, bleKjentFom: false },
   PERMITTERING: { fom: true, tom: true, bleKjentFom: false },
   SYKEFRAVÆR: { fom: true, tom: true, bleKjentFom: false },
+
   // Tariffendring er noe for seg selv
   TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
 } satisfies Record<
