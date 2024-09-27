@@ -73,7 +73,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
       }),
     )
     .optional(),
-  endringsårsaker: z
+  endringAvInntektÅrsaker: z
     .array(
       z.object({
         årsak: EndringAvInntektÅrsakerSchema,

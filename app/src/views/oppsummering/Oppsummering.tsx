@@ -98,7 +98,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
-        endringsårsaker: skjemaState.endringsårsaker,
+        endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker,
       } satisfies SendInntektsmeldingRequestDto;
 
       return sendInntektsmelding(inntektsmelding);

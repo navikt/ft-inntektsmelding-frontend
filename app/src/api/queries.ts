@@ -88,7 +88,7 @@ export function mapInntektsmeldingResponseTilValidState(
         inkluderTom: periode.tom !== undefined,
         tom: periode.tom,
       })) ?? [],
-    endringsårsaker: [], // TODO: Send inn når BE har støtte for det
+    endringAvInntektÅrsaker: [], // TODO: Send inn når BE har støtte for det
     inntekt: inntektsmelding.inntekt,
     // TODO: denne ble stygg
     skalRefunderes:

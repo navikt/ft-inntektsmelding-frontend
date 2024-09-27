@@ -47,7 +47,7 @@ export type InntektOgRefusjonForm = {
   skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   misterNaturalytelser: JaNei;
   naturalytelserSomMistes: NaturalytelserSomMistesForm[];
-  endringsårsaker: EndringsÅrsakerForm[];
+  endringAvInntektÅrsaker: EndringsÅrsakerForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
   | "refusjonsendringer"
@@ -88,10 +88,10 @@ function InntektOgRefusjon() {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt,
       korrigertInntekt: inntektsmeldingSkjemaState.korrigertInntekt,
-      endringsårsaker:
-        inntektsmeldingSkjemaState.endringsårsaker.length === 0
+      endringAvInntektÅrsaker:
+        inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
           ? [{ årsak: "" }]
-          : inntektsmeldingSkjemaState.endringsårsaker,
+          : inntektsmeldingSkjemaState.endringAvInntektÅrsaker,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
@@ -138,13 +138,13 @@ function InntektOgRefusjon() {
           inkluderTom: naturalYtelse.inkluderTom === "ja",
         }))
       : [];
-    const endringsårsaker = korrigertInntekt ? skjemadata.endringsårsaker : [];
+    const endringAvInntektÅrsaker = korrigertInntekt ? skjemadata.endringAvInntektÅrsaker : [];
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       inntekt,
       korrigertInntekt,
-      endringsårsaker,
+      endringAvInntektÅrsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       refusjonsendringer,

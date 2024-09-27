@@ -272,7 +272,7 @@ function EndringsÅrsaker() {
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "endringsårsaker",
+    name: "endringAvInntektÅrsaker",
   });
 
   return (
@@ -281,9 +281,9 @@ function EndringsÅrsaker() {
         return (
           <Fragment key={field.id}>
             <Select
-              error={formState.errors?.endringsårsaker?.[index]?.årsak?.message}
+              error={formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak?.message}
               label="Velg endringsårsak"
-              {...register(`endringsårsaker.${index}.årsak`, {
+              {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
             >
@@ -328,7 +328,7 @@ function EndringsÅrsaker() {
 
 function ÅrsaksPerioder({ index }: { index: number }) {
   const { watch } = useFormContext<InntektOgRefusjonForm>();
-  const årsak = watch(`endringsårsaker.${index}.årsak`);
+  const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
 
   // Spesialhåndtering av tariffendring
   if (årsak === "TARIFFENDRING") {
@@ -336,12 +336,12 @@ function ÅrsaksPerioder({ index }: { index: number }) {
       <>
         <DatePickerWrapped
           label="Fra og med"
-          name={`endringsårsaker.${index}.fom`}
+          name={`endringAvInntektÅrsaker.${index}.fom`}
           rules={{ required: "Må oppgis" }}
         />
         <DatePickerWrapped
           label="Ble kjent fra"
-          name={`endringsårsaker.${index}.bleKjentFra`}
+          name={`endringAvInntektÅrsaker.${index}.bleKjentFra`}
           rules={{ required: "Må oppgis" }}
         />
       </>
@@ -353,7 +353,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
       {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].fom ? (
         <DatePickerWrapped
           label="Fra og med"
-          name={`endringsårsaker.${index}.fom`}
+          name={`endringAvInntektÅrsaker.${index}.fom`}
           rules={{ required: "Må oppgis" }}
         />
       ) : (
@@ -362,7 +362,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
       {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].tom ? (
         <DatePickerWrapped
           label="Til og med"
-          name={`endringsårsaker.${index}.tom`}
+          name={`endringAvInntektÅrsaker.${index}.tom`}
           rules={{ required: "Må oppgis" }}
         />
       ) : (

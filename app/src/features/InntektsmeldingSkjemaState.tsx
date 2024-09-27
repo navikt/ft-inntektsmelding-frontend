@@ -23,7 +23,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     .optional(),
   inntekt: beløpSchema,
   korrigertInntekt: beløpSchema.optional(),
-  endringsårsaker: z.array(
+  endringAvInntektÅrsaker: z.array(
     z.object({
       årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
       fom: z.string().optional(),
@@ -67,7 +67,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
   }),
   inntekt: beløpSchema,
   korrigertInntekt: beløpSchema.optional(),
-  endringsårsaker: z.array(
+  endringAvInntektÅrsaker: z.array(
     z.object({
       årsak: EndringAvInntektÅrsakerSchema,
       fom: z.string().optional(),
@@ -129,7 +129,7 @@ const defaultSkjemaState = {
   refusjonsbeløpPerMåned: 0,
   refusjonsendringer: [],
   naturalytelserSomMistes: [],
-  endringsårsaker: [],
+  endringAvInntektÅrsaker: [],
 } satisfies InntektsmeldingSkjemaState;
 
 export const InntektsmeldingSkjemaStateProvider = ({
