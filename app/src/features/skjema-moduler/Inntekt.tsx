@@ -14,6 +14,7 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
+import { useLoaderData } from "@tanstack/react-router";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
@@ -207,6 +208,7 @@ export const endringsårsak = [
   { value: "BONUS", label: "Bonus" },
   { value: "NYANSATT", label: "Nyansatt" },
   { value: "SYKEFRAVÆR", label: "Sykefravær" },
+  { value: "TARIFFENDRING", label: "Tariffendring" },
   {
     value: "FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER",
     label: "Ferietrekk / utbetaling av feriepenger",
@@ -268,6 +270,8 @@ export const ENDRINGS_ÅRSAK_TEMPLATE = {
 };
 
 function EndringsÅrsaker() {
+  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
+
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
@@ -275,20 +279,30 @@ function EndringsÅrsaker() {
     name: "endringAvInntektÅrsaker",
   });
 
+  const muligeÅrsakerValg =
+    eksisterendeInntektsmeldinger.length > 0
+      ? Object.values(endringsårsak)
+      : Object.values(endringsårsak).filter(
+          (årsak) => årsak.value !== "TARIFFENDRING",
+        );
+
   return (
     <HGrid columns="1fr max-content max-content max-content" gap="4">
       {fields.map((field, index) => {
         return (
           <Fragment key={field.id}>
             <Select
-              error={formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak?.message}
+              error={
+                formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
+                  ?.message
+              }
               label="Velg endringsårsak"
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
             >
               <option value="">Velg endringsårsak</option>
-              {Object.values(endringsårsak).map((årsak) => (
+              {muligeÅrsakerValg.map((årsak) => (
                 <option key={årsak.value} value={årsak.value}>
                   {årsak.label}
                 </option>
