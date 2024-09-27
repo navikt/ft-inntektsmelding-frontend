@@ -1,4 +1,4 @@
-import { PencilIcon } from "@navikt/aksel-icons";
+import { ArrowUndoIcon, PencilIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -281,6 +281,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
         </Select>
         <Button
           className="mt-8"
+          icon={<ArrowUndoIcon aria-hidden />}
           onClick={tilbakestillOgLukk}
           variant="tertiary"
         >
