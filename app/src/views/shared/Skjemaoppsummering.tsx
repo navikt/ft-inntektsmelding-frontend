@@ -1,11 +1,13 @@
 import { FormSummary, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
+import { Fragment } from "react";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import { REFUSJON_RADIO_VALG } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
+  capitalize,
   formatDatoKort,
   formatDatoLang,
   formatFødselsnummer,
@@ -94,15 +96,17 @@ export const Skjemaoppsummering = ({
           />
         </FormSummary.Header>
         <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>
-              Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
-              {formatYtelsesnavn(opplysninger.ytelse)}
-            </FormSummary.Label>
-            <FormSummary.Value>
-              {formatKroner(skjemaState.inntekt)}
-            </FormSummary.Value>
-          </FormSummary.Answer>
+          {skjemaState.korrigertInntekt === undefined && (
+            <FormSummary.Answer>
+              <FormSummary.Label>
+                Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
+                {formatYtelsesnavn(opplysninger.ytelse)}
+              </FormSummary.Label>
+              <FormSummary.Value>
+                {formatKroner(skjemaState.inntekt)}
+              </FormSummary.Value>
+            </FormSummary.Answer>
+          )}
           {skjemaState.korrigertInntekt !== undefined && (
             <>
               <FormSummary.Answer>
@@ -116,45 +120,27 @@ export const Skjemaoppsummering = ({
                 <FormSummary.Value>
                   <FormSummary.Answers>
                     {skjemaState.endringAvInntektÅrsaker.map(
-                      ({ årsak, fom, tom, bleKjentFra }) => (
-                        <>
-                          <FormSummary.Answer>
-                            <FormSummary.Label>Årsak</FormSummary.Label>
-                            <FormSummary.Value>
-                              {
-                                endringsårsak.find((a) => a.value === årsak)
-                                  ?.label
-                              }
-                            </FormSummary.Value>
-                          </FormSummary.Answer>
-                          {fom && (
-                            <FormSummary.Answer>
-                              <FormSummary.Label>Fra og med</FormSummary.Label>
-                              <FormSummary.Value>
-                                {formatDatoLang(new Date(fom))}
-                              </FormSummary.Value>
-                            </FormSummary.Answer>
-                          )}
-                          {tom && (
-                            <FormSummary.Answer>
-                              <FormSummary.Label>Til og med</FormSummary.Label>
-                              <FormSummary.Value>
-                                {formatDatoLang(new Date(tom))}
-                              </FormSummary.Value>
-                            </FormSummary.Answer>
-                          )}
-                          {bleKjentFra && (
+                      ({ årsak, fom, tom, bleKjentFra }) => {
+                        const periodeStreng = formaterPeriodeStreng({
+                          fom,
+                          tom: bleKjentFra || tom,
+                        });
+                        return (
+                          <Fragment key={[årsak, fom, tom].join("-")}>
                             <FormSummary.Answer>
                               <FormSummary.Label>
-                                Ble kjent fra og med
+                                {
+                                  endringsårsak.find((a) => a.value === årsak)
+                                    ?.label
+                                }
                               </FormSummary.Label>
                               <FormSummary.Value>
-                                {formatDatoLang(new Date(bleKjentFra))}
+                                {capitalize(periodeStreng)}
                               </FormSummary.Value>
                             </FormSummary.Answer>
-                          )}
-                        </>
-                      ),
+                          </Fragment>
+                        );
+                      },
                     )}
                   </FormSummary.Answers>
                 </FormSummary.Value>
