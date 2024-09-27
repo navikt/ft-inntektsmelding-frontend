@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import { ArrowUndoIcon, PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -315,7 +315,8 @@ function EndringsÅrsaker() {
                 aria-label="fjern naturalytelse"
                 className="mt-8"
                 icon={<TrashIcon />}
-                onClick={() => remove(index)}
+                icon={<ArrowUndoIcon aria-hidden />}
+          onClick={() => remove(index)}
                 variant="tertiary"
               >
                 Slett

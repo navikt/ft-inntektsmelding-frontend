@@ -1,4 +1,9 @@
-import { PencilIcon, PlusIcon, TrashIcon } from "@navikt/aksel-icons";
+import {
+  ArrowUndoIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -122,11 +127,11 @@ function LikRefusjon() {
               />
               <Button
                 className="mt-8"
+                icon={<ArrowUndoIcon aria-hidden />}
                 onClick={() => {
                   resetField("refusjonsbeløpPerMåned");
                   setSkalEndreBeløp(false);
                 }}
-                size="small"
                 variant="tertiary"
               >
                 Tilbakestill
