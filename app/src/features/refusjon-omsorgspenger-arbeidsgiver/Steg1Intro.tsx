@@ -11,18 +11,27 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { Link as RouterLink } from "@tanstack/react-router";
-import { useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { RefusjonOmsorgspengerArbeidsgiverSkjemaState } from "./RefusjonOmsorgspengerArbeidsgiverSkjemaState";
+
+type Steg1FormFields = Pick<
+  RefusjonOmsorgspengerArbeidsgiverSkjemaState,
+  "harUtbetaltLønn" | "årForRefusjon"
+>;
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
-  const [harUtbetaltLønn, setHarUtbetaltLønn] = useState("");
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
+
+  const { register, watch } = useFormContext<Steg1FormFields>();
+  const harUtbetaltLønn = watch("harUtbetaltLønn");
+
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
       <Heading level="1" size="large">
@@ -48,9 +57,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       </GuidePanel>
       <RadioGroup
         legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
-        name="harUtbetaltLønn"
-        onChange={setHarUtbetaltLønn}
-        value={harUtbetaltLønn}
+        {...register("harUtbetaltLønn", {
+          required: "Du må svare på om dere har utbetalt lønn under fraværet",
+        })}
       >
         <Radio value="ja">Ja</Radio>
         <Radio value="nei">Nei</Radio>
@@ -77,7 +86,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       )}
       <RadioGroup
         legend="Hvilket år søker dere refusjon for?"
-        name="årForRefusjon"
+        {...register("årForRefusjon", {
+          required: "Du må svare på hvilket år du søker refusjon for",
+        })}
       >
         <Radio value={iFjor}>{iFjor}</Radio>
         <Radio value={iÅr}>{iÅr}</Radio>
