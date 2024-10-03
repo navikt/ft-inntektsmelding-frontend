@@ -19,7 +19,10 @@ import {
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import { UtbetalingOgRefusjon } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
-import type { OpplysningerDto } from "~/types/api-models.ts";
+import type {
+  EndringAvInntektÅrsaker,
+  OpplysningerDto,
+} from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
@@ -44,14 +47,21 @@ export type InntektOgRefusjonForm = {
   skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   misterNaturalytelser: JaNei;
   naturalytelserSomMistes: NaturalytelserSomMistesForm[];
+  endringAvInntektÅrsaker: EndringsÅrsakerForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
   | "refusjonsendringer"
   | "refusjonsbeløpPerMåned"
   | "inntekt"
-  | "inntektEndringsÅrsak"
+  | "korrigertInntekt"
 >;
 
+type EndringsÅrsakerForm = {
+  årsak: EndringAvInntektÅrsaker | "";
+  fom?: string;
+  tom?: string;
+  bleKjentFom?: string;
+};
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";
   beløp: number | string;
@@ -77,7 +87,15 @@ function InntektOgRefusjon() {
     defaultValues: {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt,
-      inntektEndringsÅrsak: inntektsmeldingSkjemaState.inntektEndringsÅrsak,
+      korrigertInntekt:
+        (inntektsmeldingSkjemaState.korrigertInntekt ??
+        inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length > 0)
+          ? inntektsmeldingSkjemaState.inntekt
+          : undefined,
+      endringAvInntektÅrsaker:
+        inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
+          ? [{ årsak: "" }]
+          : inntektsmeldingSkjemaState.endringAvInntektÅrsaker,
       refusjonsbeløpPerMåned:
         inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
         gjennomsnikkInntektFraAOrdning,
@@ -100,6 +118,7 @@ function InntektOgRefusjon() {
           : inntektsmeldingSkjemaState.refusjonsendringer,
     },
   });
+
   const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
@@ -107,8 +126,8 @@ function InntektOgRefusjon() {
     const {
       refusjonsbeløpPerMåned,
       inntekt,
-      inntektEndringsÅrsak,
       skalRefunderes,
+      korrigertInntekt,
     } = skjemadata;
 
     const refusjonsendringer =
@@ -123,11 +142,15 @@ function InntektOgRefusjon() {
           inkluderTom: naturalYtelse.inkluderTom === "ja",
         }))
       : [];
+    const endringAvInntektÅrsaker = korrigertInntekt
+      ? skjemadata.endringAvInntektÅrsaker
+      : [];
 
     setInntektsmeldingSkjemaState((prev) => ({
       ...prev,
       inntekt,
-      inntektEndringsÅrsak,
+      korrigertInntekt,
+      endringAvInntektÅrsaker,
       refusjonsbeløpPerMåned,
       skalRefunderes,
       refusjonsendringer,

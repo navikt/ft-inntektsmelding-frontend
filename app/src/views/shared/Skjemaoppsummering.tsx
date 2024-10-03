@@ -1,16 +1,18 @@
-import { FormSummary, VStack } from "@navikt/ds-react";
+import { FormSummary, List, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
+import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import { REFUSJON_RADIO_VALG } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
-import { ÅrsaksType } from "~/types/api-models";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
+  capitalize,
   formatDatoKort,
   formatDatoLang,
   formatFødselsnummer,
   formatKroner,
   formatYtelsesnavn,
+  gjennomsnittInntekt,
   slåSammenTilFulltNavn,
 } from "~/utils";
 
@@ -23,7 +25,6 @@ export const Skjemaoppsummering = ({
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   // TODO: bør vi ha en deepEquals mellom current og forrige, og ikke tillate submit dersom ikke faktisk har gjort en endring.
-
   return (
     <VStack gap="4">
       <FormSummary>
@@ -85,67 +86,7 @@ export const Skjemaoppsummering = ({
         </FormSummary.Answers>
       </FormSummary>
 
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-          <FormSummary.EditLink
-            as={Link}
-            to="../inntekt-og-refusjon#beregnet-manedslonn"
-          />
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>
-              Beregnet månedslønn basert på de tre siste, fulle månedene før{" "}
-              {formatYtelsesnavn(opplysninger.ytelse)}
-            </FormSummary.Label>
-            <FormSummary.Value>
-              {formatKroner(skjemaState.inntekt)}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          {skjemaState.inntektEndringsÅrsak && (
-            <>
-              <FormSummary.Answer>
-                <FormSummary.Label>Korrigert månedslønn</FormSummary.Label>
-                <FormSummary.Value>
-                  {formatKroner(
-                    skjemaState.inntektEndringsÅrsak.korrigertInntekt,
-                  )}
-                </FormSummary.Value>
-              </FormSummary.Answer>
-              <FormSummary.Answer>
-                <FormSummary.Label>Korrigert grunnet</FormSummary.Label>
-                <FormSummary.Value>
-                  {formatInntektsendrignsGrunn(
-                    skjemaState.inntektEndringsÅrsak.årsak,
-                  )}
-                </FormSummary.Value>
-              </FormSummary.Answer>
-              {skjemaState.inntektEndringsÅrsak.fom && (
-                <FormSummary.Answer>
-                  <FormSummary.Label>Fra og med</FormSummary.Label>
-                  <FormSummary.Value>
-                    {formatDatoLang(
-                      new Date(skjemaState.inntektEndringsÅrsak.fom),
-                    )}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-              )}
-              {skjemaState.inntektEndringsÅrsak.tom && (
-                <FormSummary.Answer>
-                  <FormSummary.Label>Til og med</FormSummary.Label>
-                  <FormSummary.Value>
-                    {formatDatoLang(
-                      new Date(skjemaState.inntektEndringsÅrsak.tom),
-                    )}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-              )}
-            </>
-          )}
-        </FormSummary.Answers>
-      </FormSummary>
-
+      <InntektSummary opplysninger={opplysninger} skjemaState={skjemaState} />
       <FormSummary>
         <FormSummary.Header>
           <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
@@ -245,6 +186,84 @@ export const Skjemaoppsummering = ({
   );
 };
 
+function InntektSummary({
+  skjemaState,
+  opplysninger,
+}: SkjemaoppsummeringProps) {
+  // Hvis oppsummeringen vises etter utfylt skjema (url: .../oppsummering) så er "korrigertInntekt" populert og vi bruker den som lønn.
+  // Hvis den brukes til å vise eksisterende IM (url: .../vis) så må vi bruke registrert inntekt,
+  // og sammenligne med gj.snitt fra opplysninger for å bedømme om den har blitt endret eller ikke.
+  const harEndretInntekt = skjemaState.endringAvInntektÅrsaker.length > 0;
+  const estimertInntekt = gjennomsnittInntekt(opplysninger.inntekter);
+  const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
+
+  return (
+    <FormSummary>
+      <FormSummary.Header>
+        <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
+        <FormSummary.EditLink
+          as={Link}
+          to="../inntekt-og-refusjon#beregnet-manedslonn"
+        />
+      </FormSummary.Header>
+      <FormSummary.Answers>
+        <FormSummary.Answer>
+          <FormSummary.Label>Beregnet månedslønn</FormSummary.Label>
+          <FormSummary.Value>
+            {harEndretInntekt ? (
+              <List>
+                <List.Item>
+                  Estimert:{" "}
+                  <span className="line-through">
+                    {formatKroner(estimertInntekt)}
+                  </span>
+                </List.Item>
+                <List.Item>
+                  Endret til: {formatKroner(gjeldendeInntekt)}
+                </List.Item>
+              </List>
+            ) : (
+              formatKroner(gjeldendeInntekt)
+            )}
+          </FormSummary.Value>
+        </FormSummary.Answer>
+        {harEndretInntekt && (
+          <>
+            <FormSummary.Answer>
+              <FormSummary.Label>Årsaker</FormSummary.Label>
+              <FormSummary.Value>
+                <FormSummary.Answers>
+                  {skjemaState.endringAvInntektÅrsaker.map(
+                    ({ årsak, fom, tom, bleKjentFom }) => {
+                      const periodeStreng = formaterPeriodeStreng({
+                        fom,
+                        tom: bleKjentFom || tom,
+                      });
+                      return (
+                        <FormSummary.Answer key={[årsak, fom, tom].join("-")}>
+                          <FormSummary.Label>
+                            {
+                              endringsårsak.find((a) => a.value === årsak)
+                                ?.label
+                            }
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {capitalize(periodeStreng)}
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      );
+                    },
+                  )}
+                </FormSummary.Answers>
+              </FormSummary.Value>
+            </FormSummary.Answer>
+          </>
+        )}
+      </FormSummary.Answers>
+    </FormSummary>
+  );
+}
+
 /**
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
  */
@@ -268,18 +287,4 @@ const formatterKontaktperson = (
     return "";
   }
   return `${kontaktperson.navn}, ${kontaktperson.telefonnummer}`;
-};
-
-const formatInntektsendrignsGrunn = (årsak: ÅrsaksType) => {
-  switch (årsak) {
-    case "Tariffendring": {
-      return "Tariffendring";
-    }
-    case "FeilInntekt": {
-      return "Varig feil inntekt";
-    }
-    default: {
-      return årsak;
-    }
-  }
 };

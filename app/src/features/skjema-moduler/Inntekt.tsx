@@ -1,4 +1,9 @@
-import { ArrowUndoIcon, PencilIcon } from "@navikt/aksel-icons";
+import {
+  ArrowUndoIcon,
+  PencilIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -12,12 +17,15 @@ import {
   Select,
   Stack,
   TextField,
+  VStack,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
+import { useLoaderData } from "@tanstack/react-router";
+import clsx from "clsx";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext } from "react-hook-form";
 
 import {
   HjelpetekstAlert,
@@ -25,10 +33,12 @@ import {
 } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import type { ÅrsaksType, OpplysningerDto } from "~/types/api-models.ts";
+import {
+  EndringAvInntektÅrsaker,
+  OpplysningerDto,
+} from "~/types/api-models.ts";
 import {
   capitalizeSetning,
-  formatDatoKort,
   formatKroner,
   gjennomsnittInntekt,
   leggTilGenitiv,
@@ -43,9 +53,9 @@ type InntektProps = {
 export function Inntekt({ opplysninger }: InntektProps) {
   const { startdatoPermisjon, person, inntekter } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
-  const inntektEndringsÅrsak = watch("inntektEndringsÅrsak");
-  const { isOpen, onOpen, onClose } = useDisclosure(!!inntektEndringsÅrsak);
-
+  const { isOpen, onOpen, onClose } = useDisclosure(
+    !!watch("korrigertInntekt"),
+  );
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {
       locale: nb,
@@ -85,36 +95,43 @@ export function Inntekt({ opplysninger }: InntektProps) {
         </Alert>
       )}
 
+      <VStack gap="1">
+        <BodyShort>Beregnet månedslønn</BodyShort>
+        <strong
+          className={clsx(
+            "text-heading-medium",
+            isOpen && "text-text-subtle line-through",
+          )}
+        >
+          {formatKroner(gjennomsnittInntekt(inntekter))}
+        </strong>
+        <BodyShort>
+          Gjennomsnittet av de siste tre månedene før {førsteDag}
+        </BodyShort>
+      </VStack>
       {isOpen ? (
-        <EndreMånedslønn onClose={onClose} opplysninger={opplysninger} />
+        <EndreMånedslønn onClose={onClose} />
       ) : (
-        <>
-          <BodyShort>Beregnet månedslønn</BodyShort>
-          <strong>{formatKroner(gjennomsnittInntekt(inntekter))}</strong>
-          <BodyShort>
-            Gjennomsnittet av de siste tre månedene før {førsteDag}
-          </BodyShort>
-          <Button
-            className="w-max"
-            icon={<PencilIcon />}
-            onClick={onOpen}
-            size="small"
-            type="button"
-            variant="secondary"
-          >
-            Endre månedslønn
-          </Button>
-        </>
+        <Button
+          className="w-max"
+          icon={<PencilIcon />}
+          onClick={onOpen}
+          size="small"
+          type="button"
+          variant="secondary"
+        >
+          Endre månedslønn
+        </Button>
       )}
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
-          Når må du endre månedslønnen?
+          Er månedslønnen riktig?
         </Heading>
         <BodyLong>
-          Hvis den ansatte nylig har fått varig lønnsendring, endring i
-          arbeidstid, hatt ubetalt fri eller har andre endringer i lønn må
-          månedslønnen korrigeres. Overtid skal ikke inkluderes. Beregningen
-          skal gjøres etter{" "}
+          Har den ansatte i løpet av de siste tre månedene fått varig
+          lønnsendring, stillingsprosent eller hatt lovlig fravær som påvirker
+          lønnsutbetalingen, skal månedslønnen korrigeres. Overtid skal ikke
+          inkluderes. Beregningen skal gjøres etter{" "}
           <Link
             href="https://lovdata.no/lov/1997-02-28-19/§8-28"
             target="_blank"
@@ -195,118 +212,228 @@ export function Inntekt({ opplysninger }: InntektProps) {
   );
 }
 
-// const endringsårsak = [
-//   { value: "FERIE", label: "Ferie" },
-//   { value: "VARIG_LØNNSENDRING", label: "Varig lønnsendring" },
-//   { value: "PERMISJON", label: "Permisjon" },
-//   { value: "PERMITTERING", label: "Permittering" },
-//   { value: "NY_STILLING", label: "Ny stilling" },
-//   { value: "NY_STILLINGSPROSENT", label: "Ny stillingsprosent" },
-//   { value: "BONUS", label: "Bonus" },
-//   { value: "NYANSATT", label: "Nyansatt" },
-//   { value: "SYKEFRAVÆR", label: "Sykefravær" },
-//   {
-//     value: "FERIETREKK_UTBETALING_AV_FERIEPENGER",
-//     label: "Ferietrekk / utbetaling av feriepenger",
-//   },
-//   {
-//     value: "MANGELFULL_ELLER_URIKTIG_RAPPORTERING_TIL_AORDNINGEN",
-//     label: "Mangelfull eller uriktig rapportering til A-ordningen",
-//   },
-// ];
-
-const endringsårsak = [
-  { value: "Tariffendring", label: "Tariffendring" },
-  { value: "FeilInntekt", label: "Varig feil inntekt" },
-];
-
-const NØDVENDIGE_FELTER_FOR_ÅRSAK: Record<
-  ÅrsaksType,
-  { fom: boolean; tom: boolean }
-> = {
-  Tariffendring: { fom: true, tom: true },
-  FeilInntekt: { fom: true, tom: false },
-};
+export const endringsårsak = [
+  { value: "FERIE", label: "Ferie" },
+  { value: "VARIG_LØNNSENDRING", label: "Varig lønnsendring" },
+  { value: "PERMISJON", label: "Permisjon" },
+  { value: "PERMITTERING", label: "Permittering" },
+  { value: "NY_STILLING", label: "Ny stilling" },
+  { value: "NY_STILLINGSPROSENT", label: "Ny stillingsprosent" },
+  { value: "BONUS", label: "Bonus" },
+  { value: "NYANSATT", label: "Nyansatt" },
+  { value: "SYKEFRAVÆR", label: "Sykefravær" },
+  { value: "TARIFFENDRING", label: "Tariffendring" },
+  {
+    value: "FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER",
+    label: "Ferietrekk / utbetaling av feriepenger",
+  },
+  {
+    value: "MANGELFULL_RAPPORTERING_AORDNING",
+    label: "Mangelfull eller uriktig rapportering til A-ordningen",
+  },
+] satisfies { value: EndringAvInntektÅrsaker; label: string }[];
 
 type EndreMånedslønnProps = {
   onClose: () => void;
-  opplysninger: OpplysningerDto;
 };
-const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
-  const { startdatoPermisjon } = opplysninger;
-
+const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
   const { register, watch, formState, unregister } =
     useFormContext<InntektOgRefusjonForm>();
-
   const tilbakestillOgLukk = () => {
-    unregister("inntektEndringsÅrsak");
+    unregister("korrigertInntekt");
     onClose();
   };
 
-  const årsak = watch("inntektEndringsÅrsak.årsak");
   const inntekt = watch("inntekt");
 
   return (
-    <div>
+    <>
       <div className="flex items-start gap-4">
         <TextField
-          {...register("inntektEndringsÅrsak.korrigertInntekt", {
+          {...register("korrigertInntekt", {
             min: { value: 1, message: "Må være mer enn 0" },
             required: "Må oppgis",
             value: inntekt,
-            shouldUnregister: true,
           })}
-          error={
-            formState.errors.inntektEndringsÅrsak?.korrigertInntekt?.message
-          }
+          error={formState.errors.korrigertInntekt?.message}
           inputMode="numeric"
-          label={`Månedsinntekt ${formatDatoKort(new Date(startdatoPermisjon))}`}
+          label="Endret månedsinntekt"
         />
-
-        <Select
-          className="flex-1"
-          error={formState.errors.inntektEndringsÅrsak?.årsak?.message}
-          label="Velg endringsårsak"
-          {...register("inntektEndringsÅrsak.årsak", {
-            required: "Må oppgis",
-            shouldUnregister: true,
-          })}
-        >
-          <option value="">Velg endringsårsak</option>
-          {Object.values(endringsårsak).map((årsak) => (
-            <option key={årsak.value} value={årsak.value}>
-              {årsak.label}
-            </option>
-          ))}
-        </Select>
         <Button
           className="mt-8"
           icon={<ArrowUndoIcon aria-hidden />}
           onClick={tilbakestillOgLukk}
+          type="button"
           variant="tertiary"
         >
           Tilbakestill
         </Button>
       </div>
-      <div className="flex gap-4 mt-4">
-        {NØDVENDIGE_FELTER_FOR_ÅRSAK[årsak]?.fom ? (
-          <DatePickerWrapped
-            label="Fra og med"
-            name="inntektEndringsÅrsak.fom"
-            rules={{ required: "Må oppgis" }}
-          />
-        ) : undefined}
-        {NØDVENDIGE_FELTER_FOR_ÅRSAK[årsak]?.tom ? (
-          <DatePickerWrapped
-            label="Til og med"
-            name="inntektEndringsÅrsak.tom"
-            rules={{ required: "Må oppgis" }}
-          />
-        ) : undefined}
-      </div>
-    </div>
+      <EndringsÅrsaker />
+    </>
   );
 };
+
+export const ENDRINGSÅRSAK_TEMPLATE = {
+  fom: undefined,
+  tom: undefined,
+  bleKjentFom: undefined,
+  årsak: "" as const,
+};
+
+function EndringsÅrsaker() {
+  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
+
+  const { control, register, formState } =
+    useFormContext<InntektOgRefusjonForm>();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "endringAvInntektÅrsaker",
+  });
+
+  // Tariffendring skal kun være tilgjengelig dersom man endrer en IM, ikke for førstegangs-innsendelse
+  const muligeÅrsakerValg =
+    eksisterendeInntektsmeldinger.length > 0
+      ? Object.values(endringsårsak)
+      : Object.values(endringsårsak).filter(
+          (årsak) => årsak.value !== "TARIFFENDRING",
+        );
+
+  return (
+    <HGrid columns="1fr max-content max-content max-content" gap="4">
+      {fields.map((field, index) => {
+        return (
+          <Fragment key={field.id}>
+            <Select
+              error={
+                formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
+                  ?.message
+              }
+              label="Hva er årsaken til endringen?"
+              {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
+                required: "Må oppgis",
+              })}
+            >
+              <option value="">Velg endringsårsak</option>
+              {muligeÅrsakerValg.map((årsak) => (
+                <option key={årsak.value} value={årsak.value}>
+                  {årsak.label}
+                </option>
+              ))}
+            </Select>
+            <ÅrsaksPerioder index={index} />
+            {index > 0 ? (
+              <Button
+                aria-label="fjern naturalytelse"
+                className="mt-8"
+                icon={<TrashIcon />}
+                onClick={() => remove(index)}
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            ) : (
+              <div />
+            )}
+          </Fragment>
+        );
+      })}
+      <Button
+        className="w-fit"
+        icon={<PlusIcon />}
+        iconPosition="left"
+        onClick={() => append(ENDRINGSÅRSAK_TEMPLATE)}
+        size="small"
+        type="button"
+        variant="secondary"
+      >
+        Legg til ny endringsårsak
+      </Button>
+    </HGrid>
+  );
+}
+
+function ÅrsaksPerioder({ index }: { index: number }) {
+  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
+
+  // Spesialhåndtering av tariffendring
+  if (årsak === "TARIFFENDRING") {
+    return (
+      <>
+        <DatePickerWrapped
+          label="Fra og med"
+          name={`endringAvInntektÅrsaker.${index}.fom`}
+          rules={{ required: "Må oppgis" }}
+        />
+        <DatePickerWrapped
+          label="Ble kjent fra"
+          name={`endringAvInntektÅrsaker.${index}.bleKjentFom`}
+          rules={{ required: "Må oppgis" }}
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
+        <DatePickerWrapped
+          label="Fra og med"
+          name={`endringAvInntektÅrsaker.${index}.fom`}
+          rules={{ required: "Må oppgis" }}
+        />
+      ) : (
+        <div />
+      )}
+      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
+        <DatePickerWrapped
+          label="Til og med"
+          name={`endringAvInntektÅrsaker.${index}.tom`}
+          rules={{ required: "Må oppgis" }}
+        />
+      ) : (
+        <div />
+      )}
+    </>
+  );
+}
+
+const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
+  // Før man har valgt
+  "": { fom: false, tom: false, bleKjentFom: false },
+
+  // Har ingen ekstra felter
+  BONUS: { fom: false, tom: false, bleKjentFom: false },
+  NYANSATT: { fom: false, tom: false, bleKjentFom: false },
+  FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER: {
+    fom: false,
+    tom: false,
+    bleKjentFom: false,
+  },
+  MANGELFULL_RAPPORTERING_AORDNING: {
+    fom: false,
+    tom: false,
+    bleKjentFom: false,
+  },
+
+  // Kun fom
+  VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFom: false },
+  NY_STILLING: { fom: true, tom: false, bleKjentFom: false },
+  NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFom: false },
+
+  // fom + tom
+  FERIE: { fom: true, tom: true, bleKjentFom: false },
+  PERMISJON: { fom: true, tom: true, bleKjentFom: false },
+  PERMITTERING: { fom: true, tom: true, bleKjentFom: false },
+  SYKEFRAVÆR: { fom: true, tom: true, bleKjentFom: false },
+
+  // Tariffendring er noe for seg selv
+  TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
+} satisfies Record<
+  EndringAvInntektÅrsaker & "",
+  { fom: boolean; tom: boolean; bleKjentFom: boolean }
+>;
 
 function navnPåMåned(date: string) {
   const måned = new Intl.DateTimeFormat("no", { month: "long" }).format(
