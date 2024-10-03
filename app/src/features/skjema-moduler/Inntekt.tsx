@@ -17,9 +17,11 @@ import {
   Select,
   Stack,
   TextField,
+  VStack,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
 import { useLoaderData } from "@tanstack/react-router";
+import clsx from "clsx";
 import { format } from "date-fns";
 import { nb } from "date-fns/locale";
 import { Fragment } from "react";
@@ -37,7 +39,6 @@ import {
 } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
-  formatDatoKort,
   formatKroner,
   gjennomsnittInntekt,
   leggTilGenitiv,
@@ -94,36 +95,43 @@ export function Inntekt({ opplysninger }: InntektProps) {
         </Alert>
       )}
 
+      <VStack gap="1">
+        <BodyShort>Beregnet månedslønn</BodyShort>
+        <strong
+          className={clsx(
+            "text-heading-medium",
+            isOpen && "text-text-subtle line-through",
+          )}
+        >
+          {formatKroner(gjennomsnittInntekt(inntekter))}
+        </strong>
+        <BodyShort>
+          Gjennomsnittet av de siste tre månedene før {førsteDag}
+        </BodyShort>
+      </VStack>
       {isOpen ? (
-        <EndreMånedslønn onClose={onClose} opplysninger={opplysninger} />
+        <EndreMånedslønn onClose={onClose} />
       ) : (
-        <>
-          <BodyShort>Beregnet månedslønn</BodyShort>
-          <strong>{formatKroner(gjennomsnittInntekt(inntekter))}</strong>
-          <BodyShort>
-            Gjennomsnittet av de siste tre månedene før {førsteDag}
-          </BodyShort>
-          <Button
-            className="w-max"
-            icon={<PencilIcon />}
-            onClick={onOpen}
-            size="small"
-            type="button"
-            variant="secondary"
-          >
-            Endre månedslønn
-          </Button>
-        </>
+        <Button
+          className="w-max"
+          icon={<PencilIcon />}
+          onClick={onOpen}
+          size="small"
+          type="button"
+          variant="secondary"
+        >
+          Endre månedslønn
+        </Button>
       )}
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
-          Når må du endre månedslønnen?
+          Er månedslønnen riktig?
         </Heading>
         <BodyLong>
-          Hvis den ansatte nylig har fått varig lønnsendring, endring i
-          arbeidstid, hatt ubetalt fri eller har andre endringer i lønn må
-          månedslønnen korrigeres. Overtid skal ikke inkluderes. Beregningen
-          skal gjøres etter{" "}
+          Har den ansatte i løpet av de siste tre månedene fått varig
+          lønnsendring, stillingsprosent eller hatt lovlig fravær som påvirker
+          lønnsutbetalingen, skal månedslønnen korrigeres. Overtid skal ikke
+          inkluderes. Beregningen skal gjøres etter{" "}
           <Link
             href="https://lovdata.no/lov/1997-02-28-19/§8-28"
             target="_blank"
@@ -227,11 +235,8 @@ export const endringsårsak = [
 
 type EndreMånedslønnProps = {
   onClose: () => void;
-  opplysninger: OpplysningerDto;
 };
-const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) => {
-  const { startdatoPermisjon } = opplysninger;
-
+const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
   const { register, watch, formState, unregister } =
     useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
@@ -252,7 +257,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
           })}
           error={formState.errors.korrigertInntekt?.message}
           inputMode="numeric"
-          label={`Månedsinntekt ${formatDatoKort(new Date(startdatoPermisjon))}`}
+          label="Endret månedsinntekt"
         />
         <Button
           className="mt-8"
@@ -304,7 +309,7 @@ function EndringsÅrsaker() {
                 formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
                   ?.message
               }
-              label="Velg endringsårsak"
+              label="Hva er årsaken til endringen?"
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
@@ -342,7 +347,7 @@ function EndringsÅrsaker() {
         type="button"
         variant="secondary"
       >
-        Legg til årsak
+        Legg til ny endringsårsak
       </Button>
     </HGrid>
   );
