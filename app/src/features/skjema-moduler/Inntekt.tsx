@@ -52,8 +52,9 @@ type InntektProps = {
 export function Inntekt({ opplysninger }: InntektProps) {
   const { startdatoPermisjon, person, inntekter } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
-  const inntektEndringsÅrsak = watch("korrigertInntekt"); // TODO: ikke sikkert ritkgi
-  const { isOpen, onOpen, onClose } = useDisclosure(!!inntektEndringsÅrsak);
+  const { isOpen, onOpen, onClose } = useDisclosure(
+    !!watch("korrigertInntekt"),
+  );
   const førsteDag = capitalizeSetning(
     format(startdatoPermisjon, "dd.MM yyyy", {
       locale: nb,
@@ -268,7 +269,7 @@ const EndreMånedslønn = ({ onClose, opplysninger }: EndreMånedslønnProps) =>
   );
 };
 
-export const ENDRINGS_ÅRSAK_TEMPLATE = {
+export const ENDRINGSÅRSAK_TEMPLATE = {
   fom: undefined,
   tom: undefined,
   bleKjentFom: undefined,
@@ -336,7 +337,7 @@ function EndringsÅrsaker() {
         className="w-fit"
         icon={<PlusIcon />}
         iconPosition="left"
-        onClick={() => append(ENDRINGS_ÅRSAK_TEMPLATE)}
+        onClick={() => append(ENDRINGSÅRSAK_TEMPLATE)}
         size="small"
         type="button"
         variant="secondary"
@@ -371,7 +372,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
 
   return (
     <>
-      {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].fom ? (
+      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
         <DatePickerWrapped
           label="Fra og med"
           name={`endringAvInntektÅrsaker.${index}.fom`}
@@ -380,7 +381,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
       ) : (
         <div />
       )}
-      {PÅKREVDE_ENDRING_ÅRSAK_FELTER[årsak].tom ? (
+      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
         <DatePickerWrapped
           label="Til og med"
           name={`endringAvInntektÅrsaker.${index}.tom`}
@@ -393,7 +394,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
   );
 }
 
-const PÅKREVDE_ENDRING_ÅRSAK_FELTER = {
+const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   // Før man har valgt
   "": { fom: false, tom: false, bleKjentFom: false },
 

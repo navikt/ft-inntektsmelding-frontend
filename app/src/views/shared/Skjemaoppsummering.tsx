@@ -1,6 +1,5 @@
 import { FormSummary, List, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
-import { Fragment } from "react";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
@@ -241,19 +240,17 @@ function InntektSummary({
                         tom: bleKjentFom || tom,
                       });
                       return (
-                        <Fragment key={[årsak, fom, tom].join("-")}>
-                          <FormSummary.Answer>
-                            <FormSummary.Label>
-                              {
-                                endringsårsak.find((a) => a.value === årsak)
-                                  ?.label
-                              }
-                            </FormSummary.Label>
-                            <FormSummary.Value>
-                              {capitalize(periodeStreng)}
-                            </FormSummary.Value>
-                          </FormSummary.Answer>
-                        </Fragment>
+                        <FormSummary.Answer key={[årsak, fom, tom].join("-")}>
+                          <FormSummary.Label>
+                            {
+                              endringsårsak.find((a) => a.value === årsak)
+                                ?.label
+                            }
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {capitalize(periodeStreng)}
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
                       );
                     },
                   )}
