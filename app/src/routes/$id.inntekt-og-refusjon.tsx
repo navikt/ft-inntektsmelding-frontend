@@ -8,7 +8,10 @@ import {
 } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
+import {
+  HjelpetekstReadMore,
+  HjelpetekstToggle,
+} from "~/features/Hjelpetekst.tsx";
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import type { InntektsmeldingSkjemaState } from "~/features/InntektsmeldingSkjemaState";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
@@ -228,6 +231,18 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
       >
         <BodyLong size="medium">{førsteDag}</BodyLong>
       </Informasjonsseksjon>
+      <HjelpetekstReadMore header="Hva betyr dette?">
+        <>
+          Dette er den første dagen den ansatte har søkt om foreldrepenger. Det
+          betyr at NAV trenger opplysninger om den ansattes inntekt på denne
+          datoen. Vi baserer oss på datoen som er oppgitt i søknaden, du kan
+          derfor ikke endre denne i inntektsmeldingen. <br /><br/>
+          Hvis du er usikker på om dette er riktig dato for første fraværsdag,
+          må du kontakte den ansatte før du sender inntektsmeldingen. Hvis den
+          ansatte endrer søknadsperioden, vil du få en ny oppgave med riktig
+          dato for første fraværsdag.
+        </>
+      </HjelpetekstReadMore>
     </VStack>
   );
 }

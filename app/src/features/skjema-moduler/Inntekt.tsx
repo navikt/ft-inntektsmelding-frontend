@@ -133,7 +133,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
           lønnsutbetalingen, skal månedslønnen korrigeres. Overtid skal ikke
           inkluderes. Beregningen skal gjøres etter{" "}
           <Link
-            href="https://lovdata.no/lov/1997-02-28-19/§8-28"
+            href="https://lovdata.no/nav/folketrygdloven/kap8/%C2%A78-28"
             target="_blank"
           >
             folketrygdloven §8-28.
