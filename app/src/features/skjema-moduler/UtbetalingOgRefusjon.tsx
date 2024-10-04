@@ -47,7 +47,6 @@ export function UtbetalingOgRefusjon() {
       setValue("refusjon.0.beløp", korrigertInntekt);
     }
   }, [korrigertInntekt]);
-  console.log(watch());
 
   const skalRefunderes = watch("skalRefunderes");
   return (
