@@ -18,7 +18,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
@@ -35,11 +35,19 @@ export const REFUSJON_RADIO_VALG = {
 } satisfies Record<InntektOgRefusjonForm["skalRefunderes"], string>;
 
 export function UtbetalingOgRefusjon() {
-  const { register, formState, watch } =
+  const { register, formState, watch, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
+
+  const korrigertInntekt = watch("korrigertInntekt");
+  useEffect(() => {
+    if (korrigertInntekt) {
+      setValue("refusjon.0.beløp", korrigertInntekt);
+    }
+  }, [korrigertInntekt]);
+  console.log(watch());
 
   const skalRefunderes = watch("skalRefunderes");
   return (
@@ -109,11 +117,13 @@ function Over6GAlert() {
 }
 
 function LikRefusjon() {
-  const { register, watch, resetField } =
+  const { register, watch, resetField, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
   const refusjonsbeløpPerMåned = watch(`refusjon.0.beløp`);
+  const korrigertInntekt = watch("korrigertInntekt");
+
   return (
     <>
       <div>
@@ -129,7 +139,12 @@ function LikRefusjon() {
                 className="mt-8"
                 icon={<ArrowUndoIcon aria-hidden />}
                 onClick={() => {
-                  resetField("refusjon.0.beløp");
+                  // Hvis vi har korrigert inntekt så setter vi beløp tilbake til det. Hvis ikke sett til defaultValue
+                  if (korrigertInntekt) {
+                    setValue("refusjon.0.beløp", korrigertInntekt);
+                  } else {
+                    resetField("refusjon.0.beløp");
+                  }
                   setSkalEndreBeløp(false);
                 }}
                 variant="tertiary"
