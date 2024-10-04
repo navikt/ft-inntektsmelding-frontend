@@ -82,6 +82,13 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       const gjeldendeInntekt =
         skjemaState.korrigertInntekt ?? skjemaState.inntekt;
 
+      const refusjon =
+        skjemaState.skalRefunderes === "JA_LIK_REFUSJON"
+          ? skjemaState.refusjon.slice(0, 1)
+          : skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON"
+            ? skjemaState.refusjon
+            : [];
+
       const inntektsmelding = {
         foresporselUuid: id,
         aktorId: opplysninger.person.aktørId,
@@ -90,11 +97,8 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         kontaktperson: skjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
         inntekt: gjeldendeInntekt,
-        refusjon: skjemaState.refusjonsbeløpPerMåned,
         // inntektEndringsÅrsak: skjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjonsendringer: utledRefusjonsPerioder(
-          skjemaState.refusjonsendringer,
-        ),
+        refusjon,
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
@@ -151,14 +155,5 @@ function konverterNaturalytelsePerioder(
     fom: periode.fom,
     beløp: periode.beløp,
     tom: periode.tom,
-  }));
-}
-
-function utledRefusjonsPerioder(
-  refusjonsendringer: InntektsmeldingSkjemaStateValid["refusjonsendringer"],
-): SendInntektsmeldingRequestDto["refusjonsendringer"] {
-  return refusjonsendringer.map((endring) => ({
-    fom: endring.fom,
-    beløp: endring.beløp,
   }));
 }

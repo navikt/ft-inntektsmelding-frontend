@@ -38,8 +38,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       z.literal("NEI"),
     ])
     .optional(),
-  refusjonsbeløpPerMåned: beløpSchema,
-  refusjonsendringer: z.array(
+  refusjon: z.array(
     z.object({
       fom: z.string().optional(),
       beløp: beløpSchema,
@@ -80,8 +79,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     z.literal("JA_VARIERENDE_REFUSJON"),
     z.literal("NEI"),
   ]),
-  refusjonsbeløpPerMåned: beløpSchema,
-  refusjonsendringer: z.array(
+  refusjon: z.array(
     z.object({
       fom: z.string(),
       beløp: beløpSchema,
@@ -126,8 +124,7 @@ type InntektsmeldingSkjemaStateProviderProps = {
 
 const defaultSkjemaState = {
   inntekt: 0,
-  refusjonsbeløpPerMåned: 0,
-  refusjonsendringer: [],
+  refusjon: [],
   naturalytelserSomMistes: [],
   endringAvInntektÅrsaker: [],
 } satisfies InntektsmeldingSkjemaState;

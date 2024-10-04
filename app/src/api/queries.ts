@@ -73,13 +73,7 @@ export function mapInntektsmeldingResponseTilValidState(
 ) {
   return {
     kontaktperson: inntektsmelding.kontaktperson,
-    refusjonsbeløpPerMåned: inntektsmelding.refusjon ?? 0,
-    refusjonsendringer: (inntektsmelding.refusjonsendringer ?? []).map(
-      (periode) => ({
-        ...periode,
-        fom: periode.fom,
-      }),
-    ),
+    refusjon: inntektsmelding.refusjon ?? [],
     naturalytelserSomMistes:
       inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
         navn: periode.naturalytelsetype,
@@ -90,11 +84,10 @@ export function mapInntektsmeldingResponseTilValidState(
       })) ?? [],
     endringAvInntektÅrsaker: inntektsmelding.endringAvInntektÅrsaker ?? [],
     inntekt: inntektsmelding.inntekt,
-    // TODO: denne ble stygg
     skalRefunderes:
-      (inntektsmelding.refusjonsendringer ?? []).length > 0
+      (inntektsmelding.refusjon ?? []).length > 1
         ? "JA_VARIERENDE_REFUSJON"
-        : inntektsmelding.refusjon
+        : (inntektsmelding.refusjon ?? []).length === 1
           ? "JA_LIK_REFUSJON"
           : "NEI",
     misterNaturalytelser:
