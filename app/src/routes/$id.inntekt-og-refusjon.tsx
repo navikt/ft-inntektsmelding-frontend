@@ -53,10 +53,7 @@ export type InntektOgRefusjonForm = {
   endringAvInntektÅrsaker: EndringsÅrsakerForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
-  | "refusjonsendringer"
-  | "refusjonsbeløpPerMåned"
-  | "inntekt"
-  | "korrigertInntekt"
+  "refusjon" | "inntekt" | "korrigertInntekt"
 >;
 
 type EndringsÅrsakerForm = {
@@ -79,12 +76,12 @@ function InntektOgRefusjon() {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
-  const gjennomsnikkInntektFraAOrdning = gjennomsnittInntekt(
+  const gjennomsnittInntektFraAOrdning = gjennomsnittInntekt(
     opplysninger.inntekter,
   );
 
   const inntekt =
-    inntektsmeldingSkjemaState.inntekt || gjennomsnikkInntektFraAOrdning;
+    inntektsmeldingSkjemaState.inntekt || gjennomsnittInntektFraAOrdning;
 
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
@@ -99,9 +96,6 @@ function InntektOgRefusjon() {
         inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
           ? [{ årsak: "" }]
           : inntektsmeldingSkjemaState.endringAvInntektÅrsaker,
-      refusjonsbeløpPerMåned:
-        inntektsmeldingSkjemaState.refusjonsbeløpPerMåned ||
-        gjennomsnikkInntektFraAOrdning,
       skalRefunderes: inntektsmeldingSkjemaState.skalRefunderes,
       misterNaturalytelser: konverterTilRadioValg(
         inntektsmeldingSkjemaState.misterNaturalytelser,
@@ -115,10 +109,10 @@ function InntektOgRefusjon() {
                 inkluderTom: konverterTilRadioValg(naturalYtelse.inkluderTom),
               }),
             ),
-      refusjonsendringer:
-        inntektsmeldingSkjemaState.refusjonsendringer.length === 0
+      refusjon:
+        inntektsmeldingSkjemaState.refusjon.length === 0
           ? [{ fom: opplysninger.startdatoPermisjon, beløp: inntekt }]
-          : inntektsmeldingSkjemaState.refusjonsendringer,
+          : inntektsmeldingSkjemaState.refusjon,
     },
   });
 
@@ -126,17 +120,7 @@ function InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const {
-      refusjonsbeløpPerMåned,
-      inntekt,
-      skalRefunderes,
-      korrigertInntekt,
-    } = skjemadata;
-
-    const refusjonsendringer =
-      skalRefunderes === "JA_VARIERENDE_REFUSJON"
-        ? skjemadata.refusjonsendringer
-        : [];
+    const { refusjon, inntekt, skalRefunderes, korrigertInntekt } = skjemadata;
 
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const naturalytelserSomMistes = misterNaturalytelser
@@ -154,9 +138,8 @@ function InntektOgRefusjon() {
       inntekt,
       korrigertInntekt,
       endringAvInntektÅrsaker,
-      refusjonsbeløpPerMåned,
+      refusjon,
       skalRefunderes,
-      refusjonsendringer,
       misterNaturalytelser,
       naturalytelserSomMistes,
     }));
@@ -236,7 +219,8 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
           Dette er den første dagen den ansatte har søkt om foreldrepenger. Det
           betyr at NAV trenger opplysninger om den ansattes inntekt på denne
           datoen. Vi baserer oss på datoen som er oppgitt i søknaden, du kan
-          derfor ikke endre denne i inntektsmeldingen. <br /><br/>
+          derfor ikke endre denne i inntektsmeldingen. <br />
+          <br />
           Hvis du er usikker på om dette er riktig dato for første fraværsdag,
           må du kontakte den ansatte før du sender inntektsmeldingen. Hvis den
           ansatte endrer søknadsperioden, vil du få en ny oppgave med riktig

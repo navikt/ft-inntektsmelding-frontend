@@ -108,7 +108,7 @@ export const Skjemaoppsummering = ({
             <FormSummary.Answer>
               <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
               <FormSummary.Value>
-                {formatKroner(skjemaState.refusjonsbeløpPerMåned)}
+                {formatKroner(skjemaState.refusjon[0].beløp)}
               </FormSummary.Value>
             </FormSummary.Answer>
           )}
@@ -117,7 +117,7 @@ export const Skjemaoppsummering = ({
               <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
               <FormSummary.Value>
                 <FormSummary.Answers>
-                  {skjemaState.refusjonsendringer.map((endring) => (
+                  {skjemaState.refusjon.map((endring) => (
                     <FormSummary.Answer
                       key={endring.fom.toString() + endring.beløp}
                     >

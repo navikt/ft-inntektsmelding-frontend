@@ -64,8 +64,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
   }),
   startdato: z.string(),
   inntekt: beløpSchema,
-  refusjon: beløpSchema.optional(),
-  refusjonsendringer: z
+  refusjon: z
     .array(
       z.object({
         fom: z.string(),

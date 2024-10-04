@@ -91,7 +91,7 @@ function Over6GAlert() {
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data;
 
-  const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
+  const refusjonsbeløpPerMåned = watch("refusjon")[0];
   const refusjonsbeløpPerMånedSomNummer = Number(refusjonsbeløpPerMåned);
   const erRefusjonOver6G =
     !Number.isNaN(refusjonsbeløpPerMånedSomNummer) &&
@@ -113,7 +113,7 @@ function LikRefusjon() {
     useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
-  const refusjonsbeløpPerMåned = watch("refusjonsbeløpPerMåned");
+  const refusjonsbeløpPerMåned = watch(`refusjon.0.beløp`);
   return (
     <>
       <div>
@@ -121,7 +121,7 @@ function LikRefusjon() {
           <Stack gap="4">
             <HStack gap="4">
               <TextField
-                {...register("refusjonsbeløpPerMåned", {})}
+                {...register("refusjon.0.beløp", {})}
                 autoFocus
                 label="Refusjonsbeløp per måned"
               />
@@ -129,7 +129,7 @@ function LikRefusjon() {
                 className="mt-8"
                 icon={<ArrowUndoIcon aria-hidden />}
                 onClick={() => {
-                  resetField("refusjonsbeløpPerMåned");
+                  resetField("refusjon.0.beløp");
                   setSkalEndreBeløp(false);
                 }}
                 variant="tertiary"
@@ -217,7 +217,7 @@ function RefusjonsPerioder() {
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "refusjonsendringer",
+    name: "refusjon",
   });
 
   return (
@@ -226,19 +226,17 @@ function RefusjonsPerioder() {
         <Fragment key={field.id}>
           <DatePickerWrapped
             label="Fra og med"
-            name={`refusjonsendringer.${index}.fom` as const}
+            name={`refusjon.${index}.fom` as const}
             readOnly={index === 0}
             rules={{ required: "Må oppgis" }}
           />
           <TextField
-            {...register(`refusjonsendringer.${index}.beløp` as const, {
+            {...register(`refusjon.${index}.beløp` as const, {
               valueAsNumber: true,
               validate: (value) => Number(value) >= 0 || "asdsa",
               required: "Må oppgis",
             })}
-            error={
-              formState.errors?.refusjonsendringer?.[index]?.beløp?.message
-            }
+            error={formState.errors?.refusjon?.[index]?.beløp?.message}
             inputMode="numeric"
             label="Refusjonsbeløp per måned"
             size="medium"
