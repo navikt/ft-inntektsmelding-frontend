@@ -297,7 +297,13 @@ function EndringsÅrsaker() {
         );
 
   return (
-    <HGrid columns="1fr max-content max-content max-content" gap="4">
+    <HGrid
+      columns={{
+        sm: "1fr max-content max-content max-content",
+        md: "50% max-content max-content max-content",
+      }}
+      gap="4"
+    >
       {fields.map((field, index) => {
         return (
           <Fragment key={field.id}>
@@ -310,7 +316,7 @@ function EndringsÅrsaker() {
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
-              className="lg:max-w-[50%]" // TODO: Pass på at den ikke er så bred til vanlig
+              className="lg:max-w-half"
             >
               <option value="">Velg endringsårsak</option>
               {muligeÅrsakerValg.map((årsak) => (
