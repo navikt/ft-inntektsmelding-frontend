@@ -68,13 +68,14 @@ export function Inntekt({ opplysninger }: InntektProps) {
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {/* TODO: Sorter på månedsnavn */}
-          {inntekter?.map((inntekt) => (
-            <Fragment key={inntekt.fom}>
-              <span>{navnPåMåned(inntekt.fom)}:</span>
-              <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
-            </Fragment>
-          ))}
+          {inntekter
+            ?.sort((a, b) => a.fom.localeCompare(b.fom))
+            .map((inntekt) => (
+              <Fragment key={inntekt.fom}>
+                <span>{navnPåMåned(inntekt.fom)}:</span>
+                <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
+              </Fragment>
+            ))}
         </HGrid>
       </Informasjonsseksjon>
 
