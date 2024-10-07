@@ -19,14 +19,13 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import { OpplysningerDto } from "~/types/api-models";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
 import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
@@ -37,11 +36,8 @@ export const REFUSJON_RADIO_VALG = {
   NEI: "Nei",
 } satisfies Record<InntektOgRefusjonForm["skalRefunderes"], string>;
 
-export function UtbetalingOgRefusjon({
-  opplysninger,
-}: {
-  opplysninger: OpplysningerDto;
-}) {
+export function UtbetalingOgRefusjon() {
+  const opplysninger = useOpplysninger();
   const { register, formState, watch, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {

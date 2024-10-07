@@ -35,6 +35,7 @@ import {
   gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils.ts";
+import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: () => (
@@ -169,9 +170,9 @@ function InntektOgRefusjon() {
             Inntekt og refusjon
           </Heading>
           <Fremgangsindikator aktivtSteg={2} />
-          <Ytelsesperiode opplysninger={opplysninger} />
+          <Ytelsesperiode />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon opplysninger={opplysninger} />
+          <UtbetalingOgRefusjon />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button
@@ -201,10 +202,8 @@ function konverterTilRadioValg(verdi: boolean | undefined) {
   return verdi === undefined ? undefined : verdi ? "ja" : "nei";
 }
 
-type YtelsesperiodeProps = {
-  opplysninger: OpplysningerDto;
-};
-function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
+function Ytelsesperiode() {
+  const opplysninger = useOpplysninger();
   const { startdatoPermisjon, person, ytelse } = opplysninger;
 
   const førsteDag = capitalize(formatDatoLang(new Date(startdatoPermisjon)));
