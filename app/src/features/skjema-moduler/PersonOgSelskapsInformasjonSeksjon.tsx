@@ -74,7 +74,7 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
           <Informasjonsseksjon
             className="col-span-2"
             kilde="Fra Altinn"
-            tittel={`Kontaktinformasjon for ${innsenderNavn}`}
+            tittel="Kontaktinformasjon for arbeidsgiver"
           >
             <HGrid align="start" columns={{ sm: 1, md: 2 }} gap="5">
               <TextField
@@ -102,13 +102,12 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
             </HGrid>
             <Alert variant="info">
               <Heading level="3" size="xsmall" spacing>
-                Stemmer opplysningene?
+                Er kontaktinformasjonen riktig?
               </Heading>
               <BodyShort>
-                Har vi spørsmål til inntektsmeldingen er det viktig at vi når
-                rett person, bruk derfor direktenummer fremfor
-                sentralbordnummer. Hvis du vet at du vil være utilgjengelig i
-                fremtiden, kan du bytte til en annen kontaktperson.
+                Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
+                får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
+                for nummeret til sentralbordet.
               </BodyShort>
             </Alert>
           </Informasjonsseksjon>

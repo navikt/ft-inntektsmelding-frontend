@@ -76,7 +76,7 @@ export const VisInntektsmelding = () => {
             icon={<DownloadIcon />}
             variant="tertiary"
           >
-            Last ned
+            Last ned inntektsmeldingen
           </Button>
         </HStack>
       </VStack>

@@ -90,7 +90,7 @@ export const Steg6Kvittering = () => {
             iconPosition="left"
             variant="secondary"
           >
-            Last ned
+            Last ned kvitteringen
           </Button>
         </HStack>
       </div>

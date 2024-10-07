@@ -28,6 +28,7 @@ import type {
 } from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
+  capitalize,
   capitalizeSetning,
   formatDatoLang,
   formatYtelsesnavn,
@@ -162,7 +163,7 @@ function InntektOgRefusjon() {
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode opplysninger={opplysninger} />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon />
+          <UtbetalingOgRefusjon opplysninger={opplysninger} />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button
@@ -198,9 +199,7 @@ type YtelsesperiodeProps = {
 function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
   const { startdatoPermisjon, person, ytelse } = opplysninger;
 
-  const førsteDag = capitalizeSetning(
-    formatDatoLang(new Date(startdatoPermisjon)),
-  );
+  const førsteDag = capitalize(formatDatoLang(new Date(startdatoPermisjon)));
 
   return (
     <VStack gap="4">
@@ -216,10 +215,11 @@ function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
       </Informasjonsseksjon>
       <HjelpetekstReadMore header="Hva betyr dette?">
         <>
-          Dette er den første dagen den ansatte har søkt om foreldrepenger. Det
-          betyr at NAV trenger opplysninger om den ansattes inntekt på denne
-          datoen. Vi baserer oss på datoen som er oppgitt i søknaden, du kan
-          derfor ikke endre denne i inntektsmeldingen. <br />
+          Dette er den første dagen den ansatte har søkt om{" "}
+          {formatYtelsesnavn(ytelse)}. Det betyr at NAV trenger opplysninger om
+          den ansattes inntekt på denne datoen. Vi baserer oss på datoen som er
+          oppgitt i søknaden, du kan derfor ikke endre denne i
+          inntektsmeldingen. <br />
           <br />
           Hvis du er usikker på om dette er riktig dato for første fraværsdag,
           må du kontakte den ansatte før du sender inntektsmeldingen. Hvis den

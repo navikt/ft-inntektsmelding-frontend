@@ -97,7 +97,7 @@ export const Kvittering = () => {
             iconPosition="left"
             variant="secondary"
           >
-            Last ned
+            Last ned inntektsmeldingen
           </Button>
         )}
       </HStack>
