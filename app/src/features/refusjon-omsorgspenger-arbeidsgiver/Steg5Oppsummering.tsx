@@ -17,6 +17,7 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
@@ -30,9 +31,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       </Heading>
       <Fremgangsindikator aktivtSteg={5} />
       <VStack gap="4">
-        <OppsummeringRefusjon />
         <OppsummeringArbeidsgiverOgAnsatt />
         <OppsummeringOmsorgsdager />
+        <OppsummeringRefusjon />
         <OppsummeringMånedslønn />
       </VStack>
       <div className="flex gap-4">
@@ -63,6 +64,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
 };
 
 const OppsummeringRefusjon = () => {
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -74,13 +76,15 @@ const OppsummeringRefusjon = () => {
           <FormSummaryLabel>
             Utbetaler dere lønn under fraværet, og krever refusjon?
           </FormSummaryLabel>
-          <FormSummaryValue>Ja</FormSummaryValue>
+          <FormSummaryValue>
+            {getValues("skalRefunderes") ? "Ja" : "Nei"}
+          </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
           <FormSummaryLabel>
             Hvilket år søker dere refusjon for?
           </FormSummaryLabel>
-          <FormSummaryValue>2024</FormSummaryValue>
+          <FormSummaryValue>{getValues("årForRefusjon")}</FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
     </FormSummary>
@@ -88,6 +92,7 @@ const OppsummeringRefusjon = () => {
 };
 
 const OppsummeringArbeidsgiverOgAnsatt = () => {
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -113,12 +118,18 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
           </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
-          <FormSummaryLabel>Kontaktperson</FormSummaryLabel>
-          <FormSummaryValue>Kontakt Personesen, 92929292</FormSummaryValue>
+          <FormSummaryLabel>Kontaktperson og innsender</FormSummaryLabel>
+          <FormSummaryValue>
+            {getValues("kontaktperson.navn")} (tlf.{" "}
+            {getValues("kontaktperson.telefonnummer")})
+          </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
           <FormSummaryLabel>Den ansatte</FormSummaryLabel>
-          <FormSummaryValue>Ansatt Personesen, 1234567890</FormSummaryValue>
+          <FormSummaryValue>
+            {"Place Holdersen"},{" "}
+            {getValues("ansattesFødselsnummer")?.slice(0, 6)}
+          </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
     </FormSummary>
@@ -126,6 +137,11 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
 };
 
 const OppsummeringOmsorgsdager = () => {
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const fraværHeleDager = getValues("fraværHeleDager");
+  const harFraværHeleDager = (fraværHeleDager?.length ?? 0) > 0;
+  const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+  const harFraværDelerAvDagen = (fraværDelerAvDagen?.length ?? 0) > 0;
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -139,15 +155,24 @@ const OppsummeringOmsorgsdager = () => {
           <FormSummaryLabel>
             Har dere dekket de 10 første omsorgsdagene i år?
           </FormSummaryLabel>
-          <FormSummaryValue>Ja</FormSummaryValue>
+          <FormSummaryValue>
+            {getValues("harDekket10FørsteOmsorgsdager") ? "Ja" : "Nei"}
+          </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
           <FormSummaryLabel>Dager med fravær hele dagen</FormSummaryLabel>
           <FormSummaryValue>
-            <List>
-              <ListItem>30.06.2024-31.07.2024</ListItem>
-              <ListItem>30.09.2024-31.10.2024</ListItem>
-            </List>
+            {harFraværHeleDager ? (
+              <List>
+                {fraværHeleDager?.map((periode, index) => (
+                  <ListItem key={index}>
+                    {periode.fom}-{periode.tom}
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              "Ingen dager med fravær hele dagen"
+            )}
           </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
@@ -155,12 +180,18 @@ const OppsummeringOmsorgsdager = () => {
             Dager med fravær bare deler av dagen
           </FormSummaryLabel>
           <FormSummaryValue>
-            <List>
-              <ListItem>30.02.2024, 1 time</ListItem>
-              <ListItem>02.04.2024, 2 timer</ListItem>
-              <ListItem>18.05.2024, 3.5 timer</ListItem>
-              <ListItem>27.06.2024, 3 timer</ListItem>
-            </List>
+            {harFraværDelerAvDagen ? (
+              <List>
+                {fraværDelerAvDagen?.map((fravær, index) => (
+                  <ListItem key={index}>
+                    {fravær.dato}: {fravær.antallTimer}{" "}
+                    {fravær.antallTimer === 1 ? "time" : "timer"}
+                  </ListItem>
+                ))}
+              </List>
+            ) : (
+              "Ingen dager med fravær bare deler av dagen"
+            )}
           </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
@@ -169,6 +200,7 @@ const OppsummeringOmsorgsdager = () => {
 };
 
 export const OppsummeringMånedslønn = () => {
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -182,7 +214,7 @@ export const OppsummeringMånedslønn = () => {
           <FormSummaryLabel>
             Beregnet månedslønn og refusjonskrav
           </FormSummaryLabel>
-          <FormSummaryValue>20 066 kr</FormSummaryValue>
+          <FormSummaryValue>{getValues("inntekt")} kr</FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
     </FormSummary>
