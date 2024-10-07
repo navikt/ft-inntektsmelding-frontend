@@ -2,7 +2,6 @@ import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
-  BodyShort,
   Button,
   CopyButton,
   GuidePanel,
@@ -104,11 +103,12 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               <Heading level="3" size="xsmall" spacing>
                 Er kontaktinformasjonen riktig?
               </Heading>
-              <BodyShort>
+              <BodyLong>
                 Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
                 får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
-                for nummeret til sentralbordet.
-              </BodyShort>
+                for nummeret til sentralbordet. Endre til en annen kontaktperson
+                hvis du vet at du vil være utilgjengelig fremover.
+              </BodyLong>
             </Alert>
           </Informasjonsseksjon>
 

@@ -110,6 +110,32 @@ export function formatYtelsesnavn(ytelsesnavn: string, storForbokstav = false) {
   return formattert;
 }
 
+type FormatStønadsnavnArgs = {
+  ytelsesnavn: OpplysningerDto["ytelse"];
+  form: "ubestemt" | "bestemt";
+};
+export function formatStønadsnavn({
+  ytelsesnavn,
+  form,
+}: FormatStønadsnavnArgs) {
+  const navn = STØNADSNAVN[ytelsesnavn];
+  if (!navn) {
+    return ytelsesnavn;
+  }
+  if (form === "bestemt") {
+    return navn.replace("penger", "pengene");
+  }
+  return navn;
+}
+const STØNADSNAVN = {
+  FORELDREPENGER: "foreldrepenger",
+  SVANGERSKAPSPENGER: "svangerskapspenger",
+  PLEIEPENGER_SYKT_BARN: "pleiepenger",
+  PLEIEPENGER_I_LIVETS_SLUTTFASE: "pleiepenger",
+  OPPLÆRINGSPENGER: "opplæringspenger",
+  OMSORGSPENGER: "omsorgspenger",
+};
+
 export function gjennomsnittInntekt(inntekter: OpplysningerDto["inntekter"]) {
   if (!inntekter) {
     return 0;

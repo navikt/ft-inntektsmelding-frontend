@@ -112,8 +112,16 @@ function InntektOgRefusjon() {
             ),
       refusjon:
         inntektsmeldingSkjemaState.refusjon.length === 0
-          ? [{ fom: opplysninger.startdatoPermisjon, beløp: inntekt }]
-          : inntektsmeldingSkjemaState.refusjon,
+          ? [
+              { fom: opplysninger.startdatoPermisjon, beløp: inntekt },
+              { fom: undefined, beløp: 0 },
+            ]
+          : inntektsmeldingSkjemaState.refusjon.length === 1
+            ? [
+                ...inntektsmeldingSkjemaState.refusjon,
+                { fom: undefined, beløp: 0 },
+              ]
+            : inntektsmeldingSkjemaState.refusjon,
     },
   });
 

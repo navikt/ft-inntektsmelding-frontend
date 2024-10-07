@@ -235,8 +235,12 @@ function MisterNaturalytelser() {
                     name={`naturalytelserSomMistes.${index}.tom` as const}
                     rules={{
                       validate: (tom: Date | undefined) => {
-                        if (!fom) return true;
-                        if (!tom) return "Må oppgis";
+                        if (!fom) {
+                          return true;
+                        }
+                        if (!tom) {
+                          return "Må oppgis";
+                        }
 
                         return (
                           new Date(tom) >= new Date(fom) ||
