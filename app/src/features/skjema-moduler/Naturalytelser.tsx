@@ -201,16 +201,17 @@ function MisterNaturalytelser() {
                 label={<span>Verdi&nbsp;pr. måned</span>}
                 size="medium"
               />
-              <Button
-                aria-label="fjern naturalytelse"
-                className="mt-8"
-                disabled={index === 0}
-                icon={<TrashIcon />}
-                onClick={() => remove(index)}
-                variant="tertiary"
-              >
-                Slett
-              </Button>
+              {index > 0 && (
+                <Button
+                  aria-label="fjern naturalytelse"
+                  className="mt-8"
+                  icon={<TrashIcon />}
+                  onClick={() => remove(index)}
+                  variant="tertiary"
+                >
+                  Slett
+                </Button>
+              )}
               <RadioGroup
                 className="col-span-4"
                 error={

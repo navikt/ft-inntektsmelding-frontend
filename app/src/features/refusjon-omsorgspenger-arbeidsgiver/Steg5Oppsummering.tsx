@@ -106,14 +106,14 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
                 <FormSummaryValue>Place Holder AS</FormSummaryValue>
               </FormSummaryAnswer>
               <FormSummaryAnswer>
-                <FormSummaryLabel>Org. nr. for underenhet</FormSummaryLabel>
+                <FormSummaryLabel>Org.nr. for underenhet</FormSummaryLabel>
                 <FormSummaryValue>123456789</FormSummaryValue>
               </FormSummaryAnswer>
             </FormSummaryAnswers>
           </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
-          <FormSummaryLabel>Kontaktperson og innsender</FormSummaryLabel>
+          <FormSummaryLabel>Kontaktperson</FormSummaryLabel>
           <FormSummaryValue>Kontakt Personesen, 92929292</FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>

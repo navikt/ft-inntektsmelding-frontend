@@ -38,24 +38,12 @@ export const Skjemaoppsummering = ({
           <FormSummary.Answer>
             <FormSummary.Label>Arbeidsgiver</FormSummary.Label>
             <FormSummary.Value>
-              <FormSummary.Answers>
-                <FormSummary.Answer>
-                  <FormSummary.Label>Virksomhetsnavn</FormSummary.Label>
-                  <FormSummary.Value>
-                    {opplysninger.arbeidsgiver.organisasjonNavn}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-                <FormSummary.Answer>
-                  <FormSummary.Label>Org. nr. for underenhet</FormSummary.Label>
-                  <FormSummary.Value>
-                    {opplysninger.arbeidsgiver.organisasjonNummer}
-                  </FormSummary.Value>
-                </FormSummary.Answer>
-              </FormSummary.Answers>
+              {opplysninger.arbeidsgiver.organisasjonNavn}, org.nr.{" "}
+              {opplysninger.arbeidsgiver.organisasjonNummer}
             </FormSummary.Value>
           </FormSummary.Answer>
           <FormSummary.Answer>
-            <FormSummary.Label>Kontaktperson og innsender</FormSummary.Label>
+            <FormSummary.Label>Kontaktperson</FormSummary.Label>
             <FormSummary.Value>
               {formatterKontaktperson(skjemaState.kontaktperson)}
             </FormSummary.Value>
@@ -64,7 +52,8 @@ export const Skjemaoppsummering = ({
             <FormSummary.Label>Den ansatte</FormSummary.Label>
             <FormSummary.Value>
               {slåSammenTilFulltNavn(opplysninger.person)}
-              {", "}({formatFødselsnummer(opplysninger.person.fødselsnummer)})
+              {", "}
+              {formatFødselsnummer(opplysninger.person.fødselsnummer)}
             </FormSummary.Value>
           </FormSummary.Answer>
         </FormSummary.Answers>
@@ -89,7 +78,9 @@ export const Skjemaoppsummering = ({
       <InntektSummary opplysninger={opplysninger} skjemaState={skjemaState} />
       <FormSummary>
         <FormSummary.Header>
-          <FormSummary.Heading level="3">Refusjon</FormSummary.Heading>
+          <FormSummary.Heading level="3">
+            Utbetaling og refusjon
+          </FormSummary.Heading>
           <FormSummary.EditLink
             as={Link}
             to="../inntekt-og-refusjon#refusjon"
@@ -286,5 +277,5 @@ const formatterKontaktperson = (
   if (!kontaktperson) {
     return "";
   }
-  return `${kontaktperson.navn}, ${kontaktperson.telefonnummer}`;
+  return `${kontaktperson.navn}, tlf. ${kontaktperson.telefonnummer}`;
 };

@@ -70,7 +70,7 @@ export function formatDatoLang(dato: Date) {
 
 export function formatDatoKort(dato: Date) {
   return new Intl.DateTimeFormat("nb-no", {
-    year: "2-digit",
+    year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(dato);

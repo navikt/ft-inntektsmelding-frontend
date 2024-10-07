@@ -22,8 +22,6 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { useLoaderData } from "@tanstack/react-router";
 import clsx from "clsx";
-import { format } from "date-fns";
-import { nb } from "date-fns/locale";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -39,6 +37,7 @@ import {
 } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
+  formatDatoKort,
   formatKroner,
   gjennomsnittInntekt,
   leggTilGenitiv,
@@ -56,11 +55,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
-  const førsteDag = capitalizeSetning(
-    format(startdatoPermisjon, "dd.MM yyyy", {
-      locale: nb,
-    }),
-  );
+  const førsteDag = formatDatoKort(new Date(startdatoPermisjon));
 
   return (
     <div className="flex flex-col gap-4">
@@ -73,6 +68,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
+          {/* TODO: Sorter på månedsnavn */}
           {inntekter?.map((inntekt) => (
             <Fragment key={inntekt.fom}>
               <span>{navnPåMåned(inntekt.fom)}:</span>
@@ -313,6 +309,7 @@ function EndringsÅrsaker() {
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
+              className="lg:max-w-[50%]" // TODO: Pass på at den ikke er så bred til vanlig
             >
               <option value="">Velg endringsårsak</option>
               {muligeÅrsakerValg.map((årsak) => (
@@ -324,7 +321,7 @@ function EndringsÅrsaker() {
             <ÅrsaksPerioder index={index} />
             {index > 0 ? (
               <Button
-                aria-label="fjern naturalytelse"
+                aria-label="Fjern naturalytelse"
                 className="mt-8"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}

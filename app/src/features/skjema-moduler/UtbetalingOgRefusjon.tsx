@@ -25,7 +25,8 @@ import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import { formatKroner } from "~/utils.ts";
+import { OpplysningerDto } from "~/types/api-models";
+import { formatKroner, formatYtelsesnavn } from "~/utils.ts";
 
 export const REFUSJON_RADIO_VALG = {
   JA_LIK_REFUSJON: "Ja, likt beløp i hele perioden",
@@ -34,7 +35,11 @@ export const REFUSJON_RADIO_VALG = {
   NEI: "Nei",
 } satisfies Record<InntektOgRefusjonForm["skalRefunderes"], string>;
 
-export function UtbetalingOgRefusjon() {
+export function UtbetalingOgRefusjon({
+  opplysninger,
+}: {
+  opplysninger: OpplysningerDto;
+}) {
   const { register, formState, watch, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {
@@ -49,6 +54,8 @@ export function UtbetalingOgRefusjon() {
   }, [korrigertInntekt]);
 
   const skalRefunderes = watch("skalRefunderes");
+
+  const stønadsnavn = formatYtelsesnavn(opplysninger.ytelse); // TODO: Lag et map for å gi riktig stønadsnavn til hver ytelse
   return (
     <VStack gap="4">
       <hr />
@@ -59,9 +66,10 @@ export function UtbetalingOgRefusjon() {
         <Stack gap="2">
           <BodyLong>
             Refusjon er når arbeidsgiver utbetaler lønn som vanlig til den
-            ansatte, og får tilbakebetalt stønaden direkte fra NAV. Dette kalles
-            ofte å forskuttere lønn, som man krever refundert fra NAV. Vi
-            utbetaler da stønaden til kontonummeret som er registrert i Altinn.
+            ansatte, og får tilbakebetalt {stønadsnavn} direkte fra NAV. Dette
+            kalles ofte å forskuttere lønn, som man krever refundert fra NAV. Vi
+            utbetaler da {stønadsnavn} til det kontonummeret som arbeidsgiver
+            har registrert i Altinn.
           </BodyLong>
           <BodyLong>
             Noen arbeidsgivere er forpliktet til å forskuttere ut fra
@@ -187,10 +195,11 @@ function VarierendeRefusjon() {
           Refusjonsbeløp dere krever per måned
         </Heading>
         <Alert className="mb-4" inline variant="info">
-          Skal dere slutte å forskuttere lønn i perioden, skriver du 0,- i
+          Hvis dere skal slutte å forskuttere lønn i perioden, skriver du 0,- i
           refusjonsbeløp fra den datoen dere ikke lengre forskutterer lønn.
         </Alert>
         <RefusjonsPerioder />
+        <Over6GAlert />
       </VStack>
       <VStack gap="2">
         <DelvisFraværHjelpetekst />
@@ -198,10 +207,8 @@ function VarierendeRefusjon() {
           <Stack gap="2">
             <BodyLong>
               Her skal du registrere endringer som påvirker refusjonen fra NAV.
-            </BodyLong>
-            <BodyLong>
               Dette kan være på grunn av endret stillingsprosent som gjør at
-              lønnen dere forskutterer endrer seg i perioden
+              lønnen dere forskutterer endrer seg i perioden.
             </BodyLong>
             <BodyLong>
               Hvis dere skal slutte å forskuttere lønn i perioden, registrerer
@@ -234,6 +241,8 @@ function RefusjonsPerioder() {
     name: "refusjon",
   });
 
+  // TODO: Legg til to perioder i starten
+
   return (
     <div className="grid grid-cols-[min-content_220px_min-content] gap-6 items-start">
       {fields.map((field, index) => (
@@ -255,16 +264,17 @@ function RefusjonsPerioder() {
             label="Refusjonsbeløp per måned"
             size="medium"
           />
-          <Button
-            aria-label="fjern refusjonsendring"
-            className="mt-8"
-            disabled={index < 2}
-            icon={<TrashIcon />}
-            onClick={() => remove(index)}
-            variant="tertiary"
-          >
-            Slett
-          </Button>
+          {index >= 2 && (
+            <Button
+              aria-label="fjern refusjonsendring"
+              className="mt-8"
+              icon={<TrashIcon />}
+              onClick={() => remove(index)}
+              variant="tertiary"
+            >
+              Slett
+            </Button>
+          )}
         </Fragment>
       ))}
       <Button
@@ -283,6 +293,7 @@ function RefusjonsPerioder() {
 }
 
 function DelvisFraværHjelpetekst() {
+  // TODO: Legg til stønadsnavnet i teksten (istedenfor "stønad")
   return (
     <HjelpetekstReadMore header="Har den ansatte delvis fravær i perioden?">
       <BodyLong>
