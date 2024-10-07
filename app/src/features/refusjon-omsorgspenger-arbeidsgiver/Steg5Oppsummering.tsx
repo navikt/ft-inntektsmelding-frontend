@@ -67,7 +67,7 @@ const OppsummeringRefusjon = () => {
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">Refusjon</FormSummaryHeading>
-        <FormSummaryEditLink as={Link} to="../1" />
+        <FormSummaryEditLink as={Link} to="../4-refusjon" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -94,7 +94,7 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
         <FormSummaryHeading level="3">
           Arbeidsgiver og den ansatte
         </FormSummaryHeading>
-        <FormSummaryEditLink as={Link} to="../2" />
+        <FormSummaryEditLink as={Link} to="../2-ansatt-og-arbeidsgiver" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -132,7 +132,7 @@ const OppsummeringOmsorgsdager = () => {
         <FormSummaryHeading level="3">
           Omsorgsdager dere søker utbetaling for
         </FormSummaryHeading>
-        <FormSummaryEditLink as={Link} to="../3" />
+        <FormSummaryEditLink as={Link} to="../3-omsorgsdager" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -175,7 +175,7 @@ export const OppsummeringMånedslønn = () => {
         <FormSummaryHeading level="3">
           Beregnet månedslønn og refusjonskrav
         </FormSummaryHeading>
-        <FormSummaryEditLink as={Link} to="../4" />
+        <FormSummaryEditLink as={Link} to="../4-refusjon" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>

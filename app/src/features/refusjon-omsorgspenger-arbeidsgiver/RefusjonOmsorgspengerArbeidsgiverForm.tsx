@@ -1,4 +1,4 @@
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
 import { ÅrsaksTypeSchema, NaturalytelseTypeSchema } from "~/types/api-models";
@@ -15,6 +15,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   harUtbetaltLønn: z.string().optional(),
   ansattesFødselsnummer: z.string().optional(),
   valgtArbeidsforhold: z.string().optional(),
+  harDekket10FørsteOmsorgsdager: z.string().optional(),
   fraværHeleDager: z
     .array(
       z.object({
@@ -75,4 +76,8 @@ type Props = {
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>();
   return <FormProvider {...formArgs}>{children}</FormProvider>;
+};
+
+export const useRefusjonOmsorgspengerArbeidsgiverFormContext = () => {
+  return useFormContext<RefusjonOmsorgspengerArbeidsgiverSkjemaState>();
 };

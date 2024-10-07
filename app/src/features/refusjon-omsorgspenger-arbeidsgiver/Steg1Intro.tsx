@@ -10,27 +10,42 @@ import {
   RadioGroup,
   VStack,
 } from "@navikt/ds-react";
-import { Link as RouterLink } from "@tanstack/react-router";
-import { useFormContext } from "react-hook-form";
+import { useNavigate } from "@tanstack/react-router";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
-import { RefusjonOmsorgspengerArbeidsgiverSkjemaState } from "./RefusjonOmsorgspengerArbeidsgiverSkjemaState";
-
-type Steg1FormFields = Pick<
-  RefusjonOmsorgspengerArbeidsgiverSkjemaState,
-  "harUtbetaltLønn" | "årForRefusjon"
->;
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
+  const navigate = useNavigate();
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
 
-  const { register, watch } = useFormContext<Steg1FormFields>();
+  const { register, formState, watch, handleSubmit } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const harUtbetaltLønn = watch("harUtbetaltLønn");
+
+  const onSubmit = handleSubmit(() => {
+    navigate({
+      from: "/refusjon-omsorgspenger-arbeidsgiver/1-intro",
+      to: "../2-ansatt-og-arbeidsgiver",
+    });
+  });
+
+  const { name: harUtbetaltLønnName, ...harUtbetaltLønnRadioGroupProps } =
+    register("harUtbetaltLønn", {
+      required: "Du må svare på om dere har utbetalt lønn under fraværet",
+    });
+
+  const { name: årForRefusjonName, ...årForRefusjonRadioGroupProps } = register(
+    "årForRefusjon",
+    {
+      required: "Du må svare på hvilket år du søker refusjon for",
+    },
+  );
 
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
@@ -55,57 +70,66 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           </BodyLong>
         </VStack>
       </GuidePanel>
-      <RadioGroup
-        legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
-        {...register("harUtbetaltLønn", {
-          required: "Du må svare på om dere har utbetalt lønn under fraværet",
-        })}
-      >
-        <Radio value="ja">Ja</Radio>
-        <Radio value="nei">Nei</Radio>
-      </RadioGroup>
-      {harUtbetaltLønn === "nei" && (
-        <Alert variant="warning">
-          <Heading level="3" size="small" spacing>
-            Arbeidsgivers plikt til å betale omsorgsdager
-          </Heading>
-          <BodyLong spacing>
-            Hvis arbeidstakeren har jobbet hos dere i 4 uker eller mer, plikter
-            dere å utbetale lønn for alle omsorgsdagene som arbeidstakeren har
-            rett til å bruke.
-          </BodyLong>
-          <BodyLong>
-            Hvis den ansatte har vært i jobb i mindre enn 4 uker, kan den
-            ansatte søke om utbetaling direkte fra NAV. Den ansatte må søke om
-            omsorgspenger før dere kan sende inn inntektsmelding. Varsel med
-            oppgave blir tilgjengelig i{" "}
-            <Link href="/saksoversikt">saksoversikten</Link> når den ansatte har
-            sendt inn søknad til oss.
-          </BodyLong>
-        </Alert>
-      )}
-      <RadioGroup
-        legend="Hvilket år søker dere refusjon for?"
-        {...register("årForRefusjon", {
-          required: "Du må svare på hvilket år du søker refusjon for",
-        })}
-      >
-        <Radio value={iFjor}>{iFjor}</Radio>
-        <Radio value={iÅr}>{iÅr}</Radio>
-      </RadioGroup>
+      <form onSubmit={onSubmit}>
+        <VStack gap="4">
+          <RadioGroup
+            error={formState.errors.harUtbetaltLønn?.message}
+            legend="Har dere utbetalt lønn under fraværet, og krever refusjon?"
+            name={harUtbetaltLønnName}
+          >
+            <Radio value="ja" {...harUtbetaltLønnRadioGroupProps}>
+              Ja
+            </Radio>
+            <Radio value="nei" {...harUtbetaltLønnRadioGroupProps}>
+              Nei
+            </Radio>
+          </RadioGroup>
+          {harUtbetaltLønn === "nei" && (
+            <Alert variant="warning">
+              <Heading level="3" size="small" spacing>
+                Arbeidsgivers plikt til å betale omsorgsdager
+              </Heading>
+              <BodyLong spacing>
+                Hvis arbeidstakeren har jobbet hos dere i 4 uker eller mer,
+                plikter dere å utbetale lønn for alle omsorgsdagene som
+                arbeidstakeren har rett til å bruke.
+              </BodyLong>
+              <BodyLong>
+                Hvis den ansatte har vært i jobb i mindre enn 4 uker, kan den
+                ansatte søke om utbetaling direkte fra NAV. Den ansatte må søke
+                om omsorgspenger før dere kan sende inn inntektsmelding. Varsel
+                med oppgave blir tilgjengelig i{" "}
+                <Link href="/saksoversikt">saksoversikten</Link> når den ansatte
+                har sendt inn søknad til oss.
+              </BodyLong>
+            </Alert>
+          )}
+          <RadioGroup
+            error={formState.errors.årForRefusjon?.message}
+            legend="Hvilket år søker dere refusjon for?"
+            name={årForRefusjonName}
+          >
+            <Radio value={iFjor} {...årForRefusjonRadioGroupProps}>
+              {iFjor}
+            </Radio>
+            <Radio value={iÅr} {...årForRefusjonRadioGroupProps}>
+              {iÅr}
+            </Radio>
+          </RadioGroup>
 
-      <div>
-        <Button
-          as={RouterLink}
-          disabled={harUtbetaltLønn === "nei"}
-          icon={<ArrowRightIcon />}
-          iconPosition="right"
-          to="../2-ansatt-og-arbeidsgiver"
-          variant="primary"
-        >
-          Neste steg
-        </Button>
-      </div>
+          <div>
+            <Button
+              disabled={harUtbetaltLønn === "nei"}
+              icon={<ArrowRightIcon />}
+              iconPosition="right"
+              type="submit"
+              variant="primary"
+            >
+              Neste steg
+            </Button>
+          </div>
+        </VStack>
+      </form>
     </RotLayout>
   );
 };
