@@ -1,12 +1,7 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
-import {
-  getRouteApi,
-  Link,
-  useLoaderData,
-  useNavigate,
-} from "@tanstack/react-router";
+import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import {
@@ -17,21 +12,20 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 
+import { useOpplysninger } from "../ny-inntektsmelding/OpplysningerContext";
 import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
 
 const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
-  const { opplysninger } = useLoaderData({
-    from: "/$id",
-  });
+  const opplysninger = useOpplysninger();
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
   if (!gyldigInntektsmeldingSkjemaState) {
     return (
-      <Alert variant="error">
+      <Alert className="mt-4" variant="error">
         <Stack gap="4">
           <BodyLong>
             Noe gikk galt med utfyllingen av inntektsmeldingen din. Du må

@@ -106,8 +106,8 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               <BodyLong>
                 Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
                 får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
-                for nummeret til sentralbordet. Endre til en annen kontaktperson
-                hvis du vet at du vil være utilgjengelig fremover.
+                for nummeret til sentralbordet. Hvis du vet at du vil være
+                utilgjengelig fremover, kan du endre til en annen kontaktperson.
               </BodyLong>
             </Alert>
           </Informasjonsseksjon>

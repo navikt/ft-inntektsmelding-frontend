@@ -22,10 +22,7 @@ import {
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import { UtbetalingOgRefusjon } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
-import type {
-  EndringAvInntektÅrsaker,
-  OpplysningerDto,
-} from "~/types/api-models.ts";
+import type { EndringAvInntektÅrsaker } from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalize,
