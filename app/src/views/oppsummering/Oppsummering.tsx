@@ -9,8 +9,10 @@ import {
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
+import { useDocumentTitle } from "~/features/useDocumentTitle";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
+import { formatYtelsesnavn } from "~/utils";
 
 import { useOpplysninger } from "../ny-inntektsmelding/OpplysningerContext";
 import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
@@ -19,6 +21,9 @@ const route = getRouteApi("/$id");
 
 export const Oppsummering = () => {
   const opplysninger = useOpplysninger();
+  useDocumentTitle(
+    `Oppsummering – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();

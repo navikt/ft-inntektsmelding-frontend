@@ -24,8 +24,10 @@ import {
   formatYtelsesnavn,
   slåSammenTilFulltNavn,
 } from "~/utils";
+import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
@@ -33,7 +35,10 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 >;
 
 export const PersonOgSelskapsInformasjonSeksjon = () => {
-  const { opplysninger } = useLoaderData({ from: "/$id" });
+  const opplysninger = useOpplysninger();
+  useDocumentTitle(
+    `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 

@@ -1,11 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
-import {
-  createFileRoute,
-  Link,
-  useLoaderData,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import {
@@ -22,6 +17,7 @@ import {
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import { UtbetalingOgRefusjon } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
+import { useDocumentTitle } from "~/features/useDocumentTitle";
 import type { EndringAvInntektÅrsaker } from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
@@ -70,7 +66,10 @@ type NaturalytelserSomMistesForm = {
 };
 
 function InntektOgRefusjon() {
-  const { opplysninger } = useLoaderData({ from: "/$id" });
+  const opplysninger = useOpplysninger();
+  useDocumentTitle(
+    `Inntekt og refusjon – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();

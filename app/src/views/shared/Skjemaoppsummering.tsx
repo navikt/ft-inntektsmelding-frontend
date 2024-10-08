@@ -110,14 +110,14 @@ export const Skjemaoppsummering = ({
                 <FormSummary.Answers>
                   {skjemaState.refusjon.map((endring) => (
                     <FormSummary.Answer
-                      key={endring.fom.toString() + endring.beløp}
+                      key={endring.fom!.toString() + endring?.beløp}
                     >
                       <FormSummary.Label>
                         Refusjonsbeløp per måned
                       </FormSummary.Label>
                       <FormSummary.Value>
                         {formatKroner(endring.beløp)} (fra og med{" "}
-                        {formatDatoLang(new Date(endring.fom))})
+                        {formatDatoLang(new Date(endring.fom!))})
                       </FormSummary.Value>
                     </FormSummary.Answer>
                   ))}

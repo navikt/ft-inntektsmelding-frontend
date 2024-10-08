@@ -17,14 +17,20 @@ import { useEffect } from "react";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
+import { useDocumentTitle } from "~/features/useDocumentTitle";
 import { formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils";
+
+import { useOpplysninger } from "../ny-inntektsmelding/OpplysningerContext";
 
 const route = getRouteApi("/$id");
 
 export const Kvittering = () => {
   const { id } = route.useParams();
-  const { opplysninger } = route.useLoaderData();
+  const opplysninger = useOpplysninger();
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  useDocumentTitle(
+    `Kvittering – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
   useEffect(() => {
     setBreadcrumbs([
       {
