@@ -9,7 +9,7 @@ import {
   HGrid,
   TextField,
 } from "@navikt/ds-react";
-import { useLoaderData, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
