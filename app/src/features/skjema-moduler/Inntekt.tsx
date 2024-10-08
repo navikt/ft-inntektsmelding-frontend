@@ -68,13 +68,14 @@ export function Inntekt({ opplysninger }: InntektProps) {
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {/* TODO: Sorter på månedsnavn */}
-          {inntekter?.map((inntekt) => (
-            <Fragment key={inntekt.fom}>
-              <span>{navnPåMåned(inntekt.fom)}:</span>
-              <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
-            </Fragment>
-          ))}
+          {inntekter
+            ?.sort((a, b) => a.fom.localeCompare(b.fom))
+            .map((inntekt) => (
+              <Fragment key={inntekt.fom}>
+                <span>{navnPåMåned(inntekt.fom)}:</span>
+                <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
+              </Fragment>
+            ))}
         </HGrid>
       </Informasjonsseksjon>
 
@@ -296,7 +297,13 @@ function EndringsÅrsaker() {
         );
 
   return (
-    <HGrid columns="1fr max-content max-content max-content" gap="4">
+    <HGrid
+      columns={{
+        sm: "1fr max-content max-content max-content",
+        md: "50% max-content max-content max-content",
+      }}
+      gap="4"
+    >
       {fields.map((field, index) => {
         return (
           <Fragment key={field.id}>
@@ -309,7 +316,7 @@ function EndringsÅrsaker() {
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
-              className="lg:max-w-[50%]" // TODO: Pass på at den ikke er så bred til vanlig
+              className="lg:max-w-half"
             >
               <option value="">Velg endringsårsak</option>
               {muligeÅrsakerValg.map((årsak) => (

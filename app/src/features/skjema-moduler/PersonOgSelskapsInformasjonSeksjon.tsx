@@ -2,7 +2,6 @@ import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
-  BodyShort,
   Button,
   CopyButton,
   GuidePanel,
@@ -10,7 +9,7 @@ import {
   HGrid,
   TextField,
 } from "@navikt/ds-react";
-import { useLoaderData, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
@@ -25,8 +24,10 @@ import {
   formatYtelsesnavn,
   slåSammenTilFulltNavn,
 } from "~/utils";
+import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
+import { useDocumentTitle } from "../useDocumentTitle";
 import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
@@ -34,7 +35,10 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 >;
 
 export const PersonOgSelskapsInformasjonSeksjon = () => {
-  const { opplysninger } = useLoaderData({ from: "/$id" });
+  const opplysninger = useOpplysninger();
+  useDocumentTitle(
+    `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
@@ -104,11 +108,12 @@ export const PersonOgSelskapsInformasjonSeksjon = () => {
               <Heading level="3" size="xsmall" spacing>
                 Er kontaktinformasjonen riktig?
               </Heading>
-              <BodyShort>
+              <BodyLong>
                 Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
                 får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
-                for nummeret til sentralbordet.
-              </BodyShort>
+                for nummeret til sentralbordet. Hvis du vet at du vil være
+                utilgjengelig fremover, kan du endre til en annen kontaktperson.
+              </BodyLong>
             </Alert>
           </Informasjonsseksjon>
 

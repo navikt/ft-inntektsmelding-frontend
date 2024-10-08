@@ -6,6 +6,8 @@ import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSk
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
+import { OpplysningerProvider } from "./OpplysningerContext";
+
 const route = getRouteApi("/$id");
 
 export const NyInntektsmelding = () => {
@@ -27,19 +29,23 @@ export const NyInntektsmelding = () => {
   }, [id]);
 
   return (
-    <InntektsmeldingSkjemaStateProvider>
-      <RotLayout
-        tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
-        undertittel={
-          <div className="flex gap-3">
-            <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
-            <span>|</span>
-            <span>Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}</span>
-          </div>
-        }
-      >
-        <Outlet />
-      </RotLayout>
-    </InntektsmeldingSkjemaStateProvider>
+    <OpplysningerProvider opplysninger={opplysninger}>
+      <InntektsmeldingSkjemaStateProvider>
+        <RotLayout
+          tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
+          undertittel={
+            <div className="flex gap-3">
+              <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
+              <span>|</span>
+              <span>
+                Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
+              </span>
+            </div>
+          }
+        >
+          <Outlet />
+        </RotLayout>
+      </InntektsmeldingSkjemaStateProvider>
+    </OpplysningerProvider>
   );
 };

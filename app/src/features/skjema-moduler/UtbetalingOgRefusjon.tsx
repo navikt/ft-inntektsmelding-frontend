@@ -9,6 +9,7 @@ import {
   BodyLong,
   Button,
   Heading,
+  HGrid,
   HStack,
   Label,
   Radio,
@@ -18,15 +19,15 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
-import { OpplysningerDto } from "~/types/api-models";
-import { formatKroner, formatYtelsesnavn } from "~/utils.ts";
+import { formatKroner, formatStønadsnavn } from "~/utils.ts";
+import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 export const REFUSJON_RADIO_VALG = {
   JA_LIK_REFUSJON: "Ja, likt beløp i hele perioden",
@@ -35,11 +36,8 @@ export const REFUSJON_RADIO_VALG = {
   NEI: "Nei",
 } satisfies Record<InntektOgRefusjonForm["skalRefunderes"], string>;
 
-export function UtbetalingOgRefusjon({
-  opplysninger,
-}: {
-  opplysninger: OpplysningerDto;
-}) {
+export function UtbetalingOgRefusjon() {
+  const opplysninger = useOpplysninger();
   const { register, formState, watch, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("skalRefunderes", {
@@ -55,7 +53,6 @@ export function UtbetalingOgRefusjon({
 
   const skalRefunderes = watch("skalRefunderes");
 
-  const stønadsnavn = formatYtelsesnavn(opplysninger.ytelse); // TODO: Lag et map for å gi riktig stønadsnavn til hver ytelse
   return (
     <VStack gap="4">
       <hr />
@@ -66,10 +63,18 @@ export function UtbetalingOgRefusjon({
         <Stack gap="2">
           <BodyLong>
             Refusjon er når arbeidsgiver utbetaler lønn som vanlig til den
-            ansatte, og får tilbakebetalt {stønadsnavn} direkte fra NAV. Dette
-            kalles ofte å forskuttere lønn, som man krever refundert fra NAV. Vi
-            utbetaler da {stønadsnavn} til det kontonummeret som arbeidsgiver
-            har registrert i Altinn.
+            ansatte, og får tilbakebetalt{" "}
+            {formatStønadsnavn({
+              ytelsesnavn: opplysninger.ytelse,
+              form: "ubestemt",
+            })}{" "}
+            direkte fra NAV. Dette kalles ofte å forskuttere lønn, som man
+            krever refundert fra NAV. Vi utbetaler da{" "}
+            {formatStønadsnavn({
+              ytelsesnavn: opplysninger.ytelse,
+              form: "bestemt",
+            })}{" "}
+            til det kontonummeret som arbeidsgiver har registrert i Altinn.
           </BodyLong>
           <BodyLong>
             Noen arbeidsgivere er forpliktet til å forskuttere ut fra
@@ -241,12 +246,14 @@ function RefusjonsPerioder() {
     name: "refusjon",
   });
 
-  // TODO: Legg til to perioder i starten
-
   return (
-    <div className="grid grid-cols-[min-content_220px_min-content] gap-6 items-start">
+    <VStack className="border-l-4 border-bg-subtle p-4" gap="2">
       {fields.map((field, index) => (
-        <Fragment key={field.id}>
+        <HGrid
+          columns={{ sm: "1fr", md: "min-content 1fr 1fr" }}
+          gap="6"
+          key={field.id}
+        >
           <DatePickerWrapped
             label="Fra og med"
             name={`refusjon.${index}.fom` as const}
@@ -265,17 +272,19 @@ function RefusjonsPerioder() {
             size="medium"
           />
           {index >= 2 && (
-            <Button
-              aria-label="fjern refusjonsendring"
-              className="mt-8"
-              icon={<TrashIcon />}
-              onClick={() => remove(index)}
-              variant="tertiary"
-            >
-              Slett
-            </Button>
+            <div>
+              <Button
+                aria-label="Fjern refusjonsendring"
+                className="mt-8"
+                icon={<TrashIcon />}
+                onClick={() => remove(index)}
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            </div>
           )}
-        </Fragment>
+        </HGrid>
       ))}
       <Button
         className="w-fit col-span-2"
@@ -288,19 +297,20 @@ function RefusjonsPerioder() {
       >
         Legg til ny periode
       </Button>
-    </div>
+    </VStack>
   );
 }
 
 function DelvisFraværHjelpetekst() {
-  // TODO: Legg til stønadsnavnet i teksten (istedenfor "stønad")
+  const { ytelse } = useOpplysninger();
   return (
     <HjelpetekstReadMore header="Har den ansatte delvis fravær i perioden?">
       <BodyLong>
-        Hvis den ansatte skal kombinere stønad fra NAV med arbeid, vil NAV
-        redusere utbetalingen ut fra opplysningene fra den ansatte. Du oppgir
-        derfor den månedslønnen dere utbetaler til den ansatte, uavhengig av
-        hvor mye den ansatte skal jobbe.
+        Hvis den ansatte skal kombinere{" "}
+        {formatStønadsnavn({ ytelsesnavn: ytelse, form: "ubestemt" })} fra NAV
+        med arbeid, vil NAV redusere utbetalingen ut fra opplysningene fra den
+        ansatte. Du oppgir derfor den månedslønnen dere utbetaler til den
+        ansatte, uavhengig av hvor mye den ansatte skal jobbe.
       </BodyLong>
     </HjelpetekstReadMore>
   );

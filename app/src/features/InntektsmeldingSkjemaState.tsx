@@ -81,7 +81,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
   ]),
   refusjon: z.array(
     z.object({
-      fom: z.string(),
+      fom: z.string().optional(),
       beløp: beløpSchema,
     }),
   ),

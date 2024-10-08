@@ -1,11 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
-import {
-  createFileRoute,
-  Link,
-  useLoaderData,
-  useNavigate,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import {
@@ -22,10 +17,8 @@ import {
   Naturalytelser,
 } from "~/features/skjema-moduler/Naturalytelser";
 import { UtbetalingOgRefusjon } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
-import type {
-  EndringAvInntektÅrsaker,
-  OpplysningerDto,
-} from "~/types/api-models.ts";
+import { useDocumentTitle } from "~/features/useDocumentTitle";
+import type { EndringAvInntektÅrsaker } from "~/types/api-models.ts";
 import { Naturalytelsetype } from "~/types/api-models.ts";
 import {
   capitalize,
@@ -35,6 +28,7 @@ import {
   gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils.ts";
+import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 export const Route = createFileRoute("/$id/inntekt-og-refusjon")({
   component: () => (
@@ -72,7 +66,10 @@ type NaturalytelserSomMistesForm = {
 };
 
 function InntektOgRefusjon() {
-  const { opplysninger } = useLoaderData({ from: "/$id" });
+  const opplysninger = useOpplysninger();
+  useDocumentTitle(
+    `Inntekt og refusjon – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
+  );
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
@@ -112,8 +109,16 @@ function InntektOgRefusjon() {
             ),
       refusjon:
         inntektsmeldingSkjemaState.refusjon.length === 0
-          ? [{ fom: opplysninger.startdatoPermisjon, beløp: inntekt }]
-          : inntektsmeldingSkjemaState.refusjon,
+          ? [
+              { fom: opplysninger.startdatoPermisjon, beløp: inntekt },
+              { fom: undefined, beløp: 0 },
+            ]
+          : inntektsmeldingSkjemaState.refusjon.length === 1
+            ? [
+                ...inntektsmeldingSkjemaState.refusjon,
+                { fom: undefined, beløp: 0 },
+              ]
+            : inntektsmeldingSkjemaState.refusjon,
     },
   });
 
@@ -161,9 +166,9 @@ function InntektOgRefusjon() {
             Inntekt og refusjon
           </Heading>
           <Fremgangsindikator aktivtSteg={2} />
-          <Ytelsesperiode opplysninger={opplysninger} />
+          <Ytelsesperiode />
           <Inntekt opplysninger={opplysninger} />
-          <UtbetalingOgRefusjon opplysninger={opplysninger} />
+          <UtbetalingOgRefusjon />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">
             <Button
@@ -193,10 +198,8 @@ function konverterTilRadioValg(verdi: boolean | undefined) {
   return verdi === undefined ? undefined : verdi ? "ja" : "nei";
 }
 
-type YtelsesperiodeProps = {
-  opplysninger: OpplysningerDto;
-};
-function Ytelsesperiode({ opplysninger }: YtelsesperiodeProps) {
+function Ytelsesperiode() {
+  const opplysninger = useOpplysninger();
   const { startdatoPermisjon, person, ytelse } = opplysninger;
 
   const førsteDag = capitalize(formatDatoLang(new Date(startdatoPermisjon)));
