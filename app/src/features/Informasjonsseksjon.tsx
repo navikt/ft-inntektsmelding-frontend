@@ -20,11 +20,11 @@ export const Informasjonsseksjon = ({
         className,
       )}
     >
-      <div className="flex justify-between items-center">
-        <Label size="small">{tittel}</Label>
+      <div className="flex flex-col sm:flex-row align-start sm:justify-between sm:items-center gap-2">
         {kilde && (
           <Detail className="uppercase flex items-center">{kilde}</Detail>
         )}
+        <Label size="small">{tittel}</Label>
       </div>
       {children}
     </div>

@@ -15,7 +15,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  TextField,
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
@@ -28,6 +27,8 @@ import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext"
 import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
+
+import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
 
 export const REFUSJON_RADIO_VALG = {
   JA_LIK_REFUSJON: "Ja, likt beløp i hele perioden",
@@ -129,7 +130,7 @@ function Over6GAlert() {
 }
 
 function LikRefusjon() {
-  const { register, watch, resetField, setValue } =
+  const { register, watch, resetField, setValue, control } =
     useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
@@ -142,7 +143,8 @@ function LikRefusjon() {
         {skalEndreBeløp ? (
           <Stack gap="4">
             <HStack gap="4">
-              <TextField
+              <FormattertTallTextField
+                control={control}
                 {...register("refusjon.0.beløp", {})}
                 autoFocus
                 label="Refusjonsbeløp per måned"
@@ -261,12 +263,13 @@ function Refusjonsperioder() {
             readOnly={index === 0}
             rules={{ required: "Må oppgis" }}
           />
-          <TextField
+          <FormattertTallTextField
             {...register(`refusjon.${index}.beløp` as const, {
               valueAsNumber: true,
               validate: (value) => Number(value) >= 0 || "asdsa",
               required: "Må oppgis",
             })}
+            control={control}
             error={formState.errors?.refusjon?.[index]?.beløp?.message}
             inputMode="numeric"
             label="Refusjonsbeløp per måned"

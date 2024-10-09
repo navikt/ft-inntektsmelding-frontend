@@ -16,7 +16,6 @@ import {
   List,
   Select,
   Stack,
-  TextField,
   VStack,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
@@ -29,8 +28,8 @@ import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/Hjelpetekst.tsx";
+import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
-import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import {
   EndringAvInntektÅrsaker,
   OpplysningerDto,
@@ -44,6 +43,7 @@ import {
 } from "~/utils.ts";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
+import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
 import { useDisclosure } from "../useDisclosure";
 
 type InntektProps = {
@@ -234,7 +234,7 @@ type EndreMånedslønnProps = {
   onClose: () => void;
 };
 const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
-  const { register, watch, formState, unregister } =
+  const { register, watch, formState, unregister, control } =
     useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
@@ -246,12 +246,13 @@ const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
   return (
     <>
       <div className="flex items-start gap-4">
-        <TextField
+        <FormattertTallTextField
           {...register("korrigertInntekt", {
             min: { value: 1, message: "Må være mer enn 0" },
             required: "Må oppgis",
             value: inntekt,
           })}
+          control={control}
           error={formState.errors.korrigertInntekt?.message}
           inputMode="numeric"
           label="Endret månedsinntekt"
