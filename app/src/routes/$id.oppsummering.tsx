@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Oppsummering } from "~/views/oppsummering/Oppsummering";
+import { Steg3Oppsummering } from "~/features/inntektsmelding/Steg3Oppsummering";
 
 export const Route = createFileRoute("/$id/oppsummering")({
-  component: Oppsummering,
+  component: Steg3Oppsummering,
 });

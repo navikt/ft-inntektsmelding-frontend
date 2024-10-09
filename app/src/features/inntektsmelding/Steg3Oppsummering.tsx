@@ -14,12 +14,12 @@ import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils";
 
-import { useOpplysninger } from "../ny-inntektsmelding/OpplysningerContext";
-import { Skjemaoppsummering } from "../shared/Skjemaoppsummering";
+import { useOpplysninger } from "../../views/ny-inntektsmelding/OpplysningerContext";
+import { Skjemaoppsummering } from "../../views/shared/Skjemaoppsummering";
 
 const route = getRouteApi("/$id");
 
-export const Oppsummering = () => {
+export const Steg3Oppsummering = () => {
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Oppsummering – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,

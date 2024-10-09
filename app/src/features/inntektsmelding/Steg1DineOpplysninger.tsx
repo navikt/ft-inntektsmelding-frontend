@@ -27,14 +27,14 @@ import {
 import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
+import { Fremgangsindikator } from "../skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "../useDocumentTitle";
-import { Fremgangsindikator } from "./Fremgangsindikator";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
   InntektsmeldingSkjemaState["kontaktperson"]
 >;
 
-export const PersonOgSelskapsInformasjonSeksjon = () => {
+export const Steg1DineOpplysninger = () => {
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
