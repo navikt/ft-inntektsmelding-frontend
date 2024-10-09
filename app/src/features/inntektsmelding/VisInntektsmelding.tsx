@@ -6,7 +6,8 @@ import { useEffect } from "react";
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
 import { formatDatoTidKort } from "~/utils.ts";
-import { Skjemaoppsummering } from "~/views/shared/Skjemaoppsummering.tsx";
+
+import { Skjemaoppsummering } from "./Skjemaoppsummering";
 
 const route = getRouteApi("/$id");
 
