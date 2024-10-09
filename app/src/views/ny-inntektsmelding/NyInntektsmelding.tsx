@@ -37,7 +37,7 @@ export const NyInntektsmelding = () => {
             <div className="flex gap-3">
               <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
               <span>|</span>
-              <span>
+              <span className="text-nowrap">
                 Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
               </span>
             </div>
