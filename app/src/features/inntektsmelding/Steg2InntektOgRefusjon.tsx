@@ -3,6 +3,7 @@ import { BodyLong, Button, Heading, Link, VStack } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,
@@ -12,7 +13,6 @@ import {
   gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils";
-import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 import { HjelpetekstReadMore } from "../Hjelpetekst";
 import { Informasjonsseksjon } from "../Informasjonsseksjon";

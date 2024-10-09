@@ -10,7 +10,7 @@ import { OpplysningerProvider } from "./OpplysningerContext";
 
 const route = getRouteApi("/$id");
 
-export const NyInntektsmelding = () => {
+export const InntektsmeldingRootLayout = () => {
   const { id } = route.useParams();
   const { opplysninger } = route.useLoaderData();
   const location = useLocation();

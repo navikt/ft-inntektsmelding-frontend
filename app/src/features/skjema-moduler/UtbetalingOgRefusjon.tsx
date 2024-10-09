@@ -24,10 +24,10 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
-import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 export const REFUSJON_RADIO_VALG = {
   JA_LIK_REFUSJON: "Ja, likt beløp i hele perioden",

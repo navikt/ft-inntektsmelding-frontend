@@ -13,6 +13,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
+import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
@@ -24,7 +25,6 @@ import {
   formatYtelsesnavn,
   slåSammenTilFulltNavn,
 } from "~/utils";
-import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "../skjema-moduler/Fremgangsindikator";

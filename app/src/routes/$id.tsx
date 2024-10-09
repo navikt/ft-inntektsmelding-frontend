@@ -4,10 +4,10 @@ import {
   hentEksisterendeInntektsmeldinger,
   hentOpplysningerData,
 } from "~/api/queries";
-import { NyInntektsmelding } from "~/views/ny-inntektsmelding/NyInntektsmelding";
+import { InntektsmeldingRootLayout } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
 
 export const Route = createFileRoute("/$id")({
-  component: NyInntektsmelding,
+  component: InntektsmeldingRootLayout,
   loader: async ({ params }) => {
     const [opplysninger, eksisterendeInntektsmeldinger] = await Promise.all([
       hentOpplysningerData(params.id),
