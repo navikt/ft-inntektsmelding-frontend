@@ -4,7 +4,7 @@ import illustrasjonUrl from "./illustrasjon.svg";
 
 type RotLayoutProps = {
   /** Tittelen på viewet man er i, som "Ny inntektsmelding", eller "Endring, inntektsmelding" */
-  tittel: string;
+  tittel: React.ReactNode;
   /** Undertittel, typisk navn på arbeidssted og ansatt */
   undertittel?: React.ReactNode;
   /** Innholdet i viewet */
