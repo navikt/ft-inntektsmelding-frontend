@@ -45,8 +45,6 @@ export function UtbetalingOgRefusjon() {
     required: "Du må svare på dette spørsmålet",
   });
 
-  console.log(watch());
-
   const korrigertInntekt = watch("korrigertInntekt");
   useEffect(() => {
     if (korrigertInntekt) {
