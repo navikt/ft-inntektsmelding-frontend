@@ -1,47 +1,52 @@
 import { TextField, TextFieldProps } from "@navikt/ds-react";
-import { Controller, ControllerProps } from "react-hook-form";
+import { useController } from "react-hook-form";
+
+import { formatStrengTilTall } from "~/utils.ts";
 
 type FormattertTallTextFieldProps = TextFieldProps & {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: any;
   name: string;
-  rules?: ControllerProps["rules"];
+  min?: number;
+  required?: boolean;
 };
 
 /** Et tekstfelt som formaterer innholdet til et tall med tusenvise mellomrom. */
 export const FormattertTallTextField = ({
-  defaultValue,
-  onChange: externalOnChange = () => {},
-  control,
   name,
-  rules,
+  min,
+  required,
   ...rest
 }: FormattertTallTextFieldProps) => {
-  return (
-    <Controller
-      control={control}
-      defaultValue={defaultValue}
-      name={name}
-      render={({ field }) => {
-        const { onChange, value, ref } = field;
+  const { field, fieldState } = useController({
+    name,
+    rules: {
+      required: required ? "Må oppgis" : false,
+      validate: (v) => {
+        const asNumber = formatStrengTilTall(v);
+        if (Number.isNaN(asNumber)) {
+          return "Må være et tall";
+        }
 
-        return (
-          <TextField
-            {...rest}
-            aria-label={value}
-            autoComplete="off"
-            onChange={(e) => {
-              // Remove spaces from the input value
-              const newValue = e.target.value.replaceAll(/\s+/g, "");
-              onChange(newValue);
-              externalOnChange(e);
-            }}
-            ref={ref}
-            value={formatTall(value)}
-          />
-        );
+        if (asNumber < (min ?? -Infinity)) {
+          return `Beløpet må være ${min} eller høyere`;
+        }
+        return true;
+      },
+    },
+  });
+
+  return (
+    <TextField
+      {...rest}
+      aria-label={field.value}
+      autoComplete="off"
+      error={fieldState.error?.message}
+      onChange={(e) => {
+        // Remove spaces from the input value
+        const newValue = e.target.value.replaceAll(/\s+/g, "");
+        field.onChange(newValue);
       }}
-      rules={rules}
+      ref={field.ref}
+      value={formatTall(field.value)}
     />
   );
 };
@@ -50,19 +55,26 @@ export const FormattertTallTextField = ({
  *
  * Om det ikke er et tall, returneres inputverdien.
  */
-const formatTall = (value: string) => {
-  if (value === "") {
+const formatTall = (value: string | undefined) => {
+  if (value === "" || value === undefined) {
     return "";
   }
 
   const cleanValue = value.toString().replaceAll(/\s+/g, "");
+  const hasTrailingComma = cleanValue.includes(",");
 
   // Parse to number
-  const numberValue = Number(cleanValue);
+  const numberValue = formatStrengTilTall(cleanValue);
 
   if (Number.isNaN(numberValue)) {
     return value;
   }
+  const formattedValue = new Intl.NumberFormat("nb-NO", {
+    maximumFractionDigits: 2,
+  }).format(numberValue);
 
-  return new Intl.NumberFormat("nb-NO").format(numberValue);
+  const formattedValueHasComma = formattedValue.includes(",");
+  const shouldApplyTrailingComma = !formattedValueHasComma && hasTrailingComma;
+
+  return shouldApplyTrailingComma ? `${formattedValue},` : formattedValue;
 };

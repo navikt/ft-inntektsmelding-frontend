@@ -130,7 +130,7 @@ function Over6GAlert() {
 }
 
 function LikRefusjon() {
-  const { register, watch, resetField, setValue, control } =
+  const { watch, resetField, setValue } =
     useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
@@ -144,10 +144,9 @@ function LikRefusjon() {
           <Stack gap="4">
             <HStack gap="4">
               <FormattertTallTextField
-                control={control}
-                {...register("refusjon.0.beløp", {})}
                 autoFocus
                 label="Refusjonsbeløp per måned"
+                name="refusjon.0.beløp"
               />
               <Button
                 className="mt-8"
@@ -241,8 +240,7 @@ export const ENDRING_I_REFUSJON_TEMPLATE = {
 };
 
 function Refusjonsperioder() {
-  const { control, register, formState } =
-    useFormContext<InntektOgRefusjonForm>();
+  const { control } = useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "refusjon",
@@ -265,19 +263,11 @@ function Refusjonsperioder() {
           />
           <div>
             <FormattertTallTextField
-              {...register(`refusjon.${index}.beløp` as const, {
-                valueAsNumber: true,
-                min: { value: 0, message: "Beløpet må være 0 eller høyere" },
-                validate: (value) =>
-                  Number.isNaN(Number(value))
-                    ? "Beløpet må være et tall"
-                    : true,
-                required: "Må oppgis",
-              })}
-              control={control}
-              error={formState.errors?.refusjon?.[index]?.beløp?.message}
               inputMode="numeric"
               label="Refusjonsbeløp per måned"
+              min={0}
+              name={`refusjon.${index}.beløp` as const}
+              required
               size="medium"
             />
           </div>

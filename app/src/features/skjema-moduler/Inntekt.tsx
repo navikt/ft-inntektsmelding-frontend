@@ -234,28 +234,21 @@ type EndreMånedslønnProps = {
   onClose: () => void;
 };
 const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
-  const { register, watch, formState, unregister, control } =
-    useFormContext<InntektOgRefusjonForm>();
+  const { unregister } = useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
     onClose();
   };
 
-  const inntekt = watch("inntekt");
-
   return (
     <>
       <div className="flex items-start gap-4">
         <FormattertTallTextField
-          {...register("korrigertInntekt", {
-            min: { value: 1, message: "Må være mer enn 0" },
-            required: "Må oppgis",
-            value: inntekt,
-          })}
-          control={control}
-          error={formState.errors.korrigertInntekt?.message}
           inputMode="numeric"
           label="Endret månedsinntekt"
+          min={1}
+          name="korrigertInntekt"
+          required
         />
         <Button
           className="mt-8"
