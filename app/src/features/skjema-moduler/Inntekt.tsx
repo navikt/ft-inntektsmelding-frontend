@@ -234,14 +234,11 @@ type EndreMånedslønnProps = {
   onClose: () => void;
 };
 const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
-  const { watch, unregister } = useFormContext<InntektOgRefusjonForm>();
+  const { unregister } = useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
     onClose();
   };
-
-  // TODO: sjekk dette
-  const inntekt = watch("inntekt");
 
   return (
     <>
