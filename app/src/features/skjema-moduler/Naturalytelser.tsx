@@ -186,21 +186,10 @@ function MisterNaturalytelser() {
               />
 
               <FormattertTallTextField
-                {...register(
-                  `naturalytelserSomMistes.${index}.beløp` as const,
-                  {
-                    validate: (value) =>
-                      Number(value) > 0 || "Må være mer enn 0",
-                  },
-                )}
-                autoComplete="off"
-                control={control}
-                error={
-                  formState.errors?.naturalytelserSomMistes?.[index]?.beløp
-                    ?.message
-                }
                 inputMode="numeric"
                 label={<span>Verdi&nbsp;pr. måned</span>}
+                min={1}
+                name={`naturalytelserSomMistes.${index}.beløp` as const}
                 size="medium"
               />
               {index > 0 && (

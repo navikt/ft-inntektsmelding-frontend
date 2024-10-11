@@ -52,11 +52,14 @@ export function formatKroner(kroner: number | string | undefined) {
     return "";
   }
 
+  const kronerSomTall = formatStrengTilTall(kroner);
+
   return Intl.NumberFormat("nb-no", {
     style: "currency",
     currency: "NOK",
-    maximumFractionDigits: 0,
-  }).format(Number(kroner));
+    minimumFractionDigits: kronerSomTall % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(kronerSomTall);
 }
 
 export function formatDatoLang(dato: Date) {
@@ -160,3 +163,10 @@ export function logDev(
     console[level](...message);
   }
 }
+
+export const formatStrengTilTall = (tall: string | number) => {
+  // Norske desimaltall bruker komma, mens Number() krever punktum.
+  const tallMedPunktumDesimaltegn = tall.toString().replace(",", ".");
+  const tallMedRiktigMinusTegn = tallMedPunktumDesimaltegn.replace("−", "-");
+  return Number(tallMedRiktigMinusTegn);
+};
