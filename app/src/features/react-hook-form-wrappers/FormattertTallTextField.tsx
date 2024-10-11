@@ -29,6 +29,7 @@ export const FormattertTallTextField = ({
           <TextField
             {...rest}
             aria-label={value}
+            autoComplete="off"
             onChange={(e) => {
               // Remove spaces from the input value
               const newValue = e.target.value.replaceAll(/\s+/g, "");
