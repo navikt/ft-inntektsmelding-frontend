@@ -249,10 +249,10 @@ function Refusjonsperioder() {
   });
 
   return (
-    <VStack className="p-4" gap={{ xs: "5", md: "3" }}>
+    <VStack className="py-4" gap={{ xs: "5", md: "3" }}>
       {fields.map((field, index) => (
         <HGrid
-          className="border-l-4 border-bg-subtle"
+          className="px-4 border-l-4 border-bg-subtle"
           columns={{ xs: "1fr", md: "min-content 1fr 1fr" }}
           gap="6"
           key={field.id}
@@ -263,18 +263,24 @@ function Refusjonsperioder() {
             readOnly={index === 0}
             rules={{ required: "Må oppgis" }}
           />
-          <FormattertTallTextField
-            {...register(`refusjon.${index}.beløp` as const, {
-              valueAsNumber: true,
-              validate: (value) => Number(value) >= 0 || "asdsa",
-              required: "Må oppgis",
-            })}
-            control={control}
-            error={formState.errors?.refusjon?.[index]?.beløp?.message}
-            inputMode="numeric"
-            label="Refusjonsbeløp per måned"
-            size="medium"
-          />
+          <div>
+            <FormattertTallTextField
+              {...register(`refusjon.${index}.beløp` as const, {
+                valueAsNumber: true,
+                min: { value: 0, message: "Beløpet må være 0 eller høyere" },
+                validate: (value) =>
+                  Number.isNaN(Number(value))
+                    ? "Beløpet må være et tall"
+                    : true,
+                required: "Må oppgis",
+              })}
+              control={control}
+              error={formState.errors?.refusjon?.[index]?.beløp?.message}
+              inputMode="numeric"
+              label="Refusjonsbeløp per måned"
+              size="medium"
+            />
+          </div>
           {index >= 2 && (
             <div className="flex items-end">
               <Button
