@@ -10,7 +10,12 @@ import express, { Router } from "express";
 
 import config from "./config.js";
 
-const csp = await buildCspHeader({}, { env: config.app.env });
+const csp = await buildCspHeader(
+  {
+    "img-src": ["data:*", "'self'"],
+  },
+  { env: config.app.env },
+);
 const dekoratørProps = {
   env: config.app.env,
   params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
