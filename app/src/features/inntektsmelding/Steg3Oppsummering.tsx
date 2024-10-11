@@ -12,7 +12,7 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import { useDocumentTitle } from "~/features/useDocumentTitle";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import { formatYtelsesnavn } from "~/utils";
+import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 
 import { useOpplysninger } from "./OpplysningerContext";
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
@@ -95,9 +95,12 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
         kontaktperson: skjemaState.kontaktperson,
         startdato: opplysninger.startdatoPermisjon,
-        inntekt: gjeldendeInntekt,
+        inntekt: formatStrengTilTall(gjeldendeInntekt),
         // inntektEndringsÅrsak: skjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjon,
+        refusjon: refusjon.map((r) => ({
+          ...r,
+          beløp: formatStrengTilTall(r.beløp),
+        })),
         bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
           skjemaState.naturalytelserSomMistes,
         ),
@@ -152,7 +155,7 @@ function konverterNaturalytelsePerioder(
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,
     fom: periode.fom,
-    beløp: periode.beløp,
+    beløp: formatStrengTilTall(periode.beløp),
     tom: periode.tom,
   }));
 }
