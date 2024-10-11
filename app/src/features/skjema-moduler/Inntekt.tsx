@@ -246,7 +246,7 @@ const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
         <FormattertTallTextField
           inputMode="numeric"
           label="Endret månedsinntekt"
-          min={1}
+          min={0}
           name="korrigertInntekt"
           required
         />
