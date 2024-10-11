@@ -15,7 +15,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  TextField,
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
@@ -24,10 +23,12 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
+import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
-import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
-import { useOpplysninger } from "~/views/ny-inntektsmelding/OpplysningerContext";
+
+import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
 
 export const REFUSJON_RADIO_VALG = {
   JA_LIK_REFUSJON: "Ja, likt beløp i hele perioden",
@@ -129,7 +130,7 @@ function Over6GAlert() {
 }
 
 function LikRefusjon() {
-  const { register, watch, resetField, setValue } =
+  const { register, watch, resetField, setValue, control } =
     useFormContext<InntektOgRefusjonForm>();
   const [skalEndreBeløp, setSkalEndreBeløp] = useState(false);
 
@@ -142,7 +143,8 @@ function LikRefusjon() {
         {skalEndreBeløp ? (
           <Stack gap="4">
             <HStack gap="4">
-              <TextField
+              <FormattertTallTextField
+                control={control}
                 {...register("refusjon.0.beløp", {})}
                 autoFocus
                 label="Refusjonsbeløp per måned"
@@ -203,7 +205,7 @@ function VarierendeRefusjon() {
           Hvis dere skal slutte å forskuttere lønn i perioden, skriver du 0,- i
           refusjonsbeløp fra den datoen dere ikke lengre forskutterer lønn.
         </Alert>
-        <RefusjonsPerioder />
+        <Refusjonsperioder />
         <Over6GAlert />
       </VStack>
       <VStack gap="2">
@@ -238,7 +240,7 @@ export const ENDRING_I_REFUSJON_TEMPLATE = {
   beløp: 0,
 };
 
-function RefusjonsPerioder() {
+function Refusjonsperioder() {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
@@ -247,10 +249,11 @@ function RefusjonsPerioder() {
   });
 
   return (
-    <VStack className="border-l-4 border-bg-subtle p-4" gap="2">
+    <VStack className="py-4" gap={{ xs: "5", md: "3" }}>
       {fields.map((field, index) => (
         <HGrid
-          columns={{ sm: "1fr", md: "min-content 1fr 1fr" }}
+          className="px-4 border-l-4 border-bg-subtle"
+          columns={{ xs: "1fr", md: "min-content 1fr 1fr" }}
           gap="6"
           key={field.id}
         >
@@ -260,22 +263,28 @@ function RefusjonsPerioder() {
             readOnly={index === 0}
             rules={{ required: "Må oppgis" }}
           />
-          <TextField
-            {...register(`refusjon.${index}.beløp` as const, {
-              valueAsNumber: true,
-              validate: (value) => Number(value) >= 0 || "asdsa",
-              required: "Må oppgis",
-            })}
-            error={formState.errors?.refusjon?.[index]?.beløp?.message}
-            inputMode="numeric"
-            label="Refusjonsbeløp per måned"
-            size="medium"
-          />
+          <div>
+            <FormattertTallTextField
+              {...register(`refusjon.${index}.beløp` as const, {
+                valueAsNumber: true,
+                min: { value: 0, message: "Beløpet må være 0 eller høyere" },
+                validate: (value) =>
+                  Number.isNaN(Number(value))
+                    ? "Beløpet må være et tall"
+                    : true,
+                required: "Må oppgis",
+              })}
+              control={control}
+              error={formState.errors?.refusjon?.[index]?.beløp?.message}
+              inputMode="numeric"
+              label="Refusjonsbeløp per måned"
+              size="medium"
+            />
+          </div>
           {index >= 2 && (
-            <div>
+            <div className="flex items-end">
               <Button
                 aria-label="Fjern refusjonsendring"
-                className="mt-8"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}
                 variant="tertiary"

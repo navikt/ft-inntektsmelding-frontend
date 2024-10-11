@@ -10,7 +10,7 @@ import { OpplysningerProvider } from "./OpplysningerContext";
 
 const route = getRouteApi("/$id");
 
-export const NyInntektsmelding = () => {
+export const InntektsmeldingRootLayout = () => {
   const { id } = route.useParams();
   const { opplysninger } = route.useLoaderData();
   const location = useLocation();
@@ -36,8 +36,8 @@ export const NyInntektsmelding = () => {
           undertittel={
             <div className="flex gap-3">
               <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
-              <span>|</span>
-              <span>
+              <span aria-hidden="true">|</span>
+              <span className="text-nowrap">
                 Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
               </span>
             </div>

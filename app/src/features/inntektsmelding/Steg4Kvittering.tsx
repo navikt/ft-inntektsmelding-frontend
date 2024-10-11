@@ -20,11 +20,11 @@ import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState"
 import { useDocumentTitle } from "~/features/useDocumentTitle";
 import { formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils";
 
-import { useOpplysninger } from "../ny-inntektsmelding/OpplysningerContext";
+import { useOpplysninger } from "./OpplysningerContext";
 
 const route = getRouteApi("/$id");
 
-export const Kvittering = () => {
+export const Steg4Kvittering = () => {
   const { id } = route.useParams();
   const opplysninger = useOpplysninger();
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();

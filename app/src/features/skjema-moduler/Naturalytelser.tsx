@@ -8,18 +8,19 @@ import {
   RadioGroup,
   Select,
   Stack,
-  TextField,
   VStack,
 } from "@navikt/ds-react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
+import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
-import type { InntektOgRefusjonForm } from "~/routes/$id.inntekt-og-refusjon.tsx";
 import {
   Naturalytelsetype,
   NaturalytelseTypeSchema,
 } from "~/types/api-models.ts";
+
+import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
 
 export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   fom: undefined,
@@ -184,7 +185,7 @@ function MisterNaturalytelser() {
                 rules={{ required: "Må oppgis" }}
               />
 
-              <TextField
+              <FormattertTallTextField
                 {...register(
                   `naturalytelserSomMistes.${index}.beløp` as const,
                   {
@@ -193,6 +194,7 @@ function MisterNaturalytelser() {
                   },
                 )}
                 autoComplete="off"
+                control={control}
                 error={
                   formState.errors?.naturalytelserSomMistes?.[index]?.beløp
                     ?.message

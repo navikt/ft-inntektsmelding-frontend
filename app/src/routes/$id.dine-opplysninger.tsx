@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
-import { PersonOgSelskapsInformasjonSeksjon } from "~/features/skjema-moduler/PersonOgSelskapsInformasjonSeksjon.tsx";
+import { Steg1DineOpplysninger } from "~/features/inntektsmelding/Steg1DineOpplysninger";
 
 export const Route = createFileRoute("/$id/dine-opplysninger")({
   component: () => (
     <>
       <HjelpetekstToggle />
-      <PersonOgSelskapsInformasjonSeksjon />
+      <Steg1DineOpplysninger />
     </>
   ),
 });

@@ -20,7 +20,7 @@ export const Informasjonsseksjon = ({
         className,
       )}
     >
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col-reverse md:flex-row align-start md:justify-between md:items-center gap-2">
         <Label size="small">{tittel}</Label>
         {kilde && (
           <Detail className="uppercase flex items-center">{kilde}</Detail>
