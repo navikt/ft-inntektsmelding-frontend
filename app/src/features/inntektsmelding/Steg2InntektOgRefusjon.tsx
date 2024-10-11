@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
-import { BodyLong, Button, Heading, Link, VStack } from "@navikt/ds-react";
-import { useNavigate } from "@tanstack/react-router";
+import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
