@@ -36,7 +36,7 @@ export const GenerellFeilside = () => {
                       </Link>
                     </List.Item>
                     <List.Item>
-                      {window.history.length > 1 && (
+                      {globalThis.history.length > 1 && (
                         <Link href="#" onClick={() => history.back()}>
                           gå tilbake til forrige side
                         </Link>
