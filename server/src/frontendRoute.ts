@@ -12,7 +12,7 @@ import config from "./config.js";
 
 const csp = await buildCspHeader(
   {
-    "img-src": ["data:*", "'self'"],
+    "img-src": ["data:", "'self'"],
   },
   { env: config.app.env },
 );
