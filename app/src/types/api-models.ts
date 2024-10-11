@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { beløpSchema, navnMedStorBokstav } from "~/utils.ts";
+import { navnMedStorBokstav } from "~/utils.ts";
 
 export const YtelsetypeSchema = z.enum([
   "FORELDREPENGER",
@@ -63,12 +63,12 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
     navn: z.string(),
   }),
   startdato: z.string(),
-  inntekt: beløpSchema,
+  inntekt: z.number(),
   refusjon: z
     .array(
       z.object({
         fom: z.string().optional(),
-        beløp: beløpSchema,
+        beløp: z.number(),
       }),
     )
     .optional(),
@@ -87,7 +87,7 @@ export const SendInntektsmeldingRequestDtoSchema = z.object({
       z.object({
         fom: z.string(),
         tom: z.string().optional(),
-        beløp: beløpSchema,
+        beløp: z.number(),
         naturalytelsetype: NaturalytelseTypeSchema,
       }),
     )
