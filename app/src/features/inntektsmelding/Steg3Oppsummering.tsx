@@ -30,7 +30,7 @@ export const Steg3Oppsummering = () => {
 
   if (!gyldigInntektsmeldingSkjemaState) {
     return (
-      <Alert className="mt-4" variant="error">
+      <Alert className="mt-4 mx-4 md:mx-0" variant="error">
         <Stack gap="4">
           <BodyLong>
             Noe gikk galt med utfyllingen av inntektsmeldingen din. Du må
