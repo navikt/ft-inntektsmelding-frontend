@@ -22,12 +22,10 @@ export function slåSammenTilFulltNavn({
   mellomnavn?: string;
   etternavn?: string;
 }) {
-  return navnMedStorBokstav(
-    [fornavn, mellomnavn, etternavn].filter(Boolean).join(" "),
-  );
+  return formatNavn([fornavn, mellomnavn, etternavn].filter(Boolean).join(" "));
 }
 
-export function navnMedStorBokstav(navn?: string) {
+export function formatNavn(navn?: string) {
   if (!navn) {
     return navn;
   }

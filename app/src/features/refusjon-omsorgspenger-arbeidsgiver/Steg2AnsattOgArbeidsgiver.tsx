@@ -16,7 +16,7 @@ import { useState } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { navnMedStorBokstav } from "~/utils";
+import { formatNavn } from "~/utils";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { slåOppPersondataOptions } from "./api/queries";
@@ -65,7 +65,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             ) : error ? (
               <BodyShort>Kunne ikke hente data</BodyShort>
             ) : (
-              <BodyShort>{navnMedStorBokstav(data?.navn)}</BodyShort>
+              <BodyShort>{formatNavn(data?.navn)}</BodyShort>
             )}
           </div>
         </div>
