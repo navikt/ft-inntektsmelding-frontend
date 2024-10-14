@@ -180,7 +180,7 @@ function LikRefusjon() {
               onClick={() => {
                 setSkalEndreBeløp(true);
               }}
-              size="small"
+              size="medium"
               variant="secondary"
             >
               Endre refusjonsbeløp
@@ -198,9 +198,9 @@ function VarierendeRefusjon() {
     <>
       <VStack>
         <Heading level="2" size="small">
-          Refusjonsbeløp dere krever per måned
+          Refusjonsbeløp dere krever per periode
         </Heading>
-        <Alert className="mb-4" inline variant="info">
+        <Alert className="mb-4" variant="info">
           Hvis dere skal slutte å forskuttere lønn i perioden, skriver du 0,- i
           refusjonsbeløp fra den datoen dere ikke lengre forskutterer lønn.
         </Alert>
@@ -290,7 +290,7 @@ function Refusjonsperioder() {
         icon={<PlusIcon />}
         iconPosition="left"
         onClick={() => append(ENDRING_I_REFUSJON_TEMPLATE)}
-        size="small"
+        size="medium"
         type="button"
         variant="secondary"
       >

@@ -145,7 +145,7 @@ const FraværHeleDagen = () => {
               { key: (prev.at(-1)?.key ?? 0) + 1 },
             ]);
           }}
-          size="small"
+          size="medium"
           variant="secondary"
         >
           Legg til periode
@@ -203,7 +203,7 @@ const FraværDelerAvDagen = () => {
               { key: (prev.at(-1)?.key ?? 0) + 1 },
             ]);
           }}
-          size="small"
+          size="medium"
           variant="secondary"
         >
           Legg til dag

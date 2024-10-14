@@ -160,13 +160,13 @@ function MisterNaturalytelser() {
 
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
-            {/*// TODO: items-end gjør at brekkende legend blir align. items-start gir alignment ved valideringsfeil.... Hvordan få begge pene?*/}
-            <div className="flex gap-4 flex-col items-start md:items-end md:grid md:grid-cols-[1fr_min-content_140px_max-content]">
+            <div className="flex gap-4 flex-col items-start relative">
               <Select
                 label="Naturalytelse som faller bort"
                 {...register(`naturalytelserSomMistes.${index}.navn` as const, {
                   required: "Må oppgis",
                 })}
+                className="max-w-[60%]"
                 error={
                   formState.errors?.naturalytelserSomMistes?.[index]?.navn
                     ?.message
@@ -195,7 +195,7 @@ function MisterNaturalytelser() {
               {index > 0 && (
                 <Button
                   aria-label="fjern naturalytelse"
-                  className="mt-8"
+                  className="absolute top-8 right-1"
                   icon={<TrashIcon />}
                   onClick={() => remove(index)}
                   variant="tertiary"
@@ -252,7 +252,7 @@ function MisterNaturalytelser() {
         icon={<PlusIcon />}
         iconPosition="left"
         onClick={() => append(NATURALYTELSE_SOM_MISTES_TEMPLATE)}
-        size="small"
+        size="medium"
         type="button"
         variant="secondary"
       >
