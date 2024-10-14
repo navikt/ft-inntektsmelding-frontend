@@ -198,7 +198,7 @@ function VarierendeRefusjon() {
     <>
       <VStack>
         <Heading level="2" size="small">
-          Refusjonsbeløp dere krever per måned
+          Refusjonsbeløp dere krever per periode
         </Heading>
         <Alert className="mb-4" variant="info">
           Hvis dere skal slutte å forskuttere lønn i perioden, skriver du 0,- i
