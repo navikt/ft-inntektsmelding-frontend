@@ -200,7 +200,7 @@ function VarierendeRefusjon() {
         <Heading level="2" size="small">
           Refusjonsbeløp dere krever per måned
         </Heading>
-        <Alert className="mb-4" inline variant="info">
+        <Alert className="mb-4" variant="info">
           Hvis dere skal slutte å forskuttere lønn i perioden, skriver du 0,- i
           refusjonsbeløp fra den datoen dere ikke lengre forskutterer lønn.
         </Alert>
