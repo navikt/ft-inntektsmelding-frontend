@@ -12,6 +12,7 @@ import {
   formatFødselsnummer,
   formatKroner,
   formatNavn,
+  formatTelefonnummer,
   formatYtelsesnavn,
   gjennomsnittInntekt,
   slåSammenTilFulltNavn,
@@ -278,5 +279,5 @@ const formatterKontaktperson = (
   if (!kontaktperson) {
     return "";
   }
-  return `${formatNavn(kontaktperson.navn)}, tlf. ${kontaktperson.telefonnummer}`;
+  return `${formatNavn(kontaktperson.navn)}, tlf. ${formatTelefonnummer(kontaktperson.telefonnummer)}`;
 };
