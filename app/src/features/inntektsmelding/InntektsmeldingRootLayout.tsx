@@ -6,7 +6,7 @@ import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSk
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
-import { useOpplysninger } from "./OpplysningerContext";
+import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 

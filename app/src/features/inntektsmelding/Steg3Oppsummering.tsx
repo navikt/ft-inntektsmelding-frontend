@@ -14,8 +14,8 @@ import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 
-import { useOpplysninger } from "./OpplysningerContext";
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
+import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 

@@ -20,7 +20,7 @@ import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState"
 import { useDocumentTitle } from "~/features/useDocumentTitle";
 import { formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils";
 
-import { useOpplysninger } from "./OpplysningerContext";
+import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 
