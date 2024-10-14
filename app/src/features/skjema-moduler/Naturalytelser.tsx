@@ -252,7 +252,7 @@ function MisterNaturalytelser() {
         icon={<PlusIcon />}
         iconPosition="left"
         onClick={() => append(NATURALYTELSE_SOM_MISTES_TEMPLATE)}
-        size="small"
+        size="medium"
         type="button"
         variant="secondary"
       >

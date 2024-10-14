@@ -180,7 +180,7 @@ function LikRefusjon() {
               onClick={() => {
                 setSkalEndreBeløp(true);
               }}
-              size="small"
+              size="medium"
               variant="secondary"
             >
               Endre refusjonsbeløp
@@ -290,7 +290,7 @@ function Refusjonsperioder() {
         icon={<PlusIcon />}
         iconPosition="left"
         onClick={() => append(ENDRING_I_REFUSJON_TEMPLATE)}
-        size="small"
+        size="medium"
         type="button"
         variant="secondary"
       >

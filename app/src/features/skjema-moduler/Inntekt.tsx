@@ -113,7 +113,7 @@ export function Inntekt({ opplysninger }: InntektProps) {
           className="w-max"
           icon={<PencilIcon />}
           onClick={onOpen}
-          size="small"
+          size="medium"
           type="button"
           variant="secondary"
         >
@@ -338,7 +338,7 @@ function Endringsårsaker() {
         icon={<PlusIcon />}
         iconPosition="left"
         onClick={() => append(ENDRINGSÅRSAK_TEMPLATE)}
-        size="small"
+        size="medium"
         type="button"
         variant="secondary"
       >
