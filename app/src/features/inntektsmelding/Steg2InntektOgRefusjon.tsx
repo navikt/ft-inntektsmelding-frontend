@@ -3,7 +3,7 @@ import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
+import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,

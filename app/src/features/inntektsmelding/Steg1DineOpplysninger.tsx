@@ -13,7 +13,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
-import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
+import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
