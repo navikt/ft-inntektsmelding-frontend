@@ -1,30 +1,12 @@
-import React, { createContext, useContext } from "react";
+import { getRouteApi } from "@tanstack/react-router";
 
-import { OpplysningerDto } from "~/types/api-models";
-
-const OpplysningerContext = createContext<OpplysningerDto | null>(null);
+const route = getRouteApi("/$id");
 
 export const useOpplysninger = () => {
-  const context = useContext(OpplysningerContext);
-  if (!context) {
-    throw new Error(
-      "useOpplysninger must be used within an OpplysningerProvider",
-    );
-  }
-  return context;
-};
+  const routeData = route.useLoaderData();
 
-type OpplysningerProviderProps = {
-  opplysninger: OpplysningerDto;
-  children: React.ReactNode;
-};
-export const OpplysningerProvider = ({
-  opplysninger,
-  children,
-}: OpplysningerProviderProps) => {
-  return (
-    <OpplysningerContext.Provider value={opplysninger}>
-      {children}
-    </OpplysningerContext.Provider>
-  );
+  if (!routeData) {
+    throw new Error("useOpplysninger kan kun brukes på /:id routes");
+  }
+  return routeData.opplysninger;
 };
