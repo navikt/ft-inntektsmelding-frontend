@@ -22,7 +22,9 @@ export function slåSammenTilFulltNavn({
   mellomnavn?: string;
   etternavn?: string;
 }) {
-  return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
+  return navnMedStorBokstav(
+    [fornavn, mellomnavn, etternavn].filter(Boolean).join(" "),
+  );
 }
 
 export function navnMedStorBokstav(navn?: string) {
@@ -30,9 +32,15 @@ export function navnMedStorBokstav(navn?: string) {
     return navn;
   }
   return navn
-    .split("-")
-    .map((old) => capitalize(old))
-    .join("-");
+    .toLowerCase()
+    .split(" ")
+    .map((del) =>
+      del
+        .split("-")
+        .map((delnavn) => capitalize(delnavn))
+        .join("-"),
+    )
+    .join(" ");
 }
 
 export function capitalizeSetning(setning?: string) {

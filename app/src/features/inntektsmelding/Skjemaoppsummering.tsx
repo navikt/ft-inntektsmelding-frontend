@@ -13,6 +13,7 @@ import {
   formatKroner,
   formatYtelsesnavn,
   gjennomsnittInntekt,
+  navnMedStorBokstav,
   slåSammenTilFulltNavn,
 } from "~/utils";
 
@@ -277,5 +278,5 @@ const formatterKontaktperson = (
   if (!kontaktperson) {
     return "";
   }
-  return `${kontaktperson.navn}, tlf. ${kontaktperson.telefonnummer}`;
+  return `${navnMedStorBokstav(kontaktperson.navn)}, tlf. ${kontaktperson.telefonnummer}`;
 };

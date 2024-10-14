@@ -42,9 +42,7 @@ export const Steg1DineOpplysninger = () => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
-  const innsenderNavn = capitalizeSetning(
-    slåSammenTilFulltNavn(opplysninger.innsender),
-  );
+  const innsenderNavn = slåSammenTilFulltNavn(opplysninger.innsender);
 
   const { register, handleSubmit, formState } =
     useForm<PersonOgSelskapsInformasjonForm>({
