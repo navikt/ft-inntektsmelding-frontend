@@ -13,7 +13,7 @@ export function leggTilGenitiv(navn?: string) {
   return `${navn}s`;
 }
 
-export function slåSammenTilFulltNavn({
+export function lagFulltNavn({
   fornavn,
   mellomnavn,
   etternavn,
@@ -190,3 +190,13 @@ export const formatStrengTilTall = (tall: string | number) => {
   const tallMedRiktigMinusTegn = tallMedPunktumDesimaltegn.replace("−", "-");
   return Number(tallMedRiktigMinusTegn);
 };
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[åæ]/g, "a")
+    .replaceAll(/[öø]/g, "o")
+    .replaceAll(/[^\d\sa-z-]/g, "")
+    .replaceAll(/[\s-]+/g, "-");
+}

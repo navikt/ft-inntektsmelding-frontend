@@ -31,6 +31,9 @@ export const InntektsmeldingRootLayout = () => {
   return (
     <InntektsmeldingSkjemaStateProvider>
       <RotLayout
+        background={
+          location.pathname.includes("kvittering") ? "bg-default" : "bg-subtle"
+        }
         tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
         undertittel={
           <div className="flex gap-3">

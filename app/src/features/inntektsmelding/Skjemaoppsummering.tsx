@@ -15,7 +15,7 @@ import {
   formatTelefonnummer,
   formatYtelsesnavn,
   gjennomsnittInntekt,
-  slåSammenTilFulltNavn,
+  lagFulltNavn,
 } from "~/utils";
 
 type SkjemaoppsummeringProps = {
@@ -53,7 +53,7 @@ export const Skjemaoppsummering = ({
           <FormSummary.Answer>
             <FormSummary.Label>Den ansatte</FormSummary.Label>
             <FormSummary.Value>
-              {slåSammenTilFulltNavn(opplysninger.person)}
+              {lagFulltNavn(opplysninger.person)}
               {", "}
               {formatFødselsnummer(opplysninger.person.fødselsnummer)}
             </FormSummary.Value>
