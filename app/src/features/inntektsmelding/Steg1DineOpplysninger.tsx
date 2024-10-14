@@ -13,7 +13,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
-import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
+import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
@@ -23,7 +23,7 @@ import {
   capitalizeSetning,
   formatFødselsnummer,
   formatYtelsesnavn,
-  slåSammenTilFulltNavn,
+  lagFulltNavn,
 } from "~/utils";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
@@ -42,9 +42,7 @@ export const Steg1DineOpplysninger = () => {
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
-  const innsenderNavn = capitalizeSetning(
-    slåSammenTilFulltNavn(opplysninger.innsender),
-  );
+  const innsenderNavn = lagFulltNavn(opplysninger.innsender);
 
   const { register, handleSubmit, formState } =
     useForm<PersonOgSelskapsInformasjonForm>({
@@ -137,7 +135,7 @@ type IntroProps = {
 };
 const Intro = ({ opplysninger }: IntroProps) => {
   const { person, arbeidsgiver } = opplysninger;
-  const fulltNavnSøker = slåSammenTilFulltNavn(person);
+  const fulltNavnSøker = lagFulltNavn(person);
   const fornavnSøker = person.fornavn;
 
   const { vis } = useHjelpetekst().visHjelpetekster;
@@ -180,7 +178,7 @@ type PersoninformasjonProps = {
 
 const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
   const { person } = opplysninger;
-  const fulltNavn = slåSammenTilFulltNavn(person);
+  const fulltNavn = lagFulltNavn(person);
 
   return (
     <Informasjonsseksjon

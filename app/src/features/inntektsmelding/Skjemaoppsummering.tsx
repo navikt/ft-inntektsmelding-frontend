@@ -11,9 +11,11 @@ import {
   formatDatoLang,
   formatFødselsnummer,
   formatKroner,
+  formatNavn,
+  formatTelefonnummer,
   formatYtelsesnavn,
   gjennomsnittInntekt,
-  slåSammenTilFulltNavn,
+  lagFulltNavn,
 } from "~/utils";
 
 type SkjemaoppsummeringProps = {
@@ -51,7 +53,7 @@ export const Skjemaoppsummering = ({
           <FormSummary.Answer>
             <FormSummary.Label>Den ansatte</FormSummary.Label>
             <FormSummary.Value>
-              {slåSammenTilFulltNavn(opplysninger.person)}
+              {lagFulltNavn(opplysninger.person)}
               {", "}
               {formatFødselsnummer(opplysninger.person.fødselsnummer)}
             </FormSummary.Value>
@@ -277,5 +279,5 @@ const formatterKontaktperson = (
   if (!kontaktperson) {
     return "";
   }
-  return `${kontaktperson.navn}, tlf. ${kontaktperson.telefonnummer}`;
+  return `${formatNavn(kontaktperson.navn)}, tlf. ${formatTelefonnummer(kontaktperson.telefonnummer)}`;
 };

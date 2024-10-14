@@ -260,7 +260,7 @@ const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
           Tilbakestill
         </Button>
       </div>
-      <EndringsÅrsaker />
+      <Endringsårsaker />
     </>
   );
 };
@@ -272,7 +272,7 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
   årsak: "" as const,
 };
 
-function EndringsÅrsaker() {
+function Endringsårsaker() {
   const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
 
   const { control, register, formState } =
@@ -291,16 +291,13 @@ function EndringsÅrsaker() {
         );
 
   return (
-    <HGrid
-      columns={{
-        sm: "1fr max-content max-content max-content",
-        md: "50% max-content max-content max-content",
-      }}
-      gap="4"
-    >
+    <VStack gap="4">
       {fields.map((field, index) => {
         return (
-          <Fragment key={field.id}>
+          <div
+            className="pl-4 border-l-4 border-bg-subtle flex flex-col gap-4 relative"
+            key={field.id}
+          >
             <Select
               error={
                 formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
@@ -310,7 +307,7 @@ function EndringsÅrsaker() {
               {...register(`endringAvInntektÅrsaker.${index}.årsak`, {
                 required: "Må oppgis",
               })}
-              className="lg:max-w-half"
+              className="md:max-w-[60%]"
             >
               <option value="">Velg endringsårsak</option>
               {muligeÅrsakerValg.map((årsak) => (
@@ -319,11 +316,11 @@ function EndringsÅrsaker() {
                 </option>
               ))}
             </Select>
-            <ÅrsaksPerioder index={index} />
+            <Årsaksperioder index={index} />
             {index > 0 ? (
               <Button
                 aria-label="Fjern naturalytelse"
-                className="mt-8"
+                className="w-fit md:absolute top-8 right-0"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}
                 variant="tertiary"
@@ -333,7 +330,7 @@ function EndringsÅrsaker() {
             ) : (
               <div />
             )}
-          </Fragment>
+          </div>
         );
       })}
       <Button
@@ -347,18 +344,18 @@ function EndringsÅrsaker() {
       >
         Legg til ny endringsårsak
       </Button>
-    </HGrid>
+    </VStack>
   );
 }
 
-function ÅrsaksPerioder({ index }: { index: number }) {
+function Årsaksperioder({ index }: { index: number }) {
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
 
   // Spesialhåndtering av tariffendring
   if (årsak === "TARIFFENDRING") {
     return (
-      <>
+      <div className="flex gap-4 flex-auto">
         <DatePickerWrapped
           label="Fra og med"
           name={`endringAvInntektÅrsaker.${index}.fom`}
@@ -369,12 +366,12 @@ function ÅrsaksPerioder({ index }: { index: number }) {
           name={`endringAvInntektÅrsaker.${index}.bleKjentFom`}
           rules={{ required: "Må oppgis" }}
         />
-      </>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="flex gap-4 flex-auto">
       {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
         <DatePickerWrapped
           label="Fra og med"
@@ -393,7 +390,7 @@ function ÅrsaksPerioder({ index }: { index: number }) {
       ) : (
         <div />
       )}
-    </>
+    </div>
   );
 }
 

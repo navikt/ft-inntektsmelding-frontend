@@ -1,7 +1,10 @@
 import {
   CheckmarkIcon,
+  ClockIcon,
+  DocPencilIcon,
   DownloadIcon,
   InformationIcon,
+  SackKronerIcon,
 } from "@navikt/aksel-icons";
 import {
   Alert,
@@ -10,6 +13,8 @@ import {
   ExpansionCard,
   Heading,
   HStack,
+  Link,
+  VStack,
 } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { getRouteApi } from "@tanstack/react-router";
@@ -18,9 +23,9 @@ import { useEffect } from "react";
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState";
 import { useDocumentTitle } from "~/features/useDocumentTitle";
-import { formatYtelsesnavn, slåSammenTilFulltNavn } from "~/utils";
+import { formatYtelsesnavn, lagFulltNavn, slugify } from "~/utils";
 
-import { useOpplysninger } from "./OpplysningerContext";
+import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 
@@ -45,51 +50,52 @@ export const Steg4Kvittering = () => {
   }, [id]);
 
   const inntektsmeldingsId = gyldigInntektsmeldingSkjemaState?.id;
+
+  const erRefusjon = gyldigInntektsmeldingSkjemaState?.skalRefunderes !== "NEI";
+  const ofteStilteSpørsmål = erRefusjon
+    ? ofteStilteSpørsmålRefusjon
+    : ofteStilteSpørsmålIkkeRefusjon;
   return (
-    <div className="mx-4">
-      <div className="mt-12 p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
+    <div className="mx-4 mt-12 md:mx-0">
+      <div className="p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
         <CheckmarkIcon aria-hidden fontSize="2.5em" />
       </div>
-      <Heading className="mt-6 mb-12 text-center" level="2" size="small">
-        Inntektsmelding for {slåSammenTilFulltNavn(opplysninger.person)} er
-        sendt.
+      <Heading className="mt-6 mb-12 text-center" level="2" size="medium">
+        Inntektsmelding for {lagFulltNavn(opplysninger.person)} er sendt
       </Heading>
       <Alert className="mb-12" variant="success">
-        <Heading className="mb-2" level="3" size="medium">
-          Vi har mottatt inntektsmeldingen
-        </Heading>
         <BodyLong>
-          Saksbehandler vil nå se på inntektsmeldingen for å viderebehandle
-          søknaden om {formatYtelsesnavn(opplysninger.ytelse)}. Vi tar kontakt
-          om vi trenger mer informasjon fra dere.
+          Vi har mottatt inntektsmeldingen. Saken til den ansatte ligger nå til
+          behandling hos oss. Vi tar kontakt hvis vi trenger flere opplysninger
+          fra deg.
         </BodyLong>
       </Alert>
-      <BodyLong className="mb-12">
-        Du kan laste ned kvitteringen som en PDF-fil. Denne kan du lagre og dele
-        med den ansatte.
-      </BodyLong>
-      <ExpansionCard aria-labelledby="prosessen-videre" className="mb-12">
-        <ExpansionCard.Header>
-          <ExpansionCard.Title id="prosessen-videre">
-            <HStack align="center" gap="4">
-              <div
-                aria-hidden
-                className="p-2 bg-surface-info-subtle rounded-full w-fit"
-              >
-                <InformationIcon />
-              </div>
-              Prosessen videre for deg og den ansatte
-            </HStack>
-          </ExpansionCard.Title>
-        </ExpansionCard.Header>
-        <ExpansionCard.Content>
-          <BodyLong>
-            Saksbehandler vil nå se på inntektsmeldingen for å viderebehandle
-            søknaden om {formatYtelsesnavn(opplysninger.ytelse)}. Vi tar kontakt
-            om vi trenger mer informasjon fra dere.
-          </BodyLong>
-        </ExpansionCard.Content>
-      </ExpansionCard>
+
+      <VStack className="mb-12" gap="4">
+        <Heading size="medium">Ofte stilte spørsmål</Heading>
+        {ofteStilteSpørsmål.map((spørsmål) => (
+          <ExpansionCard
+            aria-labelledby={slugify(spørsmål.spørsmål)}
+            key={spørsmål.spørsmål}
+            size="small"
+          >
+            <ExpansionCard.Header>
+              <ExpansionCard.Title id={slugify(spørsmål.spørsmål)} size="small">
+                <HStack align="center" gap="4">
+                  <div
+                    aria-hidden
+                    className="p-2 bg-surface-info-subtle rounded-full w-fit"
+                  >
+                    {spørsmål.ikon}
+                  </div>
+                  <div className="flex-1">{spørsmål.spørsmål}</div>
+                </HStack>
+              </ExpansionCard.Title>
+            </ExpansionCard.Header>
+            <ExpansionCard.Content>{spørsmål.svar}</ExpansionCard.Content>
+          </ExpansionCard>
+        ))}
+      </VStack>
       <HStack gap="2" justify="center" wrap={true}>
         <Button as="a" href="/min-side-arbeidsgiver" variant="primary">
           Gå til min side – arbeidsgiver
@@ -110,3 +116,114 @@ export const Steg4Kvittering = () => {
     </div>
   );
 };
+
+type OfteStilteSpørsmål = {
+  spørsmål: string;
+  ikon: React.ReactNode;
+  svar: React.ReactNode;
+};
+
+const ofteStilteSpørsmålRefusjon = [
+  {
+    spørsmål: "Når får den ansatte svar på søknaden sin?",
+    ikon: <ClockIcon />,
+    svar: (
+      <BodyLong>
+        <Link href="https://www.nav.no/saksbehandlingstider">
+          Her finner du oversikt over saksbehandlingstiden til NAV.
+        </Link>{" "}
+        Vi tar kontakt hvis vi trenger flere opplysninger, eller hvis
+        saksbehandlingstiden blir lengre enn forventet.
+        <br />
+        Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
+      </BodyLong>
+    ),
+  },
+  {
+    spørsmål: "Når blir refusjon utbetalt?",
+    ikon: <SackKronerIcon />,
+    svar: (
+      <BodyLong>
+        Refusjon utbetales ved hvert månedsskifte, etter at søknaden er
+        behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver har
+        registrert i Altinn.
+        <br />
+        Du får ikke beskjed når søknaden er behandlet, og må derfor ha dialog
+        med den ansatte om status på søknad og utbetaling av refusjon.
+      </BodyLong>
+    ),
+  },
+  {
+    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer i inntekt?",
+    ikon: <DocPencilIcon />,
+    svar: (
+      <BodyLong>
+        Du finner inntektsmeldingen ved å logge inn på Min Side Arbeidsgiver.
+        Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
+      </BodyLong>
+    ),
+  },
+  {
+    spørsmål: "Hvilket informasjon kan arbeidsgiver få?",
+    ikon: <InformationIcon />,
+    svar: (
+      <VStack gap="4">
+        <BodyLong>
+          NAV sender vedtaket til den ansatte, og du må ha dialog med den
+          ansatte om status på søknad og fravær fremover. NAV deler ikke
+          sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
+          et eventuelt avslag må du derfor ha dialog med den ansatte.
+        </BodyLong>
+        <BodyLong>
+          Hvis du har spørsmål om utbetaling av refusjon, kan du{" "}
+          <Link href="https://www.nav.no/arbeidsgiver/kontaktoss">
+            kontakte NAV
+          </Link>
+          for mer informasjon.
+        </BodyLong>
+      </VStack>
+    ),
+  },
+] satisfies OfteStilteSpørsmål[];
+
+const ofteStilteSpørsmålIkkeRefusjon = [
+  {
+    spørsmål: "Når får den ansatte svar på søknaden sin?",
+    ikon: <ClockIcon />,
+    svar: (
+      <BodyLong>
+        <Link href="https://www.nav.no/saksbehandlingstider">
+          Her finner du oversikt over saksbehandlingstiden til NAV.
+        </Link>{" "}
+        Vi tar kontakt hvis vi trenger flere opplysninger, eller hvis
+        saksbehandlingstiden blir lengre enn forventet.
+        <br />
+        Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
+      </BodyLong>
+    ),
+  },
+  {
+    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer i inntekt?",
+    ikon: <DocPencilIcon />,
+    svar: (
+      <BodyLong>
+        Du finner inntektsmeldingen ved å logge inn på Min Side Arbeidsgiver.
+        Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
+      </BodyLong>
+    ),
+  },
+  {
+    spørsmål: "Hvilket informasjon kan arbeidsgiver få?",
+    ikon: <InformationIcon />,
+    svar: (
+      <VStack gap="4">
+        <BodyLong>
+          NAV sender vedtaket til den ansatte, og du må ha dialog med den
+          ansatte om status på søknad og fravær fremover. NAV deler ikke
+          sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
+          et eventuelt avslag må du derfor ha dialog med den ansatte.
+        </BodyLong>
+      </VStack>
+    ),
+  },
+] satisfies OfteStilteSpørsmål[];

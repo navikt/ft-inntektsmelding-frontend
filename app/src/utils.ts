@@ -13,7 +13,7 @@ export function leggTilGenitiv(navn?: string) {
   return `${navn}s`;
 }
 
-export function slåSammenTilFulltNavn({
+export function lagFulltNavn({
   fornavn,
   mellomnavn,
   etternavn,
@@ -22,17 +22,37 @@ export function slåSammenTilFulltNavn({
   mellomnavn?: string;
   etternavn?: string;
 }) {
-  return [fornavn, mellomnavn, etternavn].filter(Boolean).join(" ");
+  return formatNavn([fornavn, mellomnavn, etternavn].filter(Boolean).join(" "));
 }
 
-export function navnMedStorBokstav(navn?: string) {
+export function formatNavn(navn?: string) {
   if (!navn) {
     return navn;
   }
   return navn
-    .split("-")
-    .map((old) => capitalize(old))
-    .join("-");
+    .toLowerCase()
+    .split(" ")
+    .map((del) =>
+      del
+        .split("-")
+        .map((delnavn) => capitalize(delnavn))
+        .join("-"),
+    )
+    .join(" ");
+}
+
+export function formatTelefonnummer(telefonnummer: string): string {
+  const tegn = telefonnummer.replaceAll(/\D/g, "");
+
+  if (tegn.length !== 8) {
+    return telefonnummer;
+  }
+
+  if (["4", "8", "9"].includes(tegn[0])) {
+    return `${tegn.slice(0, 3)} ${tegn.slice(3, 5)} ${tegn.slice(5)}`;
+  }
+
+  return `${tegn.slice(0, 2)} ${tegn.slice(2, 4)} ${tegn.slice(4, 6)} ${tegn.slice(6)}`;
 }
 
 export function capitalizeSetning(setning?: string) {
@@ -170,3 +190,13 @@ export const formatStrengTilTall = (tall: string | number) => {
   const tallMedRiktigMinusTegn = tallMedPunktumDesimaltegn.replace("−", "-");
   return Number(tallMedRiktigMinusTegn);
 };
+
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[åæ]/g, "a")
+    .replaceAll(/[öø]/g, "o")
+    .replaceAll(/[^\d\sa-z-]/g, "")
+    .replaceAll(/[\s-]+/g, "-");
+}

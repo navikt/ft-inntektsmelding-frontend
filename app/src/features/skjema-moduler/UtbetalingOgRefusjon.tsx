@@ -23,8 +23,8 @@ import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
-import { useOpplysninger } from "~/features/inntektsmelding/OpplysningerContext";
 import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
+import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
 

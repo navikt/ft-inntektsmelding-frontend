@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { navnMedStorBokstav } from "~/utils.ts";
+import { formatNavn } from "~/utils.ts";
 
 export const YtelsetypeSchema = z.enum([
   "FORELDREPENGER",
@@ -112,12 +112,12 @@ export const opplysningerSchema = z.object({
   person: z.object({
     aktørId: z.string(),
     fødselsnummer: z.string(),
-    fornavn: z.string().transform(navnMedStorBokstav),
+    fornavn: z.string().transform(formatNavn),
     mellomnavn: z
       .string()
-      .transform((mellomnavn) => navnMedStorBokstav(mellomnavn || ""))
+      .transform((mellomnavn) => formatNavn(mellomnavn || ""))
       .optional(),
-    etternavn: z.string().transform(navnMedStorBokstav),
+    etternavn: z.string().transform(formatNavn),
   }),
   innsender: z.object({
     fornavn: z.string(),

@@ -6,13 +6,13 @@ import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSk
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
-import { OpplysningerProvider } from "./OpplysningerContext";
+import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 
 export const InntektsmeldingRootLayout = () => {
   const { id } = route.useParams();
-  const { opplysninger } = route.useLoaderData();
+  const opplysninger = useOpplysninger();
   const location = useLocation();
 
   useEffect(() => {
@@ -29,23 +29,24 @@ export const InntektsmeldingRootLayout = () => {
   }, [id]);
 
   return (
-    <OpplysningerProvider opplysninger={opplysninger}>
-      <InntektsmeldingSkjemaStateProvider>
-        <RotLayout
-          tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
-          undertittel={
-            <div className="flex gap-3">
-              <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
-              <span aria-hidden="true">|</span>
-              <span className="text-nowrap">
-                Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
-              </span>
-            </div>
-          }
-        >
-          <Outlet />
-        </RotLayout>
-      </InntektsmeldingSkjemaStateProvider>
-    </OpplysningerProvider>
+    <InntektsmeldingSkjemaStateProvider>
+      <RotLayout
+        background={
+          location.pathname.includes("kvittering") ? "bg-default" : "bg-subtle"
+        }
+        tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
+        undertittel={
+          <div className="flex gap-3">
+            <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
+            <span aria-hidden="true">|</span>
+            <span className="text-nowrap">
+              Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
+            </span>
+          </div>
+        }
+      >
+        <Outlet />
+      </RotLayout>
+    </InntektsmeldingSkjemaStateProvider>
   );
 };

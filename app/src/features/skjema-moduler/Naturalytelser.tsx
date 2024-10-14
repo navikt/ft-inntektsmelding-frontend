@@ -161,7 +161,7 @@ function MisterNaturalytelser() {
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
             {/*// TODO: items-end gjør at brekkende legend blir align. items-start gir alignment ved valideringsfeil.... Hvordan få begge pene?*/}
-            <div className="grid grid-cols-[1fr_min-content_140px_max-content] gap-4 items-end">
+            <div className="flex gap-4 flex-col items-start md:items-end md:grid md:grid-cols-[1fr_min-content_140px_max-content]">
               <Select
                 label="Naturalytelse som faller bort"
                 {...register(`naturalytelserSomMistes.${index}.navn` as const, {
@@ -204,7 +204,7 @@ function MisterNaturalytelser() {
                 </Button>
               )}
               <RadioGroup
-                className="col-span-4"
+                className="md:col-span-4"
                 error={
                   formState.errors.naturalytelserSomMistes?.[index]?.inkluderTom
                     ?.message
