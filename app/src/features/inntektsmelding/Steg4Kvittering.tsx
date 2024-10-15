@@ -163,7 +163,7 @@ const ofteStilteSpørsmålRefusjon = [
     ),
   },
   {
-    spørsmål: "Hvilket informasjon kan arbeidsgiver få?",
+    spørsmål: "Hvilken informasjon kan arbeidsgiver få?",
     ikon: <InformationIcon />,
     svar: (
       <VStack gap="4">
@@ -211,7 +211,7 @@ const ofteStilteSpørsmålIkkeRefusjon = [
     ),
   },
   {
-    spørsmål: "Hvilket informasjon kan arbeidsgiver få?",
+    spørsmål: "Hvilken informasjon kan arbeidsgiver få?",
     ikon: <InformationIcon />,
     svar: (
       <VStack gap="4">
