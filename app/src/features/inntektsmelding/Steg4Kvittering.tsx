@@ -132,8 +132,7 @@ const ofteStilteSpørsmålRefusjon = [
         <Link href="https://www.nav.no/saksbehandlingstider">
           Her finner du oversikt over saksbehandlingstiden til NAV.
         </Link>{" "}
-        Vi tar kontakt hvis vi trenger flere opplysninger, eller hvis
-        saksbehandlingstiden blir lengre enn forventet.
+        Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
         Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
       </BodyLong>
@@ -154,7 +153,7 @@ const ofteStilteSpørsmålRefusjon = [
     ),
   },
   {
-    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer i inntekt?",
+    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer?",
     ikon: <DocPencilIcon />,
     svar: (
       <BodyLong>
@@ -178,7 +177,7 @@ const ofteStilteSpørsmålRefusjon = [
           Hvis du har spørsmål om utbetaling av refusjon, kan du{" "}
           <Link href="https://www.nav.no/arbeidsgiver/kontaktoss">
             kontakte NAV
-          </Link>
+          </Link>{" "}
           for mer informasjon.
         </BodyLong>
       </VStack>
@@ -195,15 +194,14 @@ const ofteStilteSpørsmålIkkeRefusjon = [
         <Link href="https://www.nav.no/saksbehandlingstider">
           Her finner du oversikt over saksbehandlingstiden til NAV.
         </Link>{" "}
-        Vi tar kontakt hvis vi trenger flere opplysninger, eller hvis
-        saksbehandlingstiden blir lengre enn forventet.
+        Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
         Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
       </BodyLong>
     ),
   },
   {
-    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer i inntekt?",
+    spørsmål: "Hvordan skal arbeidsgiver melde fra om endringer?",
     ikon: <DocPencilIcon />,
     svar: (
       <BodyLong>
