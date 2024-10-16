@@ -215,9 +215,8 @@ function Ytelsesperiode() {
           inntektsmeldingen. <br />
           <br />
           Hvis du er usikker på om dette er riktig dato for første fraværsdag,
-          må du kontakte den ansatte før du sender inntektsmeldingen. Hvis den
-          ansatte endrer søknadsperioden, vil du få en ny oppgave med riktig
-          dato for første fraværsdag.
+          må du kontakte den ansatte for avklaring. Du kan likevel fortsette med
+          innsending av denne inntektsmeldingen.
         </>
       </HjelpetekstReadMore>
     </VStack>
