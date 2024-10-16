@@ -1,7 +1,7 @@
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import { ÅrsaksTypeSchema, NaturalytelseTypeSchema } from "~/types/api-models";
+import { NaturalytelseTypeSchema } from "~/types/api-models";
 import { beløpSchema } from "~/utils";
 
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
@@ -35,7 +35,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   inntekt: beløpSchema.optional(),
   inntektEndringsÅrsak: z
     .object({
-      årsak: ÅrsaksTypeSchema,
+      årsak: z.string().optional(),
       korrigertInntekt: beløpSchema,
       fom: z.string().optional(),
       tom: z.string().optional(),

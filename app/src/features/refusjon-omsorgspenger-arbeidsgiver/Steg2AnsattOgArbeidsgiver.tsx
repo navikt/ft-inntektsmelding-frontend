@@ -60,10 +60,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             <TextField
               className="flex-1"
               label="Ansattes fødselsnummer (11 siffer)"
-              name="ansattesFødselsnummer"
-              onChange={(e) => {
-                setFødselsnummer(e.target.value);
-              }}
+              {...register("ansattesFødselsnummer", {
+                required: "Du må fylle ut fødselsnummeret til den ansatte",
+              })}
+              error={formState.errors.ansattesFødselsnummer?.message}
             />
             <div className="flex-1">
               <Label>Navn</Label>
