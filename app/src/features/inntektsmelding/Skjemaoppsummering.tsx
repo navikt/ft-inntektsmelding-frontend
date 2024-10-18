@@ -141,8 +141,7 @@ export const Skjemaoppsummering = ({
         <FormSummary.Answers>
           <FormSummary.Answer>
             <FormSummary.Label>
-              Har {opplysninger.person.fornavn} naturalytelser som faller bort
-              ved fraværet?
+              Har den ansatte naturalytelser som faller bort ved fraværet?
             </FormSummary.Label>
             <FormSummary.Value>
               {skjemaState.misterNaturalytelser ? "Ja" : "Nei"}
