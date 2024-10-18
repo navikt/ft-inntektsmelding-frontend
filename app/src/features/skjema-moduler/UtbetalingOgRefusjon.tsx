@@ -44,7 +44,7 @@ export function UtbetalingOgRefusjon() {
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
-  console.log(watch());
+
   const korrigertInntekt = watch("korrigertInntekt");
   useEffect(() => {
     if (korrigertInntekt) {
@@ -139,7 +139,6 @@ function LikRefusjon() {
   const inntekt = watch("inntekt");
 
   const maksRefusjonsBeløp = korrigertInntekt ?? inntekt;
-  console.log("MAKS", maksRefusjonsBeløp);
 
   return (
     <>
