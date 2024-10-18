@@ -6,6 +6,7 @@ import { formatStrengTilTall } from "~/utils.ts";
 type FormattertTallTextFieldProps = TextFieldProps & {
   name: string;
   min?: number;
+  max?: number;
   required?: boolean;
 };
 
@@ -13,6 +14,7 @@ type FormattertTallTextFieldProps = TextFieldProps & {
 export const FormattertTallTextField = ({
   name,
   min,
+  max,
   required,
   ...rest
 }: FormattertTallTextFieldProps) => {
@@ -29,6 +31,11 @@ export const FormattertTallTextField = ({
         if (asNumber < (min ?? -Infinity)) {
           return `Beløpet må være ${min} eller høyere`;
         }
+
+        if (asNumber > (max ?? Infinity)) {
+          return `Beløpet må være ${max} eller lavere`;
+        }
+
         return true;
       },
     },
