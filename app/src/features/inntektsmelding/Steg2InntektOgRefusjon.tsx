@@ -1,6 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import { BodyLong, Button, Heading, VStack } from "@navikt/ds-react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
@@ -63,6 +63,10 @@ export function Steg2InntektOgRefusjon() {
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
+
+  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
+  const harEksisterendeInntektsmeldinger =
+    eksisterendeInntektsmeldinger.length > 0;
 
   const gjennomsnittInntektFraAOrdning = gjennomsnittInntekt(
     opplysninger.inntekter,
@@ -157,7 +161,10 @@ export function Steg2InntektOgRefusjon() {
           </Heading>
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode />
-          <Inntekt opplysninger={opplysninger} />
+          <Inntekt
+            harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
+            opplysninger={opplysninger}
+          />
           <UtbetalingOgRefusjon />
           <Naturalytelser />
           <div className="flex gap-4 justify-center">

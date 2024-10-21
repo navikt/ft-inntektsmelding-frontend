@@ -19,7 +19,6 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
-import { useLoaderData } from "@tanstack/react-router";
 import clsx from "clsx";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -48,8 +47,12 @@ import { useDisclosure } from "../useDisclosure";
 
 type InntektProps = {
   opplysninger: OpplysningerDto;
+  harEksisterendeInntektsmeldinger: boolean;
 };
-export function Inntekt({ opplysninger }: InntektProps) {
+export function Inntekt({
+  opplysninger,
+  harEksisterendeInntektsmeldinger,
+}: InntektProps) {
   const { startdatoPermisjon, person, inntekter } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
@@ -107,7 +110,10 @@ export function Inntekt({ opplysninger }: InntektProps) {
         </BodyShort>
       </VStack>
       {isOpen ? (
-        <EndreMånedslønn onClose={onClose} />
+        <EndreMånedslønn
+          harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
+          onClose={onClose}
+        />
       ) : (
         <Button
           className="w-max"
@@ -232,8 +238,12 @@ export const endringsårsak = [
 
 type EndreMånedslønnProps = {
   onClose: () => void;
+  harEksisterendeInntektsmeldinger: boolean;
 };
-const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
+const EndreMånedslønn = ({
+  onClose,
+  harEksisterendeInntektsmeldinger,
+}: EndreMånedslønnProps) => {
   const { unregister } = useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
@@ -260,7 +270,9 @@ const EndreMånedslønn = ({ onClose }: EndreMånedslønnProps) => {
           Tilbakestill
         </Button>
       </div>
-      <Endringsårsaker />
+      <Endringsårsaker
+        harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
+      />
     </>
   );
 };
@@ -272,9 +284,12 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
   årsak: "" as const,
 };
 
-function Endringsårsaker() {
-  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
-
+type EndringsårsakerProps = {
+  harEksisterendeInntektsmeldinger: boolean;
+};
+function Endringsårsaker({
+  harEksisterendeInntektsmeldinger,
+}: EndringsårsakerProps) {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
@@ -283,12 +298,11 @@ function Endringsårsaker() {
   });
 
   // Tariffendring skal kun være tilgjengelig dersom man endrer en IM, ikke for førstegangs-innsendelse
-  const muligeÅrsakerValg =
-    eksisterendeInntektsmeldinger.length > 0
-      ? Object.values(endringsårsak)
-      : Object.values(endringsårsak).filter(
-          (årsak) => årsak.value !== "TARIFFENDRING",
-        );
+  const muligeÅrsakerValg = harEksisterendeInntektsmeldinger
+    ? Object.values(endringsårsak)
+    : Object.values(endringsårsak).filter(
+        (årsak) => årsak.value !== "TARIFFENDRING",
+      );
 
   return (
     <VStack gap="4">
