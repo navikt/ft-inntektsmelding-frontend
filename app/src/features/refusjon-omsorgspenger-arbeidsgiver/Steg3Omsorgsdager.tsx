@@ -126,12 +126,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 };
 
 const FraværHeleDagen = () => {
-  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
-  const { control } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { control, watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
   });
+
+  const årForRefusjon = Number(watch("årForRefusjon"));
+  const iDag = new Date();
+  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
+  const maxDato = årForRefusjon
+    ? new Date(årForRefusjon, iDag.getMonth(), iDag.getDate())
+    : new Date();
+  const minDato = årForRefusjon
+    ? new Date(årForRefusjon, 0, 1)
+    : førsteDagAvIfjor;
 
   return (
     <VStack gap="4">
@@ -141,8 +150,8 @@ const FraværHeleDagen = () => {
       {fields.map((periode, index) => (
         <HStack gap="4" key={periode.id}>
           <DateRangePickerWrapped
-            maxDato={new Date()}
-            minDato={førsteDagAvIfjor}
+            maxDato={maxDato}
+            minDato={minDato}
             name={`fraværHeleDager.${index}`}
             rules={{
               fom: {
