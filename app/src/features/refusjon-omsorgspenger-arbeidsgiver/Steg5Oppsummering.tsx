@@ -184,8 +184,9 @@ const OppsummeringOmsorgsdager = () => {
               <List>
                 {fraværDelerAvDagen?.map((fravær, index) => (
                   <ListItem key={index}>
-                    {fravær.dato}: {fravær.antallTimer}{" "}
-                    {fravær.antallTimer === 1 ? "time" : "timer"}
+                    {fravær.dato}: {fravær.timerFravær}{" "}
+                    {fravær.timerFravær === 1 ? "time" : "timer"} (
+                    {fravær.normalArbeidstid} timer normal arbeidstid)
                   </ListItem>
                 ))}
               </List>
