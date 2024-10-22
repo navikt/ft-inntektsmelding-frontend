@@ -56,7 +56,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
       <Fremgangsindikator aktivtSteg={2} />
       <form onSubmit={onSubmit}>
         <Informasjonsseksjon tittel="Den ansatte">
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-col md:flex-row">
             <TextField
               className="flex-1"
               label="Ansattes fødselsnummer (11 siffer)"
@@ -124,25 +124,28 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           </Informasjonsseksjon>
         )}
         <Informasjonsseksjon kilde="Fra Altinn" tittel="Kontaktinformasjon">
-          <div className="flex gap-4 flex-wrap">
-            <TextField
-              className="flex-1"
-              // TODO: Legg til default navn
-              label="Navn"
-              {...register("kontaktperson.navn", {
-                required: "Du må fylle ut navnet til kontaktpersonen",
-              })}
-              error={formState.errors.kontaktperson?.navn?.message}
-            />
-            <TextField
-              className="flex-1"
-              label="Telefonnummer"
-              type="tel"
-              {...register("kontaktperson.telefonnummer", {
-                required: "Du må fylle ut telefonnummeret til kontaktpersonen",
-              })}
-              error={formState.errors.kontaktperson?.telefonnummer?.message}
-            />
+          <div className="flex gap-4 flex-col md:flex-row">
+            <div className="flex-1">
+              <TextField
+                // TODO: Legg til default navn
+                label="Navn"
+                {...register("kontaktperson.navn", {
+                  required: "Du må fylle ut navnet til kontaktpersonen",
+                })}
+                error={formState.errors.kontaktperson?.navn?.message}
+              />
+            </div>
+            <div className="flex-1">
+              <TextField
+                label="Telefonnummer"
+                type="tel"
+                {...register("kontaktperson.telefonnummer", {
+                  required:
+                    "Du må fylle ut telefonnummeret til kontaktpersonen",
+                })}
+                error={formState.errors.kontaktperson?.telefonnummer?.message}
+              />
+            </div>
           </div>
           <Alert variant="info">
             <Heading level="3" size="small">

@@ -8,19 +8,18 @@ import {
   Alert,
   BodyLong,
   Button,
-  DatePicker,
   GuidePanel,
   Heading,
   HStack,
   Radio,
   RadioGroup,
   TextField,
-  useDatepicker,
   VStack,
 } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useFieldArray } from "react-hook-form";
 
+import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { RotLayout } from "../rot-layout/RotLayout";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -127,12 +126,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 };
 
 const FraværHeleDagen = () => {
-  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
-  const { control } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { control, watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
   });
+
+  const årForRefusjon = Number(watch("årForRefusjon"));
+  const iDag = new Date();
+  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
+  const maxDato = årForRefusjon
+    ? new Date(årForRefusjon, iDag.getMonth(), iDag.getDate())
+    : new Date();
+  const minDato = årForRefusjon
+    ? new Date(årForRefusjon, 0, 1)
+    : førsteDagAvIfjor;
 
   return (
     <VStack gap="4">
@@ -142,12 +150,27 @@ const FraværHeleDagen = () => {
       {fields.map((periode, index) => (
         <HStack gap="4" key={periode.id}>
           <DateRangePickerWrapped
-            maxDato={new Date()}
-            minDato={førsteDagAvIfjor}
+            maxDato={maxDato}
+            minDato={minDato}
             name={`fraværHeleDager.${index}`}
             rules={{
-              fom: { required: "Du må oppgi fra og med dato" },
-              tom: { required: "Du må oppgi til og med dato" },
+              fom: {
+                validate: (value) => {
+                  if (!value) {
+                    return "Du må oppgi fra og med dato";
+                  }
+                },
+              },
+              tom: {
+                validate: (value) => {
+                  if (!value) {
+                    return "Du må oppgi til og med dato";
+                  }
+                  if (periode.fom && value < periode.fom) {
+                    return "Til og med dato må være etter fra og med dato";
+                  }
+                },
+              },
             }}
           />
           <div>
@@ -183,13 +206,8 @@ const FraværHeleDagen = () => {
 };
 
 const FraværDelerAvDagen = () => {
-  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
-  const { control } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
-  const { datepickerProps, inputProps } = useDatepicker({
-    fromDate: førsteDagAvIfjor,
-    toDate: new Date(),
-    onDateChange: () => {},
-  });
+  const { control, register, formState } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværDelerAvDagen",
@@ -200,27 +218,53 @@ const FraværDelerAvDagen = () => {
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
       {fields.map((periode, index) => (
-        <DatePicker {...datepickerProps} key={periode.id}>
-          <HStack align="center" gap="4" justify="center" wrap>
-            <DatePicker.Input {...inputProps} label="Dato" />
-            <TextField label="Timer fravær" />
-            <div>
-              <Button
-                aria-label="Fjern periode"
-                className="mt-8"
-                icon={<TrashIcon />}
-                onClick={() => {
-                  remove(index);
-                }}
-                size="small"
-                type="button"
-                variant="tertiary"
-              >
-                Slett
-              </Button>
-            </div>
-          </HStack>
-        </DatePicker>
+        <HStack align="center" gap="4" key={periode.id} wrap>
+          <DatePickerWrapped
+            key={periode.id}
+            label="Dato"
+            name={`fraværDelerAvDagen.${index}.dato`}
+            rules={{
+              required: "Du må oppgi dato",
+            }}
+          />
+          <TextField
+            label="Timer fravær"
+            {...register(`fraværDelerAvDagen.${index}.antallTimer`, {
+              validate: (value) => {
+                if (!value) {
+                  return "Du må oppgi antall timer";
+                }
+                if (Number.isNaN(Number(value))) {
+                  return "Antall timer må være et tall";
+                }
+                if (value <= 0) {
+                  return "Antall timer må være høyere enn 0";
+                }
+                if (value > 24) {
+                  return "Antall timer kan ikke være mer enn 24";
+                }
+              },
+            })}
+            error={
+              formState.errors.fraværDelerAvDagen?.[index]?.antallTimer?.message
+            }
+          />
+          <div>
+            <Button
+              aria-label="Fjern periode"
+              className="mt-8"
+              icon={<TrashIcon />}
+              onClick={() => {
+                remove(index);
+              }}
+              size="small"
+              type="button"
+              variant="tertiary"
+            >
+              Slett
+            </Button>
+          </div>
+        </HStack>
       ))}
       <div>
         <Button

@@ -45,7 +45,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
       </GuidePanel>
       <form onSubmit={onSubmit}>
         <VStack gap="4">
-          <Inntekt opplysninger={dummyOpplysninger} />
+          <Inntekt
+            harEksisterendeInntektsmeldinger={false}
+            opplysninger={dummyOpplysninger}
+          />
           <div className="flex gap-4">
             <Button
               as={Link}
