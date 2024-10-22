@@ -10,6 +10,7 @@ import {
   Button,
   GuidePanel,
   Heading,
+  HGrid,
   HStack,
   Radio,
   RadioGroup,
@@ -206,7 +207,7 @@ const FraværHeleDagen = () => {
 };
 
 const FraværDelerAvDagen = () => {
-  const { control, register, formState } =
+  const { control, register, formState, watch } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -218,7 +219,7 @@ const FraværDelerAvDagen = () => {
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
       {fields.map((periode, index) => (
-        <HStack align="center" gap="4" key={periode.id} wrap>
+        <HGrid columns={{ xs: 1, md: 4 }} gap="4" key={periode.id}>
           <DatePickerWrapped
             key={periode.id}
             label="Dato"
@@ -266,9 +267,14 @@ const FraværDelerAvDagen = () => {
                 if (value > 24) {
                   return "Antall timer kan ikke være mer enn 24";
                 }
+
+                const normalArbeidstid = watch(
+                  `fraværDelerAvDagen.${index}.normalArbeidstid`,
+                );
+
                 if (
-                  periode.normalArbeidstid &&
-                  Number(value) > Number(periode.normalArbeidstid)
+                  normalArbeidstid &&
+                  Number(value) > Number(normalArbeidstid)
                 ) {
                   return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
                 }
@@ -293,7 +299,7 @@ const FraværDelerAvDagen = () => {
               Slett
             </Button>
           </div>
-        </HStack>
+        </HGrid>
       ))}
       <div>
         <Button
