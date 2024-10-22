@@ -28,7 +28,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
     .array(
       z.object({
         dato: z.string().optional(),
-        antallTimer: z.number().optional(),
+        normalArbeidstid: z.number().optional(),
+        timerFravær: z.number().optional(),
       }),
     )
     .optional(),
