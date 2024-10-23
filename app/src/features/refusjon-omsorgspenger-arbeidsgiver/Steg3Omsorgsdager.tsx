@@ -24,7 +24,7 @@ import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { RotLayout } from "../rot-layout/RotLayout";
 import { useDocumentTitle } from "../useDocumentTitle";
-import { OmsorgsPengerFremgangsindikator } from "./OmsorgsPengerFremgangsindikator.tsx";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
@@ -57,7 +57,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       <Heading level="1" size="large">
         Omsorgsdager dere søker utbetaling for
       </Heading>
-      <OmsorgsPengerFremgangsindikator aktivtSteg={3} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={3} />
       <GuidePanel>
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig

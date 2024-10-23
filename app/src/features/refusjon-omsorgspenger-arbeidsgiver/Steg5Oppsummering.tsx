@@ -16,7 +16,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { OmsorgsPengerFremgangsindikator } from "./OmsorgsPengerFremgangsindikator.tsx";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
@@ -29,7 +29,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       <Heading level="1" size="large">
         Oppsummering
       </Heading>
-      <OmsorgsPengerFremgangsindikator aktivtSteg={5} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={5} />
       <VStack gap="4">
         <OppsummeringArbeidsgiverOgAnsatt />
         <OppsummeringOmsorgsdager />

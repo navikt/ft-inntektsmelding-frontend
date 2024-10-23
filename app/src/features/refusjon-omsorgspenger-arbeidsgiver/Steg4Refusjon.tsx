@@ -13,7 +13,7 @@ import { OpplysningerDto } from "~/types/api-models";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
-import { OmsorgsPengerFremgangsindikator } from "./OmsorgsPengerFremgangsindikator.tsx";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
@@ -35,7 +35,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
       <Heading level="1" size="large">
         Beregnet månedslønn for refusjon
       </Heading>
-      <OmsorgsPengerFremgangsindikator aktivtSteg={4} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={4} />
       <GuidePanel>
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig

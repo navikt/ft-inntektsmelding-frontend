@@ -3,7 +3,7 @@ import { FormProgress } from "@navikt/ds-react";
 type FremgangsindikatorProps = {
   aktivtSteg: 1 | 2 | 3 | 4 | 5;
 };
-export const OmsorgsPengerFremgangsindikator = ({
+export const OmsorgspengerFremgangsindikator = ({
   aktivtSteg,
 }: FremgangsindikatorProps) => {
   return (
