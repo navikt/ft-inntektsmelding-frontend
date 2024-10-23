@@ -218,7 +218,7 @@ function Ytelsesperiode() {
           Dette er den første dagen den ansatte har søkt om{" "}
           {formatYtelsesnavn(ytelse)}. Det betyr at NAV trenger opplysninger om
           den ansattes inntekt på denne datoen. Vi baserer oss på datoen som er
-          oppgitt i søknaden, du kan derfor ikke endre denne i
+          oppgitt i søknaden, og du kan derfor ikke endre denne i
           inntektsmeldingen. <br />
           <br />
           Hvis du er usikker på om dette er riktig dato for første fraværsdag,
