@@ -83,7 +83,13 @@ export const Steg1DineOpplysninger = () => {
             <HGrid align="start" columns={{ sm: 1, md: 2 }} gap="5">
               <TextField
                 className="w-full"
-                {...register("navn", { required: "Navn er påkrevd" })}
+                {...register("navn", {
+                  required: "Navn er påkrevd",
+                  maxLength: {
+                    value: 100,
+                    message: "Navn kan ikke være lenger enn 100 tegn",
+                  },
+                })}
                 autoComplete="name"
                 error={formState.errors.navn?.message}
                 label="Navn"

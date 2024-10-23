@@ -131,6 +131,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                 label="Navn"
                 {...register("kontaktperson.navn", {
                   required: "Du må fylle ut navnet til kontaktpersonen",
+                  maxLength: {
+                    value: 100,
+                    message: "Navn kan ikke være lenger enn 100 tegn",
+                  },
                 })}
                 error={formState.errors.kontaktperson?.navn?.message}
               />

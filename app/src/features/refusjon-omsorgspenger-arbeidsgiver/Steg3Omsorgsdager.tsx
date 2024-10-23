@@ -10,6 +10,7 @@ import {
   Button,
   GuidePanel,
   Heading,
+  HGrid,
   HStack,
   Radio,
   RadioGroup,
@@ -206,7 +207,7 @@ const FraværHeleDagen = () => {
 };
 
 const FraværDelerAvDagen = () => {
-  const { control, register, formState } =
+  const { control, register, formState, watch } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -218,7 +219,7 @@ const FraværDelerAvDagen = () => {
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
       {fields.map((periode, index) => (
-        <HStack align="center" gap="4" key={periode.id} wrap>
+        <HGrid columns={{ xs: 1, md: 4 }} gap="4" key={periode.id}>
           <DatePickerWrapped
             key={periode.id}
             label="Dato"
@@ -228,8 +229,8 @@ const FraværDelerAvDagen = () => {
             }}
           />
           <TextField
-            label="Timer fravær"
-            {...register(`fraværDelerAvDagen.${index}.antallTimer`, {
+            label="Normal arbeidstid"
+            {...register(`fraværDelerAvDagen.${index}.normalArbeidstid`, {
               validate: (value) => {
                 if (!value) {
                   return "Du må oppgi antall timer";
@@ -246,7 +247,41 @@ const FraværDelerAvDagen = () => {
               },
             })}
             error={
-              formState.errors.fraværDelerAvDagen?.[index]?.antallTimer?.message
+              formState.errors.fraværDelerAvDagen?.[index]?.normalArbeidstid
+                ?.message
+            }
+          />
+          <TextField
+            label="Timer fravær"
+            {...register(`fraværDelerAvDagen.${index}.timerFravær`, {
+              validate: (value) => {
+                if (!value) {
+                  return "Du må oppgi antall timer";
+                }
+                if (Number.isNaN(Number(value))) {
+                  return "Antall timer må være et tall";
+                }
+                if (value <= 0) {
+                  return "Antall timer må være høyere enn 0";
+                }
+                if (value > 24) {
+                  return "Antall timer kan ikke være mer enn 24";
+                }
+
+                const normalArbeidstid = watch(
+                  `fraværDelerAvDagen.${index}.normalArbeidstid`,
+                );
+
+                if (
+                  normalArbeidstid &&
+                  Number(value) > Number(normalArbeidstid)
+                ) {
+                  return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
+                }
+              },
+            })}
+            error={
+              formState.errors.fraværDelerAvDagen?.[index]?.timerFravær?.message
             }
           />
           <div>
@@ -264,7 +299,7 @@ const FraværDelerAvDagen = () => {
               Slett
             </Button>
           </div>
-        </HStack>
+        </HGrid>
       ))}
       <div>
         <Button
