@@ -132,14 +132,14 @@ export function Inntekt({
         </Heading>
         <BodyLong>
           Har den ansatte i løpet av de siste tre månedene fått varig
-          lønnsendring, stillingsprosent eller hatt lovlig fravær som påvirker
-          lønnsutbetalingen, skal månedslønnen korrigeres. Overtid skal ikke
-          inkluderes. Beregningen skal gjøres etter{" "}
+          lønnsendring, endret stillingsprosent eller hatt lovlig fravær som
+          påvirker lønnsutbetalingen, skal månedslønnen korrigeres. Overtid skal
+          ikke inkluderes. Beregningen skal gjøres etter{" "}
           <Link
             href="https://lovdata.no/nav/folketrygdloven/kap8/%C2%A78-28"
             target="_blank"
           >
-            folketrygdloven §8-28.
+            folketrygdloven §&nbsp;8-28.
           </Link>
         </BodyLong>
       </HjelpetekstAlert>
