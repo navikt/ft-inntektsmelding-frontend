@@ -137,6 +137,7 @@ export const opplysningerSchema = z.object({
       arbeidsgiverIdent: z.string(),
     }),
   ),
+  oppgaveStatus: z.enum(["UTGÅTT", "AKTIV"]),
   startdatoPermisjon: z.string(),
   ytelse: z.enum([
     "FORELDREPENGER",
