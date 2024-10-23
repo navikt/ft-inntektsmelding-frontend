@@ -4,6 +4,7 @@ import { Link, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,
@@ -20,7 +21,6 @@ import {
   InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "../InntektsmeldingSkjemaState";
-import { Fremgangsindikator } from "../refusjon-omsorgspenger-arbeidsgiver/Fremgangsindikator";
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import {
   NATURALYTELSE_SOM_MISTES_TEMPLATE,
