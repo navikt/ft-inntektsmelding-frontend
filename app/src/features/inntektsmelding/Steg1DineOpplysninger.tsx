@@ -85,7 +85,7 @@ export const Steg1DineOpplysninger = () => {
                   required: "Navn er påkrevd",
                   maxLength: {
                     value: 100,
-                    message: "Navn kan ikke være lenger enn 100 tegn"
+                    message: "Navn kan ikke være lenger enn 100 tegn",
                   },
                 })}
                 autoComplete="name"
