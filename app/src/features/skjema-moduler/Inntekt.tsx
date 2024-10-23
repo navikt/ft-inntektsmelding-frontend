@@ -162,7 +162,7 @@ export function Inntekt({
             <List>
               <ListItem>
                 Hvis den ansatte ikke har vært tilbake på jobb, skal du oppgi
-                0,- i inntekt. NAV vurderer da søknaden ut fra opplysninger i
+                0,- i inntekt. Nav vurderer da søknaden ut fra opplysninger i
                 A-meldingen.
               </ListItem>
               <ListItem>
@@ -204,10 +204,10 @@ export function Inntekt({
         </HjelpetekstReadMore>
         <HjelpetekstReadMore header="Jobber den ansatte skift eller har timelønn?">
           <BodyLong>
-            Hvis den ansatte jobber skift eller har timelønn, skal fastsettes
-            etter de samme reglene som arbeidstakere med fastlønn. Det betyr at
-            du som hovedregel skal bruke et gjennomsnitt av inntekten fra de
-            siste tre kalendermånedene.
+            Hvis den ansatte jobber skift eller har timelønn, skal inntekten
+            fastsettes etter de samme reglene som arbeidstakere med fastlønn.
+            Det betyr at du som hovedregel skal bruke et gjennomsnitt av
+            inntekten fra de siste tre kalendermånedene.
           </BodyLong>
         </HjelpetekstReadMore>
       </div>

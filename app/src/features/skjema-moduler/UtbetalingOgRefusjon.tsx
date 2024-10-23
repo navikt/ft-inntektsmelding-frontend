@@ -69,8 +69,8 @@ export function UtbetalingOgRefusjon() {
               ytelsesnavn: opplysninger.ytelse,
               form: "ubestemt",
             })}{" "}
-            direkte fra NAV. Dette kalles ofte å forskuttere lønn, som man
-            krever refundert fra NAV. Vi utbetaler da{" "}
+            direkte fra Nav. Dette kalles ofte å forskuttere lønn, som man
+            krever refundert fra Nav. Vi utbetaler da{" "}
             {formatStønadsnavn({
               ytelsesnavn: opplysninger.ytelse,
               form: "bestemt",
@@ -121,7 +121,7 @@ function Over6GAlert() {
   if (erRefusjonOver6G) {
     return (
       <Alert variant="info">
-        NAV utbetaler opptil 6G av årslønnen. Du skal likevel føre opp den
+        Nav utbetaler opptil 6G av årslønnen. Du skal likevel føre opp den
         lønnen dere utbetaler til den ansatte i sin helhet.
       </Alert>
     );
@@ -213,10 +213,10 @@ function VarierendeRefusjon() {
       </VStack>
       <VStack gap="2">
         <DelvisFraværHjelpetekst />
-        <HjelpetekstReadMore header="Hvilke endringer må du informere NAV om?">
+        <HjelpetekstReadMore header="Hvilke endringer må du informere Nav om?">
           <Stack gap="2">
             <BodyLong>
-              Her skal du registrere endringer som påvirker refusjonen fra NAV.
+              Her skal du registrere endringer som påvirker refusjonen fra Nav.
               Dette kan være på grunn av endret stillingsprosent som gjør at
               lønnen dere forskutterer endrer seg i perioden.
             </BodyLong>
@@ -316,8 +316,8 @@ function DelvisFraværHjelpetekst() {
     <HjelpetekstReadMore header="Har den ansatte delvis fravær i perioden?">
       <BodyLong>
         Hvis den ansatte skal kombinere{" "}
-        {formatStønadsnavn({ ytelsesnavn: ytelse, form: "ubestemt" })} fra NAV
-        med arbeid, vil NAV redusere utbetalingen ut fra opplysningene fra den
+        {formatStønadsnavn({ ytelsesnavn: ytelse, form: "ubestemt" })} fra Nav
+        med arbeid, vil Nav redusere utbetalingen ut fra opplysningene fra den
         ansatte. Du oppgir derfor den månedslønnen dere utbetaler til den
         ansatte, uavhengig av hvor mye den ansatte skal jobbe.
       </BodyLong>

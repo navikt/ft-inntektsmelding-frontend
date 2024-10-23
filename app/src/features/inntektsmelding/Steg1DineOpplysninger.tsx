@@ -171,7 +171,7 @@ const Intro = ({ opplysninger }: IntroProps) => {
         </BodyLong>
         <BodyLong>
           Den ansatte har rett til å se sin egen sak, og kan be om å se
-          informasjonen du sender til NAV.
+          informasjonen du sender til Nav.
         </BodyLong>
       </div>
     </GuidePanel>

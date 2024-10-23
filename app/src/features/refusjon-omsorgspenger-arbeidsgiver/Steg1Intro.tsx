@@ -96,7 +96,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               </BodyLong>
               <BodyLong>
                 Hvis den ansatte har vært i jobb i mindre enn 4 uker, kan den
-                ansatte søke om utbetaling direkte fra NAV. Den ansatte må søke
+                ansatte søke om utbetaling direkte fra Nav. Den ansatte må søke
                 om omsorgspenger før dere kan sende inn inntektsmelding. Varsel
                 med oppgave blir tilgjengelig i{" "}
                 <Link href="/saksoversikt">saksoversikten</Link> når den ansatte
