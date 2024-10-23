@@ -55,6 +55,8 @@ export const Steg1DineOpplysninger = () => {
     });
   const navigate = useNavigate();
 
+  throw new Error("dsa");
+
   const onSubmit = handleSubmit((kontaktperson) => {
     setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
     navigate({
