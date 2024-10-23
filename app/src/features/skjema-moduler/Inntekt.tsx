@@ -139,7 +139,7 @@ export function Inntekt({
             href="https://lovdata.no/nav/folketrygdloven/kap8/%C2%A78-28"
             target="_blank"
           >
-            folketrygdloven §8-28.
+            folketrygdloven §&nbsp;8-28.
           </Link>
         </BodyLong>
       </HjelpetekstAlert>
