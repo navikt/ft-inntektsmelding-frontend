@@ -130,7 +130,7 @@ const ofteStilteSpørsmålRefusjon = [
     svar: (
       <BodyLong>
         <Link href="https://www.nav.no/saksbehandlingstider">
-          Her finner du oversikt over saksbehandlingstiden til NAV.
+          Her finner du oversikt over saksbehandlingstiden til Nav.
         </Link>{" "}
         Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
@@ -168,15 +168,15 @@ const ofteStilteSpørsmålRefusjon = [
     svar: (
       <VStack gap="4">
         <BodyLong>
-          NAV sender vedtaket til den ansatte, og du må ha dialog med den
-          ansatte om status på søknad og fravær fremover. NAV deler ikke
+          Nav sender vedtaket til den ansatte, og du må ha dialog med den
+          ansatte om status på søknad og fravær fremover. Nav deler ikke
           sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
           et eventuelt avslag må du derfor ha dialog med den ansatte.
         </BodyLong>
         <BodyLong>
           Hvis du har spørsmål om utbetaling av refusjon, kan du{" "}
           <Link href="https://www.nav.no/arbeidsgiver/kontaktoss">
-            kontakte NAV
+            kontakte Nav
           </Link>{" "}
           for mer informasjon.
         </BodyLong>
@@ -192,7 +192,7 @@ const ofteStilteSpørsmålIkkeRefusjon = [
     svar: (
       <BodyLong>
         <Link href="https://www.nav.no/saksbehandlingstider">
-          Her finner du oversikt over saksbehandlingstiden til NAV.
+          Her finner du oversikt over saksbehandlingstiden til Nav.
         </Link>{" "}
         Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
@@ -216,8 +216,8 @@ const ofteStilteSpørsmålIkkeRefusjon = [
     svar: (
       <VStack gap="4">
         <BodyLong>
-          NAV sender vedtaket til den ansatte, og du må ha dialog med den
-          ansatte om status på søknad og fravær fremover. NAV deler ikke
+          Nav sender vedtaket til den ansatte, og du må ha dialog med den
+          ansatte om status på søknad og fravær fremover. Nav deler ikke
           sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
           et eventuelt avslag må du derfor ha dialog med den ansatte.
         </BodyLong>

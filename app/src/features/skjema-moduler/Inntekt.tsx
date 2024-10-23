@@ -162,7 +162,7 @@ export function Inntekt({
             <List>
               <ListItem>
                 Hvis den ansatte ikke har vært tilbake på jobb, skal du oppgi
-                0,- i inntekt. NAV vurderer da søknaden ut fra opplysninger i
+                0,- i inntekt. Nav vurderer da søknaden ut fra opplysninger i
                 A-meldingen.
               </ListItem>
               <ListItem>

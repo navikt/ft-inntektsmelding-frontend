@@ -216,7 +216,7 @@ function Ytelsesperiode() {
       <HjelpetekstReadMore header="Hva betyr dette?">
         <>
           Dette er den første dagen den ansatte har søkt om{" "}
-          {formatYtelsesnavn(ytelse)}. Det betyr at NAV trenger opplysninger om
+          {formatYtelsesnavn(ytelse)}. Det betyr at Nav trenger opplysninger om
           den ansattes inntekt på denne datoen. Vi baserer oss på datoen som er
           oppgitt i søknaden, og du kan derfor ikke endre denne i
           inntektsmeldingen. <br />
