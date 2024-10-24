@@ -111,7 +111,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             </Alert>
           )}
           {formState.errors.fraværHeleDager?.message && (
-            <Alert variant="error" aria-live="polite">
+            <Alert aria-live="polite" variant="error">
               <BodyLong>{formState.errors.fraværHeleDager.message}</BodyLong>
             </Alert>
           )}

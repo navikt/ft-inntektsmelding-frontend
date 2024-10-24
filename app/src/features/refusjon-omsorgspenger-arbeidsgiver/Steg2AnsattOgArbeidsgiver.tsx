@@ -54,7 +54,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
         Den ansatte og arbeidsgiver
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={2} />
-      <form onSubmit={onSubmit} className="space-y-4">
+      <form className="space-y-4" onSubmit={onSubmit}>
         <Informasjonsseksjon tittel="Den ansatte">
           <div className="flex gap-4 flex-col md:flex-row">
             <TextField
