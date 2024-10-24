@@ -8,10 +8,6 @@ on:
       - "app/**"
       - ".github/workflows/bundle-size.yml"
 
-permissions:
-  contents: read
-  issues: write
-
 defaults:
   run:
     working-directory: app
@@ -20,6 +16,10 @@ jobs:
   compare-bundle-size:
     name: Sammenligne bundle-størrelse
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # ratchet:actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
 
-      - name: Install dependencies
+      - name: Install dependencies (PR branch)
         run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
@@ -101,8 +101,8 @@ jobs:
                         `**PR-størrelse:** ${formatBytes(prSize)}`;
             } else if (diff < 0) {
               message = `🔻 **Bundle-størrelse minket** med **${formatBytes(Math.abs(diff))}** (${Math.abs(percentChange)}%)\n\n` +
-                        `**Base size:** ${formatBytes(baseSize)}\n` +
-                        `**PR size:** ${formatBytes(prSize)}`;
+                        `**Base størrelse:** ${formatBytes(baseSize)}\n` +
+                        `**PR størrelse:** ${formatBytes(prSize)}`;
             } else {
               message = `✅ **Ingen endring i bundle-størrelse.**\n\n` +
                         `**Bundle-størrelse:** ${formatBytes(prSize)}`;
