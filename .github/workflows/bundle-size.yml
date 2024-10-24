@@ -76,10 +76,16 @@ jobs:
           echo "PERCENT_CHANGE=$PERCENT_CHANGE" >> $GITHUB_OUTPUT
       - name: Create job summary
         run: |
+          # Assign outputs from the previous step to variables
+          DIFF=${{ steps.compare.outputs.DIFF }}
+          PERCENT_CHANGE=${{ steps.compare.outputs.PERCENT_CHANGE }}
+          BASE_SIZE=${{ steps.compare.outputs.BASE_SIZE }}
+          PR_SIZE=${{ steps.compare.outputs.PR_SIZE }}
+
           echo "## Sammenligning av bundle-størrelse" >> $GITHUB_STEP_SUMMARY
-          if [ $DIFF -gt 0 ]; then
+          if [ "$DIFF" -gt 0 ]; then
             echo "🔺 **Bundle-størrelse økte** med **$(echo "$DIFF / 1024" | bc -l | xargs printf "%.2f") KB** (${PERCENT_CHANGE}%)" >> $GITHUB_STEP_SUMMARY
-          elif [ $DIFF -lt 0 ]; then
+          elif [ "$DIFF" -lt 0 ]; then
             echo "🔻 **Bundle-størrelse minket** med **$(echo "${DIFF#-} / 1024" | bc -l | xargs printf "%.2f") KB** (${PERCENT_CHANGE#-}%)" >> $GITHUB_STEP_SUMMARY
           else
             echo "✅ **Ingen endring i bundle-størrelse.**" >> $GITHUB_STEP_SUMMARY
