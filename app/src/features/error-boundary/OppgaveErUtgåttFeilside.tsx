@@ -24,9 +24,9 @@ export const OppgaveErUtgåttFeilside = () => {
                   <BodyShort spacing>
                     Det er ikke lenger nødvendig å sende denne
                     inntektsmeldingen. Det kan være fordi søknaden er trukket,
-                    avslått eller at vi har laget ny oppgave på grunn av viktige
-                    endringer i søknaden. Kontakt din ansatte hvis du er usikker
-                    på status på søknaden.
+                    avslått eller at Nav har laget ny oppgave på grunn av
+                    viktige endringer i søknaden. Kontakt din ansatte hvis du er
+                    usikker på status på søknaden.
                   </BodyShort>
                 </div>
 
