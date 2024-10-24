@@ -1,11 +1,11 @@
 import eslint from "@eslint/js";
 import pluginQuery from "@tanstack/eslint-plugin-query";
+import lodashPlugin from "eslint-plugin-lodash";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import reactLint from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
-import lodashPlugin from 'eslint-plugin-lodash';
 
 const IGNORED_UNICORN_RULES = {
   "unicorn/filename-case": "off",
@@ -35,11 +35,11 @@ export default tseslint.config(
   },
   {
     plugins: {
-      lodash: lodashPlugin
+      lodash: lodashPlugin,
     },
     rules: {
-      'lodash/import-scope': ['error', 'method'],
-    }
+      "lodash/import-scope": ["error", "method"],
+    },
   },
   {
     plugins: {
