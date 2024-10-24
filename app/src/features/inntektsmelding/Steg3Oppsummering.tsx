@@ -2,7 +2,7 @@ import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
-import { isEqual, pick } from "lodash";
+import { isEqual } from "lodash";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import {
@@ -91,9 +91,6 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
           id,
           eksisterendeInntektsmeldinger[0],
           opplysninger,
-        );
-        console.log(
-          isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding),
         );
         if (isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding)) {
           throw new Error(
