@@ -8,6 +8,11 @@ on:
       - "app/**"
       - ".github/workflows/bundle-size.yml"
 
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 defaults:
   run:
     working-directory: app
@@ -16,28 +21,26 @@ jobs:
   compare-bundle-size:
     name: Sammenligne bundle-størrelse
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # ratchet:actions/checkout@v4
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up NODE
-        uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # ratchet:actions/setup-node@v3
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
 
-      - name: Install dependencies
+      - name: Install dependencies (PR branch)
         run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (PR branch)
-        run: npm run size > bundle-size.json
-
-      - name: Copy bundle size output (PR branch)
-        run: cp bundle-size.json pr-bundle-size.json
+        run: npx vite-size --react --total > pr-bundle-size.json
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
@@ -48,10 +51,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
-        run: npm run size > bundle-size.json
-
-      - name: Copy bundle size output (base branch)
-        run: cp bundle-size.json base-bundle-size.json
+        run: npx vite-size --react --total > base-bundle-size.json
 
       - name: Compare bundle sizes
         id: compare
@@ -75,9 +75,26 @@ jobs:
           echo "BASE_SIZE=$BASE_SIZE" >> $GITHUB_OUTPUT
           echo "DIFF=$DIFF" >> $GITHUB_OUTPUT
           echo "PERCENT_CHANGE=$PERCENT_CHANGE" >> $GITHUB_OUTPUT
+      - name: Create job summary
+        run: |
+          # Assign outputs from the previous step to variables
+          DIFF=${{ steps.compare.outputs.DIFF }}
+          PERCENT_CHANGE=${{ steps.compare.outputs.PERCENT_CHANGE }}
+          BASE_SIZE=${{ steps.compare.outputs.BASE_SIZE }}
+          PR_SIZE=${{ steps.compare.outputs.PR_SIZE }}
 
+          echo "## Sammenligning av bundle-størrelse" >> $GITHUB_STEP_SUMMARY
+          if [ "$DIFF" -gt 0 ]; then
+            echo "🔺 **Bundle-størrelse økte** med **$(echo "$DIFF / 1024" | bc -l | xargs printf "%.2f") KB** (${PERCENT_CHANGE}%)" >> $GITHUB_STEP_SUMMARY
+          elif [ "$DIFF" -lt 0 ]; then
+            echo "🔻 **Bundle-størrelse minket** med **$(echo "${DIFF#-} / 1024" | bc -l | xargs printf "%.2f") KB** (${PERCENT_CHANGE#-}%)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ **Ingen endring i bundle-størrelse.**" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "**Base-størrelse:** $(echo "$BASE_SIZE / 1024" | bc -l | xargs printf "%.2f") KB" >> $GITHUB_STEP_SUMMARY
+          echo "**PR-størrelse:** $(echo "$PR_SIZE / 1024" | bc -l | xargs printf "%.2f") KB" >> $GITHUB_STEP_SUMMARY
       - name: Post comment on PR
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -103,8 +120,8 @@ jobs:
                         `**PR-størrelse:** ${formatBytes(prSize)}`;
             } else if (diff < 0) {
               message = `🔻 **Bundle-størrelse minket** med **${formatBytes(Math.abs(diff))}** (${Math.abs(percentChange)}%)\n\n` +
-                        `**Base size:** ${formatBytes(baseSize)}\n` +
-                        `**PR size:** ${formatBytes(prSize)}`;
+                        `**Base størrelse:** ${formatBytes(baseSize)}\n` +
+                        `**PR størrelse:** ${formatBytes(prSize)}`;
             } else {
               message = `✅ **Ingen endring i bundle-størrelse.**\n\n` +
                         `**Bundle-størrelse:** ${formatBytes(prSize)}`;

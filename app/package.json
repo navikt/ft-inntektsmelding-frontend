@@ -16,8 +16,7 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "stylelint": "stylelint '**/*.{tsx,css}'",
-    "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
-    "size": "npx tsc && vite-size --react --total"
+    "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'"
   },
   "dependencies": {
     "@navikt/aksel-icons": "^7.2.1",
