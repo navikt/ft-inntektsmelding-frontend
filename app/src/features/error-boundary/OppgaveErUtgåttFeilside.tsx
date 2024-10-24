@@ -21,7 +21,13 @@ export const OppgaveErUtgåttFeilside = () => {
                   <Heading level="1" size="large" spacing>
                     Oppgaven er utgått
                   </Heading>
-                  <BodyShort spacing>Her er noe info</BodyShort>
+                  <BodyShort spacing>
+                    Det er ikke lenger nødvendig å sende denne
+                    inntektsmeldingen. Det kan være fordi søknaden er trukket,
+                    avslått eller at vi har laget ny oppgave på grunn av viktige
+                    endringer i søknaden. Kontakt din ansatte hvis du er usikker
+                    på status på søknaden.
+                  </BodyShort>
                 </div>
 
                 <Button as="a" href="/min-side-arbeidsgiver">
