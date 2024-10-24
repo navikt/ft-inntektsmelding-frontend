@@ -18,7 +18,7 @@ export const mockGrunnlag = ({
   uuid = "1",
 }: MockGrunnlagParams) => {
   return page.route(
-    `**/*/imdialog/grunnlag?foresporselUuid=${uuid}`,
+    `**/*/imdialog/opplysninger?foresporselUuid=${uuid}`,
     async (route) => {
       await route.fulfill({ json });
     },
