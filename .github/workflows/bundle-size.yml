@@ -34,7 +34,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (PR branch)
-        run: npm run size
+        run: npm run size > bundle-size.json
 
       - name: Copy bundle size output (PR branch)
         run: cp bundle-size.json pr-bundle-size.json
@@ -48,7 +48,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
-        run: npm run size
+        run: npm run size > bundle-size.json
 
       - name: Copy bundle size output (base branch)
         run: cp bundle-size.json base-bundle-size.json
