@@ -123,7 +123,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             )}
           </Informasjonsseksjon>
         )}
-        <Informasjonsseksjon kilde="Fra Altinn" tittel="Kontaktinformasjon">
+        <Informasjonsseksjon
+          kilde="Fra Altinn og Folkeregisteret"
+          tittel="Kontaktinformasjon"
+        >
           <div className="flex gap-4 flex-col md:flex-row">
             <div className="flex-1">
               <TextField
