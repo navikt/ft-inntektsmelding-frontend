@@ -75,7 +75,7 @@ export const Steg1DineOpplysninger = () => {
           <Personinformasjon opplysninger={opplysninger} />
           <Informasjonsseksjon
             className="col-span-2"
-            kilde="Fra Altinn"
+            kilde="Fra Altinn og Folkeregisteret"
             tittel="Kontaktinformasjon for arbeidsgiver"
           >
             <HGrid align="start" columns={{ sm: 1, md: 2 }} gap="5">
