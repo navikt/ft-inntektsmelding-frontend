@@ -2,7 +2,11 @@ name: Bundle Size Comparison
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    branches:
+      - "**"
+    paths:
+      - "app/**"
+      - ".github/workflows/bundle-size.yml"
 
 defaults:
   run:
@@ -28,9 +32,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-      - name: Build the project (PR branch)
-        run: npm run build
-
       - name: Measure bundle size (PR branch)
         run: npm run size
 
@@ -42,9 +43,8 @@ jobs:
 
       - name: Install dependencies (base branch)
         run: npm ci
-
-      - name: Build the project (base branch)
-        run: npm run build
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
         run: npm run size
