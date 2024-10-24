@@ -90,6 +90,7 @@ const dummyOpplysninger: OpplysningerDto = {
     organisasjonNummer: "123456789",
   },
   ytelse: "OMSORGSPENGER",
+  forespørselStatus: "UNDER_BEHANDLING",
   inntekter: [
     {
       fom: new Date(2023, 0, 1).toISOString(),

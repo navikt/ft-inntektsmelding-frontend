@@ -99,7 +99,7 @@ export function mapInntektsmeldingResponseTilValidState(
 
 export async function hentOpplysningerData(uuid: string) {
   const response = await fetch(
-    `${SERVER_URL}/imdialog/grunnlag?foresporselUuid=${uuid}`,
+    `${SERVER_URL}/imdialog/opplysninger?foresporselUuid=${uuid}`,
   );
   if (response.status === 404) {
     throw new Error("Forespørsel ikke funnet");
