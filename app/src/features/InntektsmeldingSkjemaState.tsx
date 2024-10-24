@@ -45,7 +45,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     }),
   ),
   misterNaturalytelser: z.boolean().optional(),
-  naturalytelserSomMistes: z.array(
+  bortfaltNaturalytelsePerioder: z.array(
     z.object({
       navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
       beløp: beløpSchema,
@@ -86,7 +86,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
     }),
   ),
   misterNaturalytelser: z.boolean(),
-  naturalytelserSomMistes: z.array(
+  bortfaltNaturalytelsePerioder: z.array(
     z.object({
       navn: NaturalytelseTypeSchema,
       beløp: beløpSchema,
@@ -125,7 +125,7 @@ type InntektsmeldingSkjemaStateProviderProps = {
 const defaultSkjemaState = {
   inntekt: 0,
   refusjon: [],
-  naturalytelserSomMistes: [],
+  bortfaltNaturalytelsePerioder: [],
   endringAvInntektÅrsaker: [],
 } satisfies InntektsmeldingSkjemaState;
 

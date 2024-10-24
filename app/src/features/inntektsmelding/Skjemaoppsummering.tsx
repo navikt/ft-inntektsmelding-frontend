@@ -154,7 +154,7 @@ export const Skjemaoppsummering = ({
               </FormSummary.Label>
               <FormSummary.Value>
                 <FormSummary.Answers>
-                  {skjemaState.naturalytelserSomMistes.map((naturalytelse) => {
+                  {skjemaState.bortfaltNaturalytelsePerioder.map((naturalytelse) => {
                     return (
                       <FormSummary.Answer
                         key={`${naturalytelse.navn}-${naturalytelse.fom}`}

@@ -54,7 +54,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
     )
     .optional(),
   misterNaturalytelser: z.boolean().optional(),
-  naturalytelserSomMistes: z
+  bortfaltNaturalytelsePerioder: z
     .array(
       z.object({
         navn: z.union([NaturalytelseTypeSchema, z.literal("")]),

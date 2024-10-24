@@ -2,6 +2,7 @@ import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
+import { isEqual, pick } from "lodash";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import {
@@ -72,42 +73,36 @@ type SendInnInntektsmeldingProps = {
 function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
   const { id } = route.useParams();
+  const { eksisterendeInntektsmeldinger } = route.useLoaderData();
 
   const { gyldigInntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
-      const gjeldendeInntekt =
-        skjemaState.korrigertInntekt ?? skjemaState.inntekt;
+      const inntektsmeldingRequest = lagSendInntektsmeldingRequest(
+        id,
+        skjemaState,
+        opplysninger,
+      );
 
-      const refusjon =
-        skjemaState.skalRefunderes === "JA_LIK_REFUSJON"
-          ? skjemaState.refusjon.slice(0, 1)
-          : skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON"
-            ? skjemaState.refusjon
-            : [];
+      if (eksisterendeInntektsmeldinger[0]) {
+        const eksisterendeInntektsmelding = lagSendInntektsmeldingRequest(
+          id,
+          eksisterendeInntektsmeldinger[0],
+          opplysninger,
+        );
+        console.log(
+          isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding),
+        );
+        if (isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding)) {
+          throw new Error(
+            "Du har ikke gjort noen endringer fra forrige innsendte inntektsmelding.",
+          );
+        }
+      }
 
-      const inntektsmelding = {
-        foresporselUuid: id,
-        aktorId: opplysninger.person.aktørId,
-        ytelse: opplysninger.ytelse,
-        arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
-        kontaktperson: skjemaState.kontaktperson,
-        startdato: opplysninger.startdatoPermisjon,
-        inntekt: formatStrengTilTall(gjeldendeInntekt),
-        // inntektEndringsÅrsak: skjemaState.inntektEndringsÅrsak, // Send inn når BE har støtte for det
-        refusjon: refusjon.map((r) => ({
-          ...r,
-          beløp: formatStrengTilTall(r.beløp),
-        })),
-        bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
-          skjemaState.naturalytelserSomMistes,
-        ),
-        endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker,
-      } satisfies SendInntektsmeldingRequestDto;
-
-      return sendInntektsmelding(inntektsmelding);
+      return sendInntektsmelding(inntektsmeldingRequest);
     },
     onSuccess: (inntektsmeldingState) => {
       setInntektsmeldingSkjemaState(inntektsmeldingState);
@@ -124,8 +119,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
   return (
     <>
-      {/*TODO: hvordan feilmeldinger viser man mot bruker?*/}
-      {error ? <Alert variant="error">Noe gikk galt.</Alert> : undefined}
+      {error ? <Alert variant="error">{error.message}</Alert> : undefined}
       <div className="flex gap-4 justify-center">
         <Button
           as={Link}
@@ -149,8 +143,41 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   );
 }
 
+function lagSendInntektsmeldingRequest(
+  id: string,
+  skjemaState: InntektsmeldingSkjemaStateValid,
+  opplysninger: OpplysningerDto,
+) {
+  const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
+
+  const refusjon =
+    skjemaState.skalRefunderes === "JA_LIK_REFUSJON"
+      ? skjemaState.refusjon.slice(0, 1)
+      : skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON"
+        ? skjemaState.refusjon
+        : [];
+
+  return {
+    foresporselUuid: id,
+    aktorId: opplysninger.person.aktørId,
+    ytelse: opplysninger.ytelse,
+    arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
+    kontaktperson: skjemaState.kontaktperson,
+    startdato: opplysninger.startdatoPermisjon,
+    inntekt: formatStrengTilTall(gjeldendeInntekt),
+    refusjon: refusjon.map((r) => ({
+      ...r,
+      beløp: formatStrengTilTall(r.beløp),
+    })),
+    bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
+      skjemaState.bortfaltNaturalytelsePerioder,
+    ),
+    endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker,
+  } satisfies SendInntektsmeldingRequestDto;
+}
+
 function konverterNaturalytelsePerioder(
-  naturalytelsePerioder: InntektsmeldingSkjemaStateValid["naturalytelserSomMistes"],
+  naturalytelsePerioder: InntektsmeldingSkjemaStateValid["bortfaltNaturalytelsePerioder"],
 ): SendInntektsmeldingRequestDto["bortfaltNaturalytelsePerioder"] {
   return naturalytelsePerioder.map((periode) => ({
     naturalytelsetype: periode.navn,

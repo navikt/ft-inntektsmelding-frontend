@@ -74,7 +74,7 @@ export function mapInntektsmeldingResponseTilValidState(
   return {
     kontaktperson: inntektsmelding.kontaktperson,
     refusjon: inntektsmelding.refusjon ?? [],
-    naturalytelserSomMistes:
+    bortfaltNaturalytelsePerioder:
       inntektsmelding.bortfaltNaturalytelsePerioder?.map((periode) => ({
         navn: periode.naturalytelsetype,
         fom: periode.fom,
