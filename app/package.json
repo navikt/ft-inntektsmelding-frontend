@@ -16,7 +16,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "stylelint": "stylelint '**/*.{tsx,css}'",
-    "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'"
+    "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
+    "size": "npx tsc && vite-size --react --total"
   },
   "dependencies": {
     "@navikt/aksel-icons": "^7.2.1",
@@ -31,6 +32,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-hook-form": "7.53.0",
+    "vite-size": "^0.0.5",
     "zod": "3.23.8"
   },
   "devDependencies": {
