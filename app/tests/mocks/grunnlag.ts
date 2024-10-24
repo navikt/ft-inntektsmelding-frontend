@@ -13,6 +13,7 @@ export const enkeltGrunnlagResponse = {
     fornavn: "BERØMT",
     etternavn: "FLYTTELASS",
   },
+  forespørselStatus: "UNDER_BEHANDLING" as const,
   inntekter: [
     {
       fom: "2024-02-01",
