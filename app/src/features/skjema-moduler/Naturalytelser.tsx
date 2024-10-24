@@ -163,9 +163,12 @@ function MisterNaturalytelser() {
             <div className="flex gap-4 flex-col items-start relative">
               <Select
                 label="Naturalytelse som faller bort"
-                {...register(`bortfaltNaturalytelsePerioder.${index}.navn` as const, {
-                  required: "Må oppgis",
-                })}
+                {...register(
+                  `bortfaltNaturalytelsePerioder.${index}.navn` as const,
+                  {
+                    required: "Må oppgis",
+                  },
+                )}
                 className="max-w-[60%]"
                 error={
                   formState.errors?.bortfaltNaturalytelsePerioder?.[index]?.navn
@@ -206,8 +209,8 @@ function MisterNaturalytelser() {
               <RadioGroup
                 className="md:col-span-4"
                 error={
-                  formState.errors.bortfaltNaturalytelsePerioder?.[index]?.inkluderTom
-                    ?.message
+                  formState.errors.bortfaltNaturalytelsePerioder?.[index]
+                    ?.inkluderTom?.message
                 }
                 legend="Vil naturalytelsen komme tilbake i løpet av fraværet?"
                 name={name}

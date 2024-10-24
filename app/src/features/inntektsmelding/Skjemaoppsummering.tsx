@@ -154,20 +154,22 @@ export const Skjemaoppsummering = ({
               </FormSummary.Label>
               <FormSummary.Value>
                 <FormSummary.Answers>
-                  {skjemaState.bortfaltNaturalytelsePerioder.map((naturalytelse) => {
-                    return (
-                      <FormSummary.Answer
-                        key={`${naturalytelse.navn}-${naturalytelse.fom}`}
-                      >
-                        <FormSummary.Label>
-                          {formatYtelsesnavn(naturalytelse.navn, true)}
-                        </FormSummary.Label>
-                        <FormSummary.Value>
-                          {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
-                        </FormSummary.Value>
-                      </FormSummary.Answer>
-                    );
-                  })}
+                  {skjemaState.bortfaltNaturalytelsePerioder.map(
+                    (naturalytelse) => {
+                      return (
+                        <FormSummary.Answer
+                          key={`${naturalytelse.navn}-${naturalytelse.fom}`}
+                        >
+                          <FormSummary.Label>
+                            {formatYtelsesnavn(naturalytelse.navn, true)}
+                          </FormSummary.Label>
+                          <FormSummary.Value>
+                            {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
+                          </FormSummary.Value>
+                        </FormSummary.Answer>
+                      );
+                    },
+                  )}
                 </FormSummary.Answers>
               </FormSummary.Value>
             </FormSummary.Answer>
