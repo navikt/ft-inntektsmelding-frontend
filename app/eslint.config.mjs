@@ -5,6 +5,7 @@ import reactLint from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import eslintPluginUnicorn from "eslint-plugin-unicorn";
 import tseslint from "typescript-eslint";
+import lodashPlugin from 'eslint-plugin-lodash';
 
 const IGNORED_UNICORN_RULES = {
   "unicorn/filename-case": "off",
@@ -31,6 +32,14 @@ export default tseslint.config(
         version: "detect", // Fjerner warning om at React version ikke er satt i eslint-plugin-react
       },
     },
+  },
+  {
+    plugins: {
+      lodash: lodashPlugin
+    },
+    rules: {
+      'lodash/import-scope': ['error', 'method'],
+    }
   },
   {
     plugins: {

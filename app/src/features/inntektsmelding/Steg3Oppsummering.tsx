@@ -2,7 +2,7 @@ import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
 import {
