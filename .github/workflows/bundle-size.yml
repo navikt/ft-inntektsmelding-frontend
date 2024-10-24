@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize]
 
+defaults:
+  run:
+    working-directory: app
+
 jobs:
   compare-bundle-size:
     runs-on: ubuntu-latest
