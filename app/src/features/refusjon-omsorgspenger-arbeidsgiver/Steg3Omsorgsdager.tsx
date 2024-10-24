@@ -24,7 +24,7 @@ import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { RotLayout } from "../rot-layout/RotLayout";
 import { useDocumentTitle } from "../useDocumentTitle";
-import { Fremgangsindikator } from "./Fremgangsindikator";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
@@ -57,7 +57,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       <Heading level="1" size="large">
         Omsorgsdager dere søker utbetaling for
       </Heading>
-      <Fremgangsindikator aktivtSteg={3} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={3} />
       <GuidePanel>
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig
@@ -88,7 +88,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
                 <BodyLong>
                   Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår
                   for ansatte som har barn under 12 år, eller som fyller 12 år
-                  det gjeldende året. Du kan søke om utbetaling fra NAV fra og
+                  det gjeldende året. Du kan søke om utbetaling fra Nav fra og
                   med den 11. dagen.
                 </BodyLong>
                 <BodyLong>

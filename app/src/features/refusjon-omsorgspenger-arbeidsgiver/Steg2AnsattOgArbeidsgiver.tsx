@@ -19,7 +19,7 @@ import { formatNavn } from "~/utils";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { slåOppPersondataOptions } from "./api/queries";
-import { Fremgangsindikator } from "./Fremgangsindikator";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
@@ -53,7 +53,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
-      <Fremgangsindikator aktivtSteg={2} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={2} />
       <form onSubmit={onSubmit}>
         <Informasjonsseksjon tittel="Den ansatte">
           <div className="flex gap-4 flex-col md:flex-row">

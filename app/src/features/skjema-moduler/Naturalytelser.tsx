@@ -80,7 +80,7 @@ const naturalytelser: Record<Naturalytelsetype, string> = {
   AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS:
     "Aksjer / grunnfondsbevis til underkurs",
   LOSJI: "Losji",
-  KOST_DØGN: "Kost (døgn)",
+  KOST_DOEGN: "Kost (døgn)",
   BESØKSREISER_HJEMMET_ANNET: "Besøksreiser i hjemmet annet",
   KOSTBESPARELSE_I_HJEMMET: "Kostbesparelse i hjemmet",
   RENTEFORDEL_LÅN: "Rentefordel lån",

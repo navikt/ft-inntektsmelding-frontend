@@ -4,6 +4,7 @@ import { Link, useLoaderData, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
+import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,
@@ -20,7 +21,6 @@ import {
   InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "../InntektsmeldingSkjemaState";
-import { Fremgangsindikator } from "../refusjon-omsorgspenger-arbeidsgiver/Fremgangsindikator";
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import {
   NATURALYTELSE_SOM_MISTES_TEMPLATE,
@@ -216,7 +216,7 @@ function Ytelsesperiode() {
       <HjelpetekstReadMore header="Hva betyr dette?">
         <>
           Dette er den første dagen den ansatte har søkt om{" "}
-          {formatYtelsesnavn(ytelse)}. Det betyr at NAV trenger opplysninger om
+          {formatYtelsesnavn(ytelse)}. Det betyr at Nav trenger opplysninger om
           den ansattes inntekt på denne datoen. Vi baserer oss på datoen som er
           oppgitt i søknaden, og du kan derfor ikke endre denne i
           inntektsmeldingen. <br />

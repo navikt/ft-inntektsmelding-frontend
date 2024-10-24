@@ -15,7 +15,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { Fremgangsindikator } from "./Fremgangsindikator";
+import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
@@ -52,7 +52,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       <Heading level="1" size="large">
         Refusjon
       </Heading>
-      <Fremgangsindikator aktivtSteg={1} />
+      <OmsorgspengerFremgangsindikator aktivtSteg={1} />
       <GuidePanel>
         <VStack gap="4">
           <Heading level="2" size="medium">
@@ -96,7 +96,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               </BodyLong>
               <BodyLong>
                 Hvis den ansatte har vært i jobb i mindre enn 4 uker, kan den
-                ansatte søke om utbetaling direkte fra NAV. Den ansatte må søke
+                ansatte søke om utbetaling direkte fra Nav. Den ansatte må søke
                 om omsorgspenger før dere kan sende inn inntektsmelding. Varsel
                 med oppgave blir tilgjengelig i{" "}
                 <Link href="/saksoversikt">saksoversikten</Link> når den ansatte
