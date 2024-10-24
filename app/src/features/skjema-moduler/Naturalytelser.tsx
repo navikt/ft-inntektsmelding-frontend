@@ -104,7 +104,7 @@ function MisterNaturalytelser() {
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "naturalytelserSomMistes",
+    name: "bortfaltNaturalytelsePerioder",
     rules: {
       validate: (values) => {
         const errors = NaturalytelseTypeSchema.options.flatMap((type) => {
@@ -141,34 +141,37 @@ function MisterNaturalytelser() {
   });
 
   const overlappendePerioderError =
-    formState.errors.naturalytelserSomMistes?.root;
+    formState.errors.bortfaltNaturalytelsePerioder?.root;
 
   return (
     <div className="flex flex-col gap-4">
       {fields.map((field, index) => {
         const { name, ...radioGroupProps } = register(
-          `naturalytelserSomMistes.${index}.inkluderTom`,
+          `bortfaltNaturalytelsePerioder.${index}.inkluderTom`,
           {
             required: "Du må svare på dette spørsmålet",
           },
         );
 
         const skalInkludereTom =
-          watch(`naturalytelserSomMistes.${index}.inkluderTom`) === "ja";
+          watch(`bortfaltNaturalytelsePerioder.${index}.inkluderTom`) === "ja";
 
-        const fom = watch(`naturalytelserSomMistes.${index}.fom`);
+        const fom = watch(`bortfaltNaturalytelsePerioder.${index}.fom`);
 
         return (
           <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
             <div className="flex gap-4 flex-col items-start relative">
               <Select
                 label="Naturalytelse som faller bort"
-                {...register(`naturalytelserSomMistes.${index}.navn` as const, {
-                  required: "Må oppgis",
-                })}
+                {...register(
+                  `bortfaltNaturalytelsePerioder.${index}.navn` as const,
+                  {
+                    required: "Må oppgis",
+                  },
+                )}
                 className="max-w-[60%]"
                 error={
-                  formState.errors?.naturalytelserSomMistes?.[index]?.navn
+                  formState.errors?.bortfaltNaturalytelsePerioder?.[index]?.navn
                     ?.message
                 }
               >
@@ -181,7 +184,7 @@ function MisterNaturalytelser() {
               </Select>
               <DatePickerWrapped
                 label="Fra og med"
-                name={`naturalytelserSomMistes.${index}.fom` as const}
+                name={`bortfaltNaturalytelsePerioder.${index}.fom` as const}
                 rules={{ required: "Må oppgis" }}
               />
 
@@ -189,7 +192,7 @@ function MisterNaturalytelser() {
                 inputMode="numeric"
                 label={<span>Verdi&nbsp;pr. måned</span>}
                 min={1}
-                name={`naturalytelserSomMistes.${index}.beløp` as const}
+                name={`bortfaltNaturalytelsePerioder.${index}.beløp` as const}
                 size="medium"
               />
               {index > 0 && (
@@ -206,8 +209,8 @@ function MisterNaturalytelser() {
               <RadioGroup
                 className="md:col-span-4"
                 error={
-                  formState.errors.naturalytelserSomMistes?.[index]?.inkluderTom
-                    ?.message
+                  formState.errors.bortfaltNaturalytelsePerioder?.[index]
+                    ?.inkluderTom?.message
                 }
                 legend="Vil naturalytelsen komme tilbake i løpet av fraværet?"
                 name={name}
@@ -223,7 +226,7 @@ function MisterNaturalytelser() {
                 {skalInkludereTom && (
                   <DatePickerWrapped
                     label="Til og med"
-                    name={`naturalytelserSomMistes.${index}.tom` as const}
+                    name={`bortfaltNaturalytelsePerioder.${index}.tom` as const}
                     rules={{
                       validate: (tom: Date | undefined) => {
                         if (!fom) {

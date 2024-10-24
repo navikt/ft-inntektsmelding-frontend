@@ -1,5 +1,6 @@
 import eslint from "@eslint/js";
 import pluginQuery from "@tanstack/eslint-plugin-query";
+import lodashPlugin from "eslint-plugin-lodash";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import reactLint from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
@@ -30,6 +31,14 @@ export default tseslint.config(
       react: {
         version: "detect", // Fjerner warning om at React version ikke er satt i eslint-plugin-react
       },
+    },
+  },
+  {
+    plugins: {
+      lodash: lodashPlugin,
+    },
+    rules: {
+      "lodash/import-scope": ["error", "method"],
     },
   },
   {

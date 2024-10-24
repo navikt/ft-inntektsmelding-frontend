@@ -34,7 +34,7 @@ type JaNei = "ja" | "nei";
 export type InntektOgRefusjonForm = {
   skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   misterNaturalytelser: JaNei;
-  naturalytelserSomMistes: NaturalytelserSomMistesForm[];
+  bortfaltNaturalytelsePerioder: NaturalytelserSomMistesForm[];
   endringAvInntektÅrsaker: EndringsÅrsakerForm[];
 } & Pick<
   InntektsmeldingSkjemaState,
@@ -92,10 +92,10 @@ export function Steg2InntektOgRefusjon() {
       misterNaturalytelser: konverterTilRadioValg(
         inntektsmeldingSkjemaState.misterNaturalytelser,
       ),
-      naturalytelserSomMistes:
-        inntektsmeldingSkjemaState.naturalytelserSomMistes.length === 0
+      bortfaltNaturalytelsePerioder:
+        inntektsmeldingSkjemaState.bortfaltNaturalytelsePerioder.length === 0
           ? [NATURALYTELSE_SOM_MISTES_TEMPLATE]
-          : inntektsmeldingSkjemaState.naturalytelserSomMistes.map(
+          : inntektsmeldingSkjemaState.bortfaltNaturalytelsePerioder.map(
               (naturalYtelse) => ({
                 ...naturalYtelse,
                 inkluderTom: konverterTilRadioValg(naturalYtelse.inkluderTom),
@@ -123,8 +123,8 @@ export function Steg2InntektOgRefusjon() {
     const { refusjon, inntekt, skalRefunderes, korrigertInntekt } = skjemadata;
 
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
-    const naturalytelserSomMistes = misterNaturalytelser
-      ? skjemadata.naturalytelserSomMistes.map((naturalYtelse) => ({
+    const bortfaltNaturalytelsePerioder = misterNaturalytelser
+      ? skjemadata.bortfaltNaturalytelsePerioder.map((naturalYtelse) => ({
           ...naturalYtelse,
           inkluderTom: naturalYtelse.inkluderTom === "ja",
         }))
@@ -141,7 +141,7 @@ export function Steg2InntektOgRefusjon() {
       refusjon,
       skalRefunderes,
       misterNaturalytelser,
-      naturalytelserSomMistes,
+      bortfaltNaturalytelsePerioder,
     }));
     navigate({
       from: "/$id/inntekt-og-refusjon",
