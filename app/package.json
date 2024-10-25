@@ -40,6 +40,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.1.0",
     "@eslint/js": "9.12.0",
+    "@grafana/faro-react": "1.11.0",
     "@navikt/aksel-stylelint": "7.2.1",
     "@playwright/test": "^1.48.0",
     "@tanstack/eslint-plugin-query": "5.59.7",

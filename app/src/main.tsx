@@ -1,7 +1,7 @@
 import "@navikt/ds-css";
 import "./index.css";
 
-import { initializeFaro } from "@grafana/faro-web-sdk";
+import { initializeFaro } from "@grafana/faro-react";
 import {
   BodyShort,
   Box,
@@ -19,13 +19,12 @@ import { createRoot } from "react-dom/client";
 import { routeTree } from "./routeTree.gen.ts";
 
 initializeFaro({
-  url: "https://telemetry.ekstern.dev.nav.no/collect",
+  url: globalThis.location.hostname.includes(".intern.dev.nav")
+    ? "https://telemetry.ekstern.dev.nav.no/collect"
+    : "https://telemetry.nav.no/collect",
   app: {
     name: "ft-inntektsmelding",
   },
-  instrumentations: [
-
-  ]
 });
 
 export const queryClient = new QueryClient();
