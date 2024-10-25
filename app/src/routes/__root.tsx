@@ -1,3 +1,4 @@
+import { Button } from "@navikt/ds-react";
 import { QueryClient } from "@tanstack/react-query";
 import {
   createRootRouteWithContext,
@@ -35,6 +36,13 @@ export const Route = createRootRouteWithContext<{
           <TanStackRouterDevtools position="bottom-right" />
         </React.Suspense>
         <VisHjelpeteksterStateProvider>
+          <Button
+            onClick={() => {
+              throw new Error("første feil");
+            }}
+          >
+            Kræsj
+          </Button>
           <Outlet />
         </VisHjelpeteksterStateProvider>
         <ScrollRestoration />
