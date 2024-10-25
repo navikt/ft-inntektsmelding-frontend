@@ -10,7 +10,7 @@ spec:
   port: 8080
   frontend:
     generatedConfig:
-      mountPath: /app/public/assets
+      mountPath: /app/public/assets/nais.js
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
