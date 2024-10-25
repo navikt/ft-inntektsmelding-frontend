@@ -8,9 +8,6 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
-  frontend:
-    generatedConfig:
-      mountPath: /app/public/assets/nais.js
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}
