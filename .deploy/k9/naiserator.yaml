@@ -8,6 +8,9 @@ metadata:
 spec:
   image: {{image}}
   port: 8080
+  frontend:
+    generatedConfig:
+      mountPath: /app/public/assets
   ingresses:
   {{#each ingresses as |url|}}
      - {{url}}

@@ -1,6 +1,7 @@
 import "@navikt/ds-css";
 import "./index.css";
 
+import { initializeFaro } from "@grafana/faro-web-sdk";
 import {
   BodyShort,
   Box,
@@ -15,7 +16,15 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import { createRoot } from "react-dom/client";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import nais from "./nais.js";
 import { routeTree } from "./routeTree.gen.ts";
+
+initializeFaro({
+  url: nais.telemetryCollectorURL,
+  app: nais.app,
+});
 
 export const queryClient = new QueryClient();
 
