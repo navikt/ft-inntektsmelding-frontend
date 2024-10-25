@@ -12,12 +12,6 @@ export default defineConfig({
       "~": fileURLToPath(new URL("src", import.meta.url)),
     },
   },
-  // build: {
-  //   manifest: true,
-  //   rollupOptions: {
-  //     external: ["./nais.js"],
-  //   },
-  // },
   server: {
     origin: "http://localhost:5173",
   },
