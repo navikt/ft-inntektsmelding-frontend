@@ -20,4 +20,4 @@ function lagGrafanaAppName() {
   throw new Error(
     `Vite BASE_URL(${import.meta.env.BASE_URL}) er ikke satt, eller har ugyldig verdi`,
   );
-};
+}
