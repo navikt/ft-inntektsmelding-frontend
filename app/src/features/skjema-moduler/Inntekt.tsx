@@ -95,7 +95,7 @@ export function Inntekt({
         </Alert>
       )}
 
-      <VStack gap="1">
+      <VStack data-testid="gjennomsnittinntekt-block" gap="1">
         <BodyShort>Beregnet månedslønn</BodyShort>
         <strong
           className={clsx(

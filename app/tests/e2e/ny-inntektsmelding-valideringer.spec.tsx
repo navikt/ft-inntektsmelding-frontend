@@ -40,4 +40,74 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await page.getByLabel("Telefon").fill("12312312");
 
   await page.getByText("Bekreft og gå videre").click();
+
+  // Inntekt og refusjon siden
+  await expect(
+    page.getByRole("heading", { name: "Inntekt og refusjon" }),
+  ).toBeVisible();
+
+  // Periode med ytelse
+  await expect(
+    page.getByRole("heading", { name: "Periode med foreldrepenger" }),
+  ).toBeVisible();
+
+  await expect(
+    page.getByText("Underfundigs første dag med foreldrepenger"),
+  ).toBeVisible();
+  await expect(page.getByText("Fra søknaden til Underfundig")).toBeVisible();
+  await expect(page.getByText("Torsdag 30. mai 2024")).toBeVisible();
+
+  // Beregnet månedslønn
+  await expect(
+    page.getByRole("heading", { name: "Beregnet Månedslønn" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Underfundigs lønn fra de siste tre månedene før 30.05.2024",
+    ),
+  ).toBeVisible();
+  await expect(page.getByText("Fra A-Ordningen")).toBeVisible();
+  const gjennomsnittInntektBlokk = page.getByTestId(
+    "gjennomsnittinntekt-block",
+  );
+  await expect(
+    gjennomsnittInntektBlokk.getByText("Beregnet månedslønn"),
+  ).toBeVisible();
+  await expect(gjennomsnittInntektBlokk.getByText("53 000")).toBeVisible();
+  await expect(
+    gjennomsnittInntektBlokk.getByText(
+      "Gjennomsnittet av de siste tre månedene før 30.05.2024",
+    ),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  // Prøv å submit for å trigge errors
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  await expect(
+    page
+      .getByLabel("Endret månedsinntekt")
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+
+  await expect(
+    page
+      .getByText("Hva er årsaken til endringen?") // TODO: skjønner ikke hvorfor getByLabel ikke funker her
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+
+  await page.getByLabel("Endret månedsinntekt").fill("-50000");
+  await expect(
+    page
+      .getByText("Endret månedsinntekt")
+      .locator("..")
+      .getByText("Beløpet må være 0 eller høyere"),
+  ).toBeVisible();
+  await page.getByText("Endret månedsinntekt").fill("50000");
+  // await expect(page.getByLabel("Endret månedsinntekt")).toHaveValue("50 000");
+
+  // Hvorfor feiler denne???
+  // await expect(page.getByLabel("Endret månedsinntekt")).toBeVisible();
 });
