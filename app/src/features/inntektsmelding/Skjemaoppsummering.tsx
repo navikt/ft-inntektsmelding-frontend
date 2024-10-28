@@ -26,7 +26,6 @@ export const Skjemaoppsummering = ({
   opplysninger,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
-
   return (
     <VStack gap="4">
       <FormSummary>
