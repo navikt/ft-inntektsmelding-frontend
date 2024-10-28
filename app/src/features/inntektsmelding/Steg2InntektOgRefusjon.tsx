@@ -80,10 +80,10 @@ export function Steg2InntektOgRefusjon() {
       // Denne ligger i formet, men brukes ikke annet enn for submit
       inntekt,
       korrigertInntekt:
-        (inntektsmeldingSkjemaState.korrigertInntekt ??
-        inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length > 0)
+        inntektsmeldingSkjemaState.korrigertInntekt ??
+        (inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length > 0
           ? inntektsmeldingSkjemaState.inntekt
-          : undefined,
+          : undefined),
       endringAvInntektÅrsaker:
         inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
           ? [{ årsak: "" }]
