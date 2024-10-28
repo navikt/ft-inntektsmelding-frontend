@@ -18,6 +18,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
+import { isAfter } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -251,6 +252,8 @@ function Refusjonsperioder() {
   });
 
   const korrigertInntekt = watch("korrigertInntekt");
+  const tidligsteDato = watch(`refusjon.0.fom`) ?? "";
+
   const inntekt = watch("inntekt");
 
   const maksRefusjonsBeløp = korrigertInntekt ?? inntekt;
@@ -268,7 +271,17 @@ function Refusjonsperioder() {
             label="Fra og med"
             name={`refusjon.${index}.fom` as const}
             readOnly={index === 0}
-            rules={{ required: "Må oppgis" }}
+            rules={{
+              required: "Må oppgis",
+              validate: (date: string) => {
+                if (!tidligsteDato) {
+                  return "Fant ikke starttidspunkt";
+                }
+                return (
+                  isAfter(date, tidligsteDato) || "Kan ikke være før startdato"
+                );
+              },
+            }}
           />
           <div>
             <FormattertTallTextField
