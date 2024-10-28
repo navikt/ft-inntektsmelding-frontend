@@ -274,6 +274,9 @@ function Refusjonsperioder() {
             rules={{
               required: "Må oppgis",
               validate: (date: string) => {
+                if (index === 0) {
+                  return true;
+                }
                 if (!tidligsteDato) {
                   return "Fant ikke starttidspunkt";
                 }
