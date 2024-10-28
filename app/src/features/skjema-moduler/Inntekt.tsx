@@ -333,7 +333,7 @@ function Endringsårsaker({
             <Årsaksperioder index={index} />
             {index > 0 ? (
               <Button
-                aria-label="Fjern naturalytelse"
+                aria-label="Slett endringsårsak"
                 className="w-fit md:absolute top-8 right-0"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}

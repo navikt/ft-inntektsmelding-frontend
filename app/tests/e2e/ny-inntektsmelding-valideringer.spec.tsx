@@ -108,6 +108,33 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await page.getByText("Endret månedsinntekt").fill("50000");
   // await expect(page.getByLabel("Endret månedsinntekt")).toHaveValue("50 000");
 
+  await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
   // Hvorfor feiler denne???
   // await expect(page.getByLabel("Endret månedsinntekt")).toBeVisible();
+
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    page.getByText("Fra og med").locator("..").getByText("Må oppgis"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Til og med").locator("..").getByText("Må oppgis"),
+  ).toBeVisible();
+
+  await page.getByLabel("Fra og med").fill("01.4.2024");
+  await page.getByLabel("Til og med").fill("01.5.2024"); // TODO: mangler validering på at den ikke kan være tidligere
+
+  await page.getByRole("button", { name: "Legg til ny endringsårsak" }).click();
+  await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(2);
+
+  await page
+    .getByLabel("Hva er årsaken til endringen?")
+    .nth(1)
+    .selectOption("Ferie");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    page.getByText("Fra og med").nth(1).locator("..").getByText("Må oppgis"),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Slett endringsårsak" }).click(); // TODO: Kan finnes flere. Vurder testId
+  await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(1);
 });
