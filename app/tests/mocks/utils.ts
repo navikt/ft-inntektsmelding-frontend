@@ -4,7 +4,7 @@ import type { OpplysningerDto } from "~/types/api-models.ts";
 
 import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
-import { enkeltGrunnlagResponse } from "./grunnlag";
+import { enkeltOpplysningerResponse } from "./opplysninger.ts";
 
 type MockGrunnlagParams = {
   page: Page;
@@ -14,7 +14,7 @@ type MockGrunnlagParams = {
 
 export const mockGrunnlag = ({
   page,
-  json = enkeltGrunnlagResponse,
+  json = enkeltOpplysningerResponse,
   uuid = "1",
 }: MockGrunnlagParams) => {
   return page.route(

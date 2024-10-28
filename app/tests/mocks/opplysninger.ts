@@ -1,4 +1,6 @@
-export const enkeltGrunnlagResponse = {
+import { OpplysningerDto } from "~/types/api-models.ts";
+
+export const enkeltOpplysningerResponse = {
   person: {
     fornavn: "UNDERFUNDIG",
     etternavn: "DYREFLOKK",
@@ -33,5 +35,4 @@ export const enkeltGrunnlagResponse = {
   ],
   startdatoPermisjon: "2024-05-30",
   ytelse: "FORELDREPENGER" as const,
-  forespørselUuid: "1",
-};
+} satisfies OpplysningerDto;
