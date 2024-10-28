@@ -32,11 +32,22 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     "Omsorgsdager – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { register, formState, watch, handleSubmit } =
+  const { register, formState, watch, handleSubmit, setError } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const navigate = useNavigate();
-  const onSubmit = handleSubmit(() => {
+  const onSubmit = handleSubmit((formData) => {
+    if (
+      formData.fraværHeleDager?.length === 0 &&
+      formData.fraværDelerAvDagen?.length === 0
+    ) {
+      setError("fraværHeleDager", {
+        message:
+          "Du må oppgi minst én periode med fravær – enten hele dagen eller deler av dagen",
+      });
+      return;
+    }
+
     navigate({
       from: "/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager",
       to: "../4-refusjon",
@@ -99,6 +110,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
               </VStack>
             </Alert>
           )}
+          {formState.errors.fraværHeleDager?.message && (
+            <Alert aria-live="polite" variant="error">
+              <BodyLong>{formState.errors.fraværHeleDager.message}</BodyLong>
+            </Alert>
+          )}
           <FraværHeleDagen />
           <FraværDelerAvDagen />
 
@@ -127,7 +143,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 };
 
 const FraværHeleDagen = () => {
-  const { control, watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { control, watch, clearErrors } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
@@ -194,6 +211,7 @@ const FraværHeleDagen = () => {
           icon={<PlusIcon />}
           onClick={() => {
             append({});
+            clearErrors("fraværHeleDager");
           }}
           size="medium"
           type="button"
@@ -207,7 +225,7 @@ const FraværHeleDagen = () => {
 };
 
 const FraværDelerAvDagen = () => {
-  const { control, register, formState, watch } =
+  const { control, register, formState, watch, clearErrors } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
@@ -306,6 +324,7 @@ const FraværDelerAvDagen = () => {
           icon={<PlusIcon />}
           onClick={() => {
             append({});
+            clearErrors("fraværDelerAvDagen");
           }}
           size="medium"
           type="button"
