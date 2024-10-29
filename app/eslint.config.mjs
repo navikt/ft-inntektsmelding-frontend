@@ -21,6 +21,7 @@ export default tseslint.config(
       "src/vite-env.d.ts",
       "src/routeTree.gen.ts",
       "dist/*",
+      "playwright-report/*",
     ],
   },
   eslint.configs.recommended,
