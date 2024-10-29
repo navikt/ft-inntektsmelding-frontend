@@ -1,5 +1,4 @@
 import { expect, test } from "@playwright/test";
-import { first } from "lodash";
 import {
   finnInputFraLabel,
   mockGrunnbeløp,

@@ -64,17 +64,17 @@ export const mockInntektsmeldinger = ({
 };
 
 export const finnInputFraLabel = async ({
-                                            page,
-                                            nth = 0,
-                                            labelText,
-                                        }: {
-    page: Locator | Page;
-    nth?: number;
-    labelText: string;
+  page,
+  nth = 0,
+  labelText,
+}: {
+  page: Locator | Page;
+  nth?: number;
+  labelText: string;
 }) => {
-    const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
-    const inputId = await label.getAttribute("for");
-    return page.locator(`#${inputId}`);
+  const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
+  const inputId = await label.getAttribute("for");
+  return page.locator(`#${inputId}`);
 };
 
 export const expectError = async ({

@@ -204,11 +204,12 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     variabelRefusjonBlock.getByLabel("Fra og med").nth(0),
   ).toBeEditable({ editable: false });
   await expect(
-    await finnInputFraLabel(
-      variabelRefusjonBlock,
-      0,
-      "Refusjonsbeløp per måned",
-    ),
+    await finnInputFraLabel({
+      page: variabelRefusjonBlock,
+      nth: 0,
+
+      labelText: "Refusjonsbeløp per måned",
+    }),
   ).toHaveValue(brukNoBreakSpaces("50 000"));
   await variabelRefusjonBlock
     .getByText("Refusjonsbeløp per måned")

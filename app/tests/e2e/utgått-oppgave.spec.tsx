@@ -5,7 +5,7 @@ import {
   mockInntektsmeldinger,
 } from "tests/mocks/utils";
 
-import { utgåttOpplysningerResponse } from "../mocks/grunnlag.ts";
+import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
 
 test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
   page,
