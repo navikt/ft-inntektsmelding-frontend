@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
   brukNoBreakSpaces,
+  expectError,
   finnInputFraLabel,
   mockGrunnbeløp,
   mockGrunnlag,
@@ -25,22 +26,22 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await expect(page.getByLabel("Navn")).toBeVisible();
   await expect(page.getByLabel("Navn")).toHaveValue("Berømt Flyttelass");
   await page.getByLabel("Navn").click();
-  await page.keyboard.type("123123123".repeat(10));
-
+  await page.getByLabel("Navn").fill("123123123".repeat(15));
   await page.getByText("Bekreft og gå videre").click();
-
-  // Sjekk errors.
-  // TODO: sjekk selve error element og om det er gruppert sammen med input?
-  await expect(
-    page.getByText("Navn kan ikke være lenger enn 100 tegn"),
-  ).toBeVisible();
-  await expect(page.getByText("Telefonnummer er påkrevd")).toBeVisible();
+  await expectError({
+    page,
+    label: "Navn",
+    error: "Navn kan ikke være lenger enn 100 tegn",
+  });
+  await expectError({
+    page,
+    label: "Telefon",
+    error: "Telefonnummer er påkrevd",
+  });
 
   await page.getByLabel("Navn").clear();
-  await page.keyboard.type("Berømt Flyttelass");
-
+  await page.getByLabel("Navn").fill("Berømt Flyttelass");
   await page.getByLabel("Telefon").fill("12312312");
-
   await page.getByText("Bekreft og gå videre").click();
 
   // Inntekt og refusjon siden
@@ -48,7 +49,6 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     page.getByRole("heading", { name: "Inntekt og refusjon" }),
   ).toBeVisible();
 
-  // Periode med ytelse
   await expect(
     page.getByRole("heading", { name: "Periode med foreldrepenger" }),
   ).toBeVisible();
@@ -86,27 +86,24 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   // Prøv å submit for å trigge errors
   await page.getByRole("button", { name: "Neste steg" }).click();
 
-  await expect(
-    page
-      .getByLabel("Endret månedsinntekt")
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Endret månedsinntekt",
+    error: "Må oppgis",
+  });
 
-  await expect(
-    page
-      .getByText("Hva er årsaken til endringen?") // TODO: skjønner ikke hvorfor getByLabel ikke funker her
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Hva er årsaken til endringen?",
+    error: "Må oppgis",
+  });
 
   await page.getByLabel("Endret månedsinntekt").fill("-50000");
-  await expect(
-    page
-      .getByText("Endret månedsinntekt")
-      .locator("..")
-      .getByText("Beløpet må være 0 eller høyere"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Endret månedsinntekt",
+    error: "Beløpet må være 0 eller høyere",
+  });
   await page.getByText("Endret månedsinntekt").fill("50000");
   // await expect(page.getByLabel("Endret månedsinntekt")).toHaveValue("50 000");
 
@@ -115,12 +112,17 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   // await expect(page.getByLabel("Endret månedsinntekt")).toBeVisible();
 
   await page.getByRole("button", { name: "Neste steg" }).click();
-  await expect(
-    page.getByText("Fra og med").locator("..").getByText("Må oppgis"),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Til og med").locator("..").getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Fra og med",
+    error: "Må oppgis",
+  });
+
+  await expectError({
+    page,
+    label: "Til og med",
+    error: "Må oppgis",
+  });
 
   await page.getByLabel("Fra og med").fill("01.4.2024");
   await page.getByLabel("Til og med").fill("01.5.2024"); // TODO: mangler validering på at den ikke kan være tidligere
@@ -133,9 +135,12 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     .nth(1)
     .selectOption("Ferie");
   await page.getByRole("button", { name: "Neste steg" }).click();
-  await expect(
-    page.getByText("Fra og med").nth(1).locator("..").getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    nth: 1,
+    label: "Fra og med",
+    error: "Må oppgis",
+  });
 
   await page.getByRole("button", { name: "Slett endringsårsak" }).click(); // TODO: Kan finnes flere. Vurder testId
   await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(1);
@@ -143,12 +148,11 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   /**
    * Test Utbetaling og Refusjon
    */
-  await expect(
-    page
-      .getByText("Betaler dere lønn under fraværet og krever refusjon?")
-      .locator("..")
-      .getByText("Du må svare på dette spørsmålet"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Betaler dere lønn under fraværet og krever refusjon?",
+    error: "Du må svare på dette spørsmålet",
+  });
 
   /**
    * Lik refusjon
@@ -156,6 +160,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await page
     .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
     .click();
+
   const refusjonsBlock = page
     .getByText("Refusjonsbeløp per måned")
     .locator("..");
@@ -166,12 +171,11 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await page.getByRole("button", { name: "Endre refusjonsbeløp" }).click();
   await page.getByText("Refusjonsbeløp per måned").fill("-1");
   await page.getByRole("button", { name: "Neste steg" }).click();
-  await expect(
-    page
-      .getByText("Refusjonsbeløp per måned")
-      .locator("..")
-      .getByText("Beløpet må være 0 eller høyere"),
-  ).toBeVisible();
+  await expectError({
+    page,
+    label: "Refusjonsbeløp per måned",
+    error: "Beløpet må være 0 eller høyere",
+  });
   await page.getByText("Refusjonsbeløp per måned").fill("40000");
   await page
     .getByRole("button", { name: "Tilbakestill refusjonsbeløp" })
@@ -205,44 +209,42 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     .nth(0)
     .fill("-1");
   await page.getByRole("button", { name: "Neste steg" }).click();
-  await expect(
-    variabelRefusjonBlock
-      .getByText("Refusjonsbeløp per måned")
-      .nth(0)
-      .locator("..")
-      .getByText("Beløpet må være 0 eller høyere"),
-  ).toBeVisible();
+  await expectError({
+    page: variabelRefusjonBlock,
+    nth: 0,
+    label: "Refusjonsbeløp per måned",
+    error: "Beløpet må være 0 eller høyere",
+  });
   await variabelRefusjonBlock
     .getByText("Refusjonsbeløp per måned")
     .nth(0)
     .fill("60000");
-  await expect(
-    variabelRefusjonBlock
-      .getByText("Refusjonsbeløp per måned")
-      .nth(0)
-      .locator("..")
-      .getByText("Beløpet må være 50000 eller lavere"),
-  ).toBeVisible();
+  await expectError({
+    page: variabelRefusjonBlock,
+    nth: 0,
+    label: "Refusjonsbeløp per måned",
+    error: "Beløpet må være 50000 eller lavere",
+  });
+
   await variabelRefusjonBlock
     .getByText("Refusjonsbeløp per måned")
     .nth(0)
     .fill("40000");
 
-  await expect(
-    variabelRefusjonBlock
-      .getByText("Fra og med")
-      .nth(1)
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page: variabelRefusjonBlock,
+    nth: 1,
+    label: "Fra og med",
+    error: "Må oppgis",
+  });
   await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("30.05.2024");
-  await expect(
-    variabelRefusjonBlock
-      .getByText("Fra og med")
-      .nth(1)
-      .locator("..")
-      .getByText("Kan ikke være før startdato"),
-  ).toBeVisible();
+  await expectError({
+    page: variabelRefusjonBlock,
+    nth: 1,
+    label: "Fra og med",
+    error: "Kan ikke være før startdato",
+  });
+
   await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("30.06.2024");
 
   await variabelRefusjonBlock
@@ -264,30 +266,26 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   const naturalytelserBlokk = page.getByTestId("naturalytelser-blokk");
   await page.getByRole("button", { name: "Neste steg" }).click();
 
-  await expect(
-    naturalytelserBlokk
-      .getByText("Naturalytelse som faller bort")
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
-  await expect(
-    naturalytelserBlokk
-      .getByText("Fra og med")
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
-  await expect(
-    naturalytelserBlokk
-      .getByText("Verdi pr. måned")
-      .locator("..")
-      .getByText("Beløpet må være 1 eller høyere"),
-  ).toBeVisible();
-  await expect(
-    naturalytelserBlokk
-      .getByText("Vil naturalytelsen komme tilbake i løpet av fraværet?")
-      .locator("..")
-      .getByText("Du må svare på dette spørsmålet"),
-  ).toBeVisible();
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Naturalytelse som faller bort",
+    error: "Må oppgis",
+  });
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Fra og med",
+    error: "Må oppgis",
+  });
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Verdi pr. måned",
+    error: "Beløpet må være 1 eller høyere",
+  });
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Vil naturalytelsen komme tilbake i løpet av fraværet?",
+    error: "Du må svare på dette spørsmålet",
+  });
 
   await naturalytelserBlokk
     .getByLabel("Naturalytelse som faller bort")
@@ -300,19 +298,17 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     )
     .click();
   await page.getByRole("button", { name: "Neste steg" }).click();
-  await expect(
-    naturalytelserBlokk
-      .getByText("Til og med")
-      .locator("..")
-      .getByText("Må oppgis"),
-  ).toBeVisible();
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Til og med",
+    error: "Må oppgis",
+  });
   await naturalytelserBlokk.getByText("Til og med").fill("10.06.2024");
-  await expect(
-    naturalytelserBlokk
-      .getByText("Til og med")
-      .locator("..")
-      .getByText("Kan ikke være før fra dato"),
-  ).toBeVisible();
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Til og med",
+    error: "Kan ikke være før fra dato",
+  });
   await naturalytelserBlokk.getByText("Til og med").fill("20.07.2024");
 
   await page.getByRole("button", { name: "Legg til naturalytelse" }).click();

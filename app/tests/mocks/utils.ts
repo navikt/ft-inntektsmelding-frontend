@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
@@ -68,6 +68,22 @@ export const finnInputFraLabel = async (
   const label = locator.locator(`label:has-text("${labelText}")`).nth(nth);
   const inputId = await label.getAttribute("for");
   return locator.locator(`#${inputId}`);
+};
+
+export const expectError = async ({
+  page,
+  label,
+  nth = 0,
+  error,
+}: {
+  page: Locator | Page;
+  label: string;
+  nth?: number;
+  error: string;
+}) => {
+  await expect(
+    page.getByText(label).nth(nth).locator("..").getByText(error),
+  ).toBeVisible();
 };
 
 export const brukNoBreakSpaces = (s: string) => {
