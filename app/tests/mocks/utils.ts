@@ -2,7 +2,10 @@ import { Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
-import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
+import {
+  ingenEksisterendeInntektsmeldingerResponse,
+  mangeEksisterendeInntektsmeldingerResponse
+} from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
 import { enkeltGrunnlagResponse } from "./grunnlag";
 
@@ -43,7 +46,7 @@ export const mockGrunnbeløp = ({
 
 type MockInntektsmeldingerParams = {
   page: Page;
-  json?: typeof ingenEksisterendeInntektsmeldingerResponse;
+  json?: typeof mangeEksisterendeInntektsmeldingerResponse;
   uuid?: string;
 };
 

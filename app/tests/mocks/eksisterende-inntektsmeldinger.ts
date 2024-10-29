@@ -1,3 +1,5 @@
+import { SendInntektsmeldingResponseDto } from "~/types/api-models.ts";
+
 export const ingenEksisterendeInntektsmeldingerResponse = [];
 
 export const mangeEksisterendeInntektsmeldingerResponse = [
@@ -51,7 +53,7 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
     },
     startdato: "2024-05-30",
     inntekt: 500,
-    opprettetTidspunkt: "2024-10-04T13:34:23.086",
+    opprettetTidspunkt: "2024-10-08T13:34:23.086",
     bortfaltNaturalytelsePerioder: [
       {
         fom: "2024-09-12",
@@ -67,4 +69,4 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
       },
     ],
   },
-];
+] satisfies SendInntektsmeldingResponseDto[];
