@@ -13,7 +13,11 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import { useDocumentTitle } from "~/features/useDocumentTitle";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
+import {
+  finnSenesteInntektsmelding,
+  formatStrengTilTall,
+  formatYtelsesnavn,
+} from "~/utils";
 
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
 import { useOpplysninger } from "./useOpplysninger";
@@ -85,11 +89,14 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         skjemaState,
         opplysninger,
       );
+      const sisteInntektsmelding = finnSenesteInntektsmelding(
+        eksisterendeInntektsmeldinger,
+      );
 
-      if (eksisterendeInntektsmeldinger[0]) {
+      if (sisteInntektsmelding) {
         const eksisterendeInntektsmelding = lagSendInntektsmeldingRequest(
           id,
-          eksisterendeInntektsmeldinger[0],
+          sisteInntektsmelding,
           opplysninger,
         );
         if (isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding)) {

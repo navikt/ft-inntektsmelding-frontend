@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { mapInntektsmeldingResponseTilValidState } from "~/api/queries.ts";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
 export function leggTilGenitiv(navn?: string) {
@@ -199,4 +200,21 @@ export function slugify(text: string): string {
     .replaceAll(/[öø]/g, "o")
     .replaceAll(/[^\d\sa-z-]/g, "")
     .replaceAll(/[\s-]+/g, "-");
+}
+
+export function finnSenesteInntektsmelding(
+  inntektsmeldinger: ReturnType<
+    typeof mapInntektsmeldingResponseTilValidState
+  >[],
+) {
+  const medOpprettetTidspunkt = inntektsmeldinger.filter(
+    (im) => !!im.opprettetTidspunkt,
+  );
+  const [sisteInntektsmelding] = medOpprettetTidspunkt.sort(
+    (a, b) =>
+      new Date(b.opprettetTidspunkt).getTime() -
+      new Date(a.opprettetTidspunkt).getTime(),
+  );
+
+  return sisteInntektsmelding;
 }

@@ -166,3 +166,25 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
     }),
   ).toHaveValue("12.10.2024");
 });
+
+test("skal ikke få lov til å sende inn uten endring", async ({ page }) => {
+  await mockGrunnlag({ page, uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858" });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+    json: mangeEksisterendeInntektsmeldingerResponse,
+    uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
+  });
+
+  await page.goto("/fp-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
+  await page.getByRole("button", { name: "Endre" }).first().click();
+  await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await page.getByRole("button", { name: "Send inn" }).click();
+
+  await expect(
+    page.getByText(
+      "Du har ikke gjort noen endringer fra forrige innsendte inntektsmelding.",
+    ),
+  ).toBeVisible();
+});
