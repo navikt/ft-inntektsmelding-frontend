@@ -144,9 +144,9 @@ export const InntektsmeldingSkjemaStateProvider = ({
   const gyldigInntektsmeldingSkjemaState =
     InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
 
-  // if (!gyldigInntektsmeldingSkjemaState.success) {
-  //   logDev("error", gyldigInntektsmeldingSkjemaState.error);
-  // }
+  if (!gyldigInntektsmeldingSkjemaState.success) {
+    logDev("error", gyldigInntektsmeldingSkjemaState.error);
+  }
 
   return (
     <InntektsmeldingSkjemaStateContext.Provider
