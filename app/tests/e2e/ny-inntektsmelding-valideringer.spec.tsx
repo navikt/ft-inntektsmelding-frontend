@@ -142,7 +142,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     error: "Må oppgis",
   });
 
-  await page.getByRole("button", { name: "Slett endringsårsak" }).click(); // TODO: Kan finnes flere. Vurder testId
+  await page.getByRole("button", { name: "Slett endringsårsak" }).click();
   await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(1);
 
   /**
