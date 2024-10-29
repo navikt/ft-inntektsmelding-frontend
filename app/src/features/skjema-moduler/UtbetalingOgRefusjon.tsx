@@ -151,9 +151,11 @@ function LikRefusjon() {
                 autoFocus
                 label="Refusjonsbeløp per måned"
                 max={Number(maksRefusjonsBeløp)}
+                min={0}
                 name="refusjon.0.beløp"
               />
               <Button
+                aria-label="Tilbakestill refusjonsbeløp"
                 className="mt-8"
                 icon={<ArrowUndoIcon aria-hidden />}
                 onClick={() => {

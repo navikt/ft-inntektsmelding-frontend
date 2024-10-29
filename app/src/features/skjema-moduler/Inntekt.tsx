@@ -95,7 +95,7 @@ export function Inntekt({
         </Alert>
       )}
 
-      <VStack gap="1">
+      <VStack data-testid="gjennomsnittinntekt-block" gap="1">
         <BodyShort>Beregnet månedslønn</BodyShort>
         <strong
           className={clsx(
@@ -333,7 +333,7 @@ function Endringsårsaker({
             <Årsaksperioder index={index} />
             {index > 0 ? (
               <Button
-                aria-label="Fjern naturalytelse"
+                aria-label="Slett endringsårsak"
                 className="w-fit md:absolute top-8 right-0"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}

@@ -1,6 +1,6 @@
 import { OpplysningerDto } from "~/types/api-models.ts";
 
-export const enkeltGrunnlagResponse = {
+export const enkeltOpplysningerResponse = {
   person: {
     fornavn: "UNDERFUNDIG",
     etternavn: "DYREFLOKK",
@@ -20,19 +20,19 @@ export const enkeltGrunnlagResponse = {
     {
       fom: "2024-02-01",
       tom: "2024-02-29",
-      beløp: 57_000,
+      beløp: 52_000,
       arbeidsgiverIdent: "810007842",
     },
     {
       fom: "2024-03-01",
       tom: "2024-03-31",
-      beløp: 52_000,
+      beløp: 50_000,
       arbeidsgiverIdent: "810007842",
     },
     {
       fom: "2024-04-01",
       tom: "2024-04-30",
-      beløp: 50_000,
+      beløp: 57_000,
       arbeidsgiverIdent: "810007842",
     },
   ],

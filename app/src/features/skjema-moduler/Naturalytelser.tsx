@@ -197,7 +197,7 @@ function MisterNaturalytelser() {
               />
               {index > 0 && (
                 <Button
-                  aria-label="fjern naturalytelse"
+                  aria-label="Slett naturalytelse"
                   className="absolute top-8 right-1"
                   icon={<TrashIcon />}
                   onClick={() => remove(index)}

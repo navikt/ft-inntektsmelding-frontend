@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
@@ -7,7 +7,7 @@ import {
   mangeEksisterendeInntektsmeldingerResponse,
 } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
-import { enkeltGrunnlagResponse } from "./grunnlag";
+import { enkeltOpplysningerResponse } from "./opplysninger.ts";
 
 type MockGrunnlagParams = {
   page: Page;
@@ -17,7 +17,7 @@ type MockGrunnlagParams = {
 
 export const mockGrunnlag = ({
   page,
-  json = enkeltGrunnlagResponse,
+  json = enkeltOpplysningerResponse,
   uuid = "1",
 }: MockGrunnlagParams) => {
   return page.route(
@@ -64,15 +64,35 @@ export const mockInntektsmeldinger = ({
 };
 
 export const finnInputFraLabel = async ({
+                                            page,
+                                            nth = 0,
+                                            labelText,
+                                        }: {
+    page: Locator | Page;
+    nth?: number;
+    labelText: string;
+}) => {
+    const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
+    const inputId = await label.getAttribute("for");
+    return page.locator(`#${inputId}`);
+};
+
+export const expectError = async ({
   page,
+  label,
   nth = 0,
-  labelText,
+  error,
 }: {
   page: Locator | Page;
+  label: string;
   nth?: number;
-  labelText: string;
+  error: string;
 }) => {
-  const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
-  const inputId = await label.getAttribute("for");
-  return page.locator(`#${inputId}`);
+  await expect(
+    page.getByText(label).nth(nth).locator("..").getByText(error),
+  ).toBeVisible();
+};
+
+export const brukNoBreakSpaces = (s: string) => {
+  return s.replaceAll(" ", "\u00A0");
 };
