@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState.tsx";
-import { formatDatoTidKort } from "~/utils.ts";
+import { finnSenesteInntektsmelding, formatDatoTidKort } from "~/utils.ts";
 
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
 
@@ -16,7 +16,9 @@ export const VisInntektsmelding = () => {
   const { id } = route.useParams();
   const { setInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
-  const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
+  const sisteInntektsmelding = finnSenesteInntektsmelding(
+    eksisterendeInntektsmeldinger,
+  );
 
   // Sett IM i skjemaStaten hvis den finnes
   useEffect(() => {

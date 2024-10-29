@@ -33,7 +33,11 @@ export const Skjemaoppsummering = ({
           <FormSummary.Heading level="3">
             Arbeidsgiver og den ansatte
           </FormSummary.Heading>
-          <FormSummary.EditLink as={Link} to="../dine-opplysninger" />
+          <FormSummary.EditLink
+            aria-label="Endre dine opplysninger"
+            as={Link}
+            to="../dine-opplysninger"
+          />
         </FormSummary.Header>
         <FormSummary.Answers>
           <FormSummary.Answer>
@@ -83,6 +87,7 @@ export const Skjemaoppsummering = ({
             Utbetaling og refusjon
           </FormSummary.Heading>
           <FormSummary.EditLink
+            aria-label="Endre utbetaling og refusjon"
             as={Link}
             to="../inntekt-og-refusjon#refusjon"
           />
@@ -133,6 +138,7 @@ export const Skjemaoppsummering = ({
         <FormSummary.Header>
           <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
           <FormSummary.EditLink
+            aria-label="Endre naturalytelser"
             as={Link}
             to="../inntekt-og-refusjon#naturalytelser"
           />
@@ -195,6 +201,7 @@ function InntektSummary({
       <FormSummary.Header>
         <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
         <FormSummary.EditLink
+          aria-label="Endre inntekt"
           as={Link}
           to="../inntekt-og-refusjon#beregnet-manedslonn"
         />

@@ -2,7 +2,10 @@ import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
-import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
+import {
+  ingenEksisterendeInntektsmeldingerResponse,
+  mangeEksisterendeInntektsmeldingerResponse,
+} from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
 import { enkeltOpplysningerResponse } from "./opplysninger.ts";
 
@@ -43,7 +46,7 @@ export const mockGrunnbeløp = ({
 
 type MockInntektsmeldingerParams = {
   page: Page;
-  json?: typeof ingenEksisterendeInntektsmeldingerResponse;
+  json?: typeof mangeEksisterendeInntektsmeldingerResponse;
   uuid?: string;
 };
 
@@ -60,14 +63,18 @@ export const mockInntektsmeldinger = ({
   );
 };
 
-export const finnInputFraLabel = async (
-  locator: Locator,
-  nth: number,
-  labelText: string,
-) => {
-  const label = locator.locator(`label:has-text("${labelText}")`).nth(nth);
+export const finnInputFraLabel = async ({
+  page,
+  nth = 0,
+  labelText,
+}: {
+  page: Locator | Page;
+  nth?: number;
+  labelText: string;
+}) => {
+  const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
   const inputId = await label.getAttribute("for");
-  return locator.locator(`#${inputId}`);
+  return page.locator(`#${inputId}`);
 };
 
 export const expectError = async ({
