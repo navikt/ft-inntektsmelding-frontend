@@ -16,7 +16,11 @@ export const VisInntektsmelding = () => {
   const { id } = route.useParams();
   const { setInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
 
-  const [sisteInntektsmelding] = eksisterendeInntektsmeldinger;
+  const [sisteInntektsmelding] = eksisterendeInntektsmeldinger.sort(
+    (a, b) =>
+      new Date(b.opprettetTidspunkt).getTime() -
+      new Date(a.opprettetTidspunkt).getTime(),
+  ); //TODO: standardiser hvordan vi sorterer
 
   // Sett IM i skjemaStaten hvis den finnes
   useEffect(() => {
