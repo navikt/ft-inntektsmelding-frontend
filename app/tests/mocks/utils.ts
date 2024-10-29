@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
@@ -58,4 +58,18 @@ export const mockInntektsmeldinger = ({
       await route.fulfill({ json });
     },
   );
+};
+
+export const finnInputFraLabel = async (
+  locator: Locator,
+  nth: number,
+  labelText: string,
+) => {
+  const label = locator.locator(`label:has-text("${labelText}")`).nth(nth);
+  const inputId = await label.getAttribute("for");
+  return locator.locator(`#${inputId}`);
+};
+
+export const brukNoBreakSpaces = (s: string) => {
+  return s.replaceAll(" ", "\u00A0");
 };

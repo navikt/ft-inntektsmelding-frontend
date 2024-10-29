@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 import {
+  brukNoBreakSpaces,
+  finnInputFraLabel,
   mockGrunnbeløp,
   mockGrunnlag,
   mockInntektsmeldinger,
@@ -137,4 +139,123 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
 
   await page.getByRole("button", { name: "Slett endringsårsak" }).click(); // TODO: Kan finnes flere. Vurder testId
   await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(1);
+
+  /**
+   * Test Utbetaling og Refusjon
+   */
+  await expect(
+    page
+      .getByText("Betaler dere lønn under fraværet og krever refusjon?")
+      .locator("..")
+      .getByText("Du må svare på dette spørsmålet"),
+  ).toBeVisible();
+
+  /**
+   * Lik refusjon
+   */
+  await page
+    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .click();
+  const refusjonsBlock = page
+    .getByText("Refusjonsbeløp per måned")
+    .locator("..");
+  await expect(
+    refusjonsBlock.getByText("Refusjonsbeløp per måned"),
+  ).toBeVisible();
+  await expect(refusjonsBlock.getByText("50 000 kr")).toBeVisible();
+  await page.getByRole("button", { name: "Endre refusjonsbeløp" }).click();
+  await page.getByText("Refusjonsbeløp per måned").fill("-1");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    page
+      .getByText("Refusjonsbeløp per måned")
+      .locator("..")
+      .getByText("Beløpet må være 0 eller høyere"),
+  ).toBeVisible();
+  await page.getByText("Refusjonsbeløp per måned").fill("40000");
+  await page
+    .getByRole("button", { name: "Tilbakestill refusjonsbeløp" })
+    .click();
+  await expect(refusjonsBlock.getByText("50 000 kr")).toBeVisible();
+
+  /**
+   * Variabel refusjon
+   */
+  await page
+    .locator('input[name="skalRefunderes"][value="JA_VARIERENDE_REFUSJON"]')
+    .click();
+
+  const variabelRefusjonBlock = page.getByTestId("varierende-refusjon");
+
+  await expect(
+    variabelRefusjonBlock.getByLabel("Fra og med").nth(0),
+  ).toHaveValue("30.05.2024");
+  await expect(
+    variabelRefusjonBlock.getByLabel("Fra og med").nth(0),
+  ).toBeEditable({ editable: false });
+  await expect(
+    await finnInputFraLabel(
+      variabelRefusjonBlock,
+      0,
+      "Refusjonsbeløp per måned",
+    ),
+  ).toHaveValue(brukNoBreakSpaces("50 000"));
+  await variabelRefusjonBlock
+    .getByText("Refusjonsbeløp per måned")
+    .nth(0)
+    .fill("-1");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    variabelRefusjonBlock
+      .getByText("Refusjonsbeløp per måned")
+      .nth(0)
+      .locator("..")
+      .getByText("Beløpet må være 0 eller høyere"),
+  ).toBeVisible();
+  await variabelRefusjonBlock
+    .getByText("Refusjonsbeløp per måned")
+    .nth(0)
+    .fill("60000");
+  await expect(
+    variabelRefusjonBlock
+      .getByText("Refusjonsbeløp per måned")
+      .nth(0)
+      .locator("..")
+      .getByText("Beløpet må være 50000 eller lavere"),
+  ).toBeVisible();
+  await variabelRefusjonBlock
+    .getByText("Refusjonsbeløp per måned")
+    .nth(0)
+    .fill("40000");
+
+  await expect(
+    variabelRefusjonBlock
+      .getByText("Fra og med")
+      .nth(1)
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+  await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("30.05.2024");
+  await expect(
+    variabelRefusjonBlock
+      .getByText("Fra og med")
+      .nth(1)
+      .locator("..")
+      .getByText("Kan ikke være før startdato"),
+  ).toBeVisible();
+  await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("30.06.2024");
+
+  await variabelRefusjonBlock
+    .getByRole("button", { name: "Legg til ny periode" })
+    .click();
+  await expect(variabelRefusjonBlock.getByText("Fra og med")).toHaveCount(3);
+  await variabelRefusjonBlock
+    .getByRole("button", { name: "Fjern refusjonsendring" })
+    .click();
+  await expect(variabelRefusjonBlock.getByText("Fra og med")).toHaveCount(2);
+  await expect(
+    variabelRefusjonBlock.getByRole("button", {
+      name: "Fjern refusjonsendring",
+    }),
+  ).toHaveCount(0);
 });
