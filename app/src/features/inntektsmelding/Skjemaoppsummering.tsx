@@ -138,6 +138,7 @@ export const Skjemaoppsummering = ({
         <FormSummary.Header>
           <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
           <FormSummary.EditLink
+            aria-label="Endre naturalytelser"
             as={Link}
             to="../inntekt-og-refusjon#naturalytelser"
           />

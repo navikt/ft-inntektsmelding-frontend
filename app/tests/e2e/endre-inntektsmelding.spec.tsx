@@ -114,4 +114,55 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
       labelText: "Refusjonsbeløp per måned",
     }),
   ).toHaveValue("80");
+  await page.goBack();
+
+  // Sjekk lenke til naturalytelser og utfylt info
+  await page.getByRole("link", { name: "Endre naturalytelser" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Naturalytelser" }),
+  ).toBeVisible();
+  const naturalytelserBlokk = page.getByTestId("naturalytelser-blokk");
+
+  await expect(
+    page.locator('input[name="misterNaturalytelser"][value="ja"]'),
+  ).toBeChecked();
+  await expect(
+    await finnInputFraLabel({
+      page,
+      labelText: "Naturalytelse som faller bort",
+    }),
+  ).toHaveValue("LOSJI");
+  await expect(
+    await finnInputFraLabel({
+      page: naturalytelserBlokk,
+      nth: 0,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("12.09.2024");
+  await expect(
+    await finnInputFraLabel({
+      page: naturalytelserBlokk,
+      nth: 0,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("12.09.2024");
+  await expect(
+    await finnInputFraLabel({
+      page: naturalytelserBlokk,
+      nth: 0,
+      labelText: "Verdi pr. måned",
+    }),
+  ).toHaveValue("50");
+  await expect(
+    page.locator(
+      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="ja"]',
+    ),
+  ).toBeChecked();
+  await expect(
+    await finnInputFraLabel({
+      page: naturalytelserBlokk,
+      nth: 0,
+      labelText: "Til og med",
+    }),
+  ).toHaveValue("12.10.2024");
 });

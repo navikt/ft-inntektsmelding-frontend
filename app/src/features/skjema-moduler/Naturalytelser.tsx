@@ -39,7 +39,7 @@ export function Naturalytelser() {
 
   const misterNaturalytelser = watch("misterNaturalytelser");
   return (
-    <VStack gap="4">
+    <VStack data-testid="naturalytelser-blokk" gap="4">
       <hr />
       <Heading id="naturalytelser" level="4" size="medium">
         Naturalytelser
@@ -190,7 +190,7 @@ function MisterNaturalytelser() {
 
               <FormattertTallTextField
                 inputMode="numeric"
-                label={<span>Verdi&nbsp;pr. måned</span>}
+                label="Verdi pr. måned"
                 min={1}
                 name={`bortfaltNaturalytelsePerioder.${index}.beløp` as const}
                 size="medium"

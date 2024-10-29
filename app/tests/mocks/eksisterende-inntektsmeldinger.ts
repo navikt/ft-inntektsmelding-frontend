@@ -57,6 +57,7 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
     bortfaltNaturalytelsePerioder: [
       {
         fom: "2024-09-12",
+        tom: "2024-10-12",
         naturalytelsetype: "LOSJI",
         beløp: 50,
       },
