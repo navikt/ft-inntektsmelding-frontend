@@ -61,6 +61,16 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
         beløp: 50,
       },
     ],
+    refusjon: [
+      {
+        fom: "2024-05-30",
+        beløp: 500,
+      },
+      {
+        fom: "2024-10-25",
+        beløp: 80,
+      },
+    ],
     endringAvInntektÅrsaker: [
       {
         årsak: "FERIE",

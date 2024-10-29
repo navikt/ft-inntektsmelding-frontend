@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
+import { first } from "lodash";
 import {
+  finnInputFraLabel,
   mockGrunnbeløp,
   mockGrunnlag,
   mockInntektsmeldinger,
@@ -21,9 +23,95 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Innsendt inntektsmelding" }),
   ).toBeVisible();
-  await expect(page.getByText("Sendt inn 08.04.24 KL 13:34")).toBeVisible();
+  await expect(page.getByText("Sendt inn 08.10.24 KL 13:34")).toBeVisible();
 
+  // Skal vise 2 Endre knapper. En på topp, og en på bunn av oppsummering
+  await expect(page.getByRole("button", { name: "Endre" })).toHaveCount(2);
+
+  // Klikke endre-knapp, eller endre lenke på dine-opplysninger skal ta deg til starten av skjema.
+  await page.getByRole("button", { name: "Endre" }).first().click();
   await expect(
-    page.getByText("Underfundig Dyreflokk", { exact: true }),
+    page.getByRole("heading", { name: "Dine opplysninger" }),
   ).toBeVisible();
+  await page.goBack();
+  await page.getByRole("link", { name: "Endre dine opplysninger" }).click();
+
+  // Sjekk ferdigutfylte verdier for dine-opplysninger
+  await expect(
+    await finnInputFraLabel({ page, labelText: "Navn" }),
+  ).toHaveValue("Berømt Flyttelass");
+  await expect(
+    await finnInputFraLabel({ page, labelText: "Telefon" }),
+  ).toHaveValue("12312312");
+  await page.goBack();
+
+  // Sjekk lenke til endre inntekt og utfylt info
+  await page.getByRole("link", { name: "Endre inntekt" }).click();
+  await expect(
+    page.getByRole("heading", { name: "Beregnet månedslønn" }),
+  ).toBeVisible();
+  await expect(
+    await finnInputFraLabel({ page, labelText: "Endret månedsinntekt" }),
+  ).toHaveValue("500");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      labelText: "Hva er årsaken til endringen?",
+    }),
+  ).toHaveValue("FERIE");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("11.09.2024");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      labelText: "Til og med",
+    }),
+  ).toHaveValue("25.09.2024");
+  await page.goBack();
+
+  // Sjekk lenke til utbetaling og refusjon og utfylt info
+  await page
+    .getByRole("link", { name: "Endre utbetaling og refusjon" })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Utbetaling og refusjon" }),
+  ).toBeVisible();
+  await expect(
+    page.locator(
+      'input[name="skalRefunderes"][value="JA_VARIERENDE_REFUSJON"]',
+    ),
+  ).toBeChecked();
+  const varierendeRefusjonBlokk = page.getByTestId("varierende-refusjon");
+  await expect(
+    await finnInputFraLabel({
+      page: varierendeRefusjonBlokk,
+      nth: 0,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("30.05.2024");
+  await expect(
+    await finnInputFraLabel({
+      page: varierendeRefusjonBlokk,
+      nth: 0,
+      labelText: "Refusjonsbeløp per måned",
+    }),
+  ).toHaveValue("500");
+  await expect(
+    await finnInputFraLabel({
+      page: varierendeRefusjonBlokk,
+      nth: 1,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("25.10.2024");
+  await expect(
+    await finnInputFraLabel({
+      page: varierendeRefusjonBlokk,
+      nth: 1,
+      labelText: "Refusjonsbeløp per måned",
+    }),
+  ).toHaveValue("80");
 });

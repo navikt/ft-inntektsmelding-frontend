@@ -1,10 +1,10 @@
-import { Page } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
 import {
   ingenEksisterendeInntektsmeldingerResponse,
-  mangeEksisterendeInntektsmeldingerResponse
+  mangeEksisterendeInntektsmeldingerResponse,
 } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
 import { enkeltGrunnlagResponse } from "./grunnlag";
@@ -61,4 +61,18 @@ export const mockInntektsmeldinger = ({
       await route.fulfill({ json });
     },
   );
+};
+
+export const finnInputFraLabel = async ({
+  page,
+  nth = 0,
+  labelText,
+}: {
+  page: Locator | Page;
+  nth?: number;
+  labelText: string;
+}) => {
+  const label = page.locator(`label:has-text("${labelText}")`).nth(nth);
+  const inputId = await label.getAttribute("for");
+  return page.locator(`#${inputId}`);
 };

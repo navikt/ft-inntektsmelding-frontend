@@ -201,7 +201,7 @@ function LikRefusjon() {
 function VarierendeRefusjon() {
   return (
     <>
-      <VStack>
+      <VStack data-testid="varierende-refusjon">
         <Heading level="2" size="small">
           Refusjonsbeløp dere krever per periode
         </Heading>
