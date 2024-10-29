@@ -258,4 +258,120 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
       name: "Fjern refusjonsendring",
     }),
   ).toHaveCount(0);
+
+  await page.locator('input[name="misterNaturalytelser"][value="ja"]').click();
+
+  const naturalytelserBlokk = page.getByTestId("naturalytelser-blokk");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  await expect(
+    naturalytelserBlokk
+      .getByText("Naturalytelse som faller bort")
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+  await expect(
+    naturalytelserBlokk
+      .getByText("Fra og med")
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+  await expect(
+    naturalytelserBlokk
+      .getByText("Verdi pr. måned")
+      .locator("..")
+      .getByText("Beløpet må være 1 eller høyere"),
+  ).toBeVisible();
+  await expect(
+    naturalytelserBlokk
+      .getByText("Vil naturalytelsen komme tilbake i løpet av fraværet?")
+      .locator("..")
+      .getByText("Du må svare på dette spørsmålet"),
+  ).toBeVisible();
+
+  await naturalytelserBlokk
+    .getByLabel("Naturalytelse som faller bort")
+    .selectOption("Bil");
+  await naturalytelserBlokk.getByText("Fra og med").fill("20.06.2024"); // TODO: kan denne være før startdato?
+  await naturalytelserBlokk.getByText("Verdi pr. måned").fill("2500");
+  await naturalytelserBlokk
+    .locator(
+      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="ja"]',
+    )
+    .click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    naturalytelserBlokk
+      .getByText("Til og med")
+      .locator("..")
+      .getByText("Må oppgis"),
+  ).toBeVisible();
+  await naturalytelserBlokk.getByText("Til og med").fill("10.06.2024");
+  await expect(
+    naturalytelserBlokk
+      .getByText("Til og med")
+      .locator("..")
+      .getByText("Kan ikke være før fra dato"),
+  ).toBeVisible();
+  await naturalytelserBlokk.getByText("Til og med").fill("20.07.2024");
+
+  await page.getByRole("button", { name: "Legg til naturalytelse" }).click();
+  await expect(
+    naturalytelserBlokk.getByText("Naturalytelse som faller bort"),
+  ).toHaveCount(2);
+
+  await naturalytelserBlokk
+    .getByLabel("Naturalytelse som faller bort")
+    .nth(1)
+    .selectOption("Bil");
+  await naturalytelserBlokk.getByText("Fra og med").nth(1).fill("10.07.2024");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    naturalytelserBlokk.getByText(
+      "Naturalytelse Bil har overlappende perioder",
+    ),
+  ).toBeVisible();
+  await naturalytelserBlokk.getByText("Til og med").fill("05.07.2024");
+  await page.getByRole("button", { name: "Neste steg" }).click(); // Ville ideelt sett ikke måtte manuelt trigge validering
+  await expect(
+    naturalytelserBlokk.getByText(
+      "Naturalytelse Bil har overlappende perioder",
+    ),
+  ).toBeVisible({ visible: false });
+  await naturalytelserBlokk
+    .locator(
+      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="nei"]',
+    )
+    .click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    naturalytelserBlokk.getByText(
+      "Naturalytelse Bil har overlappende perioder",
+    ),
+  ).toBeVisible();
+  await naturalytelserBlokk
+    .getByLabel("Naturalytelse som faller bort")
+    .nth(1)
+    .selectOption("Losji");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expect(
+    naturalytelserBlokk.getByText(
+      "Naturalytelse Bil har overlappende perioder",
+    ),
+  ).toBeVisible({ visible: false });
+
+  await naturalytelserBlokk
+    .getByRole("button", { name: "Slett naturalytelse" })
+    .click();
+  await expect(
+    naturalytelserBlokk.getByText("Naturalytelse som faller bort"),
+  ).toHaveCount(1);
+  await expect(
+    naturalytelserBlokk.getByRole("button", { name: "Slett naturalytelse" }),
+  ).toHaveCount(0);
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "Oppsummering" }),
+  ).toBeVisible();
 });
