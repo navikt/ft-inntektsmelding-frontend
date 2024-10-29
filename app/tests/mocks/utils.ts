@@ -1,10 +1,10 @@
-import { Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
 import { ingenEksisterendeInntektsmeldingerResponse } from "./eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
-import { enkeltGrunnlagResponse } from "./grunnlag";
+import { enkeltOpplysningerResponse } from "./opplysninger.ts";
 
 type MockGrunnlagParams = {
   page: Page;
@@ -14,7 +14,7 @@ type MockGrunnlagParams = {
 
 export const mockGrunnlag = ({
   page,
-  json = enkeltGrunnlagResponse,
+  json = enkeltOpplysningerResponse,
   uuid = "1",
 }: MockGrunnlagParams) => {
   return page.route(
@@ -58,4 +58,34 @@ export const mockInntektsmeldinger = ({
       await route.fulfill({ json });
     },
   );
+};
+
+export const finnInputFraLabel = async (
+  locator: Locator,
+  nth: number,
+  labelText: string,
+) => {
+  const label = locator.locator(`label:has-text("${labelText}")`).nth(nth);
+  const inputId = await label.getAttribute("for");
+  return locator.locator(`#${inputId}`);
+};
+
+export const expectError = async ({
+  page,
+  label,
+  nth = 0,
+  error,
+}: {
+  page: Locator | Page;
+  label: string;
+  nth?: number;
+  error: string;
+}) => {
+  await expect(
+    page.getByText(label).nth(nth).locator("..").getByText(error),
+  ).toBeVisible();
+};
+
+export const brukNoBreakSpaces = (s: string) => {
+  return s.replaceAll(" ", "\u00A0");
 };
