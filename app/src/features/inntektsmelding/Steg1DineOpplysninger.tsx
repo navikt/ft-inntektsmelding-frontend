@@ -9,7 +9,7 @@ import {
   HGrid,
   TextField,
 } from "@navikt/ds-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useLoaderData, useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
@@ -39,6 +39,7 @@ export const Steg1DineOpplysninger = () => {
   useDocumentTitle(
     `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
   );
+  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjema();
 
@@ -62,8 +63,28 @@ export const Steg1DineOpplysninger = () => {
       to: "../inntekt-og-refusjon",
     });
   });
+
+  // Hvis en oppgave er FERDIG, men vi ikke finner noen tidligere IMer kan vi anta den er sendt fra Altinn eller LPS
+  const erTidligereSendInnFraAltinn =
+    opplysninger.forespørselStatus === "FERDIG" &&
+    eksisterendeInntektsmeldinger.length === 0;
+
   return (
     <section className="mt-2">
+      {erTidligereSendInnFraAltinn && (
+        <Alert className="mb-4" variant="warning">
+          <Heading level="3" size="xsmall" spacing>
+            Inntektsmelding er sendt inn via Altinn eller lønns- og
+            personalsystem
+          </Heading>
+          <BodyLong>
+            Dere har tidligere sendt inn inntektsmelding for denne perioden via
+            Altinn eller bedriftens lønns- og personalsystem. Vi klarer derfor
+            ikke vise inntektsmeldingen. For å korrigere eller melde fra om
+            endringer kan du fylle ut nytt skjema her.
+          </BodyLong>
+        </Alert>
+      )}
       <form onSubmit={onSubmit}>
         <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
           <Heading level="3" size="large">
