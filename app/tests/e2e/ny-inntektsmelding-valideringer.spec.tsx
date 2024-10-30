@@ -4,12 +4,12 @@ import {
   expectError,
   finnInputFraLabel,
   mockGrunnbeløp,
-  mockGrunnlag,
+  mockOpplysninger,
   mockInntektsmeldinger,
 } from "tests/mocks/utils";
 
 test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
-  await mockGrunnlag({ page });
+  await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 

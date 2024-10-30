@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 import {
   mockGrunnbeløp,
-  mockOpplysninger,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
 
-test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
+test("Happy case - det finnes 3 måneder der alle har rapportert inntekt", async ({
   page,
 }) => {
   await mockOpplysninger({ page, json: utgåttOpplysningerResponse });
