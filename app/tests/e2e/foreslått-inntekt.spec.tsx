@@ -5,33 +5,104 @@ import {
   mockOpplysninger,
 } from "tests/mocks/utils";
 
-import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
+import {
+  enkeltOpplysningerResponse,
+  opplysningerMedFlereEnn3Måneder,
+  opplysningerMedSisteMånedIkkeRapportert,
+  opplysningerMedSisteMånedRapportert0,
+} from "../mocks/opplysninger.ts";
 
-test("Happy case - det finnes 3 måneder der alle har rapportert inntekt", async ({
-  page,
-}) => {
-  await mockOpplysninger({ page, json: utgåttOpplysningerResponse });
+test("[08.05] Alle 3 måneder har rapportert inntekt", async ({ page }) => {
+  await mockOpplysninger({ page, json: enkeltOpplysningerResponse });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
     page,
   });
 
-  await page.goto("/fp-im-dialog/1");
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
 
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("April:57 000")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Oppgaven er utgått" }),
+    page.getByTestId("gjennomsnittinntekt-block").getByText("53 000"),
+  ).toBeVisible();
+});
+
+test("[01.05] Siste måned er ikke rapportert", async ({ page }) => {
+  await mockOpplysninger({
+    page,
+    json: opplysningerMedSisteMånedIkkeRapportert,
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+  });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
+  await expect(
+    beregnetMånedslønn.getByText("April:Ikke rapportert"),
   ).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Gå til Min side - arbeidsgiver" }),
+    page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
   ).toBeVisible();
+});
 
-  // Forsøk gå til en annen underside, og forvent samme resultat
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+test("[08.05] Siste måned er rapportert 0 kroner", async ({ page }) => {
+  await mockOpplysninger({
+    page,
+    json: opplysningerMedSisteMånedRapportert0,
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+  });
 
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("April:0")).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Oppgaven er utgått" }),
+    page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
   ).toBeVisible();
+});
+
+test("[01.05] Flere enn 3 måneder i respons", async ({ page }) => {
+  await mockOpplysninger({
+    page,
+    json: opplysningerMedFlereEnn3Måneder,
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+  });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("April:0")).toBeVisible();
   await expect(
-    page.getByRole("button", { name: "Gå til Min side - arbeidsgiver" }),
+    page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
   ).toBeVisible();
 });

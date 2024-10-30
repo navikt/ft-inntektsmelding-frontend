@@ -168,7 +168,7 @@ export function gjennomsnittInntekt(inntekter: OpplysningerDto["inntekter"]) {
     return sum + (inntekt?.beløp || 0);
   }, 0);
 
-  return summerteInntekter / (inntekter.length || 1);
+  return summerteInntekter / 3;
 }
 
 export const beløpSchema = z.union([z.string(), z.number()]);

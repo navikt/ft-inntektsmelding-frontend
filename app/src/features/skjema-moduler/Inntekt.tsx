@@ -76,7 +76,11 @@ export function Inntekt({
             .map((inntekt) => (
               <Fragment key={inntekt.fom}>
                 <span>{navnPåMåned(inntekt.fom)}:</span>
-                <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
+                <Label as="span">
+                  {inntekt.beløp === undefined
+                    ? "Ikke rapportert"
+                    : formatKroner(inntekt.beløp)}
+                </Label>
               </Fragment>
             ))}
         </HGrid>
