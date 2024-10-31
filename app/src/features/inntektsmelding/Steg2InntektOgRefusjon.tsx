@@ -69,7 +69,7 @@ export function Steg2InntektOgRefusjon() {
 
   const inntekt =
     inntektsmeldingSkjemaState.inntekt ||
-    opplysninger.inntektsopplysninger.gjennomsnittlønn;
+    opplysninger.inntektsopplysninger.gjennomsnittLønn;
 
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {

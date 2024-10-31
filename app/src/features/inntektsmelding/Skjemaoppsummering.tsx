@@ -192,7 +192,7 @@ function InntektSummary({
   // Hvis den brukes til å vise eksisterende IM (url: .../vis) så må vi bruke registrert inntekt,
   // og sammenligne med gj.snitt fra opplysninger for å bedømme om den har blitt endret eller ikke.
   const harEndretInntekt = skjemaState.endringAvInntektÅrsaker.length > 0;
-  const estimertInntekt = opplysninger.inntektsopplysninger.gjennomsnittlønn;
+  const estimertInntekt = opplysninger.inntektsopplysninger.gjennomsnittLønn;
   const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
 
   return (

@@ -17,7 +17,7 @@ const STANDARD_OPPLYSNINGER = {
   },
   forespørselStatus: "UNDER_BEHANDLING" as const,
   inntektsopplysninger: {
-    gjennomsnittlønn: 53_000,
+    gjennomsnittLønn: 53_000,
     månedsinntekter: [
       {
         fom: "2024-02-01",
@@ -53,7 +53,7 @@ export const utgåttOpplysningerResponse = {
 export const opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist = {
   ...STANDARD_OPPLYSNINGER,
   inntektsopplysninger: {
-    gjennomsnittlønn: 51_666.67,
+    gjennomsnittLønn: 51_666.67,
     månedsinntekter: [
       {
         fom: "2024-01-01",
@@ -85,7 +85,7 @@ export const opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist = {
 export const opplysningerMedSisteMånedRapportert0 = {
   ...STANDARD_OPPLYSNINGER,
   inntektsopplysninger: {
-    gjennomsnittlønn: 34_000,
+    gjennomsnittLønn: 34_000,
     månedsinntekter: [
       {
         fom: "2024-02-01",
@@ -112,7 +112,7 @@ export const opplysningerMedFlereEnn3Måneder = {
   ...STANDARD_OPPLYSNINGER,
   startdatoPermisjon: "2024-05-04",
   inntektsopplysninger: {
-    gjennomsnittlønn: 52_000,
+    gjennomsnittLønn: 52_000,
     månedsinntekter: [
       {
         fom: "2023-12-01",

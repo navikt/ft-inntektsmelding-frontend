@@ -92,7 +92,7 @@ const dummyOpplysninger: OpplysningerDto = {
   ytelse: "OMSORGSPENGER",
   forespørselStatus: "UNDER_BEHANDLING",
   inntektsopplysninger: {
-    gjennomsnittlønn: 53_000,
+    gjennomsnittLønn: 53_000,
     månedsinntekter: [
       {
         fom: "2024-02-01",

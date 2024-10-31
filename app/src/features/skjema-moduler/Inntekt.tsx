@@ -110,7 +110,7 @@ export function Inntekt({
             isOpen && "text-text-subtle line-through",
           )}
         >
-          {formatKroner(inntektsopplysninger.gjennomsnittlønn)}
+          {formatKroner(inntektsopplysninger.gjennomsnittLønn)}
         </strong>
         <BodyShort>
           Gjennomsnittet av lønn fra{" "}
