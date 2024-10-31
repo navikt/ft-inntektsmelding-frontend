@@ -91,7 +91,7 @@ export function Inntekt({
                 "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
               inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
           ) && (
-            <Alert className="col-span-2" data-testid="aler" variant="warning">
+            <Alert className="col-span-2" variant="warning">
               <BodyShort>
                 Det er ikke rapportert lønn for alle tre månedene før første
                 fraværsdag. Vi har derfor estimert månedslønnen basert på
