@@ -8,7 +8,7 @@ import {
 import {
   enkeltOpplysningerResponse,
   opplysningerMedFlereEnn3Måneder,
-  opplysningerMedSisteMånedIkkeRapportert,
+  opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
   opplysningerMedSisteMånedRapportert0,
 } from "../mocks/opplysninger.ts";
 
@@ -36,7 +36,7 @@ test("[08.05] Alle 3 måneder har rapportert inntekt", async ({ page }) => {
 test("[01.05] Siste måned er ikke rapportert", async ({ page }) => {
   await mockOpplysninger({
     page,
-    json: opplysningerMedSisteMånedIkkeRapportert,
+    json: opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
   });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
@@ -49,17 +49,25 @@ test("[01.05] Siste måned er ikke rapportert", async ({ page }) => {
     .getByRole("heading", { name: "Beregnet månedslønn" })
     .locator("..");
 
+  await expect(beregnetMånedslønn.getByText("Januar:53 000")).toBeVisible();
   await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
   await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
   await expect(
     beregnetMånedslønn.getByText("April:Ikke rapportert"),
   ).toBeVisible();
   await expect(
-    page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
+    page.getByTestId("gjennomsnittinntekt-block").getByText("51 666,67"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByTestId("gjennomsnittinntekt-block")
+      .getByText("Gjennomsnittet av lønn fra januar, februar og mars"),
   ).toBeVisible();
 });
 
-test("[08.05] Siste måned er rapportert 0 kroner", async ({ page }) => {
+test("[08.05] mangler siste måned men brukt i gjennomsnitt", async ({
+  page,
+}) => {
   await mockOpplysninger({
     page,
     json: opplysningerMedSisteMånedRapportert0,
@@ -83,7 +91,9 @@ test("[08.05] Siste måned er rapportert 0 kroner", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("[01.05] Flere enn 3 måneder i respons", async ({ page }) => {
+test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
+  page,
+}) => {
   await mockOpplysninger({
     page,
     json: opplysningerMedFlereEnn3Måneder,

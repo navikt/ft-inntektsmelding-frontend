@@ -37,6 +37,7 @@ import {
   capitalizeSetning,
   formatDatoKort,
   formatKroner,
+  formatOppramsing,
   leggTilGenitiv,
 } from "~/utils.ts";
 
@@ -111,7 +112,12 @@ export function Inntekt({
           {formatKroner(inntektsopplysninger.gjennomsnittlønn)}
         </strong>
         <BodyShort>
-          Gjennomsnittet av de siste tre månedene før {førsteDag}
+          Gjennomsnittet av lønn fra{" "}
+          {formatOppramsing(
+            inntektsopplysninger.månedsinntekter
+              .filter((m) => m.status === "BRUKT_I_GJENNOMSNITT")
+              .map((m) => navnPåMåned(m.fom).toLowerCase()),
+          )}
         </BodyShort>
       </VStack>
       {isOpen ? (
@@ -454,5 +460,5 @@ function navnPåMåned(date: string) {
     new Date(date),
   );
 
-  return capitalizeSetning(måned);
+  return capitalizeSetning(måned) ?? "";
 }

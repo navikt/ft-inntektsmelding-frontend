@@ -207,3 +207,10 @@ export function finnSenesteInntektsmelding(
 
   return sisteInntektsmelding;
 }
+
+export function formatOppramsing(strenger: string[]) {
+  const første = strenger.slice(0, -1);
+  const [siste] = strenger.slice(-1);
+
+  return `${første.join(", ")} og ${siste}`;
+}
