@@ -9,17 +9,17 @@ import {
 import { grunnbeløpResponse } from "./grunnbeløp";
 import { enkeltOpplysningerResponse } from "./opplysninger.ts";
 
-type MockGrunnlagParams = {
+type mockOpplysningerParams = {
   page: Page;
   json?: OpplysningerDto;
   uuid?: string;
 };
 
-export const mockGrunnlag = ({
+export const mockOpplysninger = ({
   page,
   json = enkeltOpplysningerResponse,
   uuid = "1",
-}: MockGrunnlagParams) => {
+}: mockOpplysningerParams) => {
   return page.route(
     `**/*/imdialog/opplysninger?foresporselUuid=${uuid}`,
     async (route) => {

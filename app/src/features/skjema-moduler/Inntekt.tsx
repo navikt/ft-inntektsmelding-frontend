@@ -37,7 +37,7 @@ import {
   capitalizeSetning,
   formatDatoKort,
   formatKroner,
-  gjennomsnittInntekt,
+  formatOppramsing,
   leggTilGenitiv,
 } from "~/utils.ts";
 
@@ -53,7 +53,7 @@ export function Inntekt({
   opplysninger,
   harEksisterendeInntektsmeldinger,
 }: InntektProps) {
-  const { startdatoPermisjon, person, inntekter } = opplysninger;
+  const { startdatoPermisjon, person, inntektsopplysninger } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
@@ -68,32 +68,39 @@ export function Inntekt({
       </Heading>
       <Informasjonsseksjon
         kilde="Fra A-Ordningen"
-        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {inntekter
+          {inntektsopplysninger.månedsinntekter
             ?.sort((a, b) => a.fom.localeCompare(b.fom))
             .map((inntekt) => (
               <Fragment key={inntekt.fom}>
                 <span>{navnPåMåned(inntekt.fom)}:</span>
-                <Label as="span">{formatKroner(inntekt.beløp) || "-"}</Label>
+                <Label as="span">
+                  {inntekt.status ===
+                    "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
+                  inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT"
+                    ? "Ikke rapportert"
+                    : formatKroner(inntekt.beløp)}
+                </Label>
               </Fragment>
             ))}
+          {inntektsopplysninger.månedsinntekter.some(
+            (inntekt) =>
+              inntekt.status ===
+                "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
+              inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
+          ) && (
+            <Alert className="col-span-2" variant="warning">
+              <BodyShort>
+                Det er ikke rapportert lønn for alle tre månedene før første
+                fraværsdag. Vi har derfor estimert månedslønnen basert på
+                gjennomsnittet av de tre siste månedene med rapportert lønn.
+              </BodyShort>
+            </Alert>
+          )}
         </HGrid>
       </Informasjonsseksjon>
-
-      {inntekter.some((inntekt) => inntekt.beløp === undefined) && (
-        <Alert variant="warning">
-          <Heading size="xsmall" spacing>
-            Lønnsopplysningene inneholder måneder uten rapportert inntekt
-          </Heading>
-          <BodyShort>
-            Vi estimerer beregnet månedslønn til et snitt av innrapportert
-            inntekt for de siste tre månedene. Hvis dere ser at det skal være en
-            annen beregnet månedslønn, må dere endre dette manuelt.
-          </BodyShort>
-        </Alert>
-      )}
 
       <VStack data-testid="gjennomsnittinntekt-block" gap="1">
         <BodyShort>Beregnet månedslønn</BodyShort>
@@ -103,10 +110,19 @@ export function Inntekt({
             isOpen && "text-text-subtle line-through",
           )}
         >
-          {formatKroner(gjennomsnittInntekt(inntekter))}
+          {formatKroner(inntektsopplysninger.gjennomsnittlønn)}
         </strong>
         <BodyShort>
-          Gjennomsnittet av de siste tre månedene før {førsteDag}
+          Gjennomsnittet av lønn fra{" "}
+          {formatOppramsing(
+            inntektsopplysninger.månedsinntekter
+              .filter(
+                (m) =>
+                  m.status !==
+                  "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+              )
+              .map((m) => navnPåMåned(m.fom).toLowerCase()),
+          )}
         </BodyShort>
       </VStack>
       {isOpen ? (
@@ -449,5 +465,5 @@ function navnPåMåned(date: string) {
     new Date(date),
   );
 
-  return capitalizeSetning(måned);
+  return capitalizeSetning(måned) ?? "";
 }

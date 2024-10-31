@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import {
   mockGrunnbeløp,
-  mockGrunnlag,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
@@ -10,7 +10,7 @@ import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
 test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
   page,
 }) => {
-  await mockGrunnlag({ page, json: utgåttOpplysningerResponse });
+  await mockOpplysninger({ page, json: utgåttOpplysningerResponse });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
     page,

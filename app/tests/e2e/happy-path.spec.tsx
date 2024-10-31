@@ -2,13 +2,13 @@ import { expect, test } from "@playwright/test";
 import { enkelSendInntektsmeldingResponse } from "tests/mocks/send-inntektsmelding";
 import {
   mockGrunnbeløp,
-  mockGrunnlag,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 test.describe("Happy path", () => {
   test("Enklest mulige utfylling", async ({ page }) => {
-    await mockGrunnlag({ page });
+    await mockOpplysninger({ page });
     await mockGrunnbeløp({ page });
     await mockInntektsmeldinger({ page });
 

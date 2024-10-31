@@ -129,14 +129,21 @@ export const opplysningerSchema = z.object({
     organisasjonNavn: z.string(),
     organisasjonNummer: z.string(),
   }),
-  inntekter: z.array(
-    z.object({
-      fom: z.string(),
-      tom: z.string(),
-      beløp: z.number().optional(),
-      arbeidsgiverIdent: z.string(),
-    }),
-  ),
+  inntektsopplysninger: z.object({
+    gjennomsnittlønn: z.number(),
+    månedsinntekter: z.array(
+      z.object({
+        fom: z.string(),
+        tom: z.string(),
+        beløp: z.number().optional(),
+        status: z.enum([
+          "BRUKT_I_GJENNOMSNITT",
+          "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
+          "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+        ]),
+      }),
+    ),
+  }),
   forespørselStatus: z.enum(["UNDER_BEHANDLING", "FERDIG", "UTGÅTT"]),
   startdatoPermisjon: z.string(),
   ytelse: z.enum([

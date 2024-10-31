@@ -160,17 +160,6 @@ const STØNADSNAVN = {
   OMSORGSPENGER: "omsorgspenger",
 };
 
-export function gjennomsnittInntekt(inntekter: OpplysningerDto["inntekter"]) {
-  if (!inntekter) {
-    return 0;
-  }
-  const summerteInntekter = inntekter.reduce((sum, inntekt) => {
-    return sum + (inntekt?.beløp || 0);
-  }, 0);
-
-  return summerteInntekter / (inntekter.length || 1);
-}
-
 export const beløpSchema = z.union([z.string(), z.number()]);
 
 export const isDev = import.meta.env.DEV;
@@ -217,4 +206,12 @@ export function finnSenesteInntektsmelding(
   );
 
   return sisteInntektsmelding;
+}
+
+export function formatOppramsing(strenger: string[]) {
+  const formatterer = new Intl.ListFormat("no", {
+    style: "long",
+    type: "conjunction",
+  });
+  return formatterer.format(strenger);
 }
