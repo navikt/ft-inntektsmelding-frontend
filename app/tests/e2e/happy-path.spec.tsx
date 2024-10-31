@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 import { enkelSendInntektsmeldingResponse } from "tests/mocks/send-inntektsmelding";
 import {
   mockGrunnbeløp,
-  mockOpplysninger,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 test.describe("Happy path", () => {

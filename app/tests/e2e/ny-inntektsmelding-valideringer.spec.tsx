@@ -4,8 +4,8 @@ import {
   expectError,
   finnInputFraLabel,
   mockGrunnbeløp,
-  mockOpplysninger,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {

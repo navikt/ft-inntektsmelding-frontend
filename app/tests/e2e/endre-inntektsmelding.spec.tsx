@@ -2,14 +2,17 @@ import { expect, test } from "@playwright/test";
 import {
   finnInputFraLabel,
   mockGrunnbeløp,
-  mockOpplysninger,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 import { mangeEksisterendeInntektsmeldingerResponse } from "../mocks/eksisterende-inntektsmeldinger";
 
 test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
-  await mockOpplysninger({ page, uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858" });
+  await mockOpplysninger({
+    page,
+    uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
+  });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
     page,
@@ -167,7 +170,10 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
 });
 
 test("skal ikke få lov til å sende inn uten endring", async ({ page }) => {
-  await mockOpplysninger({ page, uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858" });
+  await mockOpplysninger({
+    page,
+    uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
+  });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
     page,

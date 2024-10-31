@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import {
   mockGrunnbeløp,
-  mockOpplysninger,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 test('burde vise "dine opplysninger" riktig', async ({ page }) => {

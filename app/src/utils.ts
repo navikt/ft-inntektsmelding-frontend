@@ -209,8 +209,9 @@ export function finnSenesteInntektsmelding(
 }
 
 export function formatOppramsing(strenger: string[]) {
-  const første = strenger.slice(0, -1);
-  const [siste] = strenger.slice(-1);
-
-  return `${første.join(", ")} og ${siste}`;
+  const formatterer = new Intl.ListFormat("no", {
+    style: "long",
+    type: "conjunction",
+  });
+  return formatterer.format(strenger);
 }
