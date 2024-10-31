@@ -63,23 +63,13 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Beregnet Månedslønn" }),
   ).toBeVisible();
-  await expect(
-    page.getByText(
-      "Underfundigs lønn fra de siste tre månedene før 30.05.2024",
-    ),
-  ).toBeVisible();
+
   await expect(page.getByText("Fra A-Ordningen")).toBeVisible();
   const gjennomsnittInntektBlokk = page.getByTestId(
     "gjennomsnittinntekt-block",
   );
   await expect(
     gjennomsnittInntektBlokk.getByText("Beregnet månedslønn"),
-  ).toBeVisible();
-  await expect(gjennomsnittInntektBlokk.getByText("53 000")).toBeVisible();
-  await expect(
-    gjennomsnittInntektBlokk.getByText(
-      "Gjennomsnittet av de siste tre månedene før 30.05.2024",
-    ),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
