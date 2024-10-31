@@ -85,7 +85,7 @@ export const opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist = {
 export const opplysningerMedSisteMånedRapportert0 = {
   ...STANDARD_OPPLYSNINGER,
   inntektsopplysninger: {
-    gjennomsnittlønn: 53_000,
+    gjennomsnittlønn: 34_000,
     månedsinntekter: [
       {
         fom: "2024-02-01",
@@ -112,7 +112,7 @@ export const opplysningerMedFlereEnn3Måneder = {
   ...STANDARD_OPPLYSNINGER,
   startdatoPermisjon: "2024-05-04",
   inntektsopplysninger: {
-    gjennomsnittlønn: 53_000,
+    gjennomsnittlønn: 52_000,
     månedsinntekter: [
       {
         fom: "2023-12-01",

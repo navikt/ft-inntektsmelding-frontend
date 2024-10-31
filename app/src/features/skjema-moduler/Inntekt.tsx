@@ -68,7 +68,7 @@ export function Inntekt({
       </Heading>
       <Informasjonsseksjon
         kilde="Fra A-Ordningen"
-        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
+        tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
           {inntektsopplysninger.månedsinntekter
@@ -77,29 +77,30 @@ export function Inntekt({
               <Fragment key={inntekt.fom}>
                 <span>{navnPåMåned(inntekt.fom)}:</span>
                 <Label as="span">
-                  {inntekt.beløp === undefined
+                  {inntekt.status ===
+                    "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
+                  inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT"
                     ? "Ikke rapportert"
                     : formatKroner(inntekt.beløp)}
                 </Label>
               </Fragment>
             ))}
+          {inntektsopplysninger.månedsinntekter.some(
+            (inntekt) =>
+              inntekt.status ===
+                "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
+              inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
+          ) && (
+            <Alert className="col-span-2" variant="warning" data-testid="aler">
+              <BodyShort>
+                Det er ikke rapportert lønn for alle tre månedene før første
+                fraværsdag. Vi har derfor estimert månedslønnen basert på
+                gjennomsnittet av de tre siste månedene med rapportert lønn.
+              </BodyShort>
+            </Alert>
+          )}
         </HGrid>
       </Informasjonsseksjon>
-
-      {inntektsopplysninger.månedsinntekter.some(
-        (inntekt) => inntekt.beløp === undefined,
-      ) && (
-        <Alert variant="warning">
-          <Heading size="xsmall" spacing>
-            Lønnsopplysningene inneholder måneder uten rapportert inntekt
-          </Heading>
-          <BodyShort>
-            Vi estimerer beregnet månedslønn til et snitt av innrapportert
-            inntekt for de siste tre månedene. Hvis dere ser at det skal være en
-            annen beregnet månedslønn, må dere endre dette manuelt.
-          </BodyShort>
-        </Alert>
-      )}
 
       <VStack data-testid="gjennomsnittinntekt-block" gap="1">
         <BodyShort>Beregnet månedslønn</BodyShort>
@@ -115,7 +116,11 @@ export function Inntekt({
           Gjennomsnittet av lønn fra{" "}
           {formatOppramsing(
             inntektsopplysninger.månedsinntekter
-              .filter((m) => m.status === "BRUKT_I_GJENNOMSNITT")
+              .filter(
+                (m) =>
+                  m.status !==
+                  "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+              )
               .map((m) => navnPåMåned(m.fom).toLowerCase()),
           )}
         </BodyShort>

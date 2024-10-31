@@ -85,9 +85,16 @@ test("[08.05] mangler siste måned men brukt i gjennomsnitt", async ({
 
   await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
   await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
-  await expect(beregnetMånedslønn.getByText("April:0")).toBeVisible();
+  await expect(
+    beregnetMånedslønn.getByText("April:Ikke rapportert"),
+  ).toBeVisible();
   await expect(
     page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByTestId("gjennomsnittinntekt-block")
+      .getByText("Gjennomsnittet av lønn fra februar, mars og april"),
   ).toBeVisible();
 });
 
@@ -109,10 +116,22 @@ test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
     .getByRole("heading", { name: "Beregnet månedslønn" })
     .locator("..");
 
+  await expect(beregnetMånedslønn.getByText("Desember:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Januar:52 000")).toBeVisible();
   await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
-  await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
-  await expect(beregnetMånedslønn.getByText("April:0")).toBeVisible();
   await expect(
-    page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
+    beregnetMånedslønn.getByText("Mars:Ikke rapportert"),
+  ).toBeVisible();
+  await expect(
+    beregnetMånedslønn.getByText("April:Ikke rapportert"),
+  ).toBeVisible();
+
+  await expect(
+    page.getByTestId("gjennomsnittinntekt-block").getByText("52 000"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByTestId("gjennomsnittinntekt-block")
+      .getByText("Gjennomsnittet av lønn fra desember, januar og februar"),
   ).toBeVisible();
 });
