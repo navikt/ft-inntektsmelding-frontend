@@ -160,17 +160,6 @@ const STØNADSNAVN = {
   OMSORGSPENGER: "omsorgspenger",
 };
 
-export function gjennomsnittInntekt(inntekter: OpplysningerDto["inntekter"]) {
-  if (!inntekter) {
-    return 0;
-  }
-  const summerteInntekter = inntekter.reduce((sum, inntekt) => {
-    return sum + (inntekt?.beløp || 0);
-  }, 0);
-
-  return summerteInntekter / 3;
-}
-
 export const beløpSchema = z.union([z.string(), z.number()]);
 
 export const isDev = import.meta.env.DEV;

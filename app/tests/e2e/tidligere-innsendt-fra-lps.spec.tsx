@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import {
   mockGrunnbeløp,
-  mockGrunnlag,
   mockInntektsmeldinger,
+  mockOpplysninger,
 } from "tests/mocks/utils";
 
 import { mangeEksisterendeInntektsmeldingerResponse } from "../mocks/eksisterende-inntektsmeldinger.ts";
@@ -14,7 +14,7 @@ import {
 test("burde vise alert dersom vi kan anta at IM er sendt inn tidligere fra LPS/Altinn", async ({
   page,
 }) => {
-  await mockGrunnlag({ page, json: fullførtOppgaveResponse });
+  await mockOpplysninger({ page, json: fullførtOppgaveResponse });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
@@ -37,7 +37,7 @@ test("burde vise alert dersom vi kan anta at IM er sendt inn tidligere fra LPS/A
 });
 
 test("burde ikke vise alert dersom IM finnes", async ({ page }) => {
-  await mockGrunnlag({ page, json: enkeltOpplysningerResponse });
+  await mockOpplysninger({ page, json: enkeltOpplysningerResponse });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({
     page,

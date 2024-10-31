@@ -91,24 +91,27 @@ const dummyOpplysninger: OpplysningerDto = {
   },
   ytelse: "OMSORGSPENGER",
   forespørselStatus: "UNDER_BEHANDLING",
-  inntekter: [
-    {
-      fom: new Date(2023, 0, 1).toISOString(),
-      tom: new Date(2023, 0, 31).toISOString(),
-      arbeidsgiverIdent: "123456789",
-      beløp: 30_000,
-    },
-    {
-      fom: new Date(2023, 1, 1).toISOString(),
-      tom: new Date(2023, 1, 28).toISOString(),
-      arbeidsgiverIdent: "123456789",
-      beløp: 31_000,
-    },
-    {
-      fom: new Date(2023, 2, 1).toISOString(),
-      tom: new Date(2023, 2, 31).toISOString(),
-      arbeidsgiverIdent: "123456789",
-      beløp: 32_000,
-    },
-  ],
+  inntektsopplysninger: {
+    gjennomsnittlønn: 53_000,
+    månedsinntekter: [
+      {
+        fom: "2024-02-01",
+        tom: "2024-02-29",
+        beløp: 52_000,
+        status: "BRUKT_I_GJENNOMSNITT",
+      },
+      {
+        fom: "2024-03-01",
+        tom: "2024-03-31",
+        beløp: 50_000,
+        status: "BRUKT_I_GJENNOMSNITT",
+      },
+      {
+        fom: "2024-04-01",
+        tom: "2024-04-30",
+        beløp: 57_000,
+        status: "BRUKT_I_GJENNOMSNITT",
+      },
+    ],
+  },
 };

@@ -37,7 +37,6 @@ import {
   capitalizeSetning,
   formatDatoKort,
   formatKroner,
-  gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils.ts";
 
@@ -53,7 +52,7 @@ export function Inntekt({
   opplysninger,
   harEksisterendeInntektsmeldinger,
 }: InntektProps) {
-  const { startdatoPermisjon, person, inntekter } = opplysninger;
+  const { startdatoPermisjon, person, inntektsopplysninger } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
@@ -71,7 +70,7 @@ export function Inntekt({
         tittel={`${capitalizeSetning(leggTilGenitiv(person.fornavn))} lønn fra de siste tre månedene før ${førsteDag}`}
       >
         <HGrid columns={{ md: "max-content 1fr" }} gap="4">
-          {inntekter
+          {inntektsopplysninger.månedsinntekter
             ?.sort((a, b) => a.fom.localeCompare(b.fom))
             .map((inntekt) => (
               <Fragment key={inntekt.fom}>
@@ -86,7 +85,9 @@ export function Inntekt({
         </HGrid>
       </Informasjonsseksjon>
 
-      {inntekter.some((inntekt) => inntekt.beløp === undefined) && (
+      {inntektsopplysninger.månedsinntekter.some(
+        (inntekt) => inntekt.beløp === undefined,
+      ) && (
         <Alert variant="warning">
           <Heading size="xsmall" spacing>
             Lønnsopplysningene inneholder måneder uten rapportert inntekt
@@ -107,7 +108,7 @@ export function Inntekt({
             isOpen && "text-text-subtle line-through",
           )}
         >
-          {formatKroner(gjennomsnittInntekt(inntekter))}
+          {formatKroner(inntektsopplysninger.gjennomsnittlønn)}
         </strong>
         <BodyShort>
           Gjennomsnittet av de siste tre månedene før {førsteDag}

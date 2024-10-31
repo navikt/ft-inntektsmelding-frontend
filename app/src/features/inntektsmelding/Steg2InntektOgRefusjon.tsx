@@ -11,7 +11,6 @@ import {
   capitalizeSetning,
   formatDatoLang,
   formatYtelsesnavn,
-  gjennomsnittInntekt,
   leggTilGenitiv,
 } from "~/utils";
 
@@ -68,12 +67,9 @@ export function Steg2InntektOgRefusjon() {
   const harEksisterendeInntektsmeldinger =
     eksisterendeInntektsmeldinger.length > 0;
 
-  const gjennomsnittInntektFraAOrdning = gjennomsnittInntekt(
-    opplysninger.inntekter,
-  );
-
   const inntekt =
-    inntektsmeldingSkjemaState.inntekt || gjennomsnittInntektFraAOrdning;
+    inntektsmeldingSkjemaState.inntekt ||
+    opplysninger.inntektsopplysninger.gjennomsnittlønn;
 
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
