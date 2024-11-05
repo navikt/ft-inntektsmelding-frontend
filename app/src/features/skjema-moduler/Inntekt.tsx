@@ -260,9 +260,11 @@ const EndreMånedslønn = ({
   onClose,
   harEksisterendeInntektsmeldinger,
 }: EndreMånedslønnProps) => {
-  const { unregister } = useFormContext<InntektOgRefusjonForm>();
+  const { unregister, watch, setValue } =
+    useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
+    setValue("refusjon.0.beløp", watch("inntekt"));
     onClose();
   };
 
@@ -277,6 +279,7 @@ const EndreMånedslønn = ({
           required
         />
         <Button
+          aria-label="Tilbakestill månedsinntekt"
           className="mt-8"
           icon={<ArrowUndoIcon aria-hidden />}
           onClick={tilbakestillOgLukk}
