@@ -16,6 +16,8 @@ const csp = await buildCspHeader(
     "base-uri": ["'self'"],
     "img-src": ["data:", "'self'"],
     "style-src": ["'self'"],
+    "style-src-elem": ["'self'"],
+    "script-src-elem": ["'self'"],
     "connect-src": [
       "https://telemetry.ekstern.dev.nav.no/collect",
       "https://telemetry.nav.no/collect",
