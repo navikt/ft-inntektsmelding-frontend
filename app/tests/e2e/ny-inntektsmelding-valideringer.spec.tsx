@@ -95,11 +95,9 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     error: "Beløpet må være 0 eller høyere",
   });
   await page.getByText("Endret månedsinntekt").fill("50000");
-  // await expect(page.getByLabel("Endret månedsinntekt")).toHaveValue("50 000");
 
   await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
   // Hvorfor feiler denne???
-  // await expect(page.getByLabel("Endret månedsinntekt")).toBeVisible();
 
   await page.getByRole("button", { name: "Neste steg" }).click();
   await expectError({
@@ -367,4 +365,43 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Oppsummering" }),
   ).toBeVisible();
+});
+
+test("tilbakestilling av beløp", async ({ page }) => {
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  // Skal forsøke hente eksisterende inntektsmelding og navigere til første steg når IM ikke finnes.
+  await page.goto("/fp-im-dialog/1");
+
+  await page.getByLabel("Navn").fill("Berømt Flyttelass");
+  await page.getByLabel("Telefon").fill("12312312");
+  await page.getByText("Bekreft og gå videre").click();
+
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  await page.getByLabel("Endret månedsinntekt").fill("40000");
+
+  const gjennomsnittInntektBlokk = page.getByTestId(
+    "gjennomsnittinntekt-block",
+  );
+
+  await page
+    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .click();
+
+  const refusjonsBlock = page
+    .getByText("Refusjonsbeløp per måned")
+    .locator("..");
+
+  await expect(refusjonsBlock.getByText("40 000 kr")).toBeVisible();
+
+  // Tilbakestill månedsinntekt
+  await page
+    .getByRole("button", { name: "Tilbakestill månedsinntekt" })
+    .click();
+
+  // Månedsinntekt skal være tilbakestilt, og refusjonsbeløp skal være oppdatert til å matche månedsinntekten.
+  await expect(gjennomsnittInntektBlokk.getByText("53 000")).toBeVisible();
+  await expect(refusjonsBlock.getByText("53 000 kr")).toBeVisible();
 });

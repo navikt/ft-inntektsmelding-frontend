@@ -277,6 +277,7 @@ const EndreMånedslønn = ({
           required
         />
         <Button
+          aria-label="Tilbakestill månedsinntekt"
           className="mt-8"
           icon={<ArrowUndoIcon aria-hidden />}
           onClick={tilbakestillOgLukk}
