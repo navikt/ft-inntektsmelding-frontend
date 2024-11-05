@@ -12,11 +12,16 @@ import config from "./config.js";
 
 const csp = await buildCspHeader(
   {
+    'default-src': ["'self'"],
+    'base-uri': ["'self'"],
     "img-src": ["data:", "'self'"],
+    'style-src': ["'self'"],
     "connect-src": [
       "https://telemetry.ekstern.dev.nav.no/collect",
       "https://telemetry.nav.no/collect",
     ],
+    'media-src': ["'none'"],
+    'object-src': ["'none'"],
   },
   { env: config.app.env },
 );
