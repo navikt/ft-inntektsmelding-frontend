@@ -31,9 +31,18 @@ test("[08.05] Alle 3 måneder har rapportert inntekt", async ({ page }) => {
   await expect(
     page.getByTestId("gjennomsnittinntekt-block").getByText("53 000"),
   ).toBeVisible();
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: false });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: false });
 });
 
-test("[01.05] Siste måned er ikke rapportert", async ({ page }) => {
+test("[01.05] Siste måned er ikke rapportert - frist ikke passert", async ({
+  page,
+}) => {
   await mockOpplysninger({
     page,
     json: opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
@@ -63,9 +72,16 @@ test("[01.05] Siste måned er ikke rapportert", async ({ page }) => {
       .getByTestId("gjennomsnittinntekt-block")
       .getByText("Gjennomsnittet av lønn fra januar, februar og mars"),
   ).toBeVisible();
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: false });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: true });
 });
 
-test("[08.05] mangler siste måned men brukt i gjennomsnitt", async ({
+test("[08.05] mangler siste måned men brukt i gjennomsnitt - frist passert", async ({
   page,
 }) => {
   await mockOpplysninger({
@@ -96,6 +112,13 @@ test("[08.05] mangler siste måned men brukt i gjennomsnitt", async ({
       .getByTestId("gjennomsnittinntekt-block")
       .getByText("Gjennomsnittet av lønn fra februar, mars og april"),
   ).toBeVisible();
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: true });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: false });
 });
 
 test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
@@ -134,4 +157,11 @@ test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
       .getByTestId("gjennomsnittinntekt-block")
       .getByText("Gjennomsnittet av lønn fra desember, januar og februar"),
   ).toBeVisible();
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: false });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: true });
 });
