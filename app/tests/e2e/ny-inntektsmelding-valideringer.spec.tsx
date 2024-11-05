@@ -367,7 +367,9 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("tilbakestilling av beløp", async ({ page }) => {
+test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", async ({
+  page,
+}) => {
   await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
