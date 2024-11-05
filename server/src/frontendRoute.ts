@@ -12,18 +12,11 @@ import config from "./config.js";
 
 const csp = await buildCspHeader(
   {
-    "default-src": ["'self'"],
-    "base-uri": ["'self'"],
     "img-src": ["data:", "'self'"],
-    "style-src": ["'self'"],
-    "style-src-elem": ["'self'"],
-    "script-src-elem": ["'self'"],
     "connect-src": [
       "https://telemetry.ekstern.dev.nav.no/collect",
       "https://telemetry.nav.no/collect",
     ],
-    "media-src": ["'none'"],
-    "object-src": ["'none'"],
   },
   { env: config.app.env },
 );
@@ -37,10 +30,12 @@ export function setupStaticRoutes(router: Router) {
   // When deployed, the built frontend is copied into the public directory. If running BFF locally the index.html will not exist.
   const spaFilePath = path.resolve("./public", "index.html");
 
-  router.use((request, response, next) => {
-    response.setHeader("Content-Security-Policy", csp);
-    return next();
-  });
+  if (config.app.env === "prod") {
+    router.use((request, response, next) => {
+      response.setHeader("Content-Security-Policy", csp);
+      return next();
+    });
+  }
 
   // Only add vite-mode to dev environment
   if (config.app.env === "dev") {
