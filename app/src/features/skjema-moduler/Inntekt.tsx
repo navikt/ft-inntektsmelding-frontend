@@ -260,9 +260,11 @@ const EndreMånedslønn = ({
   onClose,
   harEksisterendeInntektsmeldinger,
 }: EndreMånedslønnProps) => {
-  const { unregister } = useFormContext<InntektOgRefusjonForm>();
+  const { unregister, watch, setValue } =
+    useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
+    setValue("refusjon.0.beløp", watch("inntekt"));
     onClose();
   };
 
