@@ -18,11 +18,11 @@ const csp = await buildCspHeader(
       }
     : {
         "img-src": ["data:", "'self'"],
-        "script-src-elem": ["localhost:*"],
-        "style-src-elem": ["localhost:*"],
+        "script-src-elem": ["http://localhost:*"],
+        "style-src-elem": ["http://localhost:*"],
         "connect-src": [
           "https://telemetry.ekstern.dev.nav.no/collect",
-          "localhost:*",
+          "http://localhost:*",
         ],
       },
   { env: config.app.env },
