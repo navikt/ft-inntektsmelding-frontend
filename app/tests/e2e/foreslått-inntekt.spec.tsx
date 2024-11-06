@@ -7,6 +7,7 @@ import {
 
 import {
   enkeltOpplysningerResponse,
+  opplysningerMedBådeRapportertOgIkkePassert,
   opplysningerMedFlereEnn3Måneder,
   opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
   opplysningerMedSisteMånedRapportert0,
@@ -102,7 +103,7 @@ test("[08.05] mangler siste måned men brukt i gjennomsnitt - frist passert", as
   await expect(beregnetMånedslønn.getByText("Februar:52 000")).toBeVisible();
   await expect(beregnetMånedslønn.getByText("Mars:50 000")).toBeVisible();
   await expect(
-    beregnetMånedslønn.getByText("April:Ikke rapportert"),
+    beregnetMånedslønn.getByText("April:Ikke rapportert (0kr)"),
   ).toBeVisible();
   await expect(
     page.getByTestId("gjennomsnittinntekt-block").getByText("34 000"),
@@ -164,4 +165,53 @@ test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
   await expect(
     beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
   ).toBeVisible({ visible: true });
+});
+
+test("[??.??] siste måned ikke passert, nest siste passert", async ({
+  page,
+}) => {
+  await mockOpplysninger({
+    page,
+    json: opplysningerMedBådeRapportertOgIkkePassert,
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+  });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("August:52 000")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("September:52 000")).toBeVisible();
+  await expect(
+    beregnetMånedslønn.getByText("Oktober:Ikke rapportert (0kr)"),
+  ).toBeVisible();
+  await expect(
+    beregnetMånedslønn.getByText("November:Ikke rapportert"),
+  ).toBeVisible();
+
+  await expect(
+    page.getByTestId("gjennomsnittinntekt-block").getByText("52 000"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByTestId("gjennomsnittinntekt-block")
+      .getByText("Gjennomsnittet av lønn fra august, september og oktober"),
+  ).toBeVisible();
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: false });
+  await expect(
+    beregnetMånedslønn.getByTestId(
+      "alert-både-ikke-rapportert-og-brukt-i-snitt",
+    ),
+  ).toBeVisible({ visible: true });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: false });
 });

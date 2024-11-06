@@ -146,6 +146,38 @@ export const opplysningerMedFlereEnn3Måneder = {
   },
 } satisfies OpplysningerDto;
 
+export const opplysningerMedBådeRapportertOgIkkePassert = {
+  ...STANDARD_OPPLYSNINGER,
+  startdatoPermisjon: "2024-12-01",
+  inntektsopplysninger: {
+    gjennomsnittLønn: 52_000,
+    månedsinntekter: [
+      {
+        fom: "2024-08-01",
+        tom: "2024-08-31",
+        beløp: 52_000,
+        status: "BRUKT_I_GJENNOMSNITT",
+      },
+      {
+        fom: "2024-09-01",
+        tom: "2024-09-30",
+        beløp: 52_000,
+        status: "BRUKT_I_GJENNOMSNITT",
+      },
+      {
+        fom: "2024-10-01",
+        tom: "2024-10-31",
+        status: "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
+      },
+      {
+        fom: "2024-11-01",
+        tom: "2024-11-30",
+        status: "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+      },
+    ],
+  },
+} satisfies OpplysningerDto;
+
 export const fullførtOppgaveResponse = {
   ...STANDARD_OPPLYSNINGER,
   forespørselStatus: "FERDIG" as const,
