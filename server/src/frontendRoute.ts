@@ -11,21 +11,21 @@ import express, { Router } from "express";
 import config from "./config.js";
 
 const csp = await buildCspHeader(
-    config.app.env === "prod"
-        ? {
-          "img-src": ["data:", "'self'"],
-          "connect-src": ["https://telemetry.nav.no/collect"],
-        }
-        : {
-          "img-src": ["data:", "'self'"],
-          "script-src-elem": ["localhost:*"],
-          "style-src-elem": ["localhost:*"],
-          "connect-src": [
-            "https://telemetry.ekstern.dev.nav.no/collect",
-            "localhost:*",
-          ],
-        },
-    {env: config.app.env},
+  config.app.env === "prod"
+    ? {
+      "img-src": ["data:", "'self'"],
+      "connect-src": ["https://telemetry.nav.no/collect"],
+    }
+    : {
+      "img-src": ["data:", "'self'"],
+      "script-src-elem": ["localhost:*"],
+      "style-src-elem": ["localhost:*"],
+      "connect-src": [
+        "https://telemetry.ekstern.dev.nav.no/collect",
+        "localhost:*",
+      ],
+    },
+  {env: config.app.env},
 );
 
 const dekoratørProps = {
