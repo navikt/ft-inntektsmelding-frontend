@@ -77,11 +77,7 @@ export function Inntekt({
               <Fragment key={inntekt.fom}>
                 <span>{navnPåMåned(inntekt.fom)}:</span>
                 <Label as="span">
-                  {inntekt.status ===
-                    "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT" ||
-                  inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT"
-                    ? "Ikke rapportert"
-                    : formatKroner(inntekt.beløp)}
+                  <InntektTekst inntekt={inntekt} />
                 </Label>
               </Fragment>
             ))}
@@ -220,6 +216,21 @@ export function Inntekt({
   );
 }
 
+const InntektTekst = ({
+  inntekt,
+}: {
+  inntekt: OpplysningerDto["inntektsopplysninger"]["månedsinntekter"][0];
+}) => {
+  if (inntekt.status === "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT") {
+    return "Ikke rapportert";
+  }
+  if (inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT") {
+    return "Ikke rapportert (0kr)";
+  }
+
+  return formatKroner(inntekt.beløp);
+};
+
 type AlertOmRapportertLønnProps = {
   månedsinntekter: OpplysningerDto["inntektsopplysninger"]["månedsinntekter"];
 };
@@ -229,6 +240,32 @@ const AlertOmRapportertLønn = ({
   const harIkkeRapportertOgFristErPassert = månedsinntekter.some(
     (inntekt) => inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
   );
+
+  const harIkkeRapportertMenFristIkkePassert = månedsinntekter.some(
+    (inntekt) =>
+      inntekt.status === "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+  );
+
+  if (
+    harIkkeRapportertOgFristErPassert &&
+    harIkkeRapportertMenFristIkkePassert
+  ) {
+    return (
+      <Alert
+        className="col-span-2"
+        data-testid="alert-både-ikke-rapportert-og-brukt-i-snitt"
+        variant="warning"
+      >
+        <BodyShort>
+          Det er ikke rapportert lønn for alle tre månedene før første
+          fraværsdag, og fristen for rapportering er passert for en eller flere
+          måneder. Vi har derfor estimert månedslønn basert på gjennomsnittet av
+          de tre siste månedene med rapportert lønn, inkludert måneder uten
+          rapportert lønn som er satt til 0 kr.
+        </BodyShort>
+      </Alert>
+    );
+  }
 
   if (harIkkeRapportertOgFristErPassert) {
     return (
@@ -246,11 +283,6 @@ const AlertOmRapportertLønn = ({
       </Alert>
     );
   }
-
-  const harIkkeRapportertMenFristIkkePassert = månedsinntekter.some(
-    (inntekt) =>
-      inntekt.status === "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
-  );
 
   if (harIkkeRapportertMenFristIkkePassert) {
     return (
