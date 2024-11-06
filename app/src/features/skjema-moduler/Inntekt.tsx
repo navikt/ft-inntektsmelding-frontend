@@ -77,7 +77,7 @@ export function Inntekt({
               <Fragment key={inntekt.fom}>
                 <span>{navnPåMåned(inntekt.fom)}:</span>
                 <Label as="span">
-                  <InntektTekst inntekt={inntekt} />
+                  <RapportertInntekt inntekt={inntekt} />
                 </Label>
               </Fragment>
             ))}
@@ -216,7 +216,7 @@ export function Inntekt({
   );
 }
 
-const InntektTekst = ({
+const RapportertInntekt = ({
   inntekt,
 }: {
   inntekt: OpplysningerDto["inntektsopplysninger"]["månedsinntekter"][0];
