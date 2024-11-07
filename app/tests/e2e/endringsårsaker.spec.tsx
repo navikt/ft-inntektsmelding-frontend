@@ -60,7 +60,7 @@ test("endringsårsaker med fom dato", async ({ page }) => {
   });
 });
 
-test("endringsårsaker med fom og tom dato", async ({ page }) => {
+test("endringsårsaker med fom og tom dato (kun ferie)", async ({ page }) => {
   await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
@@ -71,21 +71,61 @@ test("endringsårsaker med fom og tom dato", async ({ page }) => {
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
   ).toBeVisible();
 
-  await forventFomOgTomDatoForEndringsÅrsak({
-    page,
-    endringsÅrsak: "Ferie",
+  await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
+  await expect(page.getByText(`Legg inn periode for ferie:`)).toBeVisible({
+    visible: true,
   });
-  await forventFomOgTomDatoForEndringsÅrsak({
-    page,
-    endringsÅrsak: "Permisjon",
+  await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
+});
+
+test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  await expect(
+    page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
+  ).toBeVisible();
+
+  await page
+    .getByLabel("Hva er årsaken til endringen?")
+    .selectOption("Sykefravær");
+  await expect(page.getByText(`Legg inn periode for sykefravær:`)).toBeVisible({
+    visible: true,
   });
-  await forventFomOgTomDatoForEndringsÅrsak({
-    page,
-    endringsÅrsak: "Permittering",
+  await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Ansatt har fremdeles sykefravær")).toBeVisible({
+    visible: true,
   });
-  await forventFomOgTomDatoForEndringsÅrsak({
-    page,
-    endringsÅrsak: "Sykefravær",
+
+  await page
+    .getByLabel("Hva er årsaken til endringen?")
+    .selectOption("Permisjon");
+  await expect(page.getByText(`Legg inn periode for permisjon:`)).toBeVisible({
+    visible: true,
+  });
+  await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Ansatt er fremdeles permittert")).toBeVisible({
+    visible: true,
+  });
+
+  await page
+    .getByLabel("Hva er årsaken til endringen?")
+    .selectOption("Permittering");
+  await expect(
+    page.getByText(`Legg inn periode for permittering:`),
+  ).toBeVisible({
+    visible: true,
+  });
+  await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
+  await expect(page.getByText("Ansatt er fremdeles i permisjon")).toBeVisible({
+    visible: true,
   });
 });
 
@@ -106,23 +146,4 @@ const forventFomDatoForEndringsÅrsak = async ({
   });
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
-};
-
-const forventFomOgTomDatoForEndringsÅrsak = async ({
-  page,
-  endringsÅrsak,
-}: {
-  page: Page;
-  endringsÅrsak: string;
-}) => {
-  await page
-    .getByLabel("Hva er årsaken til endringen?")
-    .selectOption(endringsÅrsak);
-  await expect(
-    page.getByText(`Legg inn periode for ${endringsÅrsak}:`),
-  ).toBeVisible({
-    visible: true,
-  });
-  await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
-  await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
 };

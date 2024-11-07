@@ -9,6 +9,7 @@ import {
   BodyLong,
   BodyShort,
   Button,
+  Checkbox,
   Heading,
   HGrid,
   Label,
@@ -510,6 +511,28 @@ function Årsaksperioder({ index }: { index: number }) {
         ) : (
           <div />
         )}
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tomErValgfritt ? (
+          <Checkbox>
+            {(() => {
+              switch (årsak) {
+                case "SYKEFRAVÆR": {
+                  return "Ansatt har fremdeles sykefravær";
+                }
+                case "PERMISJON": {
+                  return "Ansatt er fremdeles permittert";
+                }
+                case "PERMITTERING": {
+                  return "Ansatt er fremdeles i permisjon";
+                }
+                default: {
+                  return "";
+                }
+              }
+            })()}
+          </Checkbox>
+        ) : (
+          <div />
+        )}
       </div>
     </>
   );
@@ -517,38 +540,70 @@ function Årsaksperioder({ index }: { index: number }) {
 
 const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   // Før man har valgt
-  "": { fom: false, tom: false, bleKjentFom: false },
+  "": { fom: false, tom: false, bleKjentFom: false, tomErValgfritt: false },
 
   // Har ingen ekstra felter
-  BONUS: { fom: false, tom: false, bleKjentFom: false },
-  NYANSATT: { fom: false, tom: false, bleKjentFom: false },
+  BONUS: { fom: false, tom: false, bleKjentFom: false, tomErValgfritt: false },
+  NYANSATT: {
+    fom: false,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
   FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER: {
     fom: false,
     tom: false,
     bleKjentFom: false,
+    tomErValgfritt: false,
   },
   MANGELFULL_RAPPORTERING_AORDNING: {
     fom: false,
     tom: false,
     bleKjentFom: false,
+    tomErValgfritt: false,
   },
 
   // Kun fom
-  VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFom: false },
-  NY_STILLING: { fom: true, tom: false, bleKjentFom: false },
-  NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFom: false },
+  VARIG_LØNNSENDRING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
+  NY_STILLING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
+  NY_STILLINGSPROSENT: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
 
   // fom + tom
-  FERIE: { fom: true, tom: true, bleKjentFom: false },
-  PERMISJON: { fom: true, tom: true, bleKjentFom: false },
-  PERMITTERING: { fom: true, tom: true, bleKjentFom: false },
-  SYKEFRAVÆR: { fom: true, tom: true, bleKjentFom: false },
+  FERIE: { fom: true, tom: true, bleKjentFom: false, tomErValgfritt: false },
+  PERMISJON: { fom: true, tom: true, bleKjentFom: false, tomErValgfritt: true },
+  PERMITTERING: {
+    fom: true,
+    tom: true,
+    bleKjentFom: false,
+    tomErValgfritt: true,
+  },
+  SYKEFRAVÆR: {
+    fom: true,
+    tom: true,
+    bleKjentFom: false,
+    tomErValgfritt: true,
+  },
 
   // Tariffendring er noe for seg selv
   TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
 } satisfies Record<
   EndringAvInntektÅrsaker & "",
-  { fom: boolean; tom: boolean; bleKjentFom: boolean }
+  { fom: boolean; tom: boolean; bleKjentFom: boolean; tomErValgfritt?: boolean }
 >;
 
 function navnPåMåned(date: string) {
