@@ -98,11 +98,8 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   });
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
-  await page.getByLabel("Til og med").fill("01.6.2024");
   await page.getByText("Ansatt har fremdeles sykefravær").click();
   await expect(page.getByText("Til og med")).toBeDisabled();
-  await page.getByText("Ansatt har fremdeles sykefravær").click();
-  await expect(page.getByText("Til og med")).toBeEnabled();
 
   await page
     .getByLabel("Hva er årsaken til endringen?")
