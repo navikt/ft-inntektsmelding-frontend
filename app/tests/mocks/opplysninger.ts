@@ -40,6 +40,7 @@ const STANDARD_OPPLYSNINGER = {
     ],
   },
   startdatoPermisjon: "2024-05-30",
+  førsteUttaksdato: "2024-05-30",
   ytelse: "FORELDREPENGER" as const,
 } satisfies OpplysningerDto;
 
