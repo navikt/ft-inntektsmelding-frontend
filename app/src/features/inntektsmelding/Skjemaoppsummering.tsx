@@ -73,7 +73,7 @@ export const Skjemaoppsummering = ({
           <FormSummary.Answer>
             <FormSummary.Label>Fra og med</FormSummary.Label>
             <FormSummary.Value>
-              {formatDatoLang(new Date(opplysninger.startdatoPermisjon))}
+              {formatDatoLang(new Date(opplysninger.førsteUttaksdato))}
             </FormSummary.Value>
           </FormSummary.Answer>
         </FormSummary.Answers>
