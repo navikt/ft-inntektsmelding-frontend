@@ -73,6 +73,42 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
       labelText: "Til og med",
     }),
   ).toHaveValue("25.09.2024");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      nth: 1,
+      labelText: "Hva er årsaken til endringen?",
+    }),
+  ).toHaveValue("PERMISJON");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      nth: 1,
+      labelText: "Fra og med",
+    }),
+  ).toHaveValue("11.10.2024");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      nth: 1,
+
+      labelText: "Til og med",
+    }),
+  ).toHaveValue("");
+  await expect(
+    await finnInputFraLabel({
+      page,
+      nth: 1,
+
+      labelText: "Til og med",
+    }),
+  ).toBeDisabled();
+  await expect(
+    await finnInputFraLabel({
+      page,
+      labelText: "Ansatt er fremdeles i permisjon",
+    }),
+  ).toBeChecked();
   await page.goBack();
 
   // Sjekk lenke til utbetaling og refusjon og utfylt info

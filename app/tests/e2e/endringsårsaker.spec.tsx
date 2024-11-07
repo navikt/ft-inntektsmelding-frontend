@@ -170,11 +170,6 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
     `**/*/imdialog/send-inntektsmelding`,
     async (route, request) => {
       const requestBody = request.postData();
-      console.log(requestBody);
-      console.log(
-        "json",
-        JSON.parse(requestBody ?? "{}").endringAvInntektÅrsaker,
-      );
       expect(JSON.parse(requestBody ?? "{}").endringAvInntektÅrsaker).toEqual([
         {
           årsak: "SYKEFRAVÆR",

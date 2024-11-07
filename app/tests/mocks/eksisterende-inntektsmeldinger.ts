@@ -39,6 +39,10 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
         fom: "2024-09-11",
         tom: "2024-09-25",
       },
+      {
+        årsak: "PERMISJON",
+        fom: "2024-10-11",
+      },
     ],
   },
   {
@@ -77,6 +81,10 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
         årsak: "FERIE",
         fom: "2024-09-11",
         tom: "2024-09-25",
+      },
+      {
+        årsak: "PERMISJON",
+        fom: "2024-10-11",
       },
     ],
   },

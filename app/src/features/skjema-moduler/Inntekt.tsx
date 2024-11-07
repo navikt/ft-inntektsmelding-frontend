@@ -527,10 +527,10 @@ function Årsaksperioder({ index }: { index: number }) {
                   return "Ansatt har fremdeles sykefravær";
                 }
                 case "PERMISJON": {
-                  return "Ansatt er fremdeles permittert";
+                  return "Ansatt er fremdeles i permisjon";
                 }
                 case "PERMITTERING": {
-                  return "Ansatt er fremdeles i permisjon";
+                  return "Ansatt er fremdeles permittert";
                 }
                 default: {
                   return "";
