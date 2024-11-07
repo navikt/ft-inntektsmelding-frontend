@@ -404,6 +404,7 @@ function Endringsårsaker({
             key={field.id}
           >
             <Select
+              description="Dette hjelper oss å forstå avviket fra rapportert lønn."
               error={
                 formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
                   ?.message
@@ -457,6 +458,10 @@ function Årsaksperioder({ index }: { index: number }) {
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
 
+  const endringsÅrsakTekst = endringsårsak.find(
+    ({ value }) => value === årsak,
+  )?.label;
+
   // Spesialhåndtering av tariffendring
   if (årsak === "TARIFFENDRING") {
     return (
@@ -475,27 +480,38 @@ function Årsaksperioder({ index }: { index: number }) {
     );
   }
 
+  const typePåkrevdeFelter =
+    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom &&
+    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom
+      ? "periode"
+      : "dato";
+
   return (
-    <div className="flex gap-4 flex-auto">
-      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
-        <DatePickerWrapped
-          label="Fra og med"
-          name={`endringAvInntektÅrsaker.${index}.fom`}
-          rules={{ required: "Må oppgis" }}
-        />
-      ) : (
-        <div />
-      )}
-      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
-        <DatePickerWrapped
-          label="Til og med"
-          name={`endringAvInntektÅrsaker.${index}.tom`}
-          rules={{ required: "Må oppgis" }}
-        />
-      ) : (
-        <div />
-      )}
-    </div>
+    <>
+      <Label as="span">
+        Legg inn {typePåkrevdeFelter} for {endringsÅrsakTekst?.toLowerCase()}:
+      </Label>
+      <div className="flex gap-4 flex-auto">
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
+          <DatePickerWrapped
+            label="Fra og med"
+            name={`endringAvInntektÅrsaker.${index}.fom`}
+            rules={{ required: "Må oppgis" }}
+          />
+        ) : (
+          <div />
+        )}
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
+          <DatePickerWrapped
+            label="Til og med"
+            name={`endringAvInntektÅrsaker.${index}.tom`}
+            rules={{ required: "Må oppgis" }}
+          />
+        ) : (
+          <div />
+        )}
+      </div>
+    </>
   );
 }
 
