@@ -110,7 +110,7 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
   await page.getByText("Ansatt er fremdeles permittert").click();
-  await expect(page.getByText("Til og med")).toBeDisabled();
+  await expect(page.getByText("Til og med")).toBeEnabled();
 
   await page
     .getByLabel("Hva er årsaken til endringen?")
