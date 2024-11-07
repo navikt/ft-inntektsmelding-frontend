@@ -233,10 +233,10 @@ function InntektSummary({
               <FormSummary.Value>
                 <FormSummary.Answers>
                   {skjemaState.endringAvInntektÅrsaker.map(
-                    ({ årsak, fom, tom, bleKjentFom }) => {
+                    ({ årsak, fom, tom, bleKjentFom, ignorerTom }) => {
                       const periodeStreng = formaterPeriodeStreng({
                         fom,
-                        tom: bleKjentFom || tom,
+                        tom: ignorerTom ? undefined : bleKjentFom || tom,
                       });
                       return (
                         <FormSummary.Answer key={[årsak, fom, tom].join("-")}>

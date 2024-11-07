@@ -163,7 +163,7 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
     page
       .getByText("Årsaker")
       .locator("..")
-      .getByText("Fra og med 01.06.2024", { exact: false }),
+      .getByText("Fra og med 01.06.2024", { exact: true }),
   ).toBeVisible();
 
   await page.route(
