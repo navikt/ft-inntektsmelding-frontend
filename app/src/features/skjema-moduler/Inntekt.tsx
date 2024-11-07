@@ -373,6 +373,7 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
   fom: undefined,
   tom: undefined,
   bleKjentFom: undefined,
+  tomErValgfritt: false,
   årsak: "" as const,
 };
 
@@ -456,8 +457,11 @@ function Endringsårsaker({
 }
 
 function Årsaksperioder({ index }: { index: number }) {
-  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const { watch, register } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
+  const tomErValgfritt = watch(
+    `endringAvInntektÅrsaker.${index}.tomErValgfritt`,
+  );
 
   const endringsÅrsakTekst = endringsårsak.find(
     ({ value }) => value === årsak,
@@ -492,7 +496,7 @@ function Årsaksperioder({ index }: { index: number }) {
       <Label as="span">
         Legg inn {typePåkrevdeFelter} for {endringsÅrsakTekst?.toLowerCase()}:
       </Label>
-      <div className="flex gap-4 flex-auto">
+      <div className="flex gap-4 flex-auto flex-wrap">
         {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
           <DatePickerWrapped
             label="Fra og med"
@@ -504,6 +508,7 @@ function Årsaksperioder({ index }: { index: number }) {
         )}
         {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
           <DatePickerWrapped
+            disabled={tomErValgfritt}
             label="Til og med"
             name={`endringAvInntektÅrsaker.${index}.tom`}
             rules={{ required: "Må oppgis" }}
@@ -512,7 +517,10 @@ function Årsaksperioder({ index }: { index: number }) {
           <div />
         )}
         {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tomErValgfritt ? (
-          <Checkbox>
+          <Checkbox
+            className="md:mt-8"
+            {...register(`endringAvInntektÅrsaker.${index}.tomErValgfritt`)}
+          >
             {(() => {
               switch (årsak) {
                 case "SYKEFRAVÆR": {
