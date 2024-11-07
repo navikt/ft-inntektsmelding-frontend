@@ -194,9 +194,9 @@ function konverterTilRadioValg(verdi: boolean | undefined) {
 
 function Ytelsesperiode() {
   const opplysninger = useOpplysninger();
-  const { startdatoPermisjon, person, ytelse } = opplysninger;
+  const { person, ytelse, førsteUttaksdato } = opplysninger;
 
-  const førsteDag = capitalize(formatDatoLang(new Date(startdatoPermisjon)));
+  const førsteDag = capitalize(formatDatoLang(new Date(førsteUttaksdato)));
 
   return (
     <VStack gap="4">
