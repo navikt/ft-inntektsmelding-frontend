@@ -161,6 +161,15 @@ function lagSendInntektsmeldingRequest(
         ? skjemaState.refusjon
         : [];
 
+  const endringAvInntektÅrsaker = skjemaState.endringAvInntektÅrsaker.map(
+    (endring) => ({
+      årsak: endring.årsak,
+      fom: endring.fom,
+      tom: endring.ignorerTom ? undefined : endring.tom,
+      bleKjentFom: endring.bleKjentFom,
+    }),
+  );
+
   return {
     foresporselUuid: id,
     aktorId: opplysninger.person.aktørId,
@@ -176,7 +185,7 @@ function lagSendInntektsmeldingRequest(
     bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
       skjemaState.bortfaltNaturalytelsePerioder,
     ),
-    endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker,
+    endringAvInntektÅrsaker,
   } satisfies SendInntektsmeldingRequestDto;
 }
 

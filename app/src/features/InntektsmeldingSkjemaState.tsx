@@ -71,6 +71,7 @@ export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
       årsak: EndringAvInntektÅrsakerSchema,
       fom: z.string().optional(),
       tom: z.string().optional(),
+      ignorerTom: z.boolean(),
       bleKjentFom: z.string().optional(),
     }),
   ),

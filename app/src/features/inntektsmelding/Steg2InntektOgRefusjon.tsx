@@ -45,7 +45,7 @@ type EndringsÅrsakerForm = {
   fom?: string;
   tom?: string;
   bleKjentFom?: string;
-  tomErValgfritt: boolean;
+  ignorerTom: boolean;
 };
 type NaturalytelserSomMistesForm = {
   navn: Naturalytelsetype | "";

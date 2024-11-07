@@ -82,7 +82,12 @@ export function mapInntektsmeldingResponseTilValidState(
         inkluderTom: periode.tom !== undefined,
         tom: periode.tom,
       })) ?? [],
-    endringAvInntektÅrsaker: inntektsmelding.endringAvInntektÅrsaker ?? [],
+    endringAvInntektÅrsaker: (
+      inntektsmelding.endringAvInntektÅrsaker ?? []
+    ).map((endringÅrsak) => ({
+      ...endringÅrsak,
+      ignorerTom: false, // TODO
+    })),
     inntekt: inntektsmelding.inntekt,
     skalRefunderes:
       (inntektsmelding.refusjon ?? []).length > 1

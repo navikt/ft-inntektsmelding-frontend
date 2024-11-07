@@ -49,6 +49,10 @@ test("endringsårsaker med fom dato", async ({ page }) => {
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
   ).toBeVisible();
 
+  await expect(page.getByText("Legg inn dato for :")).toBeVisible({
+    visible: false,
+  });
+
   await forventFomDatoForEndringsÅrsak({
     page,
     endringsÅrsak: "Varig lønnsendring",
@@ -124,6 +128,64 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
   await page.getByText("Ansatt er fremdeles i permisjon").click();
   await expect(page.getByText("Til og med")).toBeDisabled();
+});
+
+test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
+  page,
+}) => {
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.getByLabel("Telefon").fill("12312312");
+  await page.getByText("Bekreft og gå videre").click();
+
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  await page.getByText("Endret månedsinntekt").fill("50000");
+
+  await page
+    .getByLabel("Hva er årsaken til endringen?")
+    .selectOption("Sykefravær");
+  await page.getByLabel("Fra og med").fill("01.6.2024");
+  await page.getByLabel("Til og med").fill("01.7.2024");
+
+  await page.getByText("Ansatt har fremdeles sykefravær").click();
+
+  await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
+  await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  await expect(
+    page.getByText("Årsaker").locator("..").getByText("Sykefravær"),
+  ).toBeVisible();
+  await expect(
+    page
+      .getByText("Årsaker")
+      .locator("..")
+      .getByText("Fra og med 01.06.2024", { exact: false }),
+  ).toBeVisible();
+
+  await page.route(
+    `**/*/imdialog/send-inntektsmelding`,
+    async (route, request) => {
+      const requestBody = request.postData();
+      console.log(requestBody);
+      console.log(
+        "json",
+        JSON.parse(requestBody ?? "{}").endringAvInntektÅrsaker,
+      );
+      expect(JSON.parse(requestBody ?? "{}").endringAvInntektÅrsaker).toEqual([
+        {
+          årsak: "SYKEFRAVÆR",
+          fom: "2024-06-01", // Viktig at tom er undefined.
+        },
+      ]);
+      await route.continue();
+    },
+  );
+
+  await page.getByRole("button", { name: "Send inn" }).click();
 });
 
 const forventFomDatoForEndringsÅrsak = async ({
