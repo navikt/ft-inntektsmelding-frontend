@@ -546,7 +546,7 @@ function Årsaksperioder({ index }: { index: number }) {
   );
 }
 
-const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
+export const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   // Før man har valgt
   "": { fom: false, tom: false, bleKjentFom: false, tomErValgfritt: false },
 
@@ -608,7 +608,12 @@ const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   },
 
   // Tariffendring er noe for seg selv
-  TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
+  TARIFFENDRING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: true,
+    tomErValgfritt: false,
+  },
 } satisfies Record<
   EndringAvInntektÅrsaker & "",
   { fom: boolean; tom: boolean; bleKjentFom: boolean; tomErValgfritt?: boolean }
