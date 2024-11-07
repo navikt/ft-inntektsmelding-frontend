@@ -511,7 +511,7 @@ function Årsaksperioder({ index }: { index: number }) {
             disabled={ignorerTom}
             label="Til og med"
             name={`endringAvInntektÅrsaker.${index}.tom`}
-            rules={{ required: "Må oppgis" }}
+            rules={{ required: ignorerTom ? false : "Må oppgis" }}
           />
         ) : (
           <div />

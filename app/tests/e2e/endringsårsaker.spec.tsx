@@ -113,7 +113,8 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   });
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
-  await page.getByText("Ansatt er fremdeles permittert").click();
+  await page.getByText("Ansatt er fremdeles i permisjon").click();
+
   await expect(page.getByText("Til og med")).toBeEnabled();
 
   await page
@@ -126,7 +127,7 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   });
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: true });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: true });
-  await page.getByText("Ansatt er fremdeles i permisjon").click();
+  await page.getByText("Ansatt er fremdeles permittert").click();
   await expect(page.getByText("Til og med")).toBeDisabled();
 });
 
