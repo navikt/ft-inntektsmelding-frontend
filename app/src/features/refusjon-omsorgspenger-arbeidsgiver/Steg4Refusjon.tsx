@@ -75,6 +75,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
 
 const dummyOpplysninger: OpplysningerDto = {
   startdatoPermisjon: new Date().toString(),
+  førsteUttaksdato: new Date().toString(),
   person: {
     aktørId: "1234567890",
     fødselsnummer: "1234567890",
