@@ -20,7 +20,7 @@ import {
   InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "../InntektsmeldingSkjemaState";
-import { Inntekt } from "../skjema-moduler/Inntekt";
+import { ENDRINGSÅRSAK_TEMPLATE, Inntekt } from "../skjema-moduler/Inntekt";
 import {
   NATURALYTELSE_SOM_MISTES_TEMPLATE,
   Naturalytelser,
@@ -83,7 +83,7 @@ export function Steg2InntektOgRefusjon() {
           : undefined),
       endringAvInntektÅrsaker:
         inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length === 0
-          ? [{ årsak: "" }]
+          ? [ENDRINGSÅRSAK_TEMPLATE]
           : inntektsmeldingSkjemaState.endringAvInntektÅrsaker,
       skalRefunderes: inntektsmeldingSkjemaState.skalRefunderes,
       misterNaturalytelser: konverterTilRadioValg(
