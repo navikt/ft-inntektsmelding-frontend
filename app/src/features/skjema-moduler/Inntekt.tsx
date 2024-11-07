@@ -9,6 +9,7 @@ import {
   BodyLong,
   BodyShort,
   Button,
+  Checkbox,
   Heading,
   HGrid,
   Label,
@@ -372,6 +373,7 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
   fom: undefined,
   tom: undefined,
   bleKjentFom: undefined,
+  ignorerTom: false,
   årsak: "" as const,
 };
 
@@ -404,6 +406,7 @@ function Endringsårsaker({
             key={field.id}
           >
             <Select
+              description="Dette hjelper oss å forstå avviket fra rapportert lønn."
               error={
                 formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
                   ?.message
@@ -454,8 +457,13 @@ function Endringsårsaker({
 }
 
 function Årsaksperioder({ index }: { index: number }) {
-  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const { watch, register } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
+  const ignorerTom = watch(`endringAvInntektÅrsaker.${index}.ignorerTom`);
+
+  const endringsÅrsakTekst = endringsårsak.find(
+    ({ value }) => value === årsak,
+  )?.label;
 
   // Spesialhåndtering av tariffendring
   if (årsak === "TARIFFENDRING") {
@@ -475,64 +483,140 @@ function Årsaksperioder({ index }: { index: number }) {
     );
   }
 
+  const typePåkrevdeFelter =
+    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom &&
+    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom
+      ? "periode"
+      : "dato";
+
   return (
-    <div className="flex gap-4 flex-auto">
-      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
-        <DatePickerWrapped
-          label="Fra og med"
-          name={`endringAvInntektÅrsaker.${index}.fom`}
-          rules={{ required: "Må oppgis" }}
-        />
-      ) : (
-        <div />
+    <>
+      {endringsÅrsakTekst && (
+        <Label as="span">
+          Legg inn {typePåkrevdeFelter} for {endringsÅrsakTekst?.toLowerCase()}:
+        </Label>
       )}
-      {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
-        <DatePickerWrapped
-          label="Til og med"
-          name={`endringAvInntektÅrsaker.${index}.tom`}
-          rules={{ required: "Må oppgis" }}
-        />
-      ) : (
-        <div />
-      )}
-    </div>
+      <div className="flex gap-4 flex-auto flex-wrap">
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
+          <DatePickerWrapped
+            label="Fra og med"
+            name={`endringAvInntektÅrsaker.${index}.fom`}
+            rules={{ required: "Må oppgis" }}
+          />
+        ) : (
+          <div />
+        )}
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
+          <DatePickerWrapped
+            disabled={ignorerTom}
+            label="Til og med"
+            name={`endringAvInntektÅrsaker.${index}.tom`}
+            rules={{ required: ignorerTom ? false : "Må oppgis" }}
+          />
+        ) : (
+          <div />
+        )}
+        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tomErValgfritt ? (
+          <Checkbox
+            className="md:mt-8"
+            {...register(`endringAvInntektÅrsaker.${index}.ignorerTom`)}
+          >
+            {(() => {
+              switch (årsak) {
+                case "SYKEFRAVÆR": {
+                  return "Ansatt har fremdeles sykefravær";
+                }
+                case "PERMISJON": {
+                  return "Ansatt er fremdeles i permisjon";
+                }
+                case "PERMITTERING": {
+                  return "Ansatt er fremdeles permittert";
+                }
+                default: {
+                  return "";
+                }
+              }
+            })()}
+          </Checkbox>
+        ) : (
+          <div />
+        )}
+      </div>
+    </>
   );
 }
 
-const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
+export const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   // Før man har valgt
-  "": { fom: false, tom: false, bleKjentFom: false },
+  "": { fom: false, tom: false, bleKjentFom: false, tomErValgfritt: false },
 
   // Har ingen ekstra felter
-  BONUS: { fom: false, tom: false, bleKjentFom: false },
-  NYANSATT: { fom: false, tom: false, bleKjentFom: false },
+  BONUS: { fom: false, tom: false, bleKjentFom: false, tomErValgfritt: false },
+  NYANSATT: {
+    fom: false,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
   FERIETREKK_ELLER_UTBETALING_AV_FERIEPENGER: {
     fom: false,
     tom: false,
     bleKjentFom: false,
+    tomErValgfritt: false,
   },
   MANGELFULL_RAPPORTERING_AORDNING: {
     fom: false,
     tom: false,
     bleKjentFom: false,
+    tomErValgfritt: false,
   },
 
   // Kun fom
-  VARIG_LØNNSENDRING: { fom: true, tom: false, bleKjentFom: false },
-  NY_STILLING: { fom: true, tom: false, bleKjentFom: false },
-  NY_STILLINGSPROSENT: { fom: true, tom: false, bleKjentFom: false },
+  VARIG_LØNNSENDRING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
+  NY_STILLING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
+  NY_STILLINGSPROSENT: {
+    fom: true,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
 
   // fom + tom
-  FERIE: { fom: true, tom: true, bleKjentFom: false },
-  PERMISJON: { fom: true, tom: true, bleKjentFom: false },
-  PERMITTERING: { fom: true, tom: true, bleKjentFom: false },
-  SYKEFRAVÆR: { fom: true, tom: true, bleKjentFom: false },
+  FERIE: { fom: true, tom: true, bleKjentFom: false, tomErValgfritt: false },
+  PERMISJON: { fom: true, tom: true, bleKjentFom: false, tomErValgfritt: true },
+  PERMITTERING: {
+    fom: true,
+    tom: true,
+    bleKjentFom: false,
+    tomErValgfritt: true,
+  },
+  SYKEFRAVÆR: {
+    fom: true,
+    tom: true,
+    bleKjentFom: false,
+    tomErValgfritt: true,
+  },
 
   // Tariffendring er noe for seg selv
-  TARIFFENDRING: { fom: true, tom: false, bleKjentFom: true },
+  TARIFFENDRING: {
+    fom: true,
+    tom: false,
+    bleKjentFom: true,
+    tomErValgfritt: false,
+  },
 } satisfies Record<
   EndringAvInntektÅrsaker & "",
-  { fom: boolean; tom: boolean; bleKjentFom: boolean }
+  { fom: boolean; tom: boolean; bleKjentFom: boolean; tomErValgfritt?: boolean }
 >;
 
 function navnPåMåned(date: string) {

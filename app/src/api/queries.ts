@@ -2,6 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
+import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
 import {
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
@@ -82,7 +83,14 @@ export function mapInntektsmeldingResponseTilValidState(
         inkluderTom: periode.tom !== undefined,
         tom: periode.tom,
       })) ?? [],
-    endringAvInntektÅrsaker: inntektsmelding.endringAvInntektÅrsaker ?? [],
+    endringAvInntektÅrsaker: (
+      inntektsmelding.endringAvInntektÅrsaker ?? []
+    ).map((endringÅrsak) => ({
+      ...endringÅrsak,
+      ignorerTom:
+        endringÅrsak.tom === undefined &&
+        PÅKREVDE_ENDRINGSÅRSAK_FELTER[endringÅrsak.årsak]?.tomErValgfritt,
+    })),
     inntekt: inntektsmelding.inntekt,
     skalRefunderes:
       (inntektsmelding.refusjon ?? []).length > 1
