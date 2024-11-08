@@ -20,22 +20,38 @@ test("endringsårsaker uten ekstra felter", async ({ page }) => {
   await page.getByLabel("Hva er årsaken til endringen?").selectOption("Bonus");
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
+  await expect(page.getByText("Bonus")).toBeVisible({
+    visible: false,
+  });
 
   await page
     .getByLabel("Hva er årsaken til endringen?")
     .selectOption("Nyansatt");
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
+  await expect(page.getByText("Legg inn dato for Nyansatt")).toBeVisible({
+    visible: false,
+  });
+
   await page
     .getByLabel("Hva er årsaken til endringen?")
     .selectOption("Ferietrekk / utbetaling av feriepenger");
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
+  await expect(
+    page.getByText("Legg inn dato for ferietrekk / utbetaling av feriepenger"),
+  ).toBeVisible({ visible: false });
+
   await page
     .getByLabel("Hva er årsaken til endringen?")
     .selectOption("Mangelfull eller uriktig rapportering til A-ordningen");
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
+  await expect(
+    page.getByText(
+      "Legg inn dato for mangelfull eller uriktig rapportering til a-ordningen",
+    ),
+  ).toBeVisible({ visible: false });
 });
 
 test("endringsårsaker med fom dato", async ({ page }) => {
