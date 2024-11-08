@@ -535,6 +535,9 @@ function Årsaksperioder({
             rules={{
               required: ignorerTom ? false : "Må oppgis",
               validate: (date: string) => {
+                if (ignorerTom) {
+                  return true;
+                }
                 return (
                   isAfter(opplysninger.startdatoPermisjon, date) ||
                   "Lønnsendring må være før første dag med fravær"
