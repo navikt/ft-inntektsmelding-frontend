@@ -518,7 +518,7 @@ function Årsaksperioder({
               required: "Må oppgis",
               validate: (date: string) => {
                 return (
-                  isAfter(date, opplysninger.startdatoPermisjon) ||
+                  isAfter(opplysninger.startdatoPermisjon, date) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
@@ -532,7 +532,15 @@ function Årsaksperioder({
             disabled={ignorerTom}
             label="Til og med"
             name={`endringAvInntektÅrsaker.${index}.tom`}
-            rules={{ required: ignorerTom ? false : "Må oppgis" }}
+            rules={{
+              required: ignorerTom ? false : "Må oppgis",
+              validate: (date: string) => {
+                return (
+                  isAfter(opplysninger.startdatoPermisjon, date) ||
+                  "Lønnsendring må være før første dag med fravær"
+                );
+              },
+            }}
           />
         ) : (
           <div />

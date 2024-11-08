@@ -112,8 +112,22 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     error: "Må oppgis",
   });
 
+  await page.getByLabel("Fra og med").fill("01.8.2024");
+  await page.getByLabel("Til og med").fill("01.8.2024"); // TODO: mangler validering på at den ikke kan være tidligere
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expectError({
+    page,
+    label: "Fra og med",
+    error: "Lønnsendring må være før første dag med fravær",
+  });
+
+  await expectError({
+    page,
+    label: "Til og med",
+    error: "Lønnsendring må være før første dag med fravær",
+  });
   await page.getByLabel("Fra og med").fill("01.4.2024");
-  await page.getByLabel("Til og med").fill("01.5.2024"); // TODO: mangler validering på at den ikke kan være tidligere
+  await page.getByLabel("Til og med").fill("01.5.2024");
 
   await page.getByRole("button", { name: "Legg til ny endringsårsak" }).click();
   await expect(page.getByText("Hva er årsaken til endringen?")).toHaveCount(2);
