@@ -21,6 +21,7 @@ import {
 } from "@navikt/ds-react";
 import { ListItem } from "@navikt/ds-react/List";
 import clsx from "clsx";
+import { isAfter } from "date-fns";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
@@ -115,6 +116,7 @@ export function Inntekt({
         <EndreMånedslønn
           harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
           onClose={onClose}
+          opplysninger={opplysninger}
         />
       ) : (
         <Button
@@ -328,10 +330,12 @@ export const endringsårsak = [
 type EndreMånedslønnProps = {
   onClose: () => void;
   harEksisterendeInntektsmeldinger: boolean;
+  opplysninger: OpplysningerDto;
 };
 const EndreMånedslønn = ({
   onClose,
   harEksisterendeInntektsmeldinger,
+  opplysninger,
 }: EndreMånedslønnProps) => {
   const { unregister, watch, setValue } =
     useFormContext<InntektOgRefusjonForm>();
@@ -364,6 +368,7 @@ const EndreMånedslønn = ({
       </div>
       <Endringsårsaker
         harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
+        opplysninger={opplysninger}
       />
     </>
   );
@@ -379,9 +384,11 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
 
 type EndringsårsakerProps = {
   harEksisterendeInntektsmeldinger: boolean;
+  opplysninger: OpplysningerDto;
 };
 function Endringsårsaker({
   harEksisterendeInntektsmeldinger,
+  opplysninger,
 }: EndringsårsakerProps) {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
@@ -424,7 +431,7 @@ function Endringsårsaker({
                 </option>
               ))}
             </Select>
-            <Årsaksperioder index={index} />
+            <Årsaksperioder index={index} opplysninger={opplysninger} />
             {index > 0 ? (
               <Button
                 aria-label="Slett endringsårsak"
@@ -456,7 +463,13 @@ function Endringsårsaker({
   );
 }
 
-function Årsaksperioder({ index }: { index: number }) {
+function Årsaksperioder({
+  index,
+  opplysninger,
+}: {
+  index: number;
+  opplysninger: OpplysningerDto;
+}) {
   const { watch, register } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
   const ignorerTom = watch(`endringAvInntektÅrsaker.${index}.ignorerTom`);
@@ -499,7 +512,15 @@ function Årsaksperioder({ index }: { index: number }) {
           <DatePickerWrapped
             label="Fra og med"
             name={`endringAvInntektÅrsaker.${index}.fom`}
-            rules={{ required: "Må oppgis" }}
+            rules={{
+              required: "Må oppgis",
+              validate: (date: string) => {
+                return (
+                  isAfter(opplysninger.startdatoPermisjon, date) ||
+                  "Lønnsendring må være før første dag med fravær"
+                );
+              },
+            }}
           />
         ) : (
           <div />
@@ -509,7 +530,18 @@ function Årsaksperioder({ index }: { index: number }) {
             disabled={ignorerTom}
             label="Til og med"
             name={`endringAvInntektÅrsaker.${index}.tom`}
-            rules={{ required: ignorerTom ? false : "Må oppgis" }}
+            rules={{
+              required: ignorerTom ? false : "Må oppgis",
+              validate: (date: string) => {
+                if (ignorerTom) {
+                  return true;
+                }
+                return (
+                  isAfter(opplysninger.startdatoPermisjon, date) ||
+                  "Lønnsendring må være før første dag med fravær"
+                );
+              },
+            }}
           />
         ) : (
           <div />

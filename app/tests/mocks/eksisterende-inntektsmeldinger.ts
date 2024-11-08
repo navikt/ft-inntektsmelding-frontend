@@ -79,12 +79,12 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
     endringAvInntektÅrsaker: [
       {
         årsak: "FERIE",
-        fom: "2024-09-11",
-        tom: "2024-09-25",
+        fom: "2024-03-11",
+        tom: "2024-04-25",
       },
       {
         årsak: "PERMISJON",
-        fom: "2024-10-11",
+        fom: "2024-04-11",
       },
     ],
   },

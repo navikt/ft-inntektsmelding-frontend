@@ -66,13 +66,13 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
       page,
       labelText: "Fra og med",
     }),
-  ).toHaveValue("11.09.2024");
+  ).toHaveValue("11.03.2024");
   await expect(
     await finnInputFraLabel({
       page,
       labelText: "Til og med",
     }),
-  ).toHaveValue("25.09.2024");
+  ).toHaveValue("25.04.2024");
   await expect(
     await finnInputFraLabel({
       page,
@@ -86,7 +86,7 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
       nth: 1,
       labelText: "Fra og med",
     }),
-  ).toHaveValue("11.10.2024");
+  ).toHaveValue("11.04.2024");
   await expect(
     await finnInputFraLabel({
       page,

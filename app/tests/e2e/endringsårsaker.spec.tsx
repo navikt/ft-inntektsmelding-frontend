@@ -1,6 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
 
 import {
+  expectError,
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
@@ -164,7 +165,14 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
   await page
     .getByLabel("Hva er årsaken til endringen?")
     .selectOption("Sykefravær");
-  await page.getByLabel("Fra og med").fill("01.6.2024");
+  await page.getByLabel("Fra og med").fill("01.6.2028");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expectError({
+    page,
+    label: "Fra og med",
+    error: "Lønnsendring må være før første dag med fravær",
+  });
+  await page.getByLabel("Fra og med").fill("01.4.2024");
   await page.getByLabel("Til og med").fill("01.7.2024");
 
   await page.getByText("Ansatt har fremdeles sykefravær").click();
@@ -180,7 +188,7 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
     page
       .getByText("Årsaker")
       .locator("..")
-      .getByText("Fra og med 01.06.2024", { exact: true }),
+      .getByText("Fra og med 01.04.2024", { exact: true }),
   ).toBeVisible();
 
   await page.route(
@@ -190,7 +198,7 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
       expect(JSON.parse(requestBody ?? "{}").endringAvInntektÅrsaker).toEqual([
         {
           årsak: "SYKEFRAVÆR",
-          fom: "2024-06-01", // Viktig at tom er undefined.
+          fom: "2024-04-01", // Viktig at tom er undefined.
         },
       ]);
       await route.continue();
