@@ -1,6 +1,7 @@
 import { expect, Page, test } from "@playwright/test";
 
 import {
+  expectError,
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
@@ -148,6 +149,13 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
   await page
     .getByLabel("Hva er årsaken til endringen?")
     .selectOption("Sykefravær");
+  await page.getByLabel("Fra og med").fill("01.6.2020");
+  await page.getByRole("button", { name: "Neste steg" }).click();
+  await expectError({
+    page,
+    label: "Fra og med",
+    error: "Lønnsendring må være før første dag med fravær",
+  });
   await page.getByLabel("Fra og med").fill("01.6.2024");
   await page.getByLabel("Til og med").fill("01.7.2024");
 
