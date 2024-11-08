@@ -145,7 +145,7 @@ export const opplysningerSchema = z.object({
     ),
   }),
   forespørselStatus: z.enum(["UNDER_BEHANDLING", "FERDIG", "UTGÅTT"]),
-  startdatoPermisjon: z.string(),
+  skjæringstidspunkt: z.string(),
   førsteUttaksdato: z.string(),
   ytelse: z.enum([
     "FORELDREPENGER",

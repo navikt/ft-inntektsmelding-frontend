@@ -39,7 +39,7 @@ const STANDARD_OPPLYSNINGER = {
       },
     ],
   },
-  startdatoPermisjon: "2024-05-30",
+  skjæringstidspunkt: "2024-05-30",
   førsteUttaksdato: "2024-05-30",
   ytelse: "FORELDREPENGER" as const,
 } satisfies OpplysningerDto;
@@ -111,7 +111,7 @@ export const opplysningerMedSisteMånedRapportert0 = {
 
 export const opplysningerMedFlereEnn3Måneder = {
   ...STANDARD_OPPLYSNINGER,
-  startdatoPermisjon: "2024-05-04",
+  skjæringstidspunkt: "2024-05-04",
   inntektsopplysninger: {
     gjennomsnittLønn: 52_000,
     månedsinntekter: [
@@ -149,7 +149,7 @@ export const opplysningerMedFlereEnn3Måneder = {
 
 export const opplysningerMedBådeRapportertOgIkkePassert = {
   ...STANDARD_OPPLYSNINGER,
-  startdatoPermisjon: "2024-12-01",
+  skjæringstidspunkt: "2024-12-01",
   inntektsopplysninger: {
     gjennomsnittLønn: 52_000,
     månedsinntekter: [

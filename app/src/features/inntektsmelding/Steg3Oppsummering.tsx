@@ -176,7 +176,7 @@ function lagSendInntektsmeldingRequest(
     ytelse: opplysninger.ytelse,
     arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
     kontaktperson: skjemaState.kontaktperson,
-    startdato: opplysninger.startdatoPermisjon,
+    startdato: opplysninger.skjæringstidspunkt,
     inntekt: formatStrengTilTall(gjeldendeInntekt),
     refusjon: refusjon.map((r) => ({
       ...r,
