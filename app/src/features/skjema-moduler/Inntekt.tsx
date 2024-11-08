@@ -483,21 +483,19 @@ function Årsaksperioder({ index }: { index: number }) {
     );
   }
 
-  const typePåkrevdeFelter =
-    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom &&
-    PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom
-      ? "periode"
-      : "dato";
+  const fomErPåkrevd = PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom;
+  const tomErPåkrevd = PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom;
+  const typePåkrevdeFelter = fomErPåkrevd && tomErPåkrevd ? "periode" : "dato";
 
   return (
     <>
-      {endringsÅrsakTekst && (
+      {(fomErPåkrevd || tomErPåkrevd) && (
         <Label as="span">
           Legg inn {typePåkrevdeFelter} for {endringsÅrsakTekst?.toLowerCase()}:
         </Label>
       )}
       <div className="flex gap-4 flex-auto flex-wrap">
-        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].fom ? (
+        {fomErPåkrevd ? (
           <DatePickerWrapped
             label="Fra og med"
             name={`endringAvInntektÅrsaker.${index}.fom`}
@@ -506,7 +504,7 @@ function Årsaksperioder({ index }: { index: number }) {
         ) : (
           <div />
         )}
-        {PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak].tom ? (
+        {tomErPåkrevd ? (
           <DatePickerWrapped
             disabled={ignorerTom}
             label="Til og med"
