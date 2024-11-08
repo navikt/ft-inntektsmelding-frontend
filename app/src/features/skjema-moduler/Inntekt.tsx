@@ -518,7 +518,7 @@ function Årsaksperioder({
               required: "Må oppgis",
               validate: (date: string) => {
                 return (
-                  isAfter(date, opplysninger.førsteUttaksdato) ||
+                  isAfter(date, opplysninger.startdatoPermisjon) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
