@@ -55,12 +55,12 @@ export function Inntekt({
   opplysninger,
   harEksisterendeInntektsmeldinger,
 }: InntektProps) {
-  const { startdatoPermisjon, person, inntektsopplysninger } = opplysninger;
+  const { skjæringstidspunkt, person, inntektsopplysninger } = opplysninger;
   const { watch } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
-  const førsteDag = formatDatoKort(new Date(startdatoPermisjon));
+  const førsteDag = formatDatoKort(new Date(skjæringstidspunkt));
 
   return (
     <div className="flex flex-col gap-4">
@@ -516,7 +516,7 @@ function Årsaksperioder({
               required: "Må oppgis",
               validate: (date: string) => {
                 return (
-                  isAfter(opplysninger.startdatoPermisjon, date) ||
+                  isAfter(opplysninger.skjæringstidspunkt, date) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
@@ -537,7 +537,7 @@ function Årsaksperioder({
                   return true;
                 }
                 return (
-                  isAfter(opplysninger.startdatoPermisjon, date) ||
+                  isAfter(opplysninger.skjæringstidspunkt, date) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
