@@ -5,6 +5,7 @@ import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 import { z } from "zod";
 
+import { loggAmplitudeEvent } from "~/api/amplitude.ts";
 import { useLocalStorageState } from "~/features/usePersistedState.tsx";
 
 export const VIS_HJELPETEKSTER_KEY = "vis-hjelpetekster";
@@ -62,7 +63,13 @@ export function HjelpetekstToggle() {
     <Page.Block className="mt-2 mx-5 lg:mx-0" width="md">
       <Switch
         checked={visHjelpetekster.vis}
-        onChange={(e) => setVisHjelpetekster({ vis: e.target.checked })}
+        onChange={(e) => {
+          loggAmplitudeEvent({
+            eventName: "toggle-hjelpetekster",
+            eventData: { vis: e.target.checked.toString() },
+          });
+          setVisHjelpetekster({ vis: e.target.checked });
+        }}
       >
         Vis hjelpetekster
       </Switch>
