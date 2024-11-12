@@ -179,12 +179,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     error: "Beløpet må være 0 eller høyere",
   });
   await page.getByText("Refusjonsbeløp per måned").fill("53000");
-  await expectError({
-    page,
-    nth: 0,
-    label: "Refusjonsbeløp per måned",
-    error: "Beløpet må være 50000 eller lavere",
-  });
+
   await page
     .getByRole("button", { name: "Tilbakestill refusjonsbeløp" })
     .click();
@@ -228,12 +223,6 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     .getByText("Refusjonsbeløp per måned")
     .nth(0)
     .fill("60000");
-  await expectError({
-    page: variabelRefusjonBlock,
-    nth: 0,
-    label: "Refusjonsbeløp per måned",
-    error: "Beløpet må være 50000 eller lavere",
-  });
 
   await variabelRefusjonBlock
     .getByText("Refusjonsbeløp per måned")

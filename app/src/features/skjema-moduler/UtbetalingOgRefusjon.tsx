@@ -137,9 +137,6 @@ function LikRefusjon() {
 
   const refusjonsbeløpPerMåned = watch(`refusjon.0.beløp`);
   const korrigertInntekt = watch("korrigertInntekt");
-  const inntekt = watch("inntekt");
-
-  const maksRefusjonsBeløp = korrigertInntekt ?? inntekt;
 
   return (
     <>
@@ -150,7 +147,6 @@ function LikRefusjon() {
               <FormattertTallTextField
                 autoFocus
                 label="Refusjonsbeløp per måned"
-                max={Number(maksRefusjonsBeløp)}
                 min={0}
                 name="refusjon.0.beløp"
               />
@@ -253,12 +249,7 @@ function Refusjonsperioder() {
     name: "refusjon",
   });
 
-  const korrigertInntekt = watch("korrigertInntekt");
   const tidligsteDato = watch(`refusjon.0.fom`) ?? "";
-
-  const inntekt = watch("inntekt");
-
-  const maksRefusjonsBeløp = korrigertInntekt ?? inntekt;
 
   return (
     <VStack className="py-4" gap={{ xs: "5", md: "3" }}>
@@ -292,7 +283,6 @@ function Refusjonsperioder() {
             <FormattertTallTextField
               inputMode="numeric"
               label="Refusjonsbeløp per måned"
-              max={index === 0 ? Number(maksRefusjonsBeløp) : undefined}
               min={0}
               name={`refusjon.${index}.beløp` as const}
               required
