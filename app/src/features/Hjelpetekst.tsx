@@ -1,7 +1,7 @@
 import { AlertProps, Page, ReadMoreProps } from "@navikt/ds-react";
 import { Alert, ReadMore, Switch } from "@navikt/ds-react";
 import { type ReactNode } from "@tanstack/react-router";
-import type { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { createContext, useContext } from "react";
 import { z } from "zod";
 
@@ -80,13 +80,28 @@ export function HjelpetekstToggle() {
 export function HjelpetekstReadMore({
   header,
   children,
-}: Pick<ReadMoreProps, "header" | "children">) {
+}: Pick<ReadMoreProps, "children"> & { header: string }) {
   const { vis } = useHjelpetekst().visHjelpetekster;
+  const [åpen, setÅpen] = useState(false);
   if (!vis) {
     return null;
   }
 
-  return <ReadMore header={header}>{children}</ReadMore>;
+  return (
+    <ReadMore
+      header={header}
+      onOpenChange={(open) => {
+        setÅpen(open);
+        loggAmplitudeEvent({
+          eventName: open ? "readmore åpnet" : "readmore lukket",
+          eventData: { tittel: header },
+        });
+      }}
+      open={åpen}
+    >
+      {children}
+    </ReadMore>
+  );
 }
 
 export function HjelpetekstAlert({ children }: Pick<AlertProps, "children">) {
