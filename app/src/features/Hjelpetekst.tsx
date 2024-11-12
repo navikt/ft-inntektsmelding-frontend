@@ -64,11 +64,12 @@ export function HjelpetekstToggle() {
       <Switch
         checked={visHjelpetekster.vis}
         onChange={(e) => {
+          const bleSjekket = e.target.checked;
           loggAmplitudeEvent({
-            eventName: "toggle-hjelpetekster",
-            eventData: { vis: e.target.checked.toString() },
+            eventName: bleSjekket ? "switch åpnet" : "switch lukket",
+            eventData: { tittel: "HjelpetekstToggle" },
           });
-          setVisHjelpetekster({ vis: e.target.checked });
+          setVisHjelpetekster({ vis: bleSjekket });
         }}
       >
         Vis hjelpetekster
