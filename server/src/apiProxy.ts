@@ -49,7 +49,7 @@ export function addProxyHandler(
             proxyRequest.removeHeader("cookie");
             proxyRequest.setHeader("Authorization", `Bearer ${obo}`);
             proxyRequest.setHeader(
-              "Nav-ConsumerId",
+              "Nav-Consumer-Id",
               "ftinntektsmelding-frontend",
             );
           } else {
