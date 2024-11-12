@@ -40,7 +40,7 @@ const STANDARD_OPPLYSNINGER = {
     ],
   },
   skjæringstidspunkt: "2024-05-30",
-  førsteUttaksdato: "2024-05-30",
+  førsteUttaksdato: "2024-05-31",
   ytelse: "FORELDREPENGER" as const,
 } satisfies OpplysningerDto;
 

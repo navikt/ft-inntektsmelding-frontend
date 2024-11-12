@@ -57,7 +57,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     page.getByText("Underfundigs første dag med foreldrepenger"),
   ).toBeVisible();
   await expect(page.getByText("Fra søknaden til Underfundig")).toBeVisible();
-  await expect(page.getByText("Torsdag 30. mai 2024")).toBeVisible();
+  await expect(page.getByText("Fredag 31. mai 2024")).toBeVisible();
 
   // Beregnet månedslønn
   await expect(
@@ -196,7 +196,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
 
   await expect(
     variabelRefusjonBlock.getByLabel("Fra og med").nth(0),
-  ).toHaveValue("30.05.2024");
+  ).toHaveValue("31.05.2024");
   await expect(
     variabelRefusjonBlock.getByLabel("Fra og med").nth(0),
   ).toBeEditable({ editable: false });
@@ -235,7 +235,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     label: "Fra og med",
     error: "Må oppgis",
   });
-  await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("30.05.2024");
+  await variabelRefusjonBlock.getByText("Fra og med").nth(1).fill("31.05.2024");
   await expectError({
     page: variabelRefusjonBlock,
     nth: 1,

@@ -101,7 +101,7 @@ export function Steg2InntektOgRefusjon() {
       refusjon:
         inntektsmeldingSkjemaState.refusjon.length === 0
           ? [
-              { fom: opplysninger.skjæringstidspunkt, beløp: inntekt },
+              { fom: opplysninger.førsteUttaksdato, beløp: inntekt },
               { fom: undefined, beløp: 0 },
             ]
           : inntektsmeldingSkjemaState.refusjon.length === 1
