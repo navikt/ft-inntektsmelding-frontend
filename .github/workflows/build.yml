@@ -13,7 +13,7 @@ on:
       - 'CODEOWNERS'
 
 jobs:
-  build-fp-app:
+  build-app-fp:
     name: Build [FP]
     permissions:
       contents: read
@@ -139,38 +139,38 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           namespace: k9saksbehandling
 
-  deploy-dev-teamforeldrepenger:
-    name: Deploy dev teamforeldrepenger
+  deploy-dev-fp:
+    name: Deploy DEV [FP]
     permissions:
       id-token: write
-    needs: build-fp-app
+    needs: build-app-fp
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
       gar: true
-      image: ${{ needs.build-fp-app.outputs.build-version }}
+      image: ${{ needs.build-app-fp.outputs.build-version }}
       cluster: dev-gcp
       deploy_context: "/fp"
       naiserator_file: "fp/naiserator.yaml"
       namespace: teamforeldrepenger
     secrets: inherit
 
-  deploy-prod-teamforeldrepenger:
-    name: Deploy prod teamforeldrepenger
+  deploy-prod-fp:
+    name: Deploy PROD [FP]
     permissions:
       id-token: write
-    needs: [build-fp-app, deploy-dev-teamforeldrepenger]
+    needs: [build-app-fp, deploy-dev-fp]
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
       gar: true
-      image: ${{ needs.build-fp-app.outputs.build-version }}
+      image: ${{ needs.build-app-fp.outputs.build-version }}
       cluster: prod-gcp
       deploy_context: "/fp"
       naiserator_file: "fp/naiserator.yaml"
       namespace: teamforeldrepenger
     secrets: inherit
 
-  deploy-dev-k9saksbehandling:
-    name: Deploy dev k9saksbehandling
+  deploy-dev-k9:
+    name: Deploy DEV [K9]
     permissions:
       id-token: write
     needs: build-k9-app
@@ -184,12 +184,12 @@ jobs:
       namespace: k9saksbehandling
     secrets: inherit
 
-#  deploy-prod-k9saksbehandling:
-#    name: Deploy prod k9saksbehandling
+#  deploy-prod-k9:
+#    name: Deploy PROD [K9]
 #    permissions:
 #      id-token: write
 #    if: github.ref_name == 'master'
-#    needs: [build-k9-app, deploy-dev-k9saksbehandling]
+#    needs: [build-k9-app, deploy-dev-k9]
 #    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
 #    with:
 #      gar: true
