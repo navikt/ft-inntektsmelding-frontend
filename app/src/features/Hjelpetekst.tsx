@@ -1,10 +1,11 @@
 import { AlertProps, Page, ReadMoreProps } from "@navikt/ds-react";
 import { Alert, ReadMore, Switch } from "@navikt/ds-react";
 import { type ReactNode } from "@tanstack/react-router";
-import type { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { createContext, useContext } from "react";
 import { z } from "zod";
 
+import { loggAmplitudeEvent } from "~/api/amplitude.ts";
 import { useLocalStorageState } from "~/features/usePersistedState.tsx";
 
 export const VIS_HJELPETEKSTER_KEY = "vis-hjelpetekster";
@@ -62,7 +63,14 @@ export function HjelpetekstToggle() {
     <Page.Block className="mt-2 mx-5 lg:mx-0" width="md">
       <Switch
         checked={visHjelpetekster.vis}
-        onChange={(e) => setVisHjelpetekster({ vis: e.target.checked })}
+        onChange={(e) => {
+          const bleSjekket = e.target.checked;
+          loggAmplitudeEvent({
+            eventName: bleSjekket ? "switch åpnet" : "switch lukket",
+            eventData: { tittel: "HjelpetekstToggle" },
+          });
+          setVisHjelpetekster({ vis: bleSjekket });
+        }}
       >
         Vis hjelpetekster
       </Switch>
@@ -73,13 +81,28 @@ export function HjelpetekstToggle() {
 export function HjelpetekstReadMore({
   header,
   children,
-}: Pick<ReadMoreProps, "header" | "children">) {
+}: Pick<ReadMoreProps, "children"> & { header: string }) {
   const { vis } = useHjelpetekst().visHjelpetekster;
+  const [åpen, setÅpen] = useState(false);
   if (!vis) {
     return null;
   }
 
-  return <ReadMore header={header}>{children}</ReadMore>;
+  return (
+    <ReadMore
+      header={header}
+      onOpenChange={(open) => {
+        setÅpen(open);
+        loggAmplitudeEvent({
+          eventName: open ? "readmore åpnet" : "readmore lukket",
+          eventData: { tittel: header },
+        });
+      }}
+      open={åpen}
+    >
+      {children}
+    </ReadMore>
+  );
 }
 
 export function HjelpetekstAlert({ children }: Pick<AlertProps, "children">) {
