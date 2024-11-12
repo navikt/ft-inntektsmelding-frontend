@@ -48,6 +48,10 @@ export function addProxyHandler(
             proxyRequest.removeHeader("obo-token");
             proxyRequest.removeHeader("cookie");
             proxyRequest.setHeader("Authorization", `Bearer ${obo}`);
+            proxyRequest.setHeader(
+              "Nav-ConsumerId",
+              "ftinntektsmelding-frontend",
+            );
           } else {
             console.log(
               `Access token var not present in session for scope ${scope}`,
