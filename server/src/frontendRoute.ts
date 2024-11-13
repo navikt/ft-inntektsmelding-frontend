@@ -1,5 +1,6 @@
 import path from "node:path";
 
+import { DecoratorFetchProps } from "@navikt/nav-dekoratoren-moduler";
 import {
   buildCspHeader,
   fetchDecoratorHtml,
@@ -30,8 +31,13 @@ const csp = await buildCspHeader(
 
 const dekoratørProps = {
   env: config.app.env,
-  params: { context: "arbeidsgiver", simple: true, logoutWarning: true },
-} as const;
+  params: {
+    context: "arbeidsgiver",
+    simple: false,
+    logoutWarning: true,
+    chatbot: false,
+  },
+} satisfies DecoratorFetchProps;
 
 export function setupStaticRoutes(router: Router) {
   router.use(express.static("./public", { index: false }));
