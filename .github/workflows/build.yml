@@ -155,6 +155,7 @@ jobs:
     secrets: inherit
 
   deploy-prod-fp:
+    if: github.ref == 'refs/heads/master'
     name: Deploy PROD [FP]
     permissions:
       id-token: write
@@ -185,6 +186,7 @@ jobs:
     secrets: inherit
 
 #  deploy-prod-k9:
+#    if: github.ref == 'refs/heads/master'
 #    name: Deploy PROD [K9]
 #    permissions:
 #      id-token: write
