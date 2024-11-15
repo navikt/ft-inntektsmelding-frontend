@@ -12,6 +12,9 @@ export default defineConfig({
       "~": fileURLToPath(new URL("src", import.meta.url)),
     },
   },
+  build: {
+    sourcemap: true,
+  },
   server: {
     origin: "http://localhost:5173",
   },

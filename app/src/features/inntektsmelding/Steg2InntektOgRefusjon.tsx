@@ -213,14 +213,27 @@ function Ytelsesperiode() {
       <HjelpetekstReadMore header="Hva betyr dette?">
         <>
           Dette er den første dagen den ansatte har søkt om{" "}
-          {formatYtelsesnavn(ytelse)}. Det betyr at Nav trenger opplysninger om
-          den ansattes inntekt på denne datoen. Vi baserer oss på datoen som er
-          oppgitt i søknaden, og du kan derfor ikke endre denne i
-          inntektsmeldingen. <br />
+          {formatYtelsesnavn(ytelse)}. Det betyr at vi trenger opplysninger om
+          den ansattes inntekt de siste tre månedene før denne datoen. Vi
+          baserer oss på datoen som er oppgitt i søknaden, du kan derfor ikke
+          endre denne i inntektsmeldingen.
           <br />
-          Hvis du er usikker på om dette er riktig dato for første fraværsdag,
-          må du kontakte den ansatte for avklaring. Du kan likevel fortsette med
-          innsending av denne inntektsmeldingen.
+          <br />
+          Hvis du er usikker på om dato for første fraværsdag er riktig, må du
+          kontakte den ansatte før du sender inntektsmeldingen. Hvis den ansatte
+          endrer søknadsperioden, vil du få en ny oppgave med riktig dato for
+          første fraværsdag.
+          {ytelse === "FORELDREPENGER" && (
+            <>
+              <br />
+              <br />I noen tilfeller kan første dag med foreldrepenger og datoen
+              du får opp under beregnet månedslønn være forskjellig. Det er
+              fordi tidspunktet lønn beregnes fra noen ganger kan være ulik
+              første fraværsdag, for eksempel hvis termin faller på en helg,
+              eller den ansatte har søkt foreldrepenger mindre enn 3 uker før
+              termin.
+            </>
+          )}
         </>
       </HjelpetekstReadMore>
     </VStack>
