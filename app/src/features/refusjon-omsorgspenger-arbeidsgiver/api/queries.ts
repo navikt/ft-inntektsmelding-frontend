@@ -75,3 +75,45 @@ const slåOppPersondata = async (fødselsnummer: string) => {
   }
   return parsedResponse.data;
 };
+
+const OpplysningerDtoSchema = z.object({
+  innsender: z.object({
+    fornavn: z.string().optional(),
+    mellomnavn: z.string().optional(),
+    etternavn: z.string().optional(),
+    telefon: z.string().optional(),
+  }),
+});
+export type OpplysningerDto = z.infer<typeof OpplysningerDtoSchema>;
+
+type OpplysningerFeil = { feilkode: "uventet respons" };
+
+export const hentOpplysningerDataOptions = queryOptions<
+  OpplysningerDto,
+  OpplysningerFeil,
+  OpplysningerDto,
+  ["refusjon-omsorgspenger-arbeidsgiver-opplysninger"]
+>({
+  queryKey: ["refusjon-omsorgspenger-arbeidsgiver-opplysninger"],
+  queryFn: () => hentOpplysningerData(),
+});
+
+const hentOpplysningerData = async () => {
+  const response = await fetch(
+    `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/opplysninger`,
+  );
+
+  const json = await response.json();
+
+  const parsedResponse = OpplysningerDtoSchema.safeParse(json);
+  if (!parsedResponse.success) {
+    logDev(
+      "error",
+      "Mottok en uventet respons fra serveren",
+      parsedResponse.error,
+    );
+    throw { feilkode: "uventet respons" } satisfies OpplysningerFeil;
+  }
+
+  return parsedResponse.data;
+};

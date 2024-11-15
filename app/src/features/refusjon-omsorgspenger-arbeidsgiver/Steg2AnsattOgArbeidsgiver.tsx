@@ -26,6 +26,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   useDocumentTitle(
     "Ansatt og arbeidsgiver – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
+
   const navigate = useNavigate();
   const { register, formState, watch, handleSubmit } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
