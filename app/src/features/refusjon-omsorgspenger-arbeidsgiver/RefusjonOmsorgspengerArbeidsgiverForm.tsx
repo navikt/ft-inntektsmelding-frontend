@@ -2,7 +2,9 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
 import { NaturalytelseTypeSchema } from "~/types/api-models";
-import { beløpSchema } from "~/utils";
+import { beløpSchema, lagFulltNavn } from "~/utils";
+
+import { useOpplysninger } from "./useOpplysninger";
 
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   kontaktperson: z
@@ -75,7 +77,15 @@ type Props = {
   children: React.ReactNode;
 };
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>();
+  const opplysninger = useOpplysninger();
+  const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
+    defaultValues: {
+      kontaktperson: {
+        navn: lagFulltNavn(opplysninger.innsender),
+        telefonnummer: opplysninger.innsender.telefon,
+      },
+    },
+  });
   return <FormProvider {...formArgs}>{children}</FormProvider>;
 };
 

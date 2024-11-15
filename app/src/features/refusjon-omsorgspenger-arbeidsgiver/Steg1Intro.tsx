@@ -17,9 +17,13 @@ import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useOpplysninger } from "./useOpplysninger.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
+
+  const opplysninger = useOpplysninger();
+
   const navigate = useNavigate();
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
@@ -56,7 +60,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       <GuidePanel>
         <VStack gap="4">
           <Heading level="2" size="medium">
-            Hei [navn]!
+            Hei {opplysninger.innsender.fornavn}!
           </Heading>
           <BodyLong>
             Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager
