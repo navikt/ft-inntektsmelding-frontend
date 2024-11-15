@@ -6,17 +6,33 @@ import {
   mockOpplysninger,
 } from "../mocks/utils.ts";
 
-test("Skal vise hjelpetekst", async ({ page }) => {
+test("Skal toggle hjelpetekster med switch", async ({ page }) => {
   await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
   await page.goto("/fp-im-dialog/1/dine-opplysninger");
-
   await expect(
     page.getByRole("checkbox", { name: "Vis hjelpetekster" }),
-  ).toBeVisible();
+  ).toBeChecked();
 
-  await page.goto("/fp-im-dialog/1/inntekts-og-refusjon");
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await expect(page.getByText("Hva betyr dette?")).toBeVisible();
+  await page.getByRole("checkbox", { name: "Vis hjelpetekster" }).click();
+  await expect(page.getByText("Hva betyr dette?")).toBeVisible({
+    visible: false,
+  });
+  await page.getByRole("checkbox", { name: "Vis hjelpetekster" }).click();
+  await expect(page.getByText("Hva betyr dette?")).toBeVisible({
+    visible: true,
+  });
+});
 
+test("'Hva betyr dette' skal ha riktig tekst for FP", async ({ page }) => {
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.getByText("Hva betyr dette?").click();
 });
