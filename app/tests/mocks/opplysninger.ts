@@ -147,6 +147,11 @@ export const opplysningerMedFlereEnn3Måneder = {
   },
 } satisfies OpplysningerDto;
 
+export const svpOpplysninger = {
+  ...STANDARD_OPPLYSNINGER,
+  ytelse: "SVANGERSKAPSPENGER",
+} satisfies OpplysningerDto;
+
 export const opplysningerMedBådeRapportertOgIkkePassert = {
   ...STANDARD_OPPLYSNINGER,
   skjæringstidspunkt: "2024-12-01",
