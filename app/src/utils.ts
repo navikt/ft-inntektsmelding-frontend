@@ -155,7 +155,7 @@ const STØNADSNAVN = {
   FORELDREPENGER: "foreldrepenger",
   SVANGERSKAPSPENGER: "svangerskapspenger",
   PLEIEPENGER_SYKT_BARN: "pleiepenger",
-  PLEIEPENGER_I_LIVETS_SLUTTFASE: "pleiepenger",
+  PLEIEPENGER_NÆRSTÅENDE: "pleiepenger",
   OPPLÆRINGSPENGER: "opplæringspenger",
   OMSORGSPENGER: "omsorgspenger",
 };
