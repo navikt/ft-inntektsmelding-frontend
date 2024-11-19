@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
-import { Button, Heading, List, VStack } from "@navikt/ds-react";
+import { Alert, Button, Heading, List, VStack } from "@navikt/ds-react";
 import {
   FormSummary,
   FormSummaryAnswer,
@@ -11,11 +11,17 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
+import {
+  sendSøknad,
+  SendSøknadError,
+  SendSøknadFeilmelding,
+} from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -24,6 +30,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
   const navigate = useNavigate();
+  const form = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { mutate, isPending, isSuccess, isError, error } = useMutation({
+    mutationFn: sendSøknad,
+    onSuccess: () => {
+      navigate({
+        to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
+      });
+    },
+  });
+  const onSubmit = () => {
+    mutate(form.getValues());
+  };
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
       <Heading level="1" size="large">
@@ -46,19 +64,23 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           Forrige steg
         </Button>
         <Button
+          disabled={isPending || isSuccess}
           icon={<PaperplaneIcon />}
           iconPosition="right"
-          onClick={() => {
-            alert("Søknad ikke egentlig sendt inn, men vi kan late som");
-            navigate({
-              to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
-            });
-          }}
+          loading={isPending}
+          onClick={onSubmit}
           variant="primary"
         >
-          Send inn
+          {isPending ? "Sender inn…" : "Send inn"}
         </Button>
       </div>
+      {isError && (
+        <Alert aria-live="polite" className="mt-4" variant="error">
+          {error instanceof SendSøknadError
+            ? error.message
+            : SendSøknadFeilmelding.GENERISK_FEIL}
+        </Alert>
+      )}
     </RotLayout>
   );
 };
