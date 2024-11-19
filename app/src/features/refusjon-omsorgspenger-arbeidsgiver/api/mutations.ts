@@ -27,7 +27,7 @@ export async function sendSøknad(sendSøknadRequest: unknown) {
   );
 
   if (!response.ok) {
-    throw new Error(SendSøknadFeilmelding.GENERISK_FEIL);
+    throw new SendSøknadError(SendSøknadFeilmelding.GENERISK_FEIL);
   }
 
   const json = await response.json();
@@ -36,7 +36,7 @@ export async function sendSøknad(sendSøknadRequest: unknown) {
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);
 
-    throw new Error(SendSøknadFeilmelding.UGYLDIG_SØKNAD);
+    throw new SendSøknadError(SendSøknadFeilmelding.UGYLDIG_SØKNAD);
   }
   return parsedJson.data;
 }
