@@ -71,7 +71,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           onClick={onSubmit}
           variant="primary"
         >
-          {isPending ? "Sender inn..." : "Send inn"}
+          {isPending ? "Sender inn…" : "Send inn"}
         </Button>
       </div>
       {isError && (
