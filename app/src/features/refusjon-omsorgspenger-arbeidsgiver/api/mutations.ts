@@ -36,7 +36,7 @@ export async function sendSøknad(sendSøknadRequest: unknown) {
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);
 
-    throw new SendSøknadError(SendSøknadFeilmelding.UGYLDIG_SØKNAD);
+    throw new SendSøknadError(SendSøknadFeilmelding.GENERISK_FEIL);
   }
   return parsedJson.data;
 }
