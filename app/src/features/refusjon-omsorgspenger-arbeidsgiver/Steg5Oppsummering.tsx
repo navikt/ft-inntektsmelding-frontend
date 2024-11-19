@@ -17,7 +17,11 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { sendSøknad, SendSøknadRequestDtoSchema } from "./api/mutations.ts";
+import {
+  sendSøknad,
+  SendSøknadError,
+  SendSøknadFeilmelding,
+} from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -27,25 +31,16 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   );
   const navigate = useNavigate();
   const form = useRefusjonOmsorgspengerArbeidsgiverFormContext();
-  const { mutateAsync, isPending, isSuccess, isError } = useMutation({
-    mutationKey: ["send-refusjonssøknad-omsorgspenger-arbeidsgiver"],
+  const { mutate, isPending, isSuccess, isError, error } = useMutation({
     mutationFn: sendSøknad,
+    onSuccess: () => {
+      navigate({
+        to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
+      });
+    },
   });
-  const onSubmit = async () => {
-    const formValues = form.getValues();
-    const validatedFormValues =
-      SendSøknadRequestDtoSchema.safeParse(formValues);
-
-    if (!validatedFormValues.success) {
-      // TODO: Legg til feilhåndtering
-      // Dette skjer typisk hvis man refreshet siden på oppsummeringssteget eller noe annet
-      throw new Error("Skjemaet var ikke gyldig");
-    }
-
-    await mutateAsync(validatedFormValues.data);
-    navigate({
-      to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
-    });
+  const onSubmit = () => {
+    mutate(form.getValues());
   };
   return (
     <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
@@ -81,7 +76,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       </div>
       {isError && (
         <Alert aria-live="polite" className="mt-4" variant="error">
-          Noe gikk galt under innsending av søknaden. Prøv igjen om litt.
+          {error instanceof SendSøknadError
+            ? error.message
+            : SendSøknadFeilmelding.GENERISK_FEIL}
         </Alert>
       )}
     </RotLayout>

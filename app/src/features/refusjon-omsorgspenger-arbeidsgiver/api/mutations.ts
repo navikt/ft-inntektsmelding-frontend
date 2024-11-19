@@ -7,7 +7,14 @@ import { RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema } from "../RefusjonO
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
-export async function sendSøknad(sendSøknadRequest: SendSøknadRequestDto) {
+export async function sendSøknad(sendSøknadRequest: unknown) {
+  const parsedSendSøknadRequest =
+    SendSøknadRequestDtoSchema.safeParse(sendSøknadRequest);
+
+  if (!parsedSendSøknadRequest.success) {
+    throw new SendSøknadError(SendSøknadFeilmelding.UGYLDIG_SØKNAD);
+  }
+
   const response = await fetch(
     `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/send-soknad`,
     {
@@ -15,12 +22,12 @@ export async function sendSøknad(sendSøknadRequest: SendSøknadRequestDto) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(sendSøknadRequest),
+      body: JSON.stringify(parsedSendSøknadRequest.data),
     },
   );
 
   if (!response.ok) {
-    throw new Error("Noe gikk galt.");
+    throw new Error(SendSøknadFeilmelding.GENERISK_FEIL);
   }
 
   const json = await response.json();
@@ -29,7 +36,7 @@ export async function sendSøknad(sendSøknadRequest: SendSøknadRequestDto) {
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);
 
-    throw new Error("Responsen fra serveren matchet ikke forventet format");
+    throw new Error(SendSøknadFeilmelding.UGYLDIG_SØKNAD);
   }
   return parsedJson.data;
 }
@@ -68,6 +75,18 @@ export const SendSøknadRequestDtoSchema =
         )
         .optional(),
     });
-type SendSøknadRequestDto = z.infer<typeof SendSøknadRequestDtoSchema>;
 
 const SendSøknadResponseDtoSchema = z.object({});
+
+export class SendSøknadError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SendSøknadError";
+  }
+}
+
+export const SendSøknadFeilmelding = {
+  GENERISK_FEIL:
+    "Noe gikk galt under innsending av søknaden. Prøv igjen om litt.",
+  UGYLDIG_SØKNAD: "Søknaden er ikke fylt inn riktig...",
+} as const;
