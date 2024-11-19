@@ -325,6 +325,10 @@ export const endringsårsak = [
     value: "MANGELFULL_RAPPORTERING_AORDNING",
     label: "Mangelfull eller uriktig rapportering til A-ordningen",
   },
+  {
+    value: "FEIL_RAPPORTERING_AORDNING",
+    label: "Mangelfull eller uriktig rapportering til A-ordningen",
+  },
 ] satisfies { value: EndringAvInntektÅrsaker; label: string }[];
 
 type EndreMånedslønnProps = {
@@ -595,6 +599,12 @@ export const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
     tomErValgfritt: false,
   },
   MANGELFULL_RAPPORTERING_AORDNING: {
+    fom: false,
+    tom: false,
+    bleKjentFom: false,
+    tomErValgfritt: false,
+  },
+  FEIL_RAPPORTERING_AORDNING: {
     fom: false,
     tom: false,
     bleKjentFom: false,
