@@ -84,6 +84,11 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
+      if (opplysninger.forespørselStatus === "UTGÅTT") {
+        throw new Error(
+          "Du kan ikke sende inn en ny inntektsmelding når oppgaven den er knyttet til er utgått.",
+        );
+      }
       const inntektsmeldingRequest = lagSendInntektsmeldingRequest(
         id,
         skjemaState,
