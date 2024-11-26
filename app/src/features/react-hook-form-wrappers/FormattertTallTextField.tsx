@@ -53,9 +53,11 @@ export const FormattertTallTextField = ({
       autoComplete="off"
       error={fieldState.error?.message}
       onChange={(e) => {
+        const value = e.target.value;
+        const formattertTall = formatTall(value);
         // Remove spaces from the input value
-        const newValue = e.target.value.replaceAll(/\s+/g, "");
-        field.onChange(newValue);
+        const tallUtenMellomrom = formattertTall.replaceAll(/\s+/g, "");
+        field.onChange(tallUtenMellomrom);
       }}
       ref={field.ref}
       value={formatTall(field.value)}
