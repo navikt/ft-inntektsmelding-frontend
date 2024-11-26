@@ -130,7 +130,7 @@ export const opplysningerSchema = z.object({
     organisasjonNummer: z.string(),
   }),
   inntektsopplysninger: z.object({
-    gjennomsnittLønn: z.number(),
+    gjennomsnittLønn: z.number().optional(),
     månedsinntekter: z.array(
       z.object({
         fom: z.string(),

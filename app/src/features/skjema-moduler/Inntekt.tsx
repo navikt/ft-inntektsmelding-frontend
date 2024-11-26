@@ -60,6 +60,9 @@ export function Inntekt({
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
+  const AInntektErNede = opplysninger.inntektsopplysninger.månedsinntekter.some(
+    (inntekt) => inntekt.status === "NEDETID_AINNTEKT",
+  );
   const førsteDag = formatDatoKort(new Date(skjæringstidspunkt));
 
   return (
@@ -90,15 +93,19 @@ export function Inntekt({
       </Informasjonsseksjon>
 
       <VStack data-testid="gjennomsnittinntekt-block" gap="1">
-        <BodyShort>Beregnet månedslønn</BodyShort>
-        <strong
-          className={clsx(
-            "text-heading-medium",
-            isOpen && "text-text-subtle line-through",
-          )}
-        >
-          {formatKroner(inntektsopplysninger.gjennomsnittLønn)}
-        </strong>
+        {!AInntektErNede && (
+          <>
+            <BodyShort>Beregnet månedslønn</BodyShort>
+            <strong
+              className={clsx(
+                "text-heading-medium",
+                isOpen && "text-text-subtle line-through",
+              )}
+            >
+              {formatKroner(inntektsopplysninger.gjennomsnittLønn)}
+            </strong>
+          </>
+        )}
         <BodyShort>
           Gjennomsnittet av lønn fra{" "}
           {formatOppramsing(
@@ -112,7 +119,17 @@ export function Inntekt({
           )}
         </BodyShort>
       </VStack>
-      {isOpen ? (
+      {/* Hvis A-inntekt må feltet fylles ut, og det er ingen tilbakestillingsknapp. */}
+      {AInntektErNede ? (
+        <FormattertTallTextField
+          className="w-fit"
+          inputMode="numeric"
+          label="Beregned måndslønn"
+          min={0}
+          name="korrigertInntekt"
+          required
+        />
+      ) : isOpen ? (
         <EndreMånedslønn
           harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
           onClose={onClose}
@@ -130,6 +147,7 @@ export function Inntekt({
           Endre månedslønn
         </Button>
       )}
+
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
           Er månedslønnen riktig?
@@ -230,6 +248,9 @@ const RapportertInntekt = ({
   if (inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT") {
     return "Ikke rapportert (0kr)";
   }
+  if (inntekt.status === "NEDETID_AINNTEKT") {
+    return "-";
+  }
 
   return formatKroner(inntekt.beløp);
 };
@@ -240,6 +261,10 @@ type AlertOmRapportertLønnProps = {
 const AlertOmRapportertLønn = ({
   månedsinntekter,
 }: AlertOmRapportertLønnProps) => {
+  const AInntektErNede = månedsinntekter.some(
+    (inntekt) => inntekt.status === "NEDETID_AINNTEKT",
+  );
+
   const harIkkeRapportertOgFristErPassert = månedsinntekter.some(
     (inntekt) => inntekt.status === "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
   );
@@ -248,6 +273,22 @@ const AlertOmRapportertLønn = ({
     (inntekt) =>
       inntekt.status === "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
   );
+
+  if (AInntektErNede) {
+    return (
+      <Alert
+        className="col-span-2"
+        data-testid="alert-a-inntekt-er-nede"
+        variant="warning"
+      >
+        <BodyShort>
+          Vi har problemer med å hente inntektsopplysninger fra A-ordningen. Du
+          kan legge inn beregnet månedsinntekt manuelt, eller prøve igjen
+          senere.
+        </BodyShort>
+      </Alert>
+    );
+  }
 
   if (
     harIkkeRapportertOgFristErPassert &&

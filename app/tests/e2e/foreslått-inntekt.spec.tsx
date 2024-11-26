@@ -7,6 +7,7 @@ import {
 
 import {
   enkeltOpplysningerResponse,
+  opplysningerMedAInntektNede,
   opplysningerMedBådeRapportertOgIkkePassert,
   opplysningerMedFlereEnn3Måneder,
   opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
@@ -210,6 +211,47 @@ test("[??.??] siste måned ikke passert, nest siste passert", async ({
     beregnetMånedslønn.getByTestId(
       "alert-både-ikke-rapportert-og-brukt-i-snitt",
     ),
+  ).toBeVisible({ visible: true });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
+  ).toBeVisible({ visible: false });
+});
+
+test("A-inntekt er nede", async ({ page }) => {
+  await mockOpplysninger({
+    page,
+    json: opplysningerMedAInntektNede,
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+  });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  const beregnetMånedslønn = page
+    .getByRole("heading", { name: "Beregnet månedslønn" })
+    .locator("..");
+
+  await expect(beregnetMånedslønn.getByText("Februar:-")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("Mars:-")).toBeVisible();
+  await expect(beregnetMånedslønn.getByText("April:-")).toBeVisible();
+  await expect(page.getByTestId("gjennomsnittinntekt-block")).toBeVisible({
+    visible: false,
+  });
+  await expect(
+    page
+      .getByTestId("gjennomsnittinntekt-block")
+      .getByText("Gjennomsnittet av lønn fra februar, mars og april"),
+  ).toBeVisible();
+
+  await page.getByLabel("Beregnet måndslønn").fill("34000");
+
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-ikke-rapportert-brukt-i-snitt"),
+  ).toBeVisible({ visible: false });
+  await expect(
+    beregnetMånedslønn.getByTestId("alert-a-inntekt-er-nede"),
   ).toBeVisible({ visible: true });
   await expect(
     beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
