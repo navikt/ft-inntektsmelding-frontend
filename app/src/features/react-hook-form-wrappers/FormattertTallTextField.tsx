@@ -30,7 +30,7 @@ export const FormattertTallTextField = ({
 
         // Backend aksepterer tall med maks 20 siffer. Velger MAX_SAFE_INTEGER som grense for å være under 20 siffer
         if (asNumber > Number.MAX_SAFE_INTEGER) {
-          return "Beløpet er for stort"
+          return "Beløpet er for stort";
         }
 
         if (asNumber < (min ?? -Infinity)) {

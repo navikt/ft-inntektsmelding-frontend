@@ -102,7 +102,6 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   });
   await page.getByText("Endret månedsinntekt").fill("50000");
 
-
   await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
   // Hvorfor feiler denne???
 
@@ -419,9 +418,10 @@ test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", 
 });
 
 test("Lim inn inntekt skal også formattere input", async ({
-  page, context
+  page,
+  context,
 }) => {
-  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
@@ -432,7 +432,7 @@ test("Lim inn inntekt skal også formattere input", async ({
   await page.getByRole("button", { name: "Neste steg" }).click();
 
   // copy text to clipboard
-  await page.evaluate(() => navigator.clipboard.writeText('30 000,0123456'));
-  await page.getByLabel("Endret månedsinntekt").press('Meta+v');
+  await page.evaluate(() => navigator.clipboard.writeText("30 000,0123456"));
+  await page.getByLabel("Endret månedsinntekt").press("Meta+v");
   await expect(page.getByText("30 000,01 kr")).toBeVisible();
 });
