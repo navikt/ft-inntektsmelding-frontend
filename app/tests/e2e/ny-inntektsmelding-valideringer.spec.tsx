@@ -94,7 +94,14 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     label: "Endret månedsinntekt",
     error: "Beløpet må være 0 eller høyere",
   });
+  await page.getByText("Endret månedsinntekt").fill("5".repeat(21));
+  await expectError({
+    page,
+    label: "Endret månedsinntekt",
+    error: "Beløpet er for stort",
+  });
   await page.getByText("Endret månedsinntekt").fill("50000");
+
 
   await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
   // Hvorfor feiler denne???
