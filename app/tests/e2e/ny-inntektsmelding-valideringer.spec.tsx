@@ -410,3 +410,22 @@ test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", 
   await expect(gjennomsnittInntektBlokk.getByText("53 000")).toBeVisible();
   await expect(refusjonsBlock.getByText("53 000 kr")).toBeVisible();
 });
+
+test("Lim inn inntekt skal også formattere input", async ({
+  page, context
+}) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  // copy text to clipboard
+  await page.evaluate(() => navigator.clipboard.writeText('30 000,0123456'));
+  await page.getByLabel("Endret månedsinntekt").press('Meta+v');
+  await expect(page.getByText("30 000,01 kr")).toBeVisible();
+});
