@@ -137,6 +137,7 @@ export const opplysningerSchema = z.object({
         tom: z.string(),
         beløp: z.number().optional(),
         status: z.enum([
+          "NEDETID_AINNTEKT",
           "BRUKT_I_GJENNOMSNITT",
           "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
           "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
