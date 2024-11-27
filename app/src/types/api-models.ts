@@ -130,13 +130,14 @@ export const opplysningerSchema = z.object({
     organisasjonNummer: z.string(),
   }),
   inntektsopplysninger: z.object({
-    gjennomsnittLønn: z.number(),
+    gjennomsnittLønn: z.number().optional(),
     månedsinntekter: z.array(
       z.object({
         fom: z.string(),
         tom: z.string(),
         beløp: z.number().optional(),
         status: z.enum([
+          "NEDETID_AINNTEKT",
           "BRUKT_I_GJENNOMSNITT",
           "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
           "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
