@@ -118,8 +118,8 @@ export function Inntekt({
       {/* Hvis A-inntekt må feltet fylles ut, og det er ingen tilbakestillingsknapp. */}
       {AInntektErNede ? (
         <FormattertTallTextField
-          htmlSize={20}
           description={gjennomsnittAvMånederTekst}
+          htmlSize={20}
           inputMode="numeric"
           label="Beregnet måndslønn"
           min={0}
