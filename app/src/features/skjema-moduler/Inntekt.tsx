@@ -65,6 +65,15 @@ export function Inntekt({
   );
   const førsteDag = formatDatoKort(new Date(skjæringstidspunkt));
 
+  const gjennomsnittAvMånederTekst = `Gjennomsnittet av lønn fra 
+  ${formatOppramsing(
+    inntektsopplysninger.månedsinntekter
+      .filter(
+        (m) => m.status !== "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+      )
+      .map((m) => navnPåMåned(m.fom).toLowerCase()),
+  )}`;
+
   return (
     <div className="flex flex-col gap-4">
       <hr />
@@ -92,39 +101,27 @@ export function Inntekt({
         </HGrid>
       </Informasjonsseksjon>
 
-      <VStack data-testid="gjennomsnittinntekt-block" gap="1">
-        {!AInntektErNede && (
-          <>
-            <BodyShort>Beregnet månedslønn</BodyShort>
-            <strong
-              className={clsx(
-                "text-heading-medium",
-                isOpen && "text-text-subtle line-through",
-              )}
-            >
-              {formatKroner(inntektsopplysninger.gjennomsnittLønn)}
-            </strong>
-          </>
-        )}
-        <BodyShort>
-          Gjennomsnittet av lønn fra{" "}
-          {formatOppramsing(
-            inntektsopplysninger.månedsinntekter
-              .filter(
-                (m) =>
-                  m.status !==
-                  "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
-              )
-              .map((m) => navnPåMåned(m.fom).toLowerCase()),
-          )}
-        </BodyShort>
-      </VStack>
+      {!AInntektErNede && (
+        <VStack data-testid="gjennomsnittinntekt-block" gap="1">
+          <BodyShort>Beregnet månedslønn</BodyShort>
+          <strong
+            className={clsx(
+              "text-heading-medium",
+              isOpen && "text-text-subtle line-through",
+            )}
+          >
+            {formatKroner(inntektsopplysninger.gjennomsnittLønn)}
+          </strong>
+          <BodyShort>{gjennomsnittAvMånederTekst}</BodyShort>
+        </VStack>
+      )}
       {/* Hvis A-inntekt må feltet fylles ut, og det er ingen tilbakestillingsknapp. */}
       {AInntektErNede ? (
         <FormattertTallTextField
-          className="w-fit"
+          htmlSize={20}
+          description={gjennomsnittAvMånederTekst}
           inputMode="numeric"
-          label="Beregned måndslønn"
+          label="Beregnet måndslønn"
           min={0}
           name="korrigertInntekt"
           required

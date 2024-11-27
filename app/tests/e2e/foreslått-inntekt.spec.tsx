@@ -240,9 +240,7 @@ test("A-inntekt er nede", async ({ page }) => {
     visible: false,
   });
   await expect(
-    page
-      .getByTestId("gjennomsnittinntekt-block")
-      .getByText("Gjennomsnittet av lønn fra februar, mars og april"),
+    page.getByText("Gjennomsnittet av lønn fra februar, mars og april"),
   ).toBeVisible();
 
   await page.getByLabel("Beregnet måndslønn").fill("34000");
