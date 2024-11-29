@@ -94,10 +94,15 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     label: "Endret månedsinntekt",
     error: "Beløpet må være 0 eller høyere",
   });
+  await page.getByText("Endret månedsinntekt").fill("5".repeat(21));
+  await expectError({
+    page,
+    label: "Endret månedsinntekt",
+    error: "Beløpet er for stort",
+  });
   await page.getByText("Endret månedsinntekt").fill("50000");
 
   await page.getByLabel("Hva er årsaken til endringen?").selectOption("Ferie");
-  // Hvorfor feiler denne???
 
   await page.getByRole("button", { name: "Neste steg" }).click();
   await expectError({
@@ -409,4 +414,24 @@ test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", 
   // Månedsinntekt skal være tilbakestilt, og refusjonsbeløp skal være oppdatert til å matche månedsinntekten.
   await expect(gjennomsnittInntektBlokk.getByText("53 000")).toBeVisible();
   await expect(refusjonsBlock.getByText("53 000 kr")).toBeVisible();
+});
+
+test("Lim inn inntekt skal også formattere input", async ({
+  page,
+  context,
+}) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await mockOpplysninger({ page });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({ page });
+
+  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+
+  await page.getByRole("button", { name: "Endre månedslønn" }).click();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  // copy text to clipboard
+  await page.evaluate(() => navigator.clipboard.writeText("30 000,0123456"));
+  await page.getByLabel("Endret månedsinntekt").press("ControlOrMeta+v");
+  await expect(page.getByLabel("30000,01", { exact: true })).toBeVisible();
 });

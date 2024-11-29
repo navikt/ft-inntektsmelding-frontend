@@ -36,7 +36,10 @@ export const Route = createFileRoute("/$id")({
       hentEksisterendeInntektsmeldinger(params.id),
     ]);
 
-    if (opplysninger.forespørselStatus === "UTGÅTT") {
+    if (
+      opplysninger.forespørselStatus === "UTGÅTT" &&
+      eksisterendeInntektsmeldinger.length === 0
+    ) {
       throw new Error(FEILKODER.OPPGAVE_ER_UTGÅTT);
     }
 

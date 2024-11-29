@@ -28,6 +28,11 @@ export const FormattertTallTextField = ({
           return "Må være et tall";
         }
 
+        // Backend aksepterer tall med maks 20 siffer. Velger MAX_SAFE_INTEGER som grense for å være under 20 siffer
+        if (asNumber > Number.MAX_SAFE_INTEGER) {
+          return "Beløpet er for stort";
+        }
+
         if (asNumber < (min ?? -Infinity)) {
           return `Beløpet må være ${min} eller høyere`;
         }
@@ -48,9 +53,11 @@ export const FormattertTallTextField = ({
       autoComplete="off"
       error={fieldState.error?.message}
       onChange={(e) => {
+        const value = e.target.value;
+        const formattertTall = formatTall(value);
         // Remove spaces from the input value
-        const newValue = e.target.value.replaceAll(/\s+/g, "");
-        field.onChange(newValue);
+        const tallUtenMellomrom = formattertTall.replaceAll(/\s+/g, "");
+        field.onChange(tallUtenMellomrom);
       }}
       ref={field.ref}
       value={formatTall(field.value)}

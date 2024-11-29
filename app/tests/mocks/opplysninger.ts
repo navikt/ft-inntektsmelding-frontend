@@ -109,6 +109,29 @@ export const opplysningerMedSisteMånedRapportert0 = {
   },
 } satisfies OpplysningerDto;
 
+export const opplysningerMedAInntektNede = {
+  ...STANDARD_OPPLYSNINGER,
+  inntektsopplysninger: {
+    månedsinntekter: [
+      {
+        fom: "2024-02-01",
+        tom: "2024-02-29",
+        status: "NEDETID_AINNTEKT",
+      },
+      {
+        fom: "2024-03-01",
+        tom: "2024-03-31",
+        status: "NEDETID_AINNTEKT",
+      },
+      {
+        fom: "2024-04-01",
+        tom: "2024-04-30",
+        status: "NEDETID_AINNTEKT",
+      },
+    ],
+  },
+} satisfies OpplysningerDto;
+
 export const opplysningerMedFlereEnn3Måneder = {
   ...STANDARD_OPPLYSNINGER,
   skjæringstidspunkt: "2024-05-04",

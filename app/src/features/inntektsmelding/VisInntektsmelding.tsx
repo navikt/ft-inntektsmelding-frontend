@@ -1,5 +1,13 @@
 import { DownloadIcon, PencilIcon } from "@navikt/aksel-icons";
-import { Button, Detail, Heading, HStack, VStack } from "@navikt/ds-react";
+import {
+  Alert,
+  BodyShort,
+  Button,
+  Detail,
+  Heading,
+  HStack,
+  VStack,
+} from "@navikt/ds-react";
 import { getRouteApi, Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
@@ -35,6 +43,7 @@ export const VisInntektsmelding = () => {
     <Button
       as={Link}
       className="w-fit"
+      disabled={opplysninger.forespørselStatus === "UTGÅTT"}
       icon={<PencilIcon />}
       to="../dine-opplysninger"
       variant="secondary"
@@ -60,6 +69,15 @@ export const VisInntektsmelding = () => {
           </VStack>
           {endreKnapp}
         </HStack>
+        {opplysninger.forespørselStatus === "UTGÅTT" && (
+          <Alert className="my-4" variant="warning">
+            <BodyShort>
+              Du kan ikke endre inntektsmeldingen når oppgaven den er knyttet
+              til er utgått. Det kan skje når søkeren trekker søknaden sin etter
+              man har sendt inn en inntektsmelding for den søknaden.
+            </BodyShort>
+          </Alert>
+        )}
         <Skjemaoppsummering
           opplysninger={opplysninger}
           skjemaState={sisteInntektsmelding}
