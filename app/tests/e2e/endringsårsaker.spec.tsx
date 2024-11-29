@@ -49,9 +49,7 @@ test("endringsårsaker uten ekstra felter", async ({ page }) => {
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
   await expect(
-    page.getByText(
-      "Legg inn dato for Feil rapportering til a-ordningen",
-    ),
+    page.getByText("Legg inn dato for Feil rapportering til a-ordningen"),
   ).toBeVisible({ visible: false });
 });
 
