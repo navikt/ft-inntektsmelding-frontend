@@ -361,11 +361,11 @@ export const endringsårsak = [
   },
   {
     value: "MANGELFULL_RAPPORTERING_AORDNING",
-    label: "Mangelfull eller uriktig rapportering til A-ordningen",
+    label: "Feil rapportering til a-ordningen",
   },
   {
-    value: "FEIL_RAPPORTERING_AORDNING",
-    label: "Mangelfull eller uriktig rapportering til A-ordningen",
+    value: "INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING",
+    label: "Inntekt er ikke rapportert til a-ordningen enda",
   },
 ] satisfies { value: EndringAvInntektÅrsaker; label: string }[];
 
@@ -642,7 +642,7 @@ export const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
     bleKjentFom: false,
     tomErValgfritt: false,
   },
-  FEIL_RAPPORTERING_AORDNING: {
+  INNTEKT_IKKE_RAPPORTERT_ENDA_AORDNING: {
     fom: false,
     tom: false,
     bleKjentFom: false,
