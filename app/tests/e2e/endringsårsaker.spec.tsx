@@ -45,13 +45,11 @@ test("endringsårsaker uten ekstra felter", async ({ page }) => {
 
   await page
     .getByLabel("Hva er årsaken til endringen?")
-    .selectOption("Mangelfull eller uriktig rapportering til A-ordningen");
+    .selectOption("Feil rapportering til a-ordningen");
   await expect(page.getByText("Fra og med")).toBeVisible({ visible: false });
   await expect(page.getByText("Til og med")).toBeVisible({ visible: false });
   await expect(
-    page.getByText(
-      "Legg inn dato for mangelfull eller uriktig rapportering til a-ordningen",
-    ),
+    page.getByText("Legg inn dato for Feil rapportering til a-ordningen"),
   ).toBeVisible({ visible: false });
 });
 
