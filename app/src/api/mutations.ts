@@ -15,7 +15,7 @@ export async function sendInntektsmelding(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(sendInntektsmeldingRequest),
+    body: JSON.stringify({ ...sendInntektsmeldingRequest, inntekt: -12 }),
   });
 
   if (!response.ok) {
