@@ -27,35 +27,37 @@ export const RotLayout = ({
   medHvitBoks = false,
 }: RotLayoutProps) => {
   return (
-    <Page background={background}>
-      <Page.Block className="bg-bg-default border-border-focus-on-inverted border-b-4 py-5">
-        <Page.Block width="md">
-          <HStack align="center">
-            <img
-              alt=""
-              className="hidden md:block ml-3"
-              height="52"
-              src={illustrasjonUrl}
-              width="52"
-            />
-            <div className="ml-4">
-              <Heading level="1" size="large">
-                {tittel}
-              </Heading>
-              {undertittel && <Detail as="div">{undertittel}</Detail>}
-            </div>
-          </HStack>
+    <main id="maincontent">
+      <Page background={background}>
+        <Page.Block className="bg-bg-default border-border-focus-on-inverted border-b-4 py-5">
+          <Page.Block width="md">
+            <HStack align="center">
+              <img
+                alt=""
+                className="hidden md:block ml-3"
+                height="52"
+                src={illustrasjonUrl}
+                width="52"
+              />
+              <div className="ml-4">
+                <Heading level="1" size="large">
+                  {tittel}
+                </Heading>
+                {undertittel && <Detail as="div">{undertittel}</Detail>}
+              </div>
+            </HStack>
+          </Page.Block>
         </Page.Block>
-      </Page.Block>
-      <Page.Block width="md">
-        {medHvitBoks ? (
-          <div className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col mt-2">
-            {children}
-          </div>
-        ) : (
-          children
-        )}
-      </Page.Block>
-    </Page>
+        <Page.Block width="md">
+          {medHvitBoks ? (
+            <div className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col mt-2">
+              {children}
+            </div>
+          ) : (
+            children
+          )}
+        </Page.Block>
+      </Page>
+    </main>
   );
 };
