@@ -201,6 +201,7 @@ function MisterNaturalytelser() {
                   className="absolute top-8 right-1"
                   icon={<TrashIcon />}
                   onClick={() => remove(index)}
+                  type="button"
                   variant="tertiary"
                 >
                   Slett

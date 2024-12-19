@@ -295,6 +295,7 @@ function Refusjonsperioder() {
                 aria-label="Fjern refusjonsendring"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}
+                type="button"
                 variant="tertiary"
               >
                 Slett

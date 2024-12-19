@@ -480,6 +480,7 @@ function Endringsårsaker({
                 className="w-fit md:absolute top-8 right-0"
                 icon={<TrashIcon />}
                 onClick={() => remove(index)}
+                type="button"
                 variant="tertiary"
               >
                 Slett
