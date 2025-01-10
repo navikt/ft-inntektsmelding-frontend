@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as RefusjonOmsorgspengerArbeidsgiverImport } from './routes/refusjon-omsorgspenger-arbeidsgiver'
+import { Route as AgiImport } from './routes/agi'
 import { Route as IdImport } from './routes/$id'
 import { Route as IdIndexImport } from './routes/$id.index'
 import { Route as RefusjonOmsorgspengerArbeidsgiver6KvitteringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.6-kvittering'
@@ -34,6 +35,12 @@ const RefusjonOmsorgspengerArbeidsgiverRoute =
     path: '/refusjon-omsorgspenger-arbeidsgiver',
     getParentRoute: () => rootRoute,
   } as any)
+
+const AgiRoute = AgiImport.update({
+  id: '/agi',
+  path: '/agi',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IdRoute = IdImport.update({
   id: '/$id',
@@ -128,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/$id'
       fullPath: '/$id'
       preLoaderRoute: typeof IdImport
+      parentRoute: typeof rootRoute
+    }
+    '/agi': {
+      id: '/agi'
+      path: '/agi'
+      fullPath: '/agi'
+      preLoaderRoute: typeof AgiImport
       parentRoute: typeof rootRoute
     }
     '/refusjon-omsorgspenger-arbeidsgiver': {
@@ -278,6 +292,7 @@ const RefusjonOmsorgspengerArbeidsgiverRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '/$id': typeof IdRouteWithChildren
+  '/agi': typeof AgiRoute
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
@@ -294,6 +309,7 @@ export interface FileRoutesByFullPath {
 }
 
 export interface FileRoutesByTo {
+  '/agi': typeof AgiRoute
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
@@ -312,6 +328,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/$id': typeof IdRouteWithChildren
+  '/agi': typeof AgiRoute
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
@@ -331,6 +348,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/$id'
+    | '/agi'
     | '/refusjon-omsorgspenger-arbeidsgiver'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
@@ -346,6 +364,7 @@ export interface FileRouteTypes {
     | '/$id/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/agi'
     | '/refusjon-omsorgspenger-arbeidsgiver'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
@@ -362,6 +381,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/$id'
+    | '/agi'
     | '/refusjon-omsorgspenger-arbeidsgiver'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
@@ -380,11 +400,13 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IdRoute: typeof IdRouteWithChildren
+  AgiRoute: typeof AgiRoute
   RefusjonOmsorgspengerArbeidsgiverRoute: typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IdRoute: IdRouteWithChildren,
+  AgiRoute: AgiRoute,
   RefusjonOmsorgspengerArbeidsgiverRoute:
     RefusjonOmsorgspengerArbeidsgiverRouteWithChildren,
 }
@@ -400,6 +422,7 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/$id",
+        "/agi",
         "/refusjon-omsorgspenger-arbeidsgiver"
       ]
     },
@@ -413,6 +436,9 @@ export const routeTree = rootRoute
         "/$id/vis",
         "/$id/"
       ]
+    },
+    "/agi": {
+      "filePath": "agi.tsx"
     },
     "/refusjon-omsorgspenger-arbeidsgiver": {
       "filePath": "refusjon-omsorgspenger-arbeidsgiver.tsx",
