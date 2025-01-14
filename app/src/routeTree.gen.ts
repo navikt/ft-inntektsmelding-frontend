@@ -14,6 +14,7 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as RefusjonOmsorgspengerArbeidsgiverImport } from './routes/refusjon-omsorgspenger-arbeidsgiver'
 import { Route as AgiImport } from './routes/agi'
 import { Route as IdImport } from './routes/$id'
+import { Route as AgiIndexImport } from './routes/agi.index'
 import { Route as IdIndexImport } from './routes/$id.index'
 import { Route as RefusjonOmsorgspengerArbeidsgiver6KvitteringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.6-kvittering'
 import { Route as RefusjonOmsorgspengerArbeidsgiver5OppsummeringImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.5-oppsummering'
@@ -21,6 +22,7 @@ import { Route as RefusjonOmsorgspengerArbeidsgiver4RefusjonImport } from './rou
 import { Route as RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.3-omsorgsdager'
 import { Route as RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.2-ansatt-og-arbeidsgiver'
 import { Route as RefusjonOmsorgspengerArbeidsgiver1IntroImport } from './routes/refusjon-omsorgspenger-arbeidsgiver.1-intro'
+import { Route as Agi1Import } from './routes/agi.1'
 import { Route as IdVisImport } from './routes/$id.vis'
 import { Route as IdOppsummeringImport } from './routes/$id.oppsummering'
 import { Route as IdKvitteringImport } from './routes/$id.kvittering'
@@ -46,6 +48,12 @@ const IdRoute = IdImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AgiIndexRoute = AgiIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AgiRoute,
 } as any)
 
 const IdIndexRoute = IdIndexImport.update({
@@ -95,6 +103,12 @@ const RefusjonOmsorgspengerArbeidsgiver1IntroRoute =
     path: '/1-intro',
     getParentRoute: () => RefusjonOmsorgspengerArbeidsgiverRoute,
   } as any)
+
+const Agi1Route = Agi1Import.update({
+  id: '/1',
+  path: '/1',
+  getParentRoute: () => AgiRoute,
+} as any)
 
 const IdVisRoute = IdVisImport.update({
   id: '/vis',
@@ -186,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IdVisImport
       parentRoute: typeof IdImport
     }
+    '/agi/1': {
+      id: '/agi/1'
+      path: '/1'
+      fullPath: '/agi/1'
+      preLoaderRoute: typeof Agi1Import
+      parentRoute: typeof AgiImport
+    }
     '/refusjon-omsorgspenger-arbeidsgiver/1-intro': {
       id: '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
       path: '/1-intro'
@@ -235,6 +256,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IdIndexImport
       parentRoute: typeof IdImport
     }
+    '/agi/': {
+      id: '/agi/'
+      path: '/'
+      fullPath: '/agi/'
+      preLoaderRoute: typeof AgiIndexImport
+      parentRoute: typeof AgiImport
+    }
   }
 }
 
@@ -259,6 +287,18 @@ const IdRouteChildren: IdRouteChildren = {
 }
 
 const IdRouteWithChildren = IdRoute._addFileChildren(IdRouteChildren)
+
+interface AgiRouteChildren {
+  Agi1Route: typeof Agi1Route
+  AgiIndexRoute: typeof AgiIndexRoute
+}
+
+const AgiRouteChildren: AgiRouteChildren = {
+  Agi1Route: Agi1Route,
+  AgiIndexRoute: AgiIndexRoute,
+}
+
+const AgiRouteWithChildren = AgiRoute._addFileChildren(AgiRouteChildren)
 
 interface RefusjonOmsorgspengerArbeidsgiverRouteChildren {
   RefusjonOmsorgspengerArbeidsgiver1IntroRoute: typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
@@ -292,13 +332,14 @@ const RefusjonOmsorgspengerArbeidsgiverRouteWithChildren =
 
 export interface FileRoutesByFullPath {
   '/$id': typeof IdRouteWithChildren
-  '/agi': typeof AgiRoute
+  '/agi': typeof AgiRouteWithChildren
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
+  '/agi/1': typeof Agi1Route
   '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
   '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
   '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
@@ -306,16 +347,17 @@ export interface FileRoutesByFullPath {
   '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
   '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
   '/$id/': typeof IdIndexRoute
+  '/agi/': typeof AgiIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/agi': typeof AgiRoute
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
+  '/agi/1': typeof Agi1Route
   '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
   '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
   '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
@@ -323,18 +365,20 @@ export interface FileRoutesByTo {
   '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
   '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
   '/$id': typeof IdIndexRoute
+  '/agi': typeof AgiIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/$id': typeof IdRouteWithChildren
-  '/agi': typeof AgiRoute
+  '/agi': typeof AgiRouteWithChildren
   '/refusjon-omsorgspenger-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
+  '/agi/1': typeof Agi1Route
   '/refusjon-omsorgspenger-arbeidsgiver/1-intro': typeof RefusjonOmsorgspengerArbeidsgiver1IntroRoute
   '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver': typeof RefusjonOmsorgspengerArbeidsgiver2AnsattOgArbeidsgiverRoute
   '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager': typeof RefusjonOmsorgspengerArbeidsgiver3OmsorgsdagerRoute
@@ -342,6 +386,7 @@ export interface FileRoutesById {
   '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering': typeof RefusjonOmsorgspengerArbeidsgiver5OppsummeringRoute
   '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering': typeof RefusjonOmsorgspengerArbeidsgiver6KvitteringRoute
   '/$id/': typeof IdIndexRoute
+  '/agi/': typeof AgiIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -355,6 +400,7 @@ export interface FileRouteTypes {
     | '/$id/kvittering'
     | '/$id/oppsummering'
     | '/$id/vis'
+    | '/agi/1'
     | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
     | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
     | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
@@ -362,15 +408,16 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
     | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
     | '/$id/'
+    | '/agi/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/agi'
     | '/refusjon-omsorgspenger-arbeidsgiver'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
     | '/$id/kvittering'
     | '/$id/oppsummering'
     | '/$id/vis'
+    | '/agi/1'
     | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
     | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
     | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
@@ -378,6 +425,7 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
     | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
     | '/$id'
+    | '/agi'
   id:
     | '__root__'
     | '/$id'
@@ -388,6 +436,7 @@ export interface FileRouteTypes {
     | '/$id/kvittering'
     | '/$id/oppsummering'
     | '/$id/vis'
+    | '/agi/1'
     | '/refusjon-omsorgspenger-arbeidsgiver/1-intro'
     | '/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver'
     | '/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager'
@@ -395,18 +444,19 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger-arbeidsgiver/5-oppsummering'
     | '/refusjon-omsorgspenger-arbeidsgiver/6-kvittering'
     | '/$id/'
+    | '/agi/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IdRoute: typeof IdRouteWithChildren
-  AgiRoute: typeof AgiRoute
+  AgiRoute: typeof AgiRouteWithChildren
   RefusjonOmsorgspengerArbeidsgiverRoute: typeof RefusjonOmsorgspengerArbeidsgiverRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IdRoute: IdRouteWithChildren,
-  AgiRoute: AgiRoute,
+  AgiRoute: AgiRouteWithChildren,
   RefusjonOmsorgspengerArbeidsgiverRoute:
     RefusjonOmsorgspengerArbeidsgiverRouteWithChildren,
 }
@@ -438,7 +488,11 @@ export const routeTree = rootRoute
       ]
     },
     "/agi": {
-      "filePath": "agi.tsx"
+      "filePath": "agi.tsx",
+      "children": [
+        "/agi/1",
+        "/agi/"
+      ]
     },
     "/refusjon-omsorgspenger-arbeidsgiver": {
       "filePath": "refusjon-omsorgspenger-arbeidsgiver.tsx",
@@ -471,6 +525,10 @@ export const routeTree = rootRoute
       "filePath": "$id.vis.tsx",
       "parent": "/$id"
     },
+    "/agi/1": {
+      "filePath": "agi.1.tsx",
+      "parent": "/agi"
+    },
     "/refusjon-omsorgspenger-arbeidsgiver/1-intro": {
       "filePath": "refusjon-omsorgspenger-arbeidsgiver.1-intro.tsx",
       "parent": "/refusjon-omsorgspenger-arbeidsgiver"
@@ -498,6 +556,10 @@ export const routeTree = rootRoute
     "/$id/": {
       "filePath": "$id.index.tsx",
       "parent": "/$id"
+    },
+    "/agi/": {
+      "filePath": "agi.index.tsx",
+      "parent": "/agi"
     }
   }
 }
