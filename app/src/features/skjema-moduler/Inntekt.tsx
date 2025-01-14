@@ -385,6 +385,7 @@ const EndreMånedslønn = ({
     const rapportertInntekt =
       opplysninger.inntektsopplysninger.gjennomsnittLønn;
     if (rapportertInntekt) {
+      setValue("inntekt", rapportertInntekt);
       setValue("refusjon.0.beløp", rapportertInntekt);
     }
     onClose();
