@@ -157,7 +157,16 @@ function lagSendInntektsmeldingRequest(
   skjemaState: InntektsmeldingSkjemaStateValid,
   opplysninger: OpplysningerDto,
 ) {
-  const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
+  const gjeldendeInntekt =
+    skjemaState.korrigertInntekt ??
+    opplysninger.inntektsopplysninger.gjennomsnittLønn;
+
+  // Hvis dette forekommer er det en skjemafeil. Hvis vi ikke har inntekt rapportert så skal korrigertInntekt være satt
+  if (!gjeldendeInntekt) {
+    throw new Error(
+      "Inntekt må enten være korrigert eller være tilgjengelig fra inntektsopplysningene",
+    );
+  }
 
   const refusjon =
     skjemaState.skalRefunderes === "JA_LIK_REFUSJON"

@@ -379,11 +379,14 @@ const EndreMånedslønn = ({
   harEksisterendeInntektsmeldinger,
   opplysninger,
 }: EndreMånedslønnProps) => {
-  const { unregister, watch, setValue } =
-    useFormContext<InntektOgRefusjonForm>();
+  const { unregister, setValue } = useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
-    setValue("refusjon.0.beløp", watch("inntekt"));
+    const rapportertInntekt =
+      opplysninger.inntektsopplysninger.gjennomsnittLønn;
+    if (rapportertInntekt) {
+      setValue("refusjon.0.beløp", rapportertInntekt);
+    }
     onClose();
   };
 
