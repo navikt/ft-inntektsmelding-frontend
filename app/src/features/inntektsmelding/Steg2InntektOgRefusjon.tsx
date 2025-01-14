@@ -68,14 +68,13 @@ export function Steg2InntektOgRefusjon() {
   const harEksisterendeInntektsmeldinger =
     eksisterendeInntektsmeldinger.length > 0;
 
-  const inntekt =
+  const defaultInntekt =
     inntektsmeldingSkjemaState.inntekt ||
     opplysninger.inntektsopplysninger.gjennomsnittLønn;
 
   const formMethods = useForm<InntektOgRefusjonForm>({
     defaultValues: {
-      // Denne ligger i formet, men brukes ikke annet enn for submit
-      inntekt,
+      inntekt: defaultInntekt,
       korrigertInntekt:
         inntektsmeldingSkjemaState.korrigertInntekt ??
         (inntektsmeldingSkjemaState.endringAvInntektÅrsaker.length > 0
@@ -101,7 +100,7 @@ export function Steg2InntektOgRefusjon() {
       refusjon:
         inntektsmeldingSkjemaState.refusjon.length === 0
           ? [
-              { fom: opplysninger.førsteUttaksdato, beløp: inntekt },
+              { fom: opplysninger.førsteUttaksdato, beløp: defaultInntekt },
               { fom: undefined, beløp: 0 },
             ]
           : inntektsmeldingSkjemaState.refusjon.length === 1
@@ -117,7 +116,7 @@ export function Steg2InntektOgRefusjon() {
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { refusjon, inntekt, skalRefunderes, korrigertInntekt } = skjemadata;
+    const { refusjon, skalRefunderes, inntekt, korrigertInntekt } = skjemadata;
 
     const misterNaturalytelser = skjemadata.misterNaturalytelser === "ja";
     const bortfaltNaturalytelsePerioder = misterNaturalytelser

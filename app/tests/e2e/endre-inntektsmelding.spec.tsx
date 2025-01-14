@@ -205,6 +205,36 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
   ).toHaveValue("12.10.2024");
 });
 
+test("sjekk at tilbakestill inntekt tilbakestiller til gjennomsnitt fra opplysningene", async ({
+  page,
+}) => {
+  await mockOpplysninger({
+    page,
+    uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
+  });
+  await mockGrunnbeløp({ page });
+  await mockInntektsmeldinger({
+    page,
+    json: mangeEksisterendeInntektsmeldingerResponse,
+    uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
+  });
+
+  await page.goto("/fp-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
+  await page.getByRole("link", { name: "Endre inntekt" }).click();
+  await expect(
+    await finnInputFraLabel({ page, labelText: "Endret månedsinntekt" }),
+  ).toHaveValue("500");
+  await page.getByRole("button", { name: "Tilbakestill" }).first().click();
+  await expect(
+    page.getByTestId("gjennomsnittinntekt-block").getByText("53 000"),
+  ).toBeVisible();
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  await expect(
+    page.getByText("Beregnet månedslønn").locator("..").getByText("53 000 kr"),
+  ).toBeVisible();
+});
+
 test("skal ikke få lov til å sende inn uten endring", async ({ page }) => {
   await mockOpplysninger({
     page,
