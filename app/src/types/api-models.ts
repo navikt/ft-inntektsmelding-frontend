@@ -11,6 +11,8 @@ export const YtelsetypeSchema = z.enum([
   "OMSORGSPENGER",
 ]);
 
+export type Ytelsetype = z.infer<typeof YtelsetypeSchema>;
+
 export const NaturalytelseTypeSchema = z.enum([
   "ELEKTRISK_KOMMUNIKASJON",
   "AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS",
@@ -53,6 +55,17 @@ export type EndringAvInntektÅrsaker = z.infer<
   typeof EndringAvInntektÅrsakerSchema
 >;
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
+
+export const SlåOppArbeidstakerResponseDto = z.object({
+  fornavn: z.string(),
+  mellomnavn: z.string().optional(),
+  etternavn: z.string(),
+  arbeidsforhold: z.array(
+    z.object({
+      todo: z.string(), // TODO
+    }),
+  ),
+});
 
 export const SendInntektsmeldingRequestDtoSchema = z.object({
   foresporselUuid: z.string(),

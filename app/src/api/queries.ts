@@ -8,6 +8,8 @@ import {
   InntektsmeldingResponseDtoSchema,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
+  SlåOppArbeidstakerResponseDto,
+  Ytelsetype,
 } from "~/types/api-models";
 import { logDev } from "~/utils.ts";
 
@@ -122,5 +124,36 @@ export async function hentOpplysningerData(uuid: string) {
     logDev("error", parsedJson.error);
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
+  return parsedJson.data;
+}
+
+export async function hentPersonFraFnr(fnr: string, ytelsetype: Ytelsetype) {
+  const response = await fetch(
+    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/arbeidstaker`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fødselsnummer: fnr,
+        ytelseType: ytelsetype,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt.");
+  }
+
+  const json = await response.json();
+  const parsedJson = SlåOppArbeidstakerResponseDto.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
   return parsedJson.data;
 }
