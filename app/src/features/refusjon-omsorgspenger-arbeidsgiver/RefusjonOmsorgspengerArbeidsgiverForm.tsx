@@ -81,8 +81,8 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
     defaultValues: {
       kontaktperson: {
-        navn: lagFulltNavn(opplysninger.innsender),
-        telefonnummer: opplysninger.innsender.telefon,
+        navn: lagFulltNavn(opplysninger),
+        telefonnummer: opplysninger.telefon,
       },
     },
   });

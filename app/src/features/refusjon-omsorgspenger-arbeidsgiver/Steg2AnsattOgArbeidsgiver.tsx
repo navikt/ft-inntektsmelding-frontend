@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatNavn } from "~/utils";
 
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -50,7 +49,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   });
 
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
@@ -131,7 +130,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <div className="flex gap-4 flex-col md:flex-row">
             <div className="flex-1">
               <TextField
-                // TODO: Legg til default navn
                 label="Navn"
                 {...register("kontaktperson.navn", {
                   required: "Du må fylle ut navnet til kontaktpersonen",
@@ -187,6 +185,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           </Button>
         </div>
       </form>
-    </RotLayout>
+    </div>
   );
 };

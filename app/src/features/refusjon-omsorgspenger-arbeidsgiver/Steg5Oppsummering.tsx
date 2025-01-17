@@ -13,8 +13,6 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
-
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
@@ -25,7 +23,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   );
   const navigate = useNavigate();
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Oppsummering
       </Heading>
@@ -59,7 +57,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           Send inn
         </Button>
       </div>
-    </RotLayout>
+    </div>
   );
 };
 

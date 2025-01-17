@@ -12,7 +12,7 @@ import {
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { capitalizeSetning } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
@@ -52,15 +52,15 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   );
 
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={1} />
-      <GuidePanel>
+      <GuidePanel className="mb-4">
         <VStack gap="4">
           <Heading level="2" size="medium">
-            Hei {opplysninger.innsender.fornavn}!
+            Hei {capitalizeSetning(opplysninger.fornavn)}!
           </Heading>
           <BodyLong>
             Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager
@@ -134,6 +134,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           </div>
         </VStack>
       </form>
-    </RotLayout>
+    </div>
   );
 };

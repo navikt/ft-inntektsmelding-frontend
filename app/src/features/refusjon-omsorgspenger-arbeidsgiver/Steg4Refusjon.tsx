@@ -8,7 +8,6 @@ import {
 } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { OpplysningerDto } from "~/types/api-models";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
@@ -31,7 +30,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   });
 
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Beregnet månedslønn for refusjon
       </Heading>
@@ -69,7 +68,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
           </div>
         </VStack>
       </form>
-    </RotLayout>
+    </div>
   );
 };
 
