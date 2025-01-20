@@ -7,7 +7,9 @@ import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { queryClient } from "~/main";
 
-export const Route = createFileRoute("/refusjon-omsorgspenger-arbeidsgiver")({
+export const Route = createFileRoute(
+  "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer",
+)({
   component: RefusjonOmsorgspengerArbeidsgiverRotLayout,
   pendingComponent: () => (
     <RotLayout medHvitBoks={true} tittel="Inntektsmelding" undertittel={null}>
@@ -17,34 +19,29 @@ export const Route = createFileRoute("/refusjon-omsorgspenger-arbeidsgiver")({
       </div>
     </RotLayout>
   ),
-  loaderDeps: ({ search }) => {
-    const ParamsSchema = z.object({
-      organisasjonsnummer: z.number().min(100_000_000).max(999_999_999),
-    });
 
-    const parsedParams = ParamsSchema.safeParse(search);
-    if (!parsedParams.success) {
-      return {
-        organisasjonsnummer: null,
-      };
+  loader: async ({ params }) => {
+    const organisasjonsnummerSchema = z
+      .string()
+      .regex(/^\d+$/, "Må være tall")
+      .refine((val) => {
+        const num = Number(val);
+        return num >= 100_000_000 && num <= 999_999_999;
+      }, "Ugyldig organisasjonsnummer");
+
+    const parsed = organisasjonsnummerSchema.safeParse(
+      params.organisasjonsnummer,
+    );
+    if (!parsed.success) {
+      throw new Error("Ugyldig organisasjonsnummer");
     }
 
-    return {
-      organisasjonsnummer: String(parsedParams.data.organisasjonsnummer),
-    };
-  },
-  loader: async ({ deps }) => {
-    const organisasjonsnummer = deps.organisasjonsnummer;
-    if (!organisasjonsnummer) {
-      throw new Error("Du må spesifisere et organisasjonsnummer");
-    }
+    const organisasjonsnummer = parsed.data;
 
     const opplysninger = await queryClient.ensureQueryData(
       hentOpplysningerDataOptions(organisasjonsnummer),
     );
 
-    return {
-      opplysninger,
-    };
+    return { opplysninger };
   },
 });

@@ -169,3 +169,11 @@ export const grunnbeløpSchema = z.object({
   omregningsfaktor: z.number(),
   virkningstidspunktForMinsteinntekt: z.string(),
 });
+
+export const organisasjonsnummerSchema = z
+  .string()
+  .regex(/^\d+$/, "Må være tall")
+  .refine((val) => {
+    const num = Number(val);
+    return num >= 100_000_000 && num <= 999_999_999;
+  }, "Ugyldig organisasjonsnummer");

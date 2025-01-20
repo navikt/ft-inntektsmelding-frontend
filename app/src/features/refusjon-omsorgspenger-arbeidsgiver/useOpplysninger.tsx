@@ -1,6 +1,8 @@
 import { getRouteApi } from "@tanstack/react-router";
 
-const route = getRouteApi("/refusjon-omsorgspenger-arbeidsgiver");
+const route = getRouteApi(
+  "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer",
+);
 
 export const useOpplysninger = () => {
   const routeData = route.useLoaderData();

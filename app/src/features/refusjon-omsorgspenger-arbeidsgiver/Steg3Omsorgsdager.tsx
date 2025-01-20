@@ -48,7 +48,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     }
 
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager",
+      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/3-omsorgsdager",
       to: "../4-refusjon",
     });
   });
