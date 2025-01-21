@@ -36,6 +36,7 @@ export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
     queryFn: ({ queryKey }) => slåOppArbeidstaker(queryKey[1]),
     enabled: fødselsnummer.length === 11,
     staleTime: Infinity,
+    retry: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
@@ -44,10 +45,13 @@ export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
 
 const slåOppArbeidstaker = async (fødselsnummer: string) => {
   const response = await fetch(
-    `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/arbeidstaker`,
+    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/arbeidstaker`,
     {
       method: "POST",
-      body: JSON.stringify({ fødselsnummer }),
+      body: JSON.stringify({
+        fødselsnummer,
+        ytelseType: "OMSORGSPENGER",
+      }),
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
