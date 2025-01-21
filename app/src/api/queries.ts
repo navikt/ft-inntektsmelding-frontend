@@ -129,7 +129,7 @@ export async function hentOpplysningerData(uuid: string) {
 
 export async function hentPersonFraFnr(fnr: string, ytelsetype: Ytelsetype) {
   const response = await fetch(
-    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/arbeidstaker`,
+    `${SERVER_URL}/arbeidsgiverinitiert/arbeidsforhold`,
     {
       method: "POST",
       headers: {
