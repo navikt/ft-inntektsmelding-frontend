@@ -5,7 +5,7 @@ import { logDev } from "~/utils";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
-const PersondataDtoSchema = z.object({
+const ArbeidstakerOppslagDtoSchema = z.object({
   navn: z.string(),
   fødselsnummer: z.string(),
   arbeidsforhold: z.array(
@@ -15,23 +15,25 @@ const PersondataDtoSchema = z.object({
     }),
   ),
 });
-export type PersondataDto = z.infer<typeof PersondataDtoSchema>;
+export type ArbeidstakerOppslagDto = z.infer<
+  typeof ArbeidstakerOppslagDtoSchema
+>;
 
-export type PersondataFeil =
+export type ArbeidstakerOppslagFeil =
   | { feilkode: "fant ingen personer" }
   | { feilkode: "generell feil" } // 5xx respons fra serveren
   | { feilkode: "uventet respons" } // Zod-validering feilet
   | Error; // Programmeringsfeil
 
-export const slåOppPersondataOptions = (fødselsnummer: string) => {
+export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
   return queryOptions<
-    PersondataDto,
-    PersondataFeil,
-    PersondataDto,
-    ["persondata", string]
+    ArbeidstakerOppslagDto,
+    ArbeidstakerOppslagFeil,
+    ArbeidstakerOppslagDto,
+    ["arbeidstaker-oppslag", string]
   >({
-    queryKey: ["persondata", fødselsnummer],
-    queryFn: ({ queryKey }) => slåOppPersondata(queryKey[1]),
+    queryKey: ["arbeidstaker-oppslag", fødselsnummer],
+    queryFn: ({ queryKey }) => slåOppArbeidstaker(queryKey[1]),
     enabled: fødselsnummer.length === 11,
     staleTime: Infinity,
     refetchOnMount: false,
@@ -40,9 +42,9 @@ export const slåOppPersondataOptions = (fødselsnummer: string) => {
   });
 };
 
-const slåOppPersondata = async (fødselsnummer: string) => {
+const slåOppArbeidstaker = async (fødselsnummer: string) => {
   const response = await fetch(
-    `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/persondata`,
+    `${SERVER_URL}/refusjon-omsorgspenger-arbeidsgiver/arbeidstaker`,
     {
       method: "POST",
       body: JSON.stringify({ fødselsnummer }),
@@ -57,21 +59,23 @@ const slåOppPersondata = async (fødselsnummer: string) => {
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw { feilkode: "fant ingen personer" } satisfies PersondataFeil;
+      throw {
+        feilkode: "fant ingen personer",
+      } satisfies ArbeidstakerOppslagFeil;
     } else {
-      logDev("error", "Persondata-oppslag feilet", json);
-      throw { feilkode: "generell feil" } satisfies PersondataFeil;
+      logDev("error", "Arbeidstaker-oppslag feilet", json);
+      throw { feilkode: "generell feil" } satisfies ArbeidstakerOppslagFeil;
     }
   }
 
-  const parsedResponse = PersondataDtoSchema.safeParse(json);
+  const parsedResponse = ArbeidstakerOppslagDtoSchema.safeParse(json);
   if (!parsedResponse.success) {
     logDev(
       "error",
       "Mottok en uventet respons fra serveren",
       parsedResponse.error,
     );
-    throw { feilkode: "uventet respons" } satisfies PersondataFeil;
+    throw { feilkode: "uventet respons" } satisfies ArbeidstakerOppslagFeil;
   }
   return parsedResponse.data;
 };

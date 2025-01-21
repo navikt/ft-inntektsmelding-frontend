@@ -17,7 +17,7 @@ import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { formatNavn } from "~/utils";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { slåOppPersondataOptions } from "./api/queries";
+import { slåOppArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -31,7 +31,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
-    slåOppPersondataOptions(fødselsnummer ?? ""),
+    slåOppArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
   const fantIngenPersoner =
