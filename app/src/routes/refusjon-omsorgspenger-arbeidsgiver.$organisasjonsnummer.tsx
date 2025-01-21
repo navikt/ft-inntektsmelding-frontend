@@ -41,7 +41,6 @@ export const Route = createFileRoute(
     const opplysninger = await queryClient.ensureQueryData(
       hentOpplysningerDataOptions(organisasjonsnummer),
     );
-
     return { opplysninger };
   },
 });

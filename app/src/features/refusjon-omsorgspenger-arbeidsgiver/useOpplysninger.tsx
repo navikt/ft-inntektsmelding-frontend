@@ -12,5 +12,8 @@ export const useOpplysninger = () => {
       "useOpplysninger kan kun brukes på /refusjon-omsorgspenger-arbeidsgiver routes",
     );
   }
+  if (!routeData.opplysninger.organisasjonsnummer) {
+    throw new Error("Opplysninger ikke funnet");
+  }
   return routeData.opplysninger;
 };
