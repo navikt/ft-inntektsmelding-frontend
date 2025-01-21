@@ -42,7 +42,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     ) {
       setError("fraværHeleDager", {
         message:
-          "Du må oppgi minst én periode med fravær – enten hele dagen eller deler av dagen",
+          "Du må oppgi minst én periode med fravær – enten hele dagen eller deler av dagen",
       });
       return;
     }
@@ -68,7 +68,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         Omsorgsdager dere søker utbetaling for
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={3} />
-      <GuidePanel>
+      <GuidePanel className="mb-4">
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig
           lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må
@@ -165,7 +165,11 @@ const FraværHeleDagen = () => {
         Oppgi dager hvor den ansatte har hatt fravær hele dagen
       </Heading>
       {fields.map((periode, index) => (
-        <HStack gap="4" key={periode.id}>
+        <HStack
+          className="border-l-4 border-bg-subtle pl-4 py-2"
+          gap="4"
+          key={periode.id}
+        >
           <DateRangePickerWrapped
             maxDato={maxDato}
             minDato={minDato}
@@ -192,15 +196,17 @@ const FraværHeleDagen = () => {
           />
           <div>
             <Button
-              aria-label="Fjern periode"
-              className="mt-8"
+              aria-label="Slett periode"
+              className="mt-10"
               icon={<TrashIcon />}
               onClick={() => {
                 remove(index);
               }}
+              size="small"
               type="button"
+              variant="tertiary"
             >
-              Fjern periode
+              Slett
             </Button>
           </div>
         </HStack>
@@ -212,7 +218,7 @@ const FraværHeleDagen = () => {
             append({});
             clearErrors("fraværHeleDager");
           }}
-          size="medium"
+          size="small"
           type="button"
           variant="secondary"
         >
@@ -236,7 +242,12 @@ const FraværDelerAvDagen = () => {
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
       {fields.map((periode, index) => (
-        <HGrid columns={{ xs: 1, md: 4 }} gap="4" key={periode.id}>
+        <HGrid
+          className="border-l-4 border-bg-subtle pl-4 py-2"
+          columns={{ xs: 1, md: 4 }}
+          gap="4"
+          key={periode.id}
+        >
           <DatePickerWrapped
             key={periode.id}
             label="Dato"
@@ -303,8 +314,8 @@ const FraværDelerAvDagen = () => {
           />
           <div>
             <Button
-              aria-label="Fjern periode"
-              className="mt-8"
+              aria-label="Slett periode"
+              className="mt-10"
               icon={<TrashIcon />}
               onClick={() => {
                 remove(index);
@@ -325,7 +336,7 @@ const FraværDelerAvDagen = () => {
             append({});
             clearErrors("fraværDelerAvDagen");
           }}
-          size="medium"
+          size="small"
           type="button"
           variant="secondary"
         >

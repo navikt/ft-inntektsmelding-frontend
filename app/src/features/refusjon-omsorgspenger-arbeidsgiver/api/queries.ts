@@ -6,12 +6,12 @@ import { logDev } from "~/utils";
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
 const ArbeidstakerOppslagDtoSchema = z.object({
-  navn: z.string(),
-  fødselsnummer: z.string(),
+  fornavn: z.string(),
+  etternavn: z.string(),
   arbeidsforhold: z.array(
     z.object({
-      navn: z.string(),
-      underenhetId: z.string(),
+      organisasjonsnummer: z.string(),
+      arbeidsforholdId: z.string(),
     }),
   ),
 });
