@@ -23,8 +23,6 @@ import {
 import { id } from "date-fns/locale";
 import { ReactNode } from "react";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
-
 import { useDocumentTitle } from "../useDocumentTitle";
 
 export const Steg6Kvittering = () => {
@@ -32,10 +30,7 @@ export const Steg6Kvittering = () => {
     "Kvittering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
   return (
-    <RotLayout
-      background="bg-default"
-      tittel="Søknad om refusjon for omsorgspenger"
-    >
+    <div>
       <div className="mx-4">
         <div className="mt-12 p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
           <CheckmarkIcon aria-hidden fontSize="2.5em" />
@@ -94,7 +89,7 @@ export const Steg6Kvittering = () => {
           </Button>
         </HStack>
       </div>
-    </RotLayout>
+    </div>
   );
 };
 

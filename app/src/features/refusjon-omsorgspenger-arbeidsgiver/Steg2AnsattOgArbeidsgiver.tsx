@@ -14,7 +14,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatNavn } from "~/utils";
 
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -26,6 +25,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   useDocumentTitle(
     "Ansatt og arbeidsgiver – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
+
   const navigate = useNavigate();
   const { register, formState, watch, handleSubmit } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
@@ -43,13 +43,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver",
+      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
     });
   });
 
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
@@ -130,7 +130,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <div className="flex gap-4 flex-col md:flex-row">
             <div className="flex-1">
               <TextField
-                // TODO: Legg til default navn
                 label="Navn"
                 {...register("kontaktperson.navn", {
                   required: "Du må fylle ut navnet til kontaktpersonen",
@@ -186,6 +185,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           </Button>
         </div>
       </form>
-    </RotLayout>
+    </div>
   );
 };

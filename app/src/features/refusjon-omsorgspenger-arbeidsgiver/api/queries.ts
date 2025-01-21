@@ -75,3 +75,57 @@ const slåOppPersondata = async (fødselsnummer: string) => {
   }
   return parsedResponse.data;
 };
+
+const OpplysningerDtoSchema = z.object({
+  fornavn: z.string().optional(),
+  mellomnavn: z.string().optional(),
+  etternavn: z.string().optional(),
+  telefon: z.string().optional(),
+  organisasjonsnummer: z.string().optional(),
+  organisasjonsnavn: z.string().optional(),
+});
+export type OpplysningerDto = z.infer<typeof OpplysningerDtoSchema>;
+
+type OpplysningerFeil = { feilkode: "uventet respons" };
+
+export const hentOpplysningerDataOptions = (organisasjonsnummer: string) =>
+  queryOptions<
+    OpplysningerDto,
+    OpplysningerFeil,
+    OpplysningerDto,
+    ["refusjon-omsorgspenger-arbeidsgiver-opplysninger", string]
+  >({
+    queryKey: [
+      "refusjon-omsorgspenger-arbeidsgiver-opplysninger",
+      organisasjonsnummer,
+    ],
+    queryFn: ({ queryKey }) => hentOpplysningerData(queryKey[1]),
+  });
+
+const hentOpplysningerData = async (organisasjonsnummer: string) => {
+  const response = await fetch(
+    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/innlogget-bruker`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        organisasjonsnummer,
+        ytelseType: "OMSORGSPENGER",
+      }),
+    },
+  );
+
+  const json = await response.json();
+
+  const parsedResponse = OpplysningerDtoSchema.safeParse(json);
+  if (!parsedResponse.success) {
+    logDev(
+      "error",
+      "Mottok en uventet respons fra serveren",
+      parsedResponse.error,
+    );
+    throw { feilkode: "uventet respons" } satisfies OpplysningerFeil;
+  }
+
+  return parsedResponse.data;
+};

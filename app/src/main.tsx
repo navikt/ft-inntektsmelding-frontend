@@ -16,7 +16,7 @@ import { createRouter, RouterProvider } from "@tanstack/react-router";
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import { routeTree } from "./routeTree.gen.ts";
+import { routeTree } from "./routeTree.gen";
 
 export const queryClient = new QueryClient();
 

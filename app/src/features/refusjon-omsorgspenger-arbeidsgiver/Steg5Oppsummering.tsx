@@ -13,8 +13,6 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
-
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
@@ -25,7 +23,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   );
   const navigate = useNavigate();
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Oppsummering
       </Heading>
@@ -51,7 +49,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           onClick={() => {
             alert("Søknad ikke egentlig sendt inn, men vi kan late som");
             navigate({
-              to: "/refusjon-omsorgspenger-arbeidsgiver/6-kvittering",
+              from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/5-oppsummering",
+              to: "../6-kvittering",
             });
           }}
           variant="primary"
@@ -59,7 +58,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           Send inn
         </Button>
       </div>
-    </RotLayout>
+    </div>
   );
 };
 

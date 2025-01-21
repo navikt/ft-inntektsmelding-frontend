@@ -22,7 +22,6 @@ import { useFieldArray } from "react-hook-form";
 
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
-import { RotLayout } from "../rot-layout/RotLayout";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
@@ -49,7 +48,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     }
 
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/3-omsorgsdager",
+      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/3-omsorgsdager",
       to: "../4-refusjon",
     });
   });
@@ -64,7 +63,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 
   const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Omsorgsdager dere søker utbetaling for
       </Heading>
@@ -138,7 +137,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           </div>
         </VStack>
       </form>
-    </RotLayout>
+    </div>
   );
 };
 
