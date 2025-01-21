@@ -13,6 +13,11 @@ export default defineConfig({
     },
   },
   server: {
+    allowedHosts: true,
+    // allowedHosts: [
+    //   ".intern.dev.nav.no",
+    //   "https://arbeidsgiver.intern.dev.nav.no",
+    // ],
     origin: "http://localhost:5173",
   },
 });
