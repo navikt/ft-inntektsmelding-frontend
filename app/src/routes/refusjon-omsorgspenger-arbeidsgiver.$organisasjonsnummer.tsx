@@ -23,7 +23,7 @@ export const Route = createFileRoute(
   loader: async ({ params }) => {
     const organisasjonsnummerSchema = z
       .string()
-      .regex(/^\d+$/, "Må være tall")
+      .regex(/^\d+$/, "Organisasjonsnummer må bestå av kun tall")
       .refine((val) => {
         const num = Number(val);
         return num >= 100_000_000 && num <= 999_999_999;

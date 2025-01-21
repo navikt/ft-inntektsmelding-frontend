@@ -1,9 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
 
-import { RefusjonOmsorgspengerArbeidsgiverSteg3 } from '~/features/refusjon-omsorgspenger-arbeidsgiver/Steg3Omsorgsdager'
+import { RefusjonOmsorgspengerArbeidsgiverSteg3 } from "~/features/refusjon-omsorgspenger-arbeidsgiver/Steg3Omsorgsdager";
 
 export const Route = createFileRoute(
-  '/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/3-omsorgsdager',
+  "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/3-omsorgsdager",
 )({
   component: RefusjonOmsorgspengerArbeidsgiverSteg3,
-})
+});
