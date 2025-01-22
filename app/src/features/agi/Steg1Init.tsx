@@ -100,7 +100,12 @@ function NyAnsattForm({
     <VStack gap="8">
       <HStack gap="10">
         <TextField
-          {...formMethods.register("fnr")}
+          {...formMethods.register("fnr", {
+            required: "Må oppgis",
+            validate: (value) =>
+              /^\d{11}$/.test(value) || "Fødselsnummer må være 11 siffer",
+          })}
+          error={formMethods.formState.errors.fnr?.message}
           label="Ansattes fødselsnummer"
         />
         {data && (
