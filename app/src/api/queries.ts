@@ -127,7 +127,11 @@ export async function hentOpplysningerData(uuid: string) {
   return parsedJson.data;
 }
 
-export async function hentPersonFraFnr(fnr: string, ytelsetype: Ytelsetype) {
+export async function hentPersonFraFnr(
+  fnr: string,
+  ytelsetype: Ytelsetype,
+  førsteFraværsdag: string,
+) {
   const response = await fetch(
     `${SERVER_URL}/arbeidsgiverinitiert/arbeidsforhold`,
     {
@@ -138,6 +142,7 @@ export async function hentPersonFraFnr(fnr: string, ytelsetype: Ytelsetype) {
       body: JSON.stringify({
         fødselsnummer: fnr,
         ytelseType: ytelsetype,
+        førsteFraværsdag,
       }),
     },
   );

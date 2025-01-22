@@ -62,7 +62,8 @@ export const SlåOppArbeidstakerResponseDto = z.object({
   etternavn: z.string(),
   arbeidsforhold: z.array(
     z.object({
-      todo: z.string(), // TODO
+      organisasjonsnavn: z.string(),
+      organisasjonsnummer: z.string(),
     }),
   ),
 });

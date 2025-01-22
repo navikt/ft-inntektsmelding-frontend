@@ -1,12 +1,14 @@
-import { createFileRoute, getRouteApi } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 
-const route = getRouteApi("/agi");
+import { Steg1Init } from "~/features/agi/Steg1Init.tsx";
+import { HjelpetekstToggle } from "~/features/Hjelpetekst.tsx";
 
 export const Route = createFileRoute("/agi/")({
   component: () => {
-    const search = route.useSearch();
-    const navigate = route.useNavigate();
-
-    return navigate({ to: "/agi/1", search, replace: true });
+    return (
+      <>
+        <Steg1Init />
+      </>
+    );
   },
 });
