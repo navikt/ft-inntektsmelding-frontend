@@ -1,6 +1,8 @@
+import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyShort,
+  Button,
   Heading,
   HStack,
   Label,
@@ -82,8 +84,15 @@ export const Steg1Init = () => {
               <NyAnsattForm data={data} />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
+            <Button
+              className="w-fit"
+              icon={<ArrowRightIcon />}
+              iconPosition="right"
+              type="submit"
+            >
+              Hent person
+            </Button>
           </div>
-          <button type="submit">Test submit</button>
         </form>
       </section>
     </FormProvider>
