@@ -25,6 +25,7 @@ export const Skjemaoppsummering = ({
   opplysninger,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
+  const kanEndres = opplysninger.forespørselStatus !== "UTGÅTT";
   return (
     <VStack gap="4">
       <FormSummary>
@@ -32,11 +33,13 @@ export const Skjemaoppsummering = ({
           <FormSummary.Heading level="3">
             Arbeidsgiver og den ansatte
           </FormSummary.Heading>
-          <FormSummary.EditLink
-            aria-label="Endre dine opplysninger"
-            as={Link}
-            to="../dine-opplysninger"
-          />
+          {kanEndres && (
+            <FormSummary.EditLink
+              aria-label="Endre dine opplysninger"
+              as={Link}
+              to="../dine-opplysninger"
+            />
+          )}
         </FormSummary.Header>
         <FormSummary.Answers>
           <FormSummary.Answer>
@@ -85,11 +88,13 @@ export const Skjemaoppsummering = ({
           <FormSummary.Heading level="3">
             Utbetaling og refusjon
           </FormSummary.Heading>
-          <FormSummary.EditLink
-            aria-label="Endre utbetaling og refusjon"
-            as={Link}
-            to="../inntekt-og-refusjon#refusjon"
-          />
+          {kanEndres && (
+            <FormSummary.EditLink
+              aria-label="Endre utbetaling og refusjon"
+              as={Link}
+              to="../inntekt-og-refusjon#refusjon"
+            />
+          )}
         </FormSummary.Header>
         <FormSummary.Answers>
           <FormSummary.Answer>
@@ -136,11 +141,13 @@ export const Skjemaoppsummering = ({
       <FormSummary>
         <FormSummary.Header>
           <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-          <FormSummary.EditLink
-            aria-label="Endre naturalytelser"
-            as={Link}
-            to="../inntekt-og-refusjon#naturalytelser"
-          />
+          {kanEndres && (
+            <FormSummary.EditLink
+              aria-label="Endre naturalytelser"
+              as={Link}
+              to="../inntekt-og-refusjon#naturalytelser"
+            />
+          )}
         </FormSummary.Header>
         <FormSummary.Answers>
           <FormSummary.Answer>
@@ -194,16 +201,19 @@ function InntektSummary({
   const harEndretInntekt = skjemaState.endringAvInntektÅrsaker.length > 0;
   const estimertInntekt = opplysninger.inntektsopplysninger.gjennomsnittLønn;
   const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
+  const kanEndres = opplysninger.forespørselStatus !== "UTGÅTT";
 
   return (
     <FormSummary>
       <FormSummary.Header>
         <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-        <FormSummary.EditLink
-          aria-label="Endre inntekt"
-          as={Link}
-          to="../inntekt-og-refusjon#beregnet-manedslonn"
-        />
+        {kanEndres && (
+          <FormSummary.EditLink
+            aria-label="Endre inntekt"
+            as={Link}
+            to="../inntekt-og-refusjon#beregnet-manedslonn"
+          />
+        )}
       </FormSummary.Header>
       <FormSummary.Answers>
         <FormSummary.Answer>
