@@ -3,9 +3,12 @@ import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
+import { parseStorageItem } from "~/features/usePersistedState.tsx";
 import {
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
+  OpplysningerRequest,
+  OpplysningerRequestSchema,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
   SlåOppArbeidstakerResponseDto,
@@ -46,6 +49,9 @@ async function hentGrunnbeløp() {
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
+  if (uuid === "custom-id") {
+    return [];
+  }
   const response = await fetch(
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
   );
@@ -108,6 +114,19 @@ export function mapInntektsmeldingResponseTilValidState(
 }
 
 export async function hentOpplysningerData(uuid: string) {
+  if (uuid === "custom-id") {
+    // Da har vi en fakeId. Hent fra sessionstorage
+    const opplysninger = parseStorageItem(
+      sessionStorage,
+      "custom-id",
+      opplysningerSchema,
+    );
+    if (!opplysninger) {
+      throw new Error("Finner ikke arbeidsgiverinitierte opplysninger");
+    }
+    return opplysninger;
+  }
+
   const response = await fetch(
     `${SERVER_URL}/imdialog/opplysninger?foresporselUuid=${uuid}`,
   );
@@ -153,6 +172,36 @@ export async function hentPersonFraFnr(
 
   const json = await response.json();
   const parsedJson = SlåOppArbeidstakerResponseDto.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  return parsedJson.data;
+}
+
+export async function hentOpplysninger(
+  opplysningerRequest: OpplysningerRequest,
+) {
+  const response = await fetch(
+    `${SERVER_URL}/arbeidsgiverinitiert/opplysninger`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(opplysningerRequest),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt.");
+  }
+
+  const json = await response.json();
+  const parsedJson = opplysningerSchema.safeParse(json);
 
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);

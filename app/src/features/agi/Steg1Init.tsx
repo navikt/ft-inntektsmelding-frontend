@@ -12,11 +12,11 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
-import { getRouteApi } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import { hentPersonFraFnr } from "~/api/queries.ts";
+import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
 import { SlåOppArbeidstakerResponseDto } from "~/types/api-models.ts";
@@ -32,6 +32,7 @@ type FormType = {
 
 export const Steg1Init = () => {
   const { ytelseType } = route.useSearch();
+  const navigate = useNavigate();
   useDocumentTitle(
     `Opprett inntektsmelding for ${formatYtelsesnavn(ytelseType)}`,
   );
@@ -50,6 +51,42 @@ export const Steg1Init = () => {
   const { mutate, data } = useMutation({
     mutationFn: async ({ fnr, førsteFraværsdag }: FormType) => {
       return hentPersonFraFnr(fnr, ytelseType, førsteFraværsdag);
+    },
+  });
+
+  const opprettOpplysningerMutation = useMutation({
+    mutationFn: async () => {
+      const values = formMethods.watch();
+      return hentOpplysninger({
+        førsteFraværsdag: values.førsteFraværsdag,
+        organisasjonsnummer: data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
+        fødselsnummer: values.fnr,
+        ytelseType,
+      });
+    },
+    onSuccess: (opplysninger) => {
+      if (opplysninger.forespørselUuid === undefined) {
+        // 1. Finner på en ID
+        // 2. lagrer opplysningene i sessionStorage
+        // 3. redirecter til samme sti som før
+        // 4. komponenten leser ID og avgjør om den skal hente opplysninger fra Backend eller sessionstorage.
+        const fakeId = "custom-id";
+        const opplysningerMedId = {
+          ...opplysninger,
+          forespørselUuid: fakeId,
+        };
+        sessionStorage.setItem(fakeId, JSON.stringify(opplysningerMedId));
+
+        return navigate({
+          to: "/$id",
+          params: { id: fakeId },
+        });
+      }
+
+      return navigate({
+        to: "/$id",
+        params: { id: opplysninger.forespørselUuid },
+      });
     },
   });
 
@@ -92,6 +129,18 @@ export const Steg1Init = () => {
             >
               Hent person
             </Button>
+            {data && (
+              <Button
+                className="w-fit"
+                icon={<ArrowRightIcon />}
+                iconPosition="right"
+                loading={opprettOpplysningerMutation.isPending}
+                onClick={() => opprettOpplysningerMutation.mutate()}
+                type="button"
+              >
+                Opprett inntektsmelding
+              </Button>
+            )}
           </div>
         </form>
       </section>

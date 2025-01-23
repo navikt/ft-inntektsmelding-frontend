@@ -124,6 +124,7 @@ export type SendInntektsmeldingRequestDto = z.infer<
 >;
 
 export const opplysningerSchema = z.object({
+  forespørselUuid: z.string().optional(),
   person: z.object({
     aktørId: z.string(),
     fødselsnummer: z.string(),
@@ -183,3 +184,12 @@ export const grunnbeløpSchema = z.object({
   omregningsfaktor: z.number(),
   virkningstidspunktForMinsteinntekt: z.string(),
 });
+
+export const OpplysningerRequestSchema = z.object({
+  fødselsnummer: z.string(),
+  ytelseType: YtelsetypeSchema,
+  førsteFraværsdag: z.string(),
+  organisasjonsnummer: z.string(),
+});
+
+export type OpplysningerRequest = z.infer<typeof OpplysningerRequestSchema>;
