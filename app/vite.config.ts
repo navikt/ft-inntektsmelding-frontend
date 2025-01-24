@@ -14,7 +14,7 @@ export default defineConfig({
   },
   server: {
     cors: true,
-    // allowedHosts: true,
+    allowedHosts: true,
     // allowedHosts: [
     //   ".intern.dev.nav.no",
     //   "https://arbeidsgiver.intern.dev.nav.no",
