@@ -31,9 +31,13 @@ export const Steg3Oppsummering = () => {
   );
   const { id } = route.useParams();
 
-  const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();
+  const { gyldigInntektsmeldingSkjemaState, inntektsmeldingSkjemaStateError } =
+    useInntektsmeldingSkjema();
 
   if (!gyldigInntektsmeldingSkjemaState) {
+    // På dette punktet "skal" skjemaet være gyldig med mindre noe har gått galt. Logg error til Grafana for innsikt.
+    // eslint-disable-next-line no-console
+    console.error(inntektsmeldingSkjemaStateError);
     return (
       <Alert className="mt-4 mx-4 md:mx-0" variant="error">
         <Stack gap="4">
