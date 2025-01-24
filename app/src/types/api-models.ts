@@ -69,7 +69,7 @@ export const SlåOppArbeidstakerResponseDto = z.object({
 });
 
 export const SendInntektsmeldingRequestDtoSchema = z.object({
-  foresporselUuid: z.string(),
+  foresporselUuid: z.string().optional(),
   aktorId: z.string(),
   ytelse: YtelsetypeSchema,
   arbeidsgiverIdent: z.string(),

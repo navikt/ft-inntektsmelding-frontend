@@ -183,7 +183,7 @@ function lagSendInntektsmeldingRequest(
   );
 
   return {
-    foresporselUuid: id,
+    foresporselUuid: id === "custom-id" ? undefined : id,
     aktorId: opplysninger.person.aktørId,
     ytelse: opplysninger.ytelse,
     arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
