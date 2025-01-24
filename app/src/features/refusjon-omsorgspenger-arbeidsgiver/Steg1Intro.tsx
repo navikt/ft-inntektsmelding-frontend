@@ -12,14 +12,18 @@ import {
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { capitalizeSetning } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useOpplysninger } from "./useOpplysninger.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
+
+  const opplysninger = useOpplysninger();
+
   const navigate = useNavigate();
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
@@ -30,7 +34,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
 
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/1-intro",
+      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/1-intro",
       to: "../2-ansatt-og-arbeidsgiver",
     });
   });
@@ -48,15 +52,15 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   );
 
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={1} />
-      <GuidePanel>
+      <GuidePanel className="mb-4">
         <VStack gap="4">
           <Heading level="2" size="medium">
-            Hei [navn]!
+            Hei {capitalizeSetning(opplysninger.fornavn)}!
           </Heading>
           <BodyLong>
             Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager
@@ -130,6 +134,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           </div>
         </VStack>
       </form>
-    </RotLayout>
+    </div>
   );
 };

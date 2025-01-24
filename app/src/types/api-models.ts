@@ -6,7 +6,7 @@ export const YtelsetypeSchema = z.enum([
   "FORELDREPENGER",
   "SVANGERSKAPSPENGER",
   "PLEIEPENGER_SYKT_BARN",
-  "PLEIEPENGER_NÆRSTÅENDE",
+  "PLEIEPENGER_I_LIVETS_SLUTTFASE",
   "OPPLÆRINGSPENGER",
   "OMSORGSPENGER",
 ]);
@@ -168,7 +168,7 @@ export const opplysningerSchema = z.object({
     "FORELDREPENGER",
     "SVANGERSKAPSPENGER",
     "PLEIEPENGER_SYKT_BARN",
-    "PLEIEPENGER_NÆRSTÅENDE",
+    "PLEIEPENGER_I_LIVETS_SLUTTFASE",
     "OPPLÆRINGSPENGER",
     "OMSORGSPENGER",
   ]),
@@ -184,6 +184,14 @@ export const grunnbeløpSchema = z.object({
   omregningsfaktor: z.number(),
   virkningstidspunktForMinsteinntekt: z.string(),
 });
+
+export const organisasjonsnummerSchema = z
+  .string()
+  .regex(/^\d+$/, "Må være tall")
+  .refine((val) => {
+    const num = Number(val);
+    return num >= 100_000_000 && num <= 999_999_999;
+  }, "Ugyldig organisasjonsnummer");
 
 export const OpplysningerRequestSchema = z.object({
   fødselsnummer: z.string(),

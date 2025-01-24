@@ -1,7 +1,7 @@
 import { type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
-import { z } from "zod";
+import { z, ZodError } from "zod";
 
 import {
   EndringAvInntektÅrsakerSchema,
@@ -111,6 +111,7 @@ export type InntektsmeldingSkjemaStateValid = z.infer<
 
 type InntektsmeldingSkjemaStateContextType = {
   gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
+  inntektsmeldingSkjemaStateError?: ZodError;
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
   setInntektsmeldingSkjemaState: Dispatch<
     SetStateAction<InntektsmeldingSkjemaState>
@@ -153,6 +154,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
       value={{
         inntektsmeldingSkjemaState: state,
         gyldigInntektsmeldingSkjemaState: gyldigInntektsmeldingSkjemaState.data,
+        inntektsmeldingSkjemaStateError: gyldigInntektsmeldingSkjemaState.error,
         setInntektsmeldingSkjemaState: setState,
       }}
     >

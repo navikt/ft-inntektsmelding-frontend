@@ -14,11 +14,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { formatNavn } from "~/utils";
+import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { slåOppPersondataOptions } from "./api/queries";
+import { slåOppArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -26,12 +25,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   useDocumentTitle(
     "Ansatt og arbeidsgiver – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
+
   const navigate = useNavigate();
   const { register, formState, watch, handleSubmit } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
-    slåOppPersondataOptions(fødselsnummer ?? ""),
+    slåOppArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
   const fantIngenPersoner =
@@ -43,13 +43,20 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/2-ansatt-og-arbeidsgiver",
+      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
     });
   });
 
+  const fulltNavn = data
+    ? lagFulltNavn({
+        fornavn: data.fornavn,
+        etternavn: data.etternavn,
+      })
+    : "";
+
   return (
-    <RotLayout medHvitBoks={true} tittel="Søknad om refusjon for omsorgspenger">
+    <div>
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
@@ -65,21 +72,25 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               })}
               error={formState.errors.ansattesFødselsnummer?.message}
             />
-            <div className="flex-1">
+            <div className="flex-1 flex flex-col">
               <Label>Navn</Label>
               {isLoading ? (
                 <Loader className="block mt-5" title="Henter informasjon" />
               ) : fantIngenPersoner ? (
-                <BodyShort>
+                <BodyShort className="flex-1 flex flex-col justify-center">
                   Fant ingen personer som du har tilgang til å se
                   arbeidsforholdet til. Dobbeltsjekk fødselsnummer og prøv
                   igjen.
                 </BodyShort>
               ) : error ? (
-                <BodyShort>Kunne ikke hente data</BodyShort>
-              ) : (
-                <BodyShort>{formatNavn(data?.navn)}</BodyShort>
-              )}
+                <BodyShort className="flex-1 flex flex-col justify-center">
+                  Kunne ikke hente data
+                </BodyShort>
+              ) : data ? (
+                <BodyShort className="flex-1 flex flex-col justify-center">
+                  {fulltNavn}
+                </BodyShort>
+              ) : null}
             </div>
           </div>
         </Informasjonsseksjon>
@@ -95,10 +106,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               >
                 {data.arbeidsforhold.map((arbeidsforhold) => (
                   <option
-                    key={arbeidsforhold.underenhetId}
-                    value={arbeidsforhold.underenhetId}
+                    key={arbeidsforhold.arbeidsforholdId}
+                    value={arbeidsforhold.arbeidsforholdId}
                   >
-                    {arbeidsforhold.navn} ({arbeidsforhold.underenhetId})
+                    {arbeidsforhold.organisasjonsnummer} (
+                    {arbeidsforhold.arbeidsforholdId})
                   </option>
                 ))}
               </Select>
@@ -106,17 +118,22 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <div className="flex gap-4">
                 <div className="flex-1">
                   <Label>Virksomhetsnavn</Label>
-                  <BodyShort>{data.arbeidsforhold[0].navn}</BodyShort>
+                  <BodyShort>
+                    {/* TODO: Hente ut navn på ansettelsesforhold */}
+                    {data.arbeidsforhold[0].organisasjonsnummer}
+                  </BodyShort>
                 </div>
                 <div className="flex-1">
                   <Label>Org.nr. for underenhet</Label>
-                  <BodyShort>{data.arbeidsforhold[0].underenhetId}</BodyShort>
+                  <BodyShort>
+                    {data.arbeidsforhold[0].organisasjonsnummer}
+                  </BodyShort>
                 </div>
               </div>
             ) : (
               <Alert variant="warning">
                 <BodyLong>
-                  Kunne ikke finne noen arbeidsforhold for {data.navn}. Vent
+                  Kunne ikke finne noen arbeidsforhold for {fulltNavn}. Vent
                   litt, og prøv igjen.
                 </BodyLong>
               </Alert>
@@ -130,7 +147,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <div className="flex gap-4 flex-col md:flex-row">
             <div className="flex-1">
               <TextField
-                // TODO: Legg til default navn
                 label="Navn"
                 {...register("kontaktperson.navn", {
                   required: "Du må fylle ut navnet til kontaktpersonen",
@@ -186,6 +202,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           </Button>
         </div>
       </form>
-    </RotLayout>
+    </div>
   );
 };

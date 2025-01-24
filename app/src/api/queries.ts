@@ -61,7 +61,9 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
   }
 
   if (!response.ok) {
-    throw new Error("Kunne ikke hente forespørsel");
+    throw new Error(
+      "Kunne ikke hente eksisterende inntektsmeldinger for forespørsel",
+    );
   }
   const json = await response.json();
   const parsedJson = z.array(InntektsmeldingResponseDtoSchema).safeParse(json);
