@@ -13,12 +13,9 @@ export default defineConfig({
     },
   },
   server: {
-    cors: true,
-    allowedHosts: true,
-    // allowedHosts: [
-    //   ".intern.dev.nav.no",
-    //   "https://arbeidsgiver.intern.dev.nav.no",
-    // ],
+    cors: {
+      origin: new RegExp("nav.no"),
+    },
     origin: "http://localhost:5173",
   },
 });
