@@ -14,7 +14,7 @@ export default defineConfig({
   },
   server: {
     cors: {
-      origin: new RegExp("dev.nav.no"),
+      origin: new RegExp("dev.nav.no$"),
     },
     origin: "http://localhost:5173",
   },
