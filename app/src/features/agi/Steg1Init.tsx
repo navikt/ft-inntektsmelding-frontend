@@ -48,7 +48,7 @@ export const Steg1Init = () => {
     required: "Du må svare på dette spørsmålet",
   });
 
-  const { mutate, data } = useMutation({
+  const hentPersonMutation = useMutation({
     mutationFn: async ({ fnr, førsteFraværsdag }: FormType) => {
       return hentPersonFraFnr(fnr, ytelseType, førsteFraværsdag);
     },
@@ -59,7 +59,8 @@ export const Steg1Init = () => {
       const values = formMethods.watch();
       return hentOpplysninger({
         førsteFraværsdag: values.førsteFraværsdag,
-        organisasjonsnummer: data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
+        organisasjonsnummer:
+          hentPersonMutation.data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
         fødselsnummer: values.fnr,
         ytelseType,
       });
@@ -93,7 +94,11 @@ export const Steg1Init = () => {
   return (
     <FormProvider {...formMethods}>
       <section className="mt-2">
-        <form onSubmit={formMethods.handleSubmit((values) => mutate(values))}>
+        <form
+          onSubmit={formMethods.handleSubmit((values) =>
+            hentPersonMutation.mutate(values),
+          )}
+        >
           <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
             <Heading level="3" size="large">
               Opprett manuell inntektsmelding
@@ -118,18 +123,19 @@ export const Steg1Init = () => {
               </Radio>
             </RadioGroup>
             {formMethods.watch("årsak") === "ny_ansatt" && (
-              <NyAnsattForm data={data} />
+              <NyAnsattForm data={hentPersonMutation.data} />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
             <Button
               className="w-fit"
               icon={<ArrowRightIcon />}
               iconPosition="right"
+              loading={hentPersonMutation.isPending}
               type="submit"
             >
               Hent person
             </Button>
-            {data && (
+            {hentPersonMutation.data && (
               <Button
                 className="w-fit"
                 icon={<ArrowRightIcon />}

@@ -8,7 +8,6 @@ import {
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
   OpplysningerRequest,
-  OpplysningerRequestSchema,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
   SlåOppArbeidstakerResponseDto,
