@@ -49,6 +49,7 @@ async function hentGrunnbeløp() {
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
   if (uuid === "custom-id") {
+    //TODO: konstant for custom uuid
     return [];
   }
   const response = await fetch(

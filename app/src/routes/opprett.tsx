@@ -11,7 +11,7 @@ const agiSearchParams = z.object({
 /**
  * Rute for AGI - arbeidsgiverinitiert inntektsmelding.
  */
-export const Route = createFileRoute("/agi")({
+export const Route = createFileRoute("/opprett")({
   component: RouteComponent,
   validateSearch: (search) => agiSearchParams.parse(search),
 });

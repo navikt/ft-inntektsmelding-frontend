@@ -25,7 +25,7 @@ import { formatYtelsesnavn } from "~/utils.ts";
 const route = getRouteApi("/agi");
 
 type FormType = {
-  fnr: string;
+  fødselsnummer: string;
   årsak: "ny_ansatt" | "unntatt_aaregister" | "annen_årsak" | "";
   førsteFraværsdag: string;
 };
@@ -39,7 +39,7 @@ export const HentOpplysninger = () => {
 
   const formMethods = useForm<FormType>({
     defaultValues: {
-      fnr: "",
+      fødselsnummer: "",
       årsak: "",
     },
   });
@@ -49,8 +49,8 @@ export const HentOpplysninger = () => {
   });
 
   const hentPersonMutation = useMutation({
-    mutationFn: async ({ fnr, førsteFraværsdag }: FormType) => {
-      return hentPersonFraFnr(fnr, ytelseType, førsteFraværsdag);
+    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
+      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
     },
   });
 
@@ -61,7 +61,7 @@ export const HentOpplysninger = () => {
         førsteFraværsdag: values.førsteFraværsdag,
         organisasjonsnummer:
           hentPersonMutation.data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
-        fødselsnummer: values.fnr,
+        fødselsnummer: values.fødselsnummer,
         ytelseType,
       });
     },
@@ -164,12 +164,12 @@ function NyAnsattForm({
     <VStack gap="8">
       <HStack gap="10">
         <TextField
-          {...formMethods.register("fnr", {
+          {...formMethods.register("fødselsnummer", {
             required: "Må oppgis",
             validate: (value) =>
               /^\d{11}$/.test(value) || "Fødselsnummer må være 11 siffer",
           })}
-          error={formMethods.formState.errors.fnr?.message}
+          error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
         />
         {data && (
@@ -184,7 +184,7 @@ function NyAnsattForm({
       <DatePickerWrapped
         label="Første fraværsdag"
         name="førsteFraværsdag"
-        rules={{ required: "Må oppgis" }}
+        rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
       />
       {data && (
         <VStack>
@@ -209,7 +209,8 @@ function AnnenÅrsak() {
         Den ansatte må søke om foreldrepenger før du kan sende inntektsmelding.
         Varsel med oppgave blir tilgjengelig i saksoversikten når den ansatte
         har sendt inn søknad til oss, men tidligst 4 uker før første fraværsdag.
-        Trenger du hjelp, kontakt oss på tlf.&nbsp;55&nbsp;55&nbsp;33&nbsp;36.
+        Trenger du hjelp, kontakt oss på{" "}
+        <a href="tel:55553336">tlf.&nbsp;55&nbsp;55&nbsp;33&nbsp;36.</a>
       </BodyShort>
     </Alert>
   );
