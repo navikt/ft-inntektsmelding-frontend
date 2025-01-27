@@ -109,7 +109,7 @@ export const HentOpplysninger = () => {
               name={name}
             >
               <Radio value="ny_ansatt" {...radioGroupProps}>
-                Ny ansatt som mottar ytelse fra NAV
+                Ny ansatt som mottar ytelse fra Nav
               </Radio>
               <Radio
                 description="(Ambassadepersonell, fiskere og utenlandske arbeidstakere)"
