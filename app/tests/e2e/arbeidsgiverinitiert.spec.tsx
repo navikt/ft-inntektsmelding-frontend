@@ -7,7 +7,7 @@ test.describe("Arbeidsgiverinitielt path", () => {
   test("Happy path", async ({ page }) => {
     await mockHentPersonOgArbeidsforhold({ page });
 
-    await page.goto("/fp-im-dialog/agi?ytelseType=FORELDREPENGER");
+    await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
 
     await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
     await page.getByLabel("Ansattes fødselsnummer").fill("06519405464");
