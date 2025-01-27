@@ -104,8 +104,8 @@ export const HentOpplysninger = () => {
               Opprett manuell inntektsmelding
             </Heading>
             <RadioGroup
-              // error={formState.errors.misterNaturalytelser?.message}
-              legend="Har den ansatte naturalytelser som faller bort ved fraværet?"
+              error={formMethods.formState.errors.årsak?.message}
+              legend="Årsak til at du vil opprette inntektsmelding"
               name={name}
             >
               <Radio value="ny_ansatt" {...radioGroupProps}>
