@@ -22,7 +22,7 @@ import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
 import { SlåOppArbeidstakerResponseDto } from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
 
-const route = getRouteApi("/agi");
+const route = getRouteApi("/opprett");
 
 type FormType = {
   fødselsnummer: string;
