@@ -19,7 +19,10 @@ import { z } from "zod";
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
-import { SlåOppArbeidstakerResponseDto } from "~/types/api-models.ts";
+import {
+  SlåOppArbeidstakerResponseDto,
+  Ytelsetype,
+} from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
 
 const route = getRouteApi("/opprett");
@@ -123,7 +126,10 @@ export const HentOpplysninger = () => {
               </Radio>
             </RadioGroup>
             {formMethods.watch("årsak") === "ny_ansatt" && (
-              <NyAnsattForm data={hentPersonMutation.data} />
+              <NyAnsattForm
+                data={hentPersonMutation.data}
+                ytelseType={ytelseType}
+              />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
             <Button
@@ -156,7 +162,9 @@ export const HentOpplysninger = () => {
 
 function NyAnsattForm({
   data,
+  ytelseType,
 }: {
+  ytelseType: Ytelsetype;
   data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
 }) {
   const formMethods = useFormContext<FormType>();
@@ -166,8 +174,21 @@ function NyAnsattForm({
         <TextField
           {...formMethods.register("fødselsnummer", {
             required: "Må oppgis",
-            validate: (value) =>
-              /^\d{11}$/.test(value) || "Fødselsnummer må være 11 siffer",
+            validate: (value) => {
+              const erFødselsnummer = /^\d{11}$/.test(value); //TODO: mer sofistikert test?
+              if (!erFødselsnummer) {
+                return "Fødselsnummer må være 11 siffer";
+              }
+
+              if (ytelseType === "SVANGERSKAPSPENGER") {
+                // Det 8. siffer er kjønn. Partall for kvinner og oddetall for menn
+                const erKvinne = Number.parseInt(value[8], 10) % 2 === 0;
+
+                if (!erKvinne) {
+                  return "Bare kvinner kan søke svangerskapspenger";
+                }
+              }
+            },
           })}
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
