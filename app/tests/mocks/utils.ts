@@ -2,6 +2,7 @@ import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
+import { arbeidsforholdResponse } from "./arbeidsforhold.ts";
 import {
   ingenEksisterendeInntektsmeldingerResponse,
   mangeEksisterendeInntektsmeldingerResponse,
@@ -22,6 +23,22 @@ export const mockOpplysninger = ({
 }: mockOpplysningerParams) => {
   return page.route(
     `**/*/imdialog/opplysninger?foresporselUuid=${uuid}`,
+    async (route) => {
+      await route.fulfill({ json });
+    },
+  );
+};
+
+type MockHentPersonOgArbeidsforholdParams = {
+  page: Page;
+  json?: typeof arbeidsforholdResponse;
+};
+export const mockHentPersonOgArbeidsforhold = ({
+  page,
+  json = arbeidsforholdResponse,
+}: MockHentPersonOgArbeidsforholdParams) => {
+  return page.route(
+    `**/*/arbeidsgiverinitiert/arbeidsforhold`,
     async (route) => {
       await route.fulfill({ json });
     },

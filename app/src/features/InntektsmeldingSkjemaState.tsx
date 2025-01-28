@@ -1,4 +1,4 @@
-import { getRouteApi, type ReactNode } from "@tanstack/react-router";
+import { type ReactNode } from "@tanstack/react-router";
 import type { Dispatch, SetStateAction } from "react";
 import { createContext, useContext } from "react";
 import { z, ZodError } from "zod";
@@ -121,6 +121,7 @@ const InntektsmeldingSkjemaStateContext =
   createContext<InntektsmeldingSkjemaStateContextType | null>(null);
 
 type InntektsmeldingSkjemaStateProviderProps = {
+  skjemaId: string;
   children: ReactNode;
 };
 
@@ -132,13 +133,11 @@ const defaultSkjemaState = {
 } satisfies InntektsmeldingSkjemaState;
 
 export const InntektsmeldingSkjemaStateProvider = ({
+  skjemaId,
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  const route = getRouteApi("/$id");
-  const { id } = route.useParams();
-
   const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
-    `skjemadata-${id}`,
+    `skjemadata-${skjemaId}`,
     defaultSkjemaState,
     InntektsmeldingSkjemaStateSchema,
   );
