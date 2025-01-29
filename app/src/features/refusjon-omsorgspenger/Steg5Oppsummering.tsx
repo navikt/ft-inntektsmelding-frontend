@@ -49,7 +49,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           onClick={() => {
             alert("Søknad ikke egentlig sendt inn, men vi kan late som");
             navigate({
-              from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/5-oppsummering",
+              from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
               to: "../6-kvittering",
             });
           }}
