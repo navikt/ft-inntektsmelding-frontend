@@ -2,13 +2,13 @@ import { BodyShort, Loader } from "@navikt/ds-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { hentOpplysningerDataOptions } from "~/features/refusjon-omsorgspenger-arbeidsgiver/api/queries";
-import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger-arbeidsgiver/RefusjonOmsorgspengerArbeidsgiverRotLayout";
+import { hentOpplysningerDataOptions } from "~/features/refusjon-omsorgspenger/api/queries";
+import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverRotLayout";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { queryClient } from "~/main";
 
 export const Route = createFileRoute(
-  "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer",
+  "/refusjon-omsorgspenger/$organisasjonsnummer",
 )({
   component: RefusjonOmsorgspengerArbeidsgiverRotLayout,
   pendingComponent: () => (

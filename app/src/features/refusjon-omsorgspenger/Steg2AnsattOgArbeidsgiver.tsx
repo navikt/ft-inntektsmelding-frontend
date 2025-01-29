@@ -43,7 +43,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
+      from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
     });
   });

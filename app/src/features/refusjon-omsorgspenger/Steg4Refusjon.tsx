@@ -24,7 +24,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const navigate = useNavigate();
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/4-refusjon",
+      from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
       to: "../5-oppsummering",
     });
   });

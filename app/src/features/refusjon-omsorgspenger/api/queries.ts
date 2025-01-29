@@ -101,12 +101,9 @@ export const hentOpplysningerDataOptions = (organisasjonsnummer: string) =>
     OpplysningerDto,
     OpplysningerFeil,
     OpplysningerDto,
-    ["refusjon-omsorgspenger-arbeidsgiver-opplysninger", string]
+    ["refusjon-omsorgspenger-opplysninger", string]
   >({
-    queryKey: [
-      "refusjon-omsorgspenger-arbeidsgiver-opplysninger",
-      organisasjonsnummer,
-    ],
+    queryKey: ["refusjon-omsorgspenger-opplysninger", organisasjonsnummer],
     queryFn: ({ queryKey }) => hentOpplysningerData(queryKey[1]),
   });
 
