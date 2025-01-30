@@ -172,14 +172,14 @@ function NyAnsattForm({
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
         />
-        {data && (
-          <VStack gap="4">
-            <Label>Navn</Label>
+        <VStack gap="4">
+          <Label>Navn</Label>
+          {data && (
             <BodyShort>
               {data.fornavn} {data.etternavn}
             </BodyShort>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </HStack>
       <DatePickerWrapped
         label="Første fraværsdag"
