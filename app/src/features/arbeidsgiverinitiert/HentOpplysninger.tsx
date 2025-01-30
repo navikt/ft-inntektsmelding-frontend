@@ -176,7 +176,7 @@ function VelgArbeidsgiver({
 }) {
   const formMethods = useFormContext<FormType>();
 
-  if (!data || data.arbeidsforhold.length <= 2) {
+  if (!data || data.arbeidsforhold.length <= 1) {
     return null;
   }
 
@@ -191,7 +191,6 @@ function VelgArbeidsgiver({
       {...formMethods.register(`organisasjonsnummer`, {
         required: "Må oppgis",
       })}
-      className="md:max-w-[60%]"
     >
       <option value="">Velg Organisasjon</option>
       {data?.arbeidsforhold.map((arbeidsforhold) => (
@@ -199,7 +198,8 @@ function VelgArbeidsgiver({
           key={arbeidsforhold.organisasjonsnummer}
           value={arbeidsforhold.organisasjonsnummer}
         >
-          {arbeidsforhold.organisasjonsnavn}
+          {arbeidsforhold.organisasjonsnavn} (
+          {arbeidsforhold.organisasjonsnummer})
         </option>
       ))}
     </Select>
