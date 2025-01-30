@@ -13,9 +13,12 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 
+import { lagFulltNavn } from "~/utils.ts";
+
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useInnloggetBruker } from "./useOpplysninger.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
@@ -28,13 +31,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         Oppsummering
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={5} />
-      <VStack gap="4">
+      <VStack className="mb-4" gap="4">
         <OppsummeringArbeidsgiverOgAnsatt />
         <OppsummeringOmsorgsdager />
         <OppsummeringRefusjon />
         <OppsummeringMånedslønn />
       </VStack>
-      <div className="flex gap-4">
+      <div className="flex gap-4 justify-center">
         <Button
           as={Link}
           icon={<ArrowLeftIcon />}
@@ -92,6 +95,7 @@ const OppsummeringRefusjon = () => {
 
 const OppsummeringArbeidsgiverOgAnsatt = () => {
   const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const opplysninger = useInnloggetBruker();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -107,11 +111,15 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
             <FormSummaryAnswers>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Virksomhetsnavn</FormSummaryLabel>
-                <FormSummaryValue>Place Holder AS</FormSummaryValue>
+                <FormSummaryValue>
+                  {opplysninger.organisasjonsnavn}
+                </FormSummaryValue>
               </FormSummaryAnswer>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Org.nr. for underenhet</FormSummaryLabel>
-                <FormSummaryValue>123456789</FormSummaryValue>
+                <FormSummaryValue>
+                  {opplysninger.organisasjonsnummer}
+                </FormSummaryValue>
               </FormSummaryAnswer>
             </FormSummaryAnswers>
           </FormSummaryValue>
@@ -126,7 +134,7 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
         <FormSummaryAnswer>
           <FormSummaryLabel>Den ansatte</FormSummaryLabel>
           <FormSummaryValue>
-            {"Place Holdersen"},{" "}
+            {lagFulltNavn(opplysninger)},{" "}
             {getValues("ansattesFødselsnummer")?.slice(0, 6)}
           </FormSummaryValue>
         </FormSummaryAnswer>

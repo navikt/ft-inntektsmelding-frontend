@@ -4,7 +4,7 @@ import { z } from "zod";
 import { NaturalytelseTypeSchema } from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 
-import { useOpplysninger } from "./useOpplysninger";
+import { useInnloggetBruker } from "./useOpplysninger";
 
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   kontaktperson: z
@@ -77,7 +77,7 @@ type Props = {
   children: React.ReactNode;
 };
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const opplysninger = useOpplysninger();
+  const opplysninger = useInnloggetBruker();
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
     defaultValues: {
       kontaktperson: {

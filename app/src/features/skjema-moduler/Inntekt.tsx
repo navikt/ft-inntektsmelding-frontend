@@ -48,7 +48,10 @@ import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertT
 import { useDisclosure } from "../useDisclosure";
 
 type InntektProps = {
-  opplysninger: OpplysningerDto;
+  opplysninger: Pick<
+    OpplysningerDto,
+    "skjæringstidspunkt" | "person" | "inntektsopplysninger"
+  >;
   harEksisterendeInntektsmeldinger: boolean;
 };
 export function Inntekt({
@@ -60,7 +63,7 @@ export function Inntekt({
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
-  const AInntektErNede = opplysninger.inntektsopplysninger.månedsinntekter.some(
+  const erAInntektNede = inntektsopplysninger.månedsinntekter.some(
     (inntekt) => inntekt.status === "NEDETID_AINNTEKT",
   );
   const førsteDag = formatDatoKort(new Date(skjæringstidspunkt));
@@ -101,7 +104,7 @@ export function Inntekt({
         </HGrid>
       </Informasjonsseksjon>
 
-      {!AInntektErNede && (
+      {!erAInntektNede && (
         <VStack data-testid="gjennomsnittinntekt-block" gap="1">
           <BodyShort>Beregnet månedslønn</BodyShort>
           <strong
@@ -116,7 +119,7 @@ export function Inntekt({
         </VStack>
       )}
       {/* Hvis A-inntekt må feltet fylles ut, og det er ingen tilbakestillingsknapp. */}
-      {AInntektErNede ? (
+      {erAInntektNede ? (
         <FormattertTallTextField
           description={gjennomsnittAvMånederTekst}
           htmlSize={20}

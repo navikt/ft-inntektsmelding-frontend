@@ -6,8 +6,12 @@ import { logDev } from "~/utils";
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
 const ArbeidstakerOppslagDtoSchema = z.object({
-  fornavn: z.string(),
-  etternavn: z.string(),
+  personinformasjon: z.object({
+    fornavn: z.string(),
+    mellomnavn: z.string().optional(),
+    etternavn: z.string(),
+    fødselsnummer: z.string(),
+  }),
   arbeidsforhold: z.array(
     z.object({
       organisasjonsnummer: z.string(),
@@ -25,7 +29,7 @@ export type ArbeidstakerOppslagFeil =
   | { feilkode: "uventet respons" } // Zod-validering feilet
   | Error; // Programmeringsfeil
 
-export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
+export const hentArbeidstakerOptions = (fødselsnummer: string) => {
   return queryOptions<
     ArbeidstakerOppslagDto,
     ArbeidstakerOppslagFeil,
@@ -33,7 +37,7 @@ export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
     ["arbeidstaker-oppslag", string]
   >({
     queryKey: ["arbeidstaker-oppslag", fødselsnummer],
-    queryFn: ({ queryKey }) => slåOppArbeidstaker(queryKey[1]),
+    queryFn: ({ queryKey }) => hentArbeidstaker(queryKey[1]),
     enabled: fødselsnummer.length === 11,
     staleTime: Infinity,
     retry: false,
@@ -43,9 +47,9 @@ export const slåOppArbeidstakerOptions = (fødselsnummer: string) => {
   });
 };
 
-const slåOppArbeidstaker = async (fødselsnummer: string) => {
+const hentArbeidstaker = async (fødselsnummer: string) => {
   const response = await fetch(
-    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/arbeidstaker`,
+    `${SERVER_URL}/refusjon-omsorgsdager/arbeidstaker`,
     {
       method: "POST",
       body: JSON.stringify({
@@ -84,7 +88,7 @@ const slåOppArbeidstaker = async (fødselsnummer: string) => {
   return parsedResponse.data;
 };
 
-const OpplysningerDtoSchema = z.object({
+const InnloggetBrukerDtoSchema = z.object({
   fornavn: z.string().optional(),
   mellomnavn: z.string().optional(),
   etternavn: z.string().optional(),
@@ -92,24 +96,24 @@ const OpplysningerDtoSchema = z.object({
   organisasjonsnummer: z.string().optional(),
   organisasjonsnavn: z.string().optional(),
 });
-export type OpplysningerDto = z.infer<typeof OpplysningerDtoSchema>;
+export type InnloggetBrukerDto = z.infer<typeof InnloggetBrukerDtoSchema>;
 
-type OpplysningerFeil = { feilkode: "uventet respons" };
+type InnloggetBrukerFeil = { feilkode: "uventet respons" };
 
-export const hentOpplysningerDataOptions = (organisasjonsnummer: string) =>
+export const hentInnloggetBrukerDataOptions = (organisasjonsnummer: string) =>
   queryOptions<
-    OpplysningerDto,
-    OpplysningerFeil,
-    OpplysningerDto,
-    ["refusjon-omsorgspenger-opplysninger", string]
+    InnloggetBrukerDto,
+    InnloggetBrukerFeil,
+    InnloggetBrukerDto,
+    ["refusjon-omsorgspenger-innlogget-bruker", string]
   >({
-    queryKey: ["refusjon-omsorgspenger-opplysninger", organisasjonsnummer],
-    queryFn: ({ queryKey }) => hentOpplysningerData(queryKey[1]),
+    queryKey: ["refusjon-omsorgspenger-innlogget-bruker", organisasjonsnummer],
+    queryFn: ({ queryKey }) => hentInnloggetBrukerData(queryKey[1]),
   });
 
-const hentOpplysningerData = async (organisasjonsnummer: string) => {
+const hentInnloggetBrukerData = async (organisasjonsnummer: string) => {
   const response = await fetch(
-    `${SERVER_URL}/refusjon-omsorgsdager-arbeidsgiver/innlogget-bruker`,
+    `${SERVER_URL}/refusjon-omsorgsdager/innlogget-bruker`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -122,14 +126,14 @@ const hentOpplysningerData = async (organisasjonsnummer: string) => {
 
   const json = await response.json();
 
-  const parsedResponse = OpplysningerDtoSchema.safeParse(json);
+  const parsedResponse = InnloggetBrukerDtoSchema.safeParse(json);
   if (!parsedResponse.success) {
     logDev(
       "error",
       "Mottok en uventet respons fra serveren",
       parsedResponse.error,
     );
-    throw { feilkode: "uventet respons" } satisfies OpplysningerFeil;
+    throw { feilkode: "uventet respons" } satisfies InnloggetBrukerFeil;
   }
 
   return parsedResponse.data;

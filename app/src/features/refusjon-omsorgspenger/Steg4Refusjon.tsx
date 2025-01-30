@@ -14,13 +14,17 @@ import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useInnloggetBruker } from "./useOpplysninger.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   useDocumentTitle(
     "Refusjon – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { handleSubmit } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { handleSubmit, getValues } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  const innloggetBruker = useInnloggetBruker();
   const navigate = useNavigate();
   const onSubmit = handleSubmit(() => {
     navigate({
@@ -29,13 +33,42 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     });
   });
 
+  const fraværHeleDager = getValues("fraværHeleDager");
+  const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+
+  const førsteFraværsdato = [
+    ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
+    ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
+  ].sort()[0];
+
+  if (!førsteFraværsdato) {
+    throw new Error("Ingen fraværsdato funnet");
+  }
+
+  const info: Pick<
+    OpplysningerDto,
+    "skjæringstidspunkt" | "person" | "inntektsopplysninger"
+  > = {
+    person: {
+      aktørId: "?", // TODO
+      fødselsnummer: "?", // TODO
+      fornavn: innloggetBruker.fornavn!,
+      etternavn: innloggetBruker.etternavn!,
+    },
+    inntektsopplysninger: {
+      månedsinntekter: [],
+      gjennomsnittLønn: 0,
+    },
+    skjæringstidspunkt: førsteFraværsdato,
+  };
+
   return (
     <div>
       <Heading level="1" size="large">
         Beregnet månedslønn for refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={4} />
-      <GuidePanel>
+      <GuidePanel className="mb-4">
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig
           lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må

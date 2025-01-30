@@ -17,7 +17,7 @@ import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { slåOppArbeidstakerOptions } from "./api/queries";
+import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -31,7 +31,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
-    slåOppArbeidstakerOptions(fødselsnummer ?? ""),
+    hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
   const fantIngenPersoner =
@@ -48,12 +48,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     });
   });
 
-  const fulltNavn = data
-    ? lagFulltNavn({
-        fornavn: data.fornavn,
-        etternavn: data.etternavn,
-      })
-    : "";
+  const fulltNavn = data ? lagFulltNavn(data.personinformasjon) : "";
 
   return (
     <div>
