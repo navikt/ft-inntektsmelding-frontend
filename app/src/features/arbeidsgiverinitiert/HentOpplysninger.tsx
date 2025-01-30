@@ -8,24 +8,30 @@ import {
   Label,
   Radio,
   RadioGroup,
+  Select,
   TextField,
   VStack,
 } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import { MutableRefObject, Ref, RefObject, useEffect, useRef } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
-import { SlåOppArbeidstakerResponseDto } from "~/types/api-models.ts";
+import {
+  OpplysningerRequest,
+  SlåOppArbeidstakerResponseDto,
+} from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
 
 const route = getRouteApi("/opprett");
 
 type FormType = {
   fødselsnummer: string;
+  organisasjonsnummer: string;
   årsak: "ny_ansatt" | "unntatt_aaregister" | "annen_årsak" | "";
   førsteFraværsdag: string;
 };
@@ -36,11 +42,13 @@ export const HentOpplysninger = () => {
   useDocumentTitle(
     `Opprett inntektsmelding for ${formatYtelsesnavn(ytelseType)}`,
   );
+  const formRef = useRef<HTMLFormElement>(null);
 
   const formMethods = useForm<FormType>({
     defaultValues: {
       fødselsnummer: "",
       årsak: "",
+      organisasjonsnummer: "",
     },
   });
 
@@ -48,22 +56,9 @@ export const HentOpplysninger = () => {
     required: "Du må svare på dette spørsmålet",
   });
 
-  const hentPersonMutation = useMutation({
-    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
-      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
-    },
-  });
-
   const opprettOpplysningerMutation = useMutation({
-    mutationFn: async () => {
-      const values = formMethods.watch();
-      return hentOpplysninger({
-        førsteFraværsdag: values.førsteFraværsdag,
-        organisasjonsnummer:
-          hentPersonMutation.data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
-        fødselsnummer: values.fødselsnummer,
-        ytelseType,
-      });
+    mutationFn: async (opplysningerRequest: OpplysningerRequest) => {
+      return hentOpplysninger(opplysningerRequest);
     },
     onSuccess: (opplysninger) => {
       if (opplysninger.forespørselUuid === undefined) {
@@ -91,6 +86,25 @@ export const HentOpplysninger = () => {
     },
   });
 
+  const hentPersonMutation = useMutation({
+    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
+      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
+    },
+    onSuccess: (data, { fødselsnummer, førsteFraværsdag }) => {
+      if (data.arbeidsforhold.length === 1) {
+        return opprettOpplysningerMutation.mutate({
+          fødselsnummer,
+          førsteFraværsdag,
+          ytelseType,
+          organisasjonsnummer: data.arbeidsforhold[0].organisasjonsnummer,
+        });
+      }
+    },
+  });
+
+  const isPending =
+    hentPersonMutation.isPending || opprettOpplysningerMutation.isPending;
+
   return (
     <FormProvider {...formMethods}>
       <section className="mt-2">
@@ -98,6 +112,7 @@ export const HentOpplysninger = () => {
           onSubmit={formMethods.handleSubmit((values) =>
             hentPersonMutation.mutate(values),
           )}
+          ref={formRef}
         >
           <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
             <Heading level="3" size="large">
@@ -123,25 +138,25 @@ export const HentOpplysninger = () => {
               </Radio>
             </RadioGroup>
             {formMethods.watch("årsak") === "ny_ansatt" && (
-              <NyAnsattForm data={hentPersonMutation.data} />
+              <>
+                <NyAnsattForm
+                  data={hentPersonMutation.data}
+                  formRef={formRef}
+                />
+                <VelgArbeidsgiver data={hentPersonMutation.data} />
+              </>
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
-            <Button
-              className="w-fit"
-              icon={<ArrowRightIcon />}
-              iconPosition="right"
-              loading={hentPersonMutation.isPending}
-              type="submit"
-            >
-              Hent person
+            <Button className="w-fit" loading={isPending} type="submit">
+              Hent opplysninger
             </Button>
-            {hentPersonMutation.data && (
+            {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
                 className="w-fit"
                 icon={<ArrowRightIcon />}
                 iconPosition="right"
                 loading={opprettOpplysningerMutation.isPending}
-                onClick={() => opprettOpplysningerMutation.mutate()}
+                // onClick={() => opprettOpplysningerMutation.mutate({})}
                 type="button"
               >
                 Opprett inntektsmelding
@@ -154,12 +169,52 @@ export const HentOpplysninger = () => {
   );
 };
 
-function NyAnsattForm({
+function VelgArbeidsgiver({
   data,
 }: {
   data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
 }) {
   const formMethods = useFormContext<FormType>();
+
+  if (!data || data.arbeidsforhold.length <= 2) {
+    return null;
+  }
+
+  return (
+    <Select
+      description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver.  Velg hvilken underenhet inntektsmeldingen gjelder for. "
+      // error={
+      //   formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
+      //       ?.message
+      // }
+      label="Arbeidsgiver"
+      {...formMethods.register(`organisasjonsnummer`, {
+        required: "Må oppgis",
+      })}
+      className="md:max-w-[60%]"
+    >
+      <option value="">Velg Organisasjon</option>
+      {data?.arbeidsforhold.map((arbeidsforhold) => (
+        <option
+          key={arbeidsforhold.organisasjonsnummer}
+          value={arbeidsforhold.organisasjonsnummer}
+        >
+          {arbeidsforhold.organisasjonsnavn}
+        </option>
+      ))}
+    </Select>
+  );
+}
+
+function NyAnsattForm({
+  data,
+  formRef,
+}: {
+  formRef: RefObject<HTMLFormElement>;
+  data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
+}) {
+  const formMethods = useFormContext<FormType>();
+
   return (
     <VStack gap="8">
       <HStack gap="10">
@@ -171,6 +226,11 @@ function NyAnsattForm({
           })}
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
+          // onBlur={() => {
+          //   formRef.current?.dispatchEvent(
+          //     new Event("submit", { bubbles: true, cancelable: true }),
+          //   );
+          // }}
         />
         <VStack gap="4">
           <Label>Navn</Label>
@@ -184,17 +244,14 @@ function NyAnsattForm({
       <DatePickerWrapped
         label="Første fraværsdag"
         name="førsteFraværsdag"
+        // onBlur={() => {
+        //   console.log("blurring dato");
+        //   formRef.current?.dispatchEvent(
+        //     new Event("submit", { bubbles: true, cancelable: true }),
+        //   );
+        // }}
         rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
       />
-      {data && (
-        <VStack>
-          <Label>Arbeidsgiver</Label>
-          <BodyShort>
-            Org.nr. {data.arbeidsforhold[0].organisasjonsnummer} -{" "}
-            {data.arbeidsforhold[0].organisasjonsnavn}
-          </BodyShort>
-        </VStack>
-      )}
     </VStack>
   );
 }
