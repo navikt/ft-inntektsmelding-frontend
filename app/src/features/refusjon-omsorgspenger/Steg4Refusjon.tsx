@@ -1,20 +1,23 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
   BodyLong,
   Button,
   GuidePanel,
   Heading,
+  Loader,
   VStack,
 } from "@navikt/ds-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { OpplysningerDto } from "~/types/api-models";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
-import { useInnloggetBruker } from "./useOpplysninger.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   useDocumentTitle(
@@ -24,7 +27,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const { handleSubmit, getValues } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
-  const innloggetBruker = useInnloggetBruker();
   const navigate = useNavigate();
   const onSubmit = handleSubmit(() => {
     navigate({
@@ -41,26 +43,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
   ].sort()[0];
 
+  const {
+    data: inntektsopplysninger,
+    isLoading,
+    isError,
+  } = useQuery(
+    hentInntektsopplysningerOptions({
+      skjæringstidspunkt: førsteFraværsdato!,
+      fødselsnummer: getValues("ansattesFødselsnummer")!,
+      organisasjonsnummer: getValues("valgtArbeidsforhold")!,
+    }),
+  );
+
   if (!førsteFraværsdato) {
     throw new Error("Ingen fraværsdato funnet");
   }
-
-  const info: Pick<
-    OpplysningerDto,
-    "skjæringstidspunkt" | "person" | "inntektsopplysninger"
-  > = {
-    person: {
-      aktørId: "?", // TODO
-      fødselsnummer: "?", // TODO
-      fornavn: innloggetBruker.fornavn!,
-      etternavn: innloggetBruker.etternavn!,
-    },
-    inntektsopplysninger: {
-      månedsinntekter: [],
-      gjennomsnittLønn: 0,
-    },
-    skjæringstidspunkt: førsteFraværsdato,
-  };
 
   return (
     <div>
@@ -77,10 +74,27 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
       </GuidePanel>
       <form onSubmit={onSubmit}>
         <VStack gap="4">
-          <Inntekt
-            harEksisterendeInntektsmeldinger={false}
-            opplysninger={dummyOpplysninger}
-          />
+          {inntektsopplysninger ? (
+            <Inntekt
+              harEksisterendeInntektsmeldinger={false}
+              opplysninger={{
+                person: {
+                  aktørId: getValues("ansattesAktørId")!,
+                  fødselsnummer: getValues("ansattesFødselsnummer")!,
+                  fornavn: getValues("ansattesFornavn")!,
+                  etternavn: getValues("ansattesEtternavn")!,
+                },
+                inntektsopplysninger,
+                skjæringstidspunkt: førsteFraværsdato,
+              }}
+            />
+          ) : isLoading ? (
+            <Loader />
+          ) : isError ? (
+            <Alert variant="error">
+              Inntektsopplysninger kunne ikke hentes.
+            </Alert>
+          ) : null}
           <div className="flex gap-4">
             <Button
               as={Link}
@@ -91,6 +105,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
               Forrige steg
             </Button>
             <Button
+              disabled={!inntektsopplysninger}
               icon={<ArrowRightIcon />}
               iconPosition="right"
               type="submit"

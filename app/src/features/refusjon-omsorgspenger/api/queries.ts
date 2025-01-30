@@ -11,6 +11,7 @@ const ArbeidstakerOppslagDtoSchema = z.object({
     mellomnavn: z.string().optional(),
     etternavn: z.string(),
     fødselsnummer: z.string(),
+    aktørId: z.string(),
   }),
   arbeidsforhold: z.array(
     z.object({
@@ -137,4 +138,65 @@ const hentInnloggetBrukerData = async (organisasjonsnummer: string) => {
   }
 
   return parsedResponse.data;
+};
+
+const InntektsopplysningerDtoSchema = z.object({
+  gjennomsnittLønn: z.number().optional(),
+  månedsinntekter: z.array(
+    z.object({
+      fom: z.string(),
+      tom: z.string(),
+      beløp: z.number().optional(),
+      status: z.enum([
+        "NEDETID_AINNTEKT",
+        "BRUKT_I_GJENNOMSNITT",
+        "IKKE_RAPPORTERT_MEN_BRUKT_I_GJENNOMSNITT",
+        "IKKE_RAPPORTERT_RAPPORTERINGSFRIST_IKKE_PASSERT",
+      ]),
+    }),
+  ),
+});
+export type InntektsopplysningerDto = z.infer<
+  typeof InntektsopplysningerDtoSchema
+>;
+
+type HentInntektsopplysningerArgs = {
+  fødselsnummer: string;
+  skjæringstidspunkt: string;
+  organisasjonsnummer: string;
+};
+const hentInntektsopplysninger = async (args: HentInntektsopplysningerArgs) => {
+  const response = await fetch(
+    `${SERVER_URL}/refusjon-omsorgsdager/inntektsopplysninger`,
+    {
+      method: "POST",
+      body: JSON.stringify(args),
+      headers: { "Content-Type": "application/json" },
+    },
+  );
+
+  const json = await response.json();
+  const parsedJson = InntektsopplysningerDtoSchema.safeParse(json);
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+  return parsedJson.data;
+};
+
+export const hentInntektsopplysningerOptions = (
+  args: HentInntektsopplysningerArgs,
+) => {
+  return queryOptions<
+    InntektsopplysningerDto,
+    Error,
+    InntektsopplysningerDto,
+    [
+      "refusjon-omsorgspenger-inntektsopplysninger",
+      HentInntektsopplysningerArgs,
+    ]
+  >({
+    queryKey: ["refusjon-omsorgspenger-inntektsopplysninger", args],
+    queryFn: () => hentInntektsopplysninger(args),
+  });
 };

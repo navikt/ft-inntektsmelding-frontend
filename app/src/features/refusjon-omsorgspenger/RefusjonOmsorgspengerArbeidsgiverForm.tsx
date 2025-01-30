@@ -13,9 +13,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       telefonnummer: z.string(),
     })
     .optional(),
+  ansattesFødselsnummer: z.string().optional(),
+  ansattesFornavn: z.string().optional(),
+  ansattesEtternavn: z.string().optional(),
+  ansattesAktørId: z.string().optional(),
   årForRefusjon: z.string().optional(),
   harUtbetaltLønn: z.string().optional(),
-  ansattesFødselsnummer: z.string().optional(),
   valgtArbeidsforhold: z.string().optional(),
   harDekket10FørsteOmsorgsdager: z.string().optional(),
   fraværHeleDager: z

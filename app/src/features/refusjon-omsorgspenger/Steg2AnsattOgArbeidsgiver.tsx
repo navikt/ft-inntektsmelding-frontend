@@ -10,6 +10,7 @@ import {
   Select,
   TextField,
 } from "@navikt/ds-react";
+import { idnr } from "@navikt/fnrvalidator";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
@@ -64,6 +65,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               label="Ansattes fødselsnummer (11 siffer)"
               {...register("ansattesFødselsnummer", {
                 required: "Du må fylle ut fødselsnummeret til den ansatte",
+                validate: (value) =>
+                  (value && idnr(value).status === "valid") ||
+                  "Du må fylle ut et gyldig fødselsnummer",
               })}
               error={formState.errors.ansattesFødselsnummer?.message}
             />
@@ -84,6 +88,24 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               ) : data ? (
                 <BodyShort className="flex-1 flex flex-col justify-center">
                   {fulltNavn}
+                  <input
+                    type="hidden"
+                    {...register("ansattesFornavn", {
+                      value: data.personinformasjon.fornavn,
+                    })}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("ansattesEtternavn", {
+                      value: data.personinformasjon.etternavn,
+                    })}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("ansattesAktørId", {
+                      value: data.personinformasjon.aktørId,
+                    })}
+                  />
                 </BodyShort>
               ) : null}
             </div>

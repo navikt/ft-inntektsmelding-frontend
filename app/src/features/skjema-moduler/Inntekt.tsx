@@ -131,9 +131,10 @@ export function Inntekt({
         />
       ) : isOpen ? (
         <EndreMånedslønn
+          gjennomsnittLønn={inntektsopplysninger.gjennomsnittLønn}
           harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
           onClose={onClose}
-          opplysninger={opplysninger}
+          skjæringstidspunkt={skjæringstidspunkt}
         />
       ) : (
         <Button
@@ -375,21 +376,21 @@ export const endringsårsak = [
 type EndreMånedslønnProps = {
   onClose: () => void;
   harEksisterendeInntektsmeldinger: boolean;
-  opplysninger: OpplysningerDto;
+  gjennomsnittLønn?: number;
+  skjæringstidspunkt: string;
 };
 const EndreMånedslønn = ({
   onClose,
   harEksisterendeInntektsmeldinger,
-  opplysninger,
+  gjennomsnittLønn,
+  skjæringstidspunkt,
 }: EndreMånedslønnProps) => {
   const { unregister, setValue } = useFormContext<InntektOgRefusjonForm>();
   const tilbakestillOgLukk = () => {
     unregister("korrigertInntekt");
-    const rapportertInntekt =
-      opplysninger.inntektsopplysninger.gjennomsnittLønn;
-    if (rapportertInntekt) {
-      setValue("inntekt", rapportertInntekt);
-      setValue("refusjon.0.beløp", rapportertInntekt);
+    if (gjennomsnittLønn) {
+      setValue("inntekt", gjennomsnittLønn);
+      setValue("refusjon.0.beløp", gjennomsnittLønn);
     }
     onClose();
   };
@@ -417,7 +418,7 @@ const EndreMånedslønn = ({
       </div>
       <Endringsårsaker
         harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
-        opplysninger={opplysninger}
+        skjæringstidspunkt={skjæringstidspunkt}
       />
     </>
   );
@@ -433,11 +434,11 @@ export const ENDRINGSÅRSAK_TEMPLATE = {
 
 type EndringsårsakerProps = {
   harEksisterendeInntektsmeldinger: boolean;
-  opplysninger: OpplysningerDto;
+  skjæringstidspunkt: string;
 };
 function Endringsårsaker({
   harEksisterendeInntektsmeldinger,
-  opplysninger,
+  skjæringstidspunkt,
 }: EndringsårsakerProps) {
   const { control, register, formState } =
     useFormContext<InntektOgRefusjonForm>();
@@ -480,7 +481,10 @@ function Endringsårsaker({
                 </option>
               ))}
             </Select>
-            <Årsaksperioder index={index} opplysninger={opplysninger} />
+            <Årsaksperioder
+              index={index}
+              skjæringstidspunkt={skjæringstidspunkt}
+            />
             {index > 0 ? (
               <Button
                 aria-label="Slett endringsårsak"
@@ -513,13 +517,12 @@ function Endringsårsaker({
   );
 }
 
-function Årsaksperioder({
-  index,
-  opplysninger,
-}: {
+type ÅrsaksperioderProps = {
   index: number;
-  opplysninger: OpplysningerDto;
-}) {
+  skjæringstidspunkt: string;
+};
+
+function Årsaksperioder({ index, skjæringstidspunkt }: ÅrsaksperioderProps) {
   const { watch, register } = useFormContext<InntektOgRefusjonForm>();
   const årsak = watch(`endringAvInntektÅrsaker.${index}.årsak`);
   const ignorerTom = watch(`endringAvInntektÅrsaker.${index}.ignorerTom`);
@@ -566,7 +569,7 @@ function Årsaksperioder({
               required: "Må oppgis",
               validate: (date: string) => {
                 return (
-                  isAfter(opplysninger.skjæringstidspunkt, date) ||
+                  isAfter(skjæringstidspunkt, date) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
@@ -587,7 +590,7 @@ function Årsaksperioder({
                   return true;
                 }
                 return (
-                  isAfter(opplysninger.skjæringstidspunkt, date) ||
+                  isAfter(skjæringstidspunkt, date) ||
                   "Lønnsendring må være før første dag med fravær"
                 );
               },
