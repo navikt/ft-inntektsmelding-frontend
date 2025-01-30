@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from "@navikt/aksel-icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyShort,
@@ -12,7 +12,12 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
-import { getRouteApi, useNavigate } from "@tanstack/react-router";
+import {
+  getRouteApi,
+  Link,
+  Link as TanstackLink,
+  useNavigate,
+} from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -53,6 +58,15 @@ export const HentOpplysninger = () => {
 
   const hentPersonMutation = useMutation({
     mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
+      if (ytelseType === "SVANGERSKAPSPENGER") {
+        // Det 8. siffer er kjønn. Partall for kvinner og oddetall for menn
+        const erKvinne = Number.parseInt(fødselsnummer[8], 10) % 2 === 0;
+
+        if (!erKvinne) {
+          throw new Error("MENN_KAN_IKKE_SØKE_SVP");
+        }
+      }
+
       return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
     },
   });
@@ -132,6 +146,36 @@ export const HentOpplysninger = () => {
               />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
+            {hentPersonMutation.error?.message === "MENN_KAN_IKKE_SØKE_SVP" && (
+              <Alert variant="warning">
+                <Heading level="3" size="small">
+                  Bare kvinner kan søke svangerskapspenger
+                </Heading>
+                Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
+                {/*<Button*/}
+                {/*  as={TanstackLink}*/}
+                {/*  from="/opprett"*/}
+                {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
+                {/*  variant="primary"*/}
+                {/*>*/}
+                {/*  Klikk her*/}
+                {/*</Button>*/}
+                <TanstackLink
+                  from="/opprett"
+                  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
+                  to="."
+                >
+                  Klikk her
+                </TanstackLink>
+                {/*<TanstackLink*/}
+                {/*  as={Link}*/}
+                {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
+                {/*  to="."*/}
+                {/*>*/}
+                {/*  Klikk her*/}
+                {/*</TanstackLink>*/}
+              </Alert>
+            )}
             <Button
               className="w-fit"
               icon={<ArrowRightIcon />}
@@ -178,15 +222,6 @@ function NyAnsattForm({
               const erFødselsnummer = /^\d{11}$/.test(value); //TODO: mer sofistikert test?
               if (!erFødselsnummer) {
                 return "Fødselsnummer må være 11 siffer";
-              }
-
-              if (ytelseType === "SVANGERSKAPSPENGER") {
-                // Det 8. siffer er kjønn. Partall for kvinner og oddetall for menn
-                const erKvinne = Number.parseInt(value[8], 10) % 2 === 0;
-
-                if (!erKvinne) {
-                  return "Bare kvinner kan søke svangerskapspenger";
-                }
               }
             },
           })}
