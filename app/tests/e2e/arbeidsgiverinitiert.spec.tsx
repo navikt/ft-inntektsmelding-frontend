@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
+import { expectError, mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
 
 import { enkeltOpplysningerResponse } from "../mocks/opplysninger.ts";
 
@@ -27,5 +27,21 @@ test.describe("Arbeidsgiverinitielt path", () => {
     await expect(
       page.getByRole("heading", { name: "Dine opplysninger" }),
     ).toBeVisible();
+  });
+
+  test("Kun kvinner kan søke SVP", async ({ page }) => {
+    await mockHentPersonOgArbeidsforhold({ page });
+
+    await page.goto("/fp-im-dialog/opprett?ytelseType=SVANGERSKAPSPENGER");
+
+    await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
+    await page.getByLabel("Ansattes fødselsnummer").fill("06519405364"); //FNR er mannlig
+    await page.getByRole("button", { name: "Hent person" }).click();
+
+    await expectError({
+      page,
+      label: "Ansattes fødselsnummer",
+      error: "Bare kvinner kan søke svangerskapspenger",
+    });
   });
 });
