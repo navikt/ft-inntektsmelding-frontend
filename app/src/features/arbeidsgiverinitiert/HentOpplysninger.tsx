@@ -148,6 +148,9 @@ export const HentOpplysninger = () => {
                 <VelgArbeidsgiver data={hentPersonMutation.data} />
               </>
             )}
+            {formMethods.watch("årsak") === "unntatt_aaregister" && (
+              <UnntattAaregRegistrering />
+            )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
             <NotFoundError error={hentPersonMutation.error} />
             {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
@@ -177,6 +180,21 @@ export const HentOpplysninger = () => {
     </FormProvider>
   );
 };
+
+function UnntattAaregRegistrering() {
+  return (
+    <Alert variant="info">
+      <Heading level="3" size="small">
+        Du må sende inn inntektsmelding via Altinn
+      </Heading>
+      <BodyShort>
+        Skal du sende inn inntektsmelding for en ansatt som er unntatt for
+        registrering i Aa-registeret, må du enn så lenge sende inn
+        inntektsmelding i Altinn.
+      </BodyShort>
+    </Alert>
+  );
+}
 
 function NotFoundError({ error }: { error?: Error | null }) {
   if (!error) {
