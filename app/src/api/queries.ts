@@ -187,7 +187,7 @@ export async function hentPersonFraFnr(
     ...data,
     arbeidsforhold: [
       data.arbeidsforhold[0],
-      { organisasjonsnavn: "TEST", organisasjonsnummer: 123_123_123 },
+      { organisasjonsnavn: "TEST", organisasjonsnummer: "123_123_123" },
     ],
   };
 }

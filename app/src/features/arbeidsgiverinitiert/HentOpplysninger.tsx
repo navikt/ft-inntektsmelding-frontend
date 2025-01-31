@@ -14,7 +14,6 @@ import {
 } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
-import { MutableRefObject, Ref, RefObject, useEffect, useRef } from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -42,7 +41,6 @@ export const HentOpplysninger = () => {
   useDocumentTitle(
     `Opprett inntektsmelding for ${formatYtelsesnavn(ytelseType)}`,
   );
-  const formRef = useRef<HTMLFormElement>(null);
 
   const formMethods = useForm<FormType>({
     defaultValues: {
@@ -112,7 +110,6 @@ export const HentOpplysninger = () => {
           onSubmit={formMethods.handleSubmit((values) =>
             hentPersonMutation.mutate(values),
           )}
-          ref={formRef}
         >
           <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
             <Heading level="3" size="large">
@@ -139,10 +136,7 @@ export const HentOpplysninger = () => {
             </RadioGroup>
             {formMethods.watch("årsak") === "ny_ansatt" && (
               <>
-                <NyAnsattForm
-                  data={hentPersonMutation.data}
-                  formRef={formRef}
-                />
+                <NyAnsattForm data={hentPersonMutation.data} />
                 <VelgArbeidsgiver data={hentPersonMutation.data} />
               </>
             )}
@@ -183,10 +177,7 @@ function VelgArbeidsgiver({
   return (
     <Select
       description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver.  Velg hvilken underenhet inntektsmeldingen gjelder for. "
-      // error={
-      //   formState.errors?.endringAvInntektÅrsaker?.[index]?.årsak
-      //       ?.message
-      // }
+      error={formMethods.formState.errors.organisasjon}
       label="Arbeidsgiver"
       {...formMethods.register(`organisasjonsnummer`, {
         required: "Må oppgis",
@@ -208,9 +199,7 @@ function VelgArbeidsgiver({
 
 function NyAnsattForm({
   data,
-  formRef,
 }: {
-  formRef: RefObject<HTMLFormElement>;
   data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
 }) {
   const formMethods = useFormContext<FormType>();
@@ -226,11 +215,6 @@ function NyAnsattForm({
           })}
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
-          // onBlur={() => {
-          //   formRef.current?.dispatchEvent(
-          //     new Event("submit", { bubbles: true, cancelable: true }),
-          //   );
-          // }}
         />
         <VStack gap="4">
           <Label>Navn</Label>
@@ -244,12 +228,6 @@ function NyAnsattForm({
       <DatePickerWrapped
         label="Første fraværsdag"
         name="førsteFraværsdag"
-        // onBlur={() => {
-        //   console.log("blurring dato");
-        //   formRef.current?.dispatchEvent(
-        //     new Event("submit", { bubbles: true, cancelable: true }),
-        //   );
-        // }}
         rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
       />
     </VStack>
