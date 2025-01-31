@@ -232,7 +232,7 @@ function VelgArbeidsgiver({
   return (
     <Select
       description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver.  Velg hvilken underenhet inntektsmeldingen gjelder for. "
-      error={formMethods.formState.errors.organisasjon}
+      error={formMethods.formState.errors.organisasjonsnummer?.message}
       label="Arbeidsgiver"
       {...formMethods.register(`organisasjonsnummer`, {
         required: "Må oppgis",
