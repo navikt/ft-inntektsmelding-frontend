@@ -137,20 +137,35 @@ export const HentOpplysninger = () => {
             {formMethods.watch("årsak") === "ny_ansatt" && (
               <>
                 <NyAnsattForm data={hentPersonMutation.data} />
+                <Button
+                  className="w-fit"
+                  loading={isPending}
+                  type="submit"
+                  variant="secondary"
+                >
+                  Hent opplysninger
+                </Button>
                 <VelgArbeidsgiver data={hentPersonMutation.data} />
               </>
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
-            <Button className="w-fit" loading={isPending} type="submit">
-              Hent opplysninger
-            </Button>
+            <NotFoundError error={hentPersonMutation.error} />
             {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
                 className="w-fit"
                 icon={<ArrowRightIcon />}
                 iconPosition="right"
                 loading={opprettOpplysningerMutation.isPending}
-                // onClick={() => opprettOpplysningerMutation.mutate({})}
+                onClick={() =>
+                  opprettOpplysningerMutation.mutate({
+                    organisasjonsnummer: formMethods.watch(
+                      "organisasjonsnummer",
+                    ),
+                    fødselsnummer: formMethods.watch("fødselsnummer"),
+                    førsteFraværsdag: formMethods.watch("førsteFraværsdag"),
+                    ytelseType,
+                  })
+                }
                 type="button"
               >
                 Opprett inntektsmelding
@@ -162,6 +177,28 @@ export const HentOpplysninger = () => {
     </FormProvider>
   );
 };
+
+function NotFoundError({ error }: { error?: Error | null }) {
+  if (!error) {
+    return null;
+  }
+  if (error.message.includes("Fant ikke person")) {
+    return (
+      <Alert variant="error">
+        <Heading level="3" size="small">
+          Vi finner ingen ansatt registrert hos dere med dette fødselsnummeret
+        </Heading>
+        <BodyShort>
+          Sjekk om fødselsnummeret er riktig og at den ansatte er registrert hos
+          dere i Aa-registeret. Den ansatte må være registrert i Aa-registeret
+          for å kunne sende inn inntektsmelding.{" "}
+        </BodyShort>
+      </Alert>
+    );
+  }
+
+  return <Alert variant="error">{error.message}</Alert>;
+}
 
 function VelgArbeidsgiver({
   data,

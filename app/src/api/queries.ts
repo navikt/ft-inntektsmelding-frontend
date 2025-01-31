@@ -168,8 +168,11 @@ export async function hentPersonFraFnr(
     },
   );
 
+  if (response.status === 404) {
+    throw new Error("Fant ikke person");
+  }
   if (!response.ok) {
-    throw new Error("Noe gikk galt.");
+    throw new Error("Kunne ikke hente personopplysninger.");
   }
 
   const json = await response.json();
@@ -207,7 +210,7 @@ export async function hentOpplysninger(
   );
 
   if (!response.ok) {
-    throw new Error("Noe gikk galt.");
+    throw new Error("Kunne ikke hente opplysninger.");
   }
 
   const json = await response.json();

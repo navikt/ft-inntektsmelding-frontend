@@ -20,11 +20,6 @@ function RouteComponent() {
   const { ytelseType } = Route.useSearch();
 
   return (
-    <InntektsmeldingRootLayoutComponent
-      organisasjonNavn="TODO"
-      organisasjonNummer="TODO"
-      skjemaId="agi"
-      ytelse={ytelseType}
-    />
+    <InntektsmeldingRootLayoutComponent skjemaId="agi" ytelse={ytelseType} />
   );
 }
