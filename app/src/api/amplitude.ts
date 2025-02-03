@@ -7,7 +7,7 @@ type EventNamesTaksonomi =
   | "switch åpnet"
   | "switch lukket";
 
-export const loggAmplitudeEvent = ({
+export const loggAmplitudeEvent = async ({
   eventName,
   eventData,
 }: {
@@ -15,11 +15,15 @@ export const loggAmplitudeEvent = ({
   eventData?: Record<string, string>;
 }) => {
   if (!isDev) {
-    // eslint-disable-next-line unicorn/prefer-global-this -- klarer ikke få TS til å bli riktig for globalThis
-    window.dekoratorenAmplitude({
-      origin: "ft-inntektsmelding-frontend",
-      eventName,
-      eventData,
-    });
+    try {
+      // eslint-disable-next-line unicorn/prefer-global-this -- klarer ikke få TS til å bli riktig for globalThis
+      window.dekoratorenAmplitude?.({
+        origin: "ft-inntektsmelding-frontend",
+        eventName,
+        eventData,
+      });
+    } catch {
+      /* Vi bryr oss ikke om amplitude logging feiler. Oftest hvis bruker rejecter cookies */
+    }
   }
 };
