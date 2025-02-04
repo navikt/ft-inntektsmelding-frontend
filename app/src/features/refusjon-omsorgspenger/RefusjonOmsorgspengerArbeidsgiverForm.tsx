@@ -1,7 +1,10 @@
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import { NaturalytelseTypeSchema } from "~/types/api-models";
+import {
+  EndringAvInntektÅrsakerSchema,
+  NaturalytelseTypeSchema,
+} from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 
 import { useOpplysninger } from "./useOpplysninger";
@@ -35,38 +38,39 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       }),
     )
     .optional(),
-  inntekt: beløpSchema.optional(),
-  inntektEndringsÅrsak: z
-    .object({
-      årsak: z.string().optional(),
-      korrigertInntekt: beløpSchema,
+  inntekt: beløpSchema,
+  korrigertInntekt: beløpSchema.optional(),
+  endringAvInntektÅrsaker: z.array(
+    z.object({
+      årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
       fom: z.string().optional(),
       tom: z.string().optional(),
-    })
+      bleKjentFom: z.string().optional(),
+    }),
+  ),
+  skalRefunderes: z
+    .union([
+      z.literal("JA_LIK_REFUSJON"),
+      z.literal("JA_VARIERENDE_REFUSJON"),
+      z.literal("NEI"),
+    ])
     .optional(),
-  skalRefunderes: z.boolean().optional(),
-  refusjonsbeløpPerMåned: beløpSchema.optional(),
-  endringIRefusjon: z.boolean().optional(),
-  refusjonsendringer: z
-    .array(
-      z.object({
-        fom: z.string().optional(),
-        beløp: beløpSchema,
-      }),
-    )
-    .optional(),
+  refusjon: z.array(
+    z.object({
+      fom: z.string().optional(),
+      beløp: beløpSchema,
+    }),
+  ),
   misterNaturalytelser: z.boolean().optional(),
-  bortfaltNaturalytelsePerioder: z
-    .array(
-      z.object({
-        navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-        beløp: beløpSchema,
-        fom: z.string().optional(),
-        tom: z.string().optional(),
-        inkluderTom: z.boolean(),
-      }),
-    )
-    .optional(),
+  bortfaltNaturalytelsePerioder: z.array(
+    z.object({
+      navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
+      beløp: beløpSchema,
+      fom: z.string().optional(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
 });
 
 export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<

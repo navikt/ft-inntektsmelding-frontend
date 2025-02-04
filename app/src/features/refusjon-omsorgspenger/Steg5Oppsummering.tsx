@@ -30,8 +30,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       <OmsorgspengerFremgangsindikator aktivtSteg={5} />
       <VStack gap="4">
         <OppsummeringArbeidsgiverOgAnsatt />
-        <OppsummeringOmsorgsdager />
         <OppsummeringRefusjon />
+        <OppsummeringOmsorgsdager />
         <OppsummeringMånedslønn />
       </VStack>
       <div className="flex gap-4">
@@ -163,11 +163,16 @@ const OppsummeringOmsorgsdager = () => {
           <FormSummaryValue>
             {harFraværHeleDager ? (
               <List>
-                {fraværHeleDager?.map((periode, index) => (
-                  <ListItem key={index}>
-                    {periode.fom}-{periode.tom}
-                  </ListItem>
-                ))}
+                {fraværHeleDager?.map((periode, index) =>
+                  periode.fom && periode.tom ? (
+                    <ListItem key={index}>
+                      {new Date(periode.fom).toLocaleDateString("nb-no")}–
+                      {periode.tom
+                        ? new Date(periode.tom).toLocaleDateString("nb-no")
+                        : "I dag"}
+                    </ListItem>
+                  ) : null,
+                )}
               </List>
             ) : (
               "Ingen dager med fravær hele dagen"
@@ -183,7 +188,10 @@ const OppsummeringOmsorgsdager = () => {
               <List>
                 {fraværDelerAvDagen?.map((fravær, index) => (
                   <ListItem key={index}>
-                    {fravær.dato}: {fravær.timerFravær}{" "}
+                    {fravær.dato
+                      ? new Date(fravær.dato).toLocaleDateString("nb-no")
+                      : null}
+                    : {fravær.timerFravær}{" "}
                     {fravær.timerFravær === 1 ? "time" : "timer"} (
                     {fravær.normalArbeidstid} timer normal arbeidstid)
                   </ListItem>
