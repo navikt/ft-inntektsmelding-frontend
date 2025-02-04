@@ -1,5 +1,6 @@
 import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
 import {
+  Alert,
   BodyLong,
   Button,
   GuidePanel,
@@ -7,10 +8,12 @@ import {
   Loader,
   VStack,
 } from "@navikt/ds-react";
+import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -44,13 +47,37 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     });
   });
 
+  const fraværHeleDager = getValues("fraværHeleDager");
+  const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+
+  const førsteFraværsdato = [
+    ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
+    ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
+  ].sort()[0];
+
+  const {
+    data: inntektsopplysninger,
+    isLoading,
+    isError,
+  } = useQuery(
+    hentInntektsopplysningerOptions({
+      skjæringstidspunkt: førsteFraværsdato!,
+      fødselsnummer: getValues("ansattesFødselsnummer")!,
+      organisasjonsnummer: getValues("organisasjonsnummer")!,
+    }),
+  );
+
+  if (!førsteFraværsdato) {
+    throw new Error("Ingen fraværsdato funnet");
+  }
+
   return (
     <div>
       <Heading level="1" size="large">
         Beregnet månedslønn for refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={4} />
-      <GuidePanel>
+      <GuidePanel className="mb-4">
         <BodyLong>
           Oppgi kun dager dere søker refusjon for. Har det vært en varig
           lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må
@@ -92,6 +119,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
               Forrige steg
             </Button>
             <Button
+              disabled={!inntektsopplysninger}
               icon={<ArrowRightIcon />}
               iconPosition="right"
               type="submit"

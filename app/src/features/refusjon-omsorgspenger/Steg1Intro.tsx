@@ -17,12 +17,12 @@ import { capitalizeSetning } from "~/utils.ts";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
-import { useOpplysninger } from "./useOpplysninger.tsx";
+import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
 
-  const opplysninger = useOpplysninger();
+  const innloggetBruker = useInnloggetBruker();
 
   const navigate = useNavigate();
   const iÅr = new Date().getFullYear();
@@ -60,7 +60,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       <GuidePanel className="mb-4">
         <VStack gap="4">
           <Heading level="2" size="medium">
-            Hei {capitalizeSetning(opplysninger.fornavn)}!
+            Hei {capitalizeSetning(innloggetBruker.fornavn)}!
           </Heading>
           <BodyLong>
             Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager

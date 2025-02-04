@@ -6,10 +6,10 @@ import { useEffect } from "react";
 
 import { RotLayout } from "../rot-layout/RotLayout";
 import { RefusjonOmsorgspengerArbeidsgiverForm } from "./RefusjonOmsorgspengerArbeidsgiverForm";
-import { useOpplysninger } from "./useOpplysninger";
+import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
-  const opplysninger = useOpplysninger();
+  const innloggetBruker = useInnloggetBruker();
   const location = useLocation();
 
   useEffect(() => {
@@ -34,10 +34,10 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
         tittel="Søknad om refusjon for omsorgspenger"
         undertittel={
           <div className="flex gap-3">
-            <span>{opplysninger.organisasjonsnavn}</span>
+            <span>{innloggetBruker.organisasjonsnavn}</span>
             <span aria-hidden="true">|</span>
             <span className="text-nowrap">
-              Org.nr.: {opplysninger.organisasjonsnummer}
+              Org.nr.: {innloggetBruker.organisasjonsnummer}
             </span>
           </div>
         }

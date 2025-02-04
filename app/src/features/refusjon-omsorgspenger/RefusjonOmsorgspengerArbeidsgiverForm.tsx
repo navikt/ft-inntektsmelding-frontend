@@ -7,7 +7,7 @@ import {
 } from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 
-import { useOpplysninger } from "./useOpplysninger";
+import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   kontaktperson: z
@@ -16,9 +16,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       telefonnummer: z.string(),
     })
     .optional(),
+  ansattesFødselsnummer: z.string().optional(),
+  ansattesFornavn: z.string().optional(),
+  ansattesEtternavn: z.string().optional(),
+  ansattesAktørId: z.string().optional(),
   årForRefusjon: z.string().optional(),
   harUtbetaltLønn: z.string().optional(),
-  ansattesFødselsnummer: z.string().optional(),
+  organisasjonsnummer: z.string(),
   valgtArbeidsforhold: z.string().optional(),
   harDekket10FørsteOmsorgsdager: z.string().optional(),
   fraværHeleDager: z
@@ -81,7 +85,7 @@ type Props = {
   children: React.ReactNode;
 };
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const opplysninger = useOpplysninger();
+  const opplysninger = useInnloggetBruker();
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
     defaultValues: {
       kontaktperson: {
