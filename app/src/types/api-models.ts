@@ -66,6 +66,7 @@ export const SlåOppArbeidstakerResponseDto = z.object({
       organisasjonsnummer: z.string(),
     }),
   ),
+  kjønn: z.enum(["MANN", "KVINNE", "UKJENT"]),
 });
 
 export const SendInntektsmeldingRequestDtoSchema = z.object({

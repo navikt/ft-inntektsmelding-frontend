@@ -1,4 +1,4 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
+import { ArrowRightIcon } from "@navikt/aksel-icons";
 import {
   Alert,
   BodyShort,
@@ -15,7 +15,6 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import {
   getRouteApi,
-  Link,
   Link as TanstackLink,
   useNavigate,
 } from "@tanstack/react-router";
@@ -27,7 +26,6 @@ import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePicke
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
 import {
   OpplysningerRequest,
-    Ytelsetype,
   SlåOppArbeidstakerResponseDto,
 } from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
@@ -92,7 +90,19 @@ export const HentOpplysninger = () => {
 
   const hentPersonMutation = useMutation({
     mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
-      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
+      const personinfo = await hentPersonFraFnr(
+        fødselsnummer,
+        ytelseType,
+        førsteFraværsdag,
+      );
+      if (
+        ytelseType === "SVANGERSKAPSPENGER" &&
+        personinfo.kjønn === "KVINNE"
+      ) {
+        throw new Error("MENN_KAN_IKKE_SØKE_SVP");
+      }
+
+      return personinfo;
     },
     onSuccess: (data, { fødselsnummer, førsteFraværsdag }) => {
       if (data.arbeidsforhold.length === 1) {
@@ -158,37 +168,7 @@ export const HentOpplysninger = () => {
               <UnntattAaregRegistrering />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
-              {hentPersonMutation.error?.message === "MENN_KAN_IKKE_SØKE_SVP" && (
-                  <Alert variant="warning">
-                      <Heading level="3" size="small">
-                          Bare kvinner kan søke svangerskapspenger
-                      </Heading>
-                      Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
-                      {/*<Button*/}
-                      {/*  as={TanstackLink}*/}
-                      {/*  from="/opprett"*/}
-                      {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
-                      {/*  variant="primary"*/}
-                      {/*>*/}
-                      {/*  Klikk her*/}
-                      {/*</Button>*/}
-                      <TanstackLink
-                          from="/opprett"
-                          search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
-                          to="."
-                      >
-                          Klikk her
-                      </TanstackLink>
-                      {/*<TanstackLink*/}
-                      {/*  as={Link}*/}
-                      {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
-                      {/*  to="."*/}
-                      {/*>*/}
-                      {/*  Klikk her*/}
-                      {/*</TanstackLink>*/}
-                  </Alert>
-              )}
-            <NotFoundError error={hentPersonMutation.error} />
+            <HentPersonError error={hentPersonMutation.error} />
             {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
                 className="w-fit"
@@ -217,25 +197,29 @@ export const HentOpplysninger = () => {
   );
 };
 
-function UnntattAaregRegistrering() {
-  return (
-    <Alert variant="info">
-      <Heading level="3" size="small">
-        Du må sende inn inntektsmelding via Altinn
-      </Heading>
-      <BodyShort>
-        Skal du sende inn inntektsmelding for en ansatt som er unntatt for
-        registrering i Aa-registeret, må du enn så lenge sende inn
-        inntektsmelding i Altinn.
-      </BodyShort>
-    </Alert>
-  );
-}
-
-function NotFoundError({ error }: { error?: Error | null }) {
+function HentPersonError({ error }: { error: Error | null }) {
   if (!error) {
     return null;
   }
+
+  if (error?.message === "MENN_KAN_IKKE_SØKE_SVP") {
+    return (
+      <Alert variant="warning">
+        <Heading level="3" size="small">
+          Bare kvinner kan søke svangerskapspenger
+        </Heading>
+        Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
+        <TanstackLink
+          from="/opprett"
+          search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
+          to="."
+        >
+          Klikk her
+        </TanstackLink>
+      </Alert>
+    );
+  }
+
   if (error.message.includes("Fant ikke person")) {
     return (
       <Alert variant="error">
@@ -252,6 +236,21 @@ function NotFoundError({ error }: { error?: Error | null }) {
   }
 
   return <Alert variant="error">{error.message}</Alert>;
+}
+
+function UnntattAaregRegistrering() {
+  return (
+    <Alert variant="info">
+      <Heading level="3" size="small">
+        Du må sende inn inntektsmelding via Altinn
+      </Heading>
+      <BodyShort>
+        Skal du sende inn inntektsmelding for en ansatt som er unntatt for
+        registrering i Aa-registeret, må du enn så lenge sende inn
+        inntektsmelding i Altinn.
+      </BodyShort>
+    </Alert>
+  );
 }
 
 function VelgArbeidsgiver({
@@ -290,9 +289,7 @@ function VelgArbeidsgiver({
 
 function NyAnsattForm({
   data,
-  ytelseType,
 }: {
-  ytelseType: Ytelsetype;
   data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
 }) {
   const formMethods = useFormContext<FormType>();
