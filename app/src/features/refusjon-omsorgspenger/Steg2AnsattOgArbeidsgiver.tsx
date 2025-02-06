@@ -10,6 +10,7 @@ import {
   Select,
   TextField,
 } from "@navikt/ds-react";
+import { idnr } from "@navikt/fnrvalidator";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 
@@ -17,7 +18,7 @@ import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { slåOppArbeidstakerOptions } from "./api/queries";
+import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
@@ -31,7 +32,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
-    slåOppArbeidstakerOptions(fødselsnummer ?? ""),
+    hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
   const fantIngenPersoner =
@@ -43,17 +44,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   const onSubmit = handleSubmit(() => {
     navigate({
-      from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
+      from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
     });
   });
 
-  const fulltNavn = data
-    ? lagFulltNavn({
-        fornavn: data.fornavn,
-        etternavn: data.etternavn,
-      })
-    : "";
+  const fulltNavn = data ? lagFulltNavn(data.personinformasjon) : "";
 
   return (
     <div>
@@ -69,6 +65,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               label="Ansattes fødselsnummer (11 siffer)"
               {...register("ansattesFødselsnummer", {
                 required: "Du må fylle ut fødselsnummeret til den ansatte",
+                validate: (value) =>
+                  (value && idnr(value).status === "valid") ||
+                  "Du må fylle ut et gyldig fødselsnummer",
               })}
               error={formState.errors.ansattesFødselsnummer?.message}
             />
@@ -89,6 +88,24 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               ) : data ? (
                 <BodyShort className="flex-1 flex flex-col justify-center">
                   {fulltNavn}
+                  <input
+                    type="hidden"
+                    {...register("ansattesFornavn", {
+                      value: data.personinformasjon.fornavn,
+                    })}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("ansattesEtternavn", {
+                      value: data.personinformasjon.etternavn,
+                    })}
+                  />
+                  <input
+                    type="hidden"
+                    {...register("ansattesAktørId", {
+                      value: data.personinformasjon.aktørId,
+                    })}
+                  />
                 </BodyShort>
               ) : null}
             </div>
@@ -97,23 +114,31 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
         {data && (
           <Informasjonsseksjon kilde="Fra Altinn" tittel="Arbeidsgiver">
             {harFlereEnnEttArbeidsforhold ? (
-              <Select
-                label="Velg arbeidsforhold"
-                {...register("valgtArbeidsforhold", {
-                  required: "Du må velge et arbeidsforhold",
-                })}
-                error={formState.errors.valgtArbeidsforhold?.message}
-              >
-                {data.arbeidsforhold.map((arbeidsforhold) => (
-                  <option
-                    key={arbeidsforhold.arbeidsforholdId}
-                    value={arbeidsforhold.arbeidsforholdId}
-                  >
-                    {arbeidsforhold.organisasjonsnummer} (
-                    {arbeidsforhold.arbeidsforholdId})
-                  </option>
-                ))}
-              </Select>
+              <>
+                <Select
+                  label="Velg arbeidsforhold"
+                  {...register("valgtArbeidsforhold", {
+                    required: "Du må velge et arbeidsforhold",
+                  })}
+                  error={formState.errors.valgtArbeidsforhold?.message}
+                >
+                  {data.arbeidsforhold.map((arbeidsforhold) => (
+                    <option
+                      key={arbeidsforhold.arbeidsforholdId}
+                      value={arbeidsforhold.arbeidsforholdId}
+                    >
+                      {arbeidsforhold.organisasjonsnummer} (
+                      {arbeidsforhold.arbeidsforholdId})
+                    </option>
+                  ))}
+                </Select>
+                <input
+                  type="hidden"
+                  {...register("organisasjonsnummer", {
+                    value: data.arbeidsforhold[0].organisasjonsnummer,
+                  })}
+                />
+              </>
             ) : harEttArbeidsforhold ? (
               <div className="flex gap-4">
                 <div className="flex-1">
@@ -122,6 +147,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                     {/* TODO: Hente ut navn på ansettelsesforhold */}
                     {data.arbeidsforhold[0].organisasjonsnummer}
                   </BodyShort>
+                  <input
+                    type="hidden"
+                    {...register("organisasjonsnummer", {
+                      value: data.arbeidsforhold[0].organisasjonsnummer,
+                    })}
+                  />
                 </div>
                 <div className="flex-1">
                   <Label>Org.nr. for underenhet</Label>

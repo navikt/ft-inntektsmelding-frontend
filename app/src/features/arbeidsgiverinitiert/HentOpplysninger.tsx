@@ -8,6 +8,7 @@ import {
   Label,
   Radio,
   RadioGroup,
+  Select,
   TextField,
   VStack,
 } from "@navikt/ds-react";
@@ -25,8 +26,9 @@ import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
 import {
+  OpplysningerRequest,
+    Ytelsetype,
   SlåOppArbeidstakerResponseDto,
-  Ytelsetype,
 } from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
 
@@ -34,6 +36,7 @@ const route = getRouteApi("/opprett");
 
 type FormType = {
   fødselsnummer: string;
+  organisasjonsnummer: string;
   årsak: "ny_ansatt" | "unntatt_aaregister" | "annen_årsak" | "";
   førsteFraværsdag: string;
 };
@@ -49,6 +52,7 @@ export const HentOpplysninger = () => {
     defaultValues: {
       fødselsnummer: "",
       årsak: "",
+      organisasjonsnummer: "",
     },
   });
 
@@ -56,31 +60,9 @@ export const HentOpplysninger = () => {
     required: "Du må svare på dette spørsmålet",
   });
 
-  const hentPersonMutation = useMutation({
-    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
-      if (ytelseType === "SVANGERSKAPSPENGER") {
-        // Det 8. siffer er kjønn. Partall for kvinner og oddetall for menn
-        const erKvinne = Number.parseInt(fødselsnummer[8], 10) % 2 === 0;
-
-        if (!erKvinne) {
-          throw new Error("MENN_KAN_IKKE_SØKE_SVP");
-        }
-      }
-
-      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
-    },
-  });
-
   const opprettOpplysningerMutation = useMutation({
-    mutationFn: async () => {
-      const values = formMethods.watch();
-      return hentOpplysninger({
-        førsteFraværsdag: values.førsteFraværsdag,
-        organisasjonsnummer:
-          hentPersonMutation.data?.arbeidsforhold[0].organisasjonsnummer ?? "", //TODO: fiks senere
-        fødselsnummer: values.fødselsnummer,
-        ytelseType,
-      });
+    mutationFn: async (opplysningerRequest: OpplysningerRequest) => {
+      return hentOpplysninger(opplysningerRequest);
     },
     onSuccess: (opplysninger) => {
       if (opplysninger.forespørselUuid === undefined) {
@@ -107,6 +89,25 @@ export const HentOpplysninger = () => {
       });
     },
   });
+
+  const hentPersonMutation = useMutation({
+    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
+      return hentPersonFraFnr(fødselsnummer, ytelseType, førsteFraværsdag);
+    },
+    onSuccess: (data, { fødselsnummer, førsteFraværsdag }) => {
+      if (data.arbeidsforhold.length === 1) {
+        return opprettOpplysningerMutation.mutate({
+          fødselsnummer,
+          førsteFraværsdag,
+          ytelseType,
+          organisasjonsnummer: data.arbeidsforhold[0].organisasjonsnummer,
+        });
+      }
+    },
+  });
+
+  const isPending =
+    hentPersonMutation.isPending || opprettOpplysningerMutation.isPending;
 
   return (
     <FormProvider {...formMethods}>
@@ -140,58 +141,70 @@ export const HentOpplysninger = () => {
               </Radio>
             </RadioGroup>
             {formMethods.watch("årsak") === "ny_ansatt" && (
-              <NyAnsattForm
-                data={hentPersonMutation.data}
-                ytelseType={ytelseType}
-              />
+              <>
+                <NyAnsattForm data={hentPersonMutation.data} />
+                <Button
+                  className="w-fit"
+                  loading={isPending}
+                  type="submit"
+                  variant="secondary"
+                >
+                  Hent opplysninger
+                </Button>
+                <VelgArbeidsgiver data={hentPersonMutation.data} />
+              </>
+            )}
+            {formMethods.watch("årsak") === "unntatt_aaregister" && (
+              <UnntattAaregRegistrering />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
-            {hentPersonMutation.error?.message === "MENN_KAN_IKKE_SØKE_SVP" && (
-              <Alert variant="warning">
-                <Heading level="3" size="small">
-                  Bare kvinner kan søke svangerskapspenger
-                </Heading>
-                Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
-                {/*<Button*/}
-                {/*  as={TanstackLink}*/}
-                {/*  from="/opprett"*/}
-                {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
-                {/*  variant="primary"*/}
-                {/*>*/}
-                {/*  Klikk her*/}
-                {/*</Button>*/}
-                <TanstackLink
-                  from="/opprett"
-                  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
-                  to="."
-                >
-                  Klikk her
-                </TanstackLink>
-                {/*<TanstackLink*/}
-                {/*  as={Link}*/}
-                {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
-                {/*  to="."*/}
-                {/*>*/}
-                {/*  Klikk her*/}
-                {/*</TanstackLink>*/}
-              </Alert>
-            )}
-            <Button
-              className="w-fit"
-              icon={<ArrowRightIcon />}
-              iconPosition="right"
-              loading={hentPersonMutation.isPending}
-              type="submit"
-            >
-              Hent person
-            </Button>
-            {hentPersonMutation.data && (
+              {hentPersonMutation.error?.message === "MENN_KAN_IKKE_SØKE_SVP" && (
+                  <Alert variant="warning">
+                      <Heading level="3" size="small">
+                          Bare kvinner kan søke svangerskapspenger
+                      </Heading>
+                      Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
+                      {/*<Button*/}
+                      {/*  as={TanstackLink}*/}
+                      {/*  from="/opprett"*/}
+                      {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
+                      {/*  variant="primary"*/}
+                      {/*>*/}
+                      {/*  Klikk her*/}
+                      {/*</Button>*/}
+                      <TanstackLink
+                          from="/opprett"
+                          search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
+                          to="."
+                      >
+                          Klikk her
+                      </TanstackLink>
+                      {/*<TanstackLink*/}
+                      {/*  as={Link}*/}
+                      {/*  search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}*/}
+                      {/*  to="."*/}
+                      {/*>*/}
+                      {/*  Klikk her*/}
+                      {/*</TanstackLink>*/}
+                  </Alert>
+              )}
+            <NotFoundError error={hentPersonMutation.error} />
+            {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
                 className="w-fit"
                 icon={<ArrowRightIcon />}
                 iconPosition="right"
                 loading={opprettOpplysningerMutation.isPending}
-                onClick={() => opprettOpplysningerMutation.mutate()}
+                onClick={() =>
+                  opprettOpplysningerMutation.mutate({
+                    organisasjonsnummer: formMethods.watch(
+                      "organisasjonsnummer",
+                    ),
+                    fødselsnummer: formMethods.watch("fødselsnummer"),
+                    førsteFraværsdag: formMethods.watch("førsteFraværsdag"),
+                    ytelseType,
+                  })
+                }
                 type="button"
               >
                 Opprett inntektsmelding
@@ -204,6 +217,77 @@ export const HentOpplysninger = () => {
   );
 };
 
+function UnntattAaregRegistrering() {
+  return (
+    <Alert variant="info">
+      <Heading level="3" size="small">
+        Du må sende inn inntektsmelding via Altinn
+      </Heading>
+      <BodyShort>
+        Skal du sende inn inntektsmelding for en ansatt som er unntatt for
+        registrering i Aa-registeret, må du enn så lenge sende inn
+        inntektsmelding i Altinn.
+      </BodyShort>
+    </Alert>
+  );
+}
+
+function NotFoundError({ error }: { error?: Error | null }) {
+  if (!error) {
+    return null;
+  }
+  if (error.message.includes("Fant ikke person")) {
+    return (
+      <Alert variant="error">
+        <Heading level="3" size="small">
+          Vi finner ingen ansatt registrert hos dere med dette fødselsnummeret
+        </Heading>
+        <BodyShort>
+          Sjekk om fødselsnummeret er riktig og at den ansatte er registrert hos
+          dere i Aa-registeret. Den ansatte må være registrert i Aa-registeret
+          for å kunne sende inn inntektsmelding.{" "}
+        </BodyShort>
+      </Alert>
+    );
+  }
+
+  return <Alert variant="error">{error.message}</Alert>;
+}
+
+function VelgArbeidsgiver({
+  data,
+}: {
+  data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
+}) {
+  const formMethods = useFormContext<FormType>();
+
+  if (!data || data.arbeidsforhold.length <= 1) {
+    return null;
+  }
+
+  return (
+    <Select
+      description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver.  Velg hvilken underenhet inntektsmeldingen gjelder for. "
+      error={formMethods.formState.errors.organisasjonsnummer?.message}
+      label="Arbeidsgiver"
+      {...formMethods.register(`organisasjonsnummer`, {
+        required: "Må oppgis",
+      })}
+    >
+      <option value="">Velg Organisasjon</option>
+      {data?.arbeidsforhold.map((arbeidsforhold) => (
+        <option
+          key={arbeidsforhold.organisasjonsnummer}
+          value={arbeidsforhold.organisasjonsnummer}
+        >
+          {arbeidsforhold.organisasjonsnavn} (
+          {arbeidsforhold.organisasjonsnummer})
+        </option>
+      ))}
+    </Select>
+  );
+}
+
 function NyAnsattForm({
   data,
   ytelseType,
@@ -212,6 +296,7 @@ function NyAnsattForm({
   data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
 }) {
   const formMethods = useFormContext<FormType>();
+
   return (
     <VStack gap="8">
       <HStack gap="10">
@@ -228,29 +313,20 @@ function NyAnsattForm({
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"
         />
-        {data && (
-          <VStack gap="4">
-            <Label>Navn</Label>
+        <VStack gap="4">
+          <Label>Navn</Label>
+          {data && (
             <BodyShort>
               {data.fornavn} {data.etternavn}
             </BodyShort>
-          </VStack>
-        )}
+          )}
+        </VStack>
       </HStack>
       <DatePickerWrapped
         label="Første fraværsdag"
         name="førsteFraværsdag"
         rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
       />
-      {data && (
-        <VStack>
-          <Label>Arbeidsgiver</Label>
-          <BodyShort>
-            Org.nr. {data.arbeidsforhold[0].organisasjonsnummer} -{" "}
-            {data.arbeidsforhold[0].organisasjonsnavn}
-          </BodyShort>
-        </VStack>
-      )}
     </VStack>
   );
 }

@@ -3,14 +3,14 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'master'
+      - "master"
     paths-ignore:
-      - '**.md'
-      - '**.MD'
-      - '.gitignore'
-      - '.editorconfig'
-      - 'LICENCE'
-      - 'CODEOWNERS'
+      - "**.md"
+      - "**.MD"
+      - ".gitignore"
+      - ".editorconfig"
+      - "LICENCE"
+      - "CODEOWNERS"
 
 jobs:
   build-app-fp:
@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: "22"
           registry-url: https://npm.pkg.github.com/
-          scope: '@navikt'
+          scope: "@navikt"
 
       - name: Install server dependencies
         run: npm install
@@ -76,7 +76,7 @@ jobs:
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           namespace: teamforeldrepenger
 
-  build-k9-app:
+  build-app-k9:
     name: Build [K9]
     permissions:
       contents: read
@@ -97,7 +97,7 @@ jobs:
         with:
           node-version: "22"
           registry-url: https://npm.pkg.github.com/
-          scope: '@navikt'
+          scope: "@navikt"
 
       - name: Install server dependencies
         run: npm install
@@ -174,30 +174,29 @@ jobs:
     name: Deploy DEV [K9]
     permissions:
       id-token: write
-    needs: build-k9-app
+    needs: build-app-k9
     uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
     with:
       gar: true
-      image: ${{ needs.build-k9-app.outputs.build-version }}
+      image: ${{ needs.build-app-k9.outputs.build-version }}
       cluster: dev-gcp
       deploy_context: "/k9"
       naiserator_file: "k9/naiserator.yaml"
       namespace: k9saksbehandling
     secrets: inherit
 
-#  deploy-prod-k9:
-#    if: github.ref == 'refs/heads/master'
-#    name: Deploy PROD [K9]
-#    permissions:
-#      id-token: write
-#    if: github.ref_name == 'master'
-#    needs: [build-k9-app, deploy-dev-k9]
-#    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
-#    with:
-#      gar: true
-#      image: ${{ needs.build-app.outputs.build-version }}
-#      cluster: prod-gcp
-#      deploy_context: "/k9"
-#      naiserator_file: "k9/naiserator.yaml"
-#      namespace: k9saksbehandling
-#    secrets: inherit
+  deploy-prod-k9:
+    if: github.ref == 'refs/heads/master'
+    name: Deploy PROD [K9]
+    permissions:
+      id-token: write
+    needs: [build-app-k9, deploy-dev-k9]
+    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
+    with:
+      gar: true
+      image: ${{ needs.build-app-k9.outputs.build-version }}
+      cluster: prod-gcp
+      deploy_context: "/k9"
+      naiserator_file: "k9/naiserator.yaml"
+      namespace: k9saksbehandling
+    secrets: inherit

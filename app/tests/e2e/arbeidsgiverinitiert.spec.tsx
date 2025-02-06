@@ -13,17 +13,18 @@ test.describe("Arbeidsgiverinitielt path", () => {
     await page.getByLabel("Ansattes fødselsnummer").fill("06519405464");
 
     await page.getByLabel("Første fraværsdag").fill("01.4.2024");
-    await page.getByRole("button", { name: "Hent person" }).click();
+    await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
-    await expect(page.getByText("Arbeidsgiver")).toBeVisible();
     await page.route(
       `**/*/arbeidsgiverinitiert/opplysninger`,
       async (route) => {
         await route.fulfill({ json: enkeltOpplysningerResponse });
       },
     );
-    await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
+    await page.getByLabel("Arbeidsgiver").selectOption("123_123_123");
+
+    await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
     await expect(
       page.getByRole("heading", { name: "Dine opplysninger" }),
     ).toBeVisible();

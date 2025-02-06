@@ -1,10 +1,13 @@
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import { NaturalytelseTypeSchema } from "~/types/api-models";
+import {
+  EndringAvInntektÅrsakerSchema,
+  NaturalytelseTypeSchema,
+} from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 
-import { useOpplysninger } from "./useOpplysninger";
+import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   kontaktperson: z
@@ -13,9 +16,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       telefonnummer: z.string(),
     })
     .optional(),
+  ansattesFødselsnummer: z.string().optional(),
+  ansattesFornavn: z.string().optional(),
+  ansattesEtternavn: z.string().optional(),
+  ansattesAktørId: z.string().optional(),
   årForRefusjon: z.string().optional(),
   harUtbetaltLønn: z.string().optional(),
-  ansattesFødselsnummer: z.string().optional(),
+  organisasjonsnummer: z.string(),
   valgtArbeidsforhold: z.string().optional(),
   harDekket10FørsteOmsorgsdager: z.string().optional(),
   fraværHeleDager: z
@@ -35,38 +42,39 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       }),
     )
     .optional(),
-  inntekt: beløpSchema.optional(),
-  inntektEndringsÅrsak: z
-    .object({
-      årsak: z.string().optional(),
-      korrigertInntekt: beløpSchema,
+  inntekt: beløpSchema,
+  korrigertInntekt: beløpSchema.optional(),
+  endringAvInntektÅrsaker: z.array(
+    z.object({
+      årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
       fom: z.string().optional(),
       tom: z.string().optional(),
-    })
+      bleKjentFom: z.string().optional(),
+    }),
+  ),
+  skalRefunderes: z
+    .union([
+      z.literal("JA_LIK_REFUSJON"),
+      z.literal("JA_VARIERENDE_REFUSJON"),
+      z.literal("NEI"),
+    ])
     .optional(),
-  skalRefunderes: z.boolean().optional(),
-  refusjonsbeløpPerMåned: beløpSchema.optional(),
-  endringIRefusjon: z.boolean().optional(),
-  refusjonsendringer: z
-    .array(
-      z.object({
-        fom: z.string().optional(),
-        beløp: beløpSchema,
-      }),
-    )
-    .optional(),
+  refusjon: z.array(
+    z.object({
+      fom: z.string().optional(),
+      beløp: beløpSchema,
+    }),
+  ),
   misterNaturalytelser: z.boolean().optional(),
-  bortfaltNaturalytelsePerioder: z
-    .array(
-      z.object({
-        navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-        beløp: beløpSchema,
-        fom: z.string().optional(),
-        tom: z.string().optional(),
-        inkluderTom: z.boolean(),
-      }),
-    )
-    .optional(),
+  bortfaltNaturalytelsePerioder: z.array(
+    z.object({
+      navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
+      beløp: beløpSchema,
+      fom: z.string().optional(),
+      tom: z.string().optional(),
+      inkluderTom: z.boolean(),
+    }),
+  ),
 });
 
 export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<
@@ -77,7 +85,7 @@ type Props = {
   children: React.ReactNode;
 };
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const opplysninger = useOpplysninger();
+  const opplysninger = useInnloggetBruker();
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
     defaultValues: {
       kontaktperson: {

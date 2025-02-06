@@ -13,9 +13,12 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 
+import { lagFulltNavn } from "~/utils.ts";
+
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
@@ -30,8 +33,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       <OmsorgspengerFremgangsindikator aktivtSteg={5} />
       <VStack gap="4">
         <OppsummeringArbeidsgiverOgAnsatt />
-        <OppsummeringOmsorgsdager />
         <OppsummeringRefusjon />
+        <OppsummeringOmsorgsdager />
         <OppsummeringMånedslønn />
       </VStack>
       <div className="flex gap-4">
@@ -49,7 +52,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
           onClick={() => {
             alert("Søknad ikke egentlig sendt inn, men vi kan late som");
             navigate({
-              from: "/refusjon-omsorgspenger-arbeidsgiver/$organisasjonsnummer/5-oppsummering",
+              from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
               to: "../6-kvittering",
             });
           }}
@@ -92,6 +95,7 @@ const OppsummeringRefusjon = () => {
 
 const OppsummeringArbeidsgiverOgAnsatt = () => {
   const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const innloggetBruker = useInnloggetBruker();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -107,11 +111,15 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
             <FormSummaryAnswers>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Virksomhetsnavn</FormSummaryLabel>
-                <FormSummaryValue>Place Holder AS</FormSummaryValue>
+                <FormSummaryValue>
+                  {innloggetBruker.organisasjonsnavn}
+                </FormSummaryValue>
               </FormSummaryAnswer>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Org.nr. for underenhet</FormSummaryLabel>
-                <FormSummaryValue>123456789</FormSummaryValue>
+                <FormSummaryValue>
+                  {innloggetBruker.organisasjonsnummer}
+                </FormSummaryValue>
               </FormSummaryAnswer>
             </FormSummaryAnswers>
           </FormSummaryValue>
@@ -126,8 +134,11 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
         <FormSummaryAnswer>
           <FormSummaryLabel>Den ansatte</FormSummaryLabel>
           <FormSummaryValue>
-            {"Place Holdersen"},{" "}
-            {getValues("ansattesFødselsnummer")?.slice(0, 6)}
+            {lagFulltNavn({
+              fornavn: getValues("ansattesFornavn")!,
+              etternavn: getValues("ansattesEtternavn")!,
+            })}
+            , {getValues("ansattesFødselsnummer")?.slice(0, 6)}
           </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
@@ -163,11 +174,14 @@ const OppsummeringOmsorgsdager = () => {
           <FormSummaryValue>
             {harFraværHeleDager ? (
               <List>
-                {fraværHeleDager?.map((periode, index) => (
-                  <ListItem key={index}>
-                    {periode.fom}-{periode.tom}
-                  </ListItem>
-                ))}
+                {fraværHeleDager?.map((periode, index) =>
+                  periode.fom && periode.tom ? (
+                    <ListItem key={index}>
+                      {new Date(periode.fom).toLocaleDateString("nb-no")}–
+                      {new Date(periode.tom).toLocaleDateString("nb-no")}
+                    </ListItem>
+                  ) : null,
+                )}
               </List>
             ) : (
               "Ingen dager med fravær hele dagen"
@@ -183,7 +197,10 @@ const OppsummeringOmsorgsdager = () => {
               <List>
                 {fraværDelerAvDagen?.map((fravær, index) => (
                   <ListItem key={index}>
-                    {fravær.dato}: {fravær.timerFravær}{" "}
+                    {fravær.dato
+                      ? new Date(fravær.dato).toLocaleDateString("nb-no")
+                      : null}
+                    : {fravær.timerFravær}{" "}
                     {fravær.timerFravær === 1 ? "time" : "timer"} (
                     {fravær.normalArbeidstid} timer normal arbeidstid)
                   </ListItem>
@@ -214,7 +231,11 @@ export const OppsummeringMånedslønn = () => {
           <FormSummaryLabel>
             Beregnet månedslønn og refusjonskrav
           </FormSummaryLabel>
-          <FormSummaryValue>{getValues("inntekt")} kr</FormSummaryValue>
+          <FormSummaryValue>
+            {getValues("korrigertInntekt") || getValues("inntekt")}
+            {" "}
+            kr
+          </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
     </FormSummary>
