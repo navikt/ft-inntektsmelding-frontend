@@ -27,8 +27,8 @@ export const InntektsmeldingRootLayout = () => {
 
 type InntektsmeldingRootLayoutProps = {
   ytelse: string;
-  organisasjonNavn: string;
-  organisasjonNummer: string;
+  organisasjonNavn?: string;
+  organisasjonNummer?: string;
   skjemaId: string;
 };
 export const InntektsmeldingRootLayoutComponent = (
@@ -50,20 +50,23 @@ export const InntektsmeldingRootLayoutComponent = (
   }, []);
 
   const erPåKvitteringssiden = location.pathname.includes("kvittering");
-
+  const skalViseUndertittel =
+    props.organisasjonNavn && props.organisasjonNummer;
   return (
     <InntektsmeldingSkjemaStateProvider skjemaId={props.skjemaId}>
       <RotLayout
         background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
         tittel={`Inntektsmelding ${formatYtelsesnavn(props.ytelse)}`}
         undertittel={
-          <div className="flex gap-3">
-            <span>{props.organisasjonNavn}</span>
-            <span aria-hidden="true">|</span>
-            <span className="text-nowrap">
-              Org.nr.: {props.organisasjonNummer}
-            </span>
-          </div>
+          skalViseUndertittel && (
+            <div className="flex gap-3">
+              <span>{props.organisasjonNavn}</span>
+              <span aria-hidden="true">|</span>
+              <span className="text-nowrap">
+                Org.nr.: {props.organisasjonNummer}
+              </span>
+            </div>
+          )
         }
       >
         <Outlet />
