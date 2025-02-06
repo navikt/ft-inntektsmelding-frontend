@@ -2,6 +2,8 @@ import { DatePicker, HStack, useRangeDatepicker } from "@navikt/ds-react";
 import { forwardRef } from "react";
 import { RegisterOptions, useController } from "react-hook-form";
 
+import { formatIsoDatostempel } from "~/utils";
+
 type DateRangePickerWrappedProps = {
   name: string;
   minDato: Date;
@@ -28,14 +30,22 @@ export const DateRangePickerWrapped = forwardRef<
     fromDate: minDato,
     toDate: maxDato,
     onRangeChange: (dateRange) => {
-      fromField.onChange(dateRange?.from);
-      toField.onChange(dateRange?.to);
+      fromField.onChange(
+        dateRange?.from ? formatIsoDatostempel(dateRange.from) : undefined,
+      );
+      toField.onChange(
+        dateRange?.to ? formatIsoDatostempel(dateRange.to) : undefined,
+      );
     },
     onValidate: (dateRange) => {
       if (dateRange?.from && dateRange?.to) {
         return dateRange.from <= dateRange.to;
       }
       return true;
+    },
+    defaultSelected: {
+      from: fromField.value ? new Date(fromField.value) : undefined,
+      to: toField.value ? new Date(toField.value) : undefined,
     },
   });
   return (
