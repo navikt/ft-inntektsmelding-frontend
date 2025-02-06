@@ -13,9 +13,12 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 
+import { lagFulltNavn } from "~/utils.ts";
+
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
@@ -92,6 +95,7 @@ const OppsummeringRefusjon = () => {
 
 const OppsummeringArbeidsgiverOgAnsatt = () => {
   const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const innloggetBruker = useInnloggetBruker();
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -107,11 +111,15 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
             <FormSummaryAnswers>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Virksomhetsnavn</FormSummaryLabel>
-                <FormSummaryValue>Place Holder AS</FormSummaryValue>
+                <FormSummaryValue>
+                  {innloggetBruker.organisasjonsnavn}
+                </FormSummaryValue>
               </FormSummaryAnswer>
               <FormSummaryAnswer>
                 <FormSummaryLabel>Org.nr. for underenhet</FormSummaryLabel>
-                <FormSummaryValue>123456789</FormSummaryValue>
+                <FormSummaryValue>
+                  {innloggetBruker.organisasjonsnummer}
+                </FormSummaryValue>
               </FormSummaryAnswer>
             </FormSummaryAnswers>
           </FormSummaryValue>
@@ -126,8 +134,11 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
         <FormSummaryAnswer>
           <FormSummaryLabel>Den ansatte</FormSummaryLabel>
           <FormSummaryValue>
-            {"Place Holdersen"},{" "}
-            {getValues("ansattesFødselsnummer")?.slice(0, 6)}
+            {lagFulltNavn({
+              fornavn: getValues("ansattesFornavn")!,
+              etternavn: getValues("ansattesEtternavn")!,
+            })}
+            , {getValues("ansattesFødselsnummer")?.slice(0, 6)}
           </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
@@ -167,9 +178,7 @@ const OppsummeringOmsorgsdager = () => {
                   periode.fom && periode.tom ? (
                     <ListItem key={index}>
                       {new Date(periode.fom).toLocaleDateString("nb-no")}–
-                      {periode.tom
-                        ? new Date(periode.tom).toLocaleDateString("nb-no")
-                        : "I dag"}
+                      {new Date(periode.tom).toLocaleDateString("nb-no")}
                     </ListItem>
                   ) : null,
                 )}
@@ -222,7 +231,11 @@ export const OppsummeringMånedslønn = () => {
           <FormSummaryLabel>
             Beregnet månedslønn og refusjonskrav
           </FormSummaryLabel>
-          <FormSummaryValue>{getValues("inntekt")} kr</FormSummaryValue>
+          <FormSummaryValue>
+            {getValues("korrigertInntekt") || getValues("inntekt")}
+            {" "}
+            kr
+          </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
     </FormSummary>
