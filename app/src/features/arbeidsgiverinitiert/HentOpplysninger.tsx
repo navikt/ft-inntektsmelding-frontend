@@ -12,6 +12,7 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { fnr } from "@navikt/fnrvalidator";
 import { useMutation } from "@tanstack/react-query";
 import {
   getRouteApi,
@@ -288,12 +289,9 @@ function NyAnsattForm({ data }: { data?: SlåOppArbeidstakerResponseDto }) {
         <TextField
           {...formMethods.register("fødselsnummer", {
             required: "Må oppgis",
-            validate: (value) => {
-              const erFødselsnummer = /^\d{11}$/.test(value); //TODO: mer sofistikert test?
-              if (!erFødselsnummer) {
-                return "Fødselsnummer må være 11 siffer";
-              }
-            },
+            validate: (value) =>
+              (value && fnr(value).status === "valid") ||
+              "Du må fylle ut et gyldig fødselsnummer",
           })}
           error={formMethods.formState.errors.fødselsnummer?.message}
           label="Ansattes fødselsnummer"

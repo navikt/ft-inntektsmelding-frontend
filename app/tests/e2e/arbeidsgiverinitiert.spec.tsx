@@ -1,16 +1,29 @@
 import { expect, test } from "@playwright/test";
-import { mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
+import { expectError, mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
 
 import { enkeltOpplysningerResponse } from "../mocks/opplysninger.ts";
 
-test("Happy path", async ({ page }) => {
+test("Ny ansatt", async ({ page }) => {
   await mockHentPersonOgArbeidsforhold({ page });
 
   await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
 
   await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-  await page.getByLabel("Ansattes fødselsnummer").fill("06519405464");
+  await page.getByLabel("Ansattes fødselsnummer").fill("0981019887");
+  await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
+  await expectError({
+    page,
+    error: "Du må fylle ut et gyldig fødselsnummer",
+    label: "Ansattes fødselsnummer",
+  });
+  await expectError({
+    page,
+    label: "Første fraværsdag",
+    error: "Må oppgis",
+  });
+
+  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
   await page.getByLabel("Første fraværsdag").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
@@ -32,7 +45,7 @@ test("Kun kvinner kan søke SVP", async ({ page }) => {
   await page.goto("/fp-im-dialog/opprett?ytelseType=SVANGERSKAPSPENGER");
 
   await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-  await page.getByLabel("Ansattes fødselsnummer").fill("06519405364");
+  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
   await page.getByLabel("Første fraværsdag").fill("01.8.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
