@@ -56,7 +56,7 @@ export type EndringAvInntektÅrsaker = z.infer<
 >;
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
 
-export const SlåOppArbeidstakerResponseDto = z.object({
+export const SlåOppArbeidstakerResponseDtoSchema = z.object({
   fornavn: z.string(),
   mellomnavn: z.string().optional(),
   etternavn: z.string(),
@@ -68,6 +68,9 @@ export const SlåOppArbeidstakerResponseDto = z.object({
   ),
   kjønn: z.enum(["MANN", "KVINNE", "UKJENT"]),
 });
+export type SlåOppArbeidstakerResponseDto = z.infer<
+  typeof SlåOppArbeidstakerResponseDtoSchema
+>;
 
 export const SendInntektsmeldingRequestDtoSchema = z.object({
   foresporselUuid: z.string().optional(),

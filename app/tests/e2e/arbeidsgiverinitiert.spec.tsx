@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expectError, mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
+import { mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
 
 import { enkeltOpplysningerResponse } from "../mocks/opplysninger.ts";
 
@@ -36,13 +36,14 @@ test.describe("Arbeidsgiverinitielt path", () => {
     await page.goto("/fp-im-dialog/opprett?ytelseType=SVANGERSKAPSPENGER");
 
     await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-    await page.getByLabel("Ansattes fødselsnummer").fill("06519405364"); //FNR er mannlig
-    await page.getByRole("button", { name: "Hent person" }).click();
+    await page.getByLabel("Ansattes fødselsnummer").fill("06519405364");
+    await page.getByLabel("Første fraværsdag").fill("01.8.2024");
+    await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
-    await expectError({
-      page,
-      label: "Ansattes fødselsnummer",
-      error: "Bare kvinner kan søke svangerskapspenger",
-    });
+    await expect(
+      page.getByRole("heading", {
+        name: "Bare kvinner kan søke svangerskapspenger",
+      }),
+    ).toBeVisible();
   });
 });

@@ -10,7 +10,7 @@ import {
   OpplysningerRequest,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
-  SlåOppArbeidstakerResponseDto,
+  SlåOppArbeidstakerResponseDtoSchema,
   Ytelsetype,
 } from "~/types/api-models";
 import { logDev } from "~/utils.ts";
@@ -176,7 +176,7 @@ export async function hentPersonFraFnr(
   }
 
   const json = await response.json();
-  const parsedJson = SlåOppArbeidstakerResponseDto.safeParse(json);
+  const parsedJson = SlåOppArbeidstakerResponseDtoSchema.safeParse(json);
 
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);

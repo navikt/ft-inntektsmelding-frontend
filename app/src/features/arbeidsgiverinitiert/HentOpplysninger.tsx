@@ -19,7 +19,6 @@ import {
   useNavigate,
 } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
-import { z } from "zod";
 
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
@@ -95,10 +94,7 @@ export const HentOpplysninger = () => {
         ytelseType,
         førsteFraværsdag,
       );
-      if (
-        ytelseType === "SVANGERSKAPSPENGER" &&
-        personinfo.kjønn === "KVINNE"
-      ) {
+      if (ytelseType === "SVANGERSKAPSPENGER" && personinfo.kjønn === "MANN") {
         throw new Error("MENN_KAN_IKKE_SØKE_SVP");
       }
 
@@ -253,11 +249,7 @@ function UnntattAaregRegistrering() {
   );
 }
 
-function VelgArbeidsgiver({
-  data,
-}: {
-  data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
-}) {
+function VelgArbeidsgiver({ data }: { data?: SlåOppArbeidstakerResponseDto }) {
   const formMethods = useFormContext<FormType>();
 
   if (!data || data.arbeidsforhold.length <= 1) {
@@ -287,11 +279,7 @@ function VelgArbeidsgiver({
   );
 }
 
-function NyAnsattForm({
-  data,
-}: {
-  data?: z.infer<typeof SlåOppArbeidstakerResponseDto>;
-}) {
+function NyAnsattForm({ data }: { data?: SlåOppArbeidstakerResponseDto }) {
   const formMethods = useFormContext<FormType>();
 
   return (

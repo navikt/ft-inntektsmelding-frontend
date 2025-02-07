@@ -1,3 +1,5 @@
+import { SlåOppArbeidstakerResponseDto } from "~/types/api-models.ts";
+
 export const arbeidsforholdResponse = {
   fornavn: "MOMENTAN",
   etternavn: "TRAKT",
@@ -7,4 +9,5 @@ export const arbeidsforholdResponse = {
       organisasjonsnummer: "315786940",
     },
   ],
-};
+  kjønn: "MANN",
+} satisfies SlåOppArbeidstakerResponseDto;
