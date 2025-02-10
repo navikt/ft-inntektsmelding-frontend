@@ -3,11 +3,15 @@ import { z } from "zod";
 
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
+import { parseStorageItem } from "~/features/usePersistedState.tsx";
 import {
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
+  OpplysningerRequest,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
+  SlåOppArbeidstakerResponseDtoSchema,
+  Ytelsetype,
 } from "~/types/api-models";
 import { logDev } from "~/utils.ts";
 
@@ -44,6 +48,10 @@ async function hentGrunnbeløp() {
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
+  if (uuid === "custom-id") {
+    //TODO: konstant for custom uuid
+    return [];
+  }
   const response = await fetch(
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
   );
@@ -108,6 +116,19 @@ export function mapInntektsmeldingResponseTilValidState(
 }
 
 export async function hentOpplysningerData(uuid: string) {
+  if (uuid === "custom-id") {
+    // Da har vi en fakeId. Hent fra sessionstorage
+    const opplysninger = parseStorageItem(
+      sessionStorage,
+      "custom-id",
+      opplysningerSchema,
+    );
+    if (!opplysninger) {
+      throw new Error("Finner ikke arbeidsgiverinitierte opplysninger");
+    }
+    return opplysninger;
+  }
+
   const response = await fetch(
     `${SERVER_URL}/imdialog/opplysninger?foresporselUuid=${uuid}`,
   );
@@ -124,5 +145,82 @@ export async function hentOpplysningerData(uuid: string) {
     logDev("error", parsedJson.error);
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
+  return parsedJson.data;
+}
+
+export async function hentPersonFraFnr(
+  fnr: string,
+  ytelsetype: Ytelsetype,
+  førsteFraværsdag: string,
+) {
+  const response = await fetch(
+    `${SERVER_URL}/arbeidsgiverinitiert/arbeidsforhold`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        fødselsnummer: fnr,
+        ytelseType: ytelsetype,
+        førsteFraværsdag,
+      }),
+    },
+  );
+
+  if (response.status === 404) {
+    throw new Error("Fant ikke person");
+  }
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente personopplysninger.");
+  }
+
+  const json = await response.json();
+  const parsedJson = SlåOppArbeidstakerResponseDtoSchema.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  // MOCK
+  const data = parsedJson.data;
+  return {
+    ...data,
+    arbeidsforhold: [
+      data.arbeidsforhold[0],
+      { organisasjonsnavn: "TEST", organisasjonsnummer: "123_123_123" },
+    ],
+  };
+}
+
+export async function hentOpplysninger(
+  opplysningerRequest: OpplysningerRequest,
+) {
+  const response = await fetch(
+    `${SERVER_URL}/arbeidsgiverinitiert/opplysninger`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(opplysningerRequest),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente opplysninger.");
+  }
+
+  const json = await response.json();
+  const parsedJson = opplysningerSchema.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
   return parsedJson.data;
 }

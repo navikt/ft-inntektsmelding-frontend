@@ -11,6 +11,8 @@ export const YtelsetypeSchema = z.enum([
   "OMSORGSPENGER",
 ]);
 
+export type Ytelsetype = z.infer<typeof YtelsetypeSchema>;
+
 export const NaturalytelseTypeSchema = z.enum([
   "ELEKTRISK_KOMMUNIKASJON",
   "AKSJER_GRUNNFONDSBEVIS_TIL_UNDERKURS",
@@ -54,8 +56,24 @@ export type EndringAvInntektÅrsaker = z.infer<
 >;
 export type Naturalytelsetype = z.infer<typeof NaturalytelseTypeSchema>;
 
+export const SlåOppArbeidstakerResponseDtoSchema = z.object({
+  fornavn: z.string(),
+  mellomnavn: z.string().optional(),
+  etternavn: z.string(),
+  arbeidsforhold: z.array(
+    z.object({
+      organisasjonsnavn: z.string(),
+      organisasjonsnummer: z.string(),
+    }),
+  ),
+  kjønn: z.enum(["MANN", "KVINNE", "UKJENT"]),
+});
+export type SlåOppArbeidstakerResponseDto = z.infer<
+  typeof SlåOppArbeidstakerResponseDtoSchema
+>;
+
 export const SendInntektsmeldingRequestDtoSchema = z.object({
-  foresporselUuid: z.string(),
+  foresporselUuid: z.string().optional(),
   aktorId: z.string(),
   ytelse: YtelsetypeSchema,
   arbeidsgiverIdent: z.string(),
@@ -110,6 +128,7 @@ export type SendInntektsmeldingRequestDto = z.infer<
 >;
 
 export const opplysningerSchema = z.object({
+  forespørselUuid: z.string().optional(),
   person: z.object({
     aktørId: z.string(),
     fødselsnummer: z.string(),
@@ -177,3 +196,12 @@ export const organisasjonsnummerSchema = z
     const num = Number(val);
     return num >= 100_000_000 && num <= 999_999_999;
   }, "Ugyldig organisasjonsnummer");
+
+export const OpplysningerRequestSchema = z.object({
+  fødselsnummer: z.string(),
+  ytelseType: YtelsetypeSchema,
+  førsteFraværsdag: z.string(),
+  organisasjonsnummer: z.string(),
+});
+
+export type OpplysningerRequest = z.infer<typeof OpplysningerRequestSchema>;

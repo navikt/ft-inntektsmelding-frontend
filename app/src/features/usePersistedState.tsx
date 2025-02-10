@@ -42,7 +42,11 @@ export function useLocalStorageState<T = unknown>(
   return [state, setState] as const;
 }
 
-function parseStorageItem(storage: Storage, key: string, schema: ZodSchema) {
+export function parseStorageItem(
+  storage: Storage,
+  key: string,
+  schema: ZodSchema,
+) {
   const item = storage.getItem(key);
 
   if (item) {

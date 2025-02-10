@@ -15,6 +15,25 @@ const route = getRouteApi("/$id");
 export const InntektsmeldingRootLayout = () => {
   const { id } = route.useParams();
   const opplysninger = useOpplysninger();
+
+  return (
+    <InntektsmeldingRootLayoutComponent
+      skjemaId={id}
+      ytelse={opplysninger.ytelse}
+      {...opplysninger.arbeidsgiver}
+    />
+  );
+};
+
+type InntektsmeldingRootLayoutProps = {
+  ytelse: string;
+  organisasjonNavn?: string;
+  organisasjonNummer?: string;
+  skjemaId: string;
+};
+export const InntektsmeldingRootLayoutComponent = (
+  props: InntektsmeldingRootLayoutProps,
+) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -28,23 +47,26 @@ export const InntektsmeldingRootLayout = () => {
         url: location.pathname,
       },
     ]);
-  }, [id]);
+  }, []);
 
   const erPåKvitteringssiden = location.pathname.includes("kvittering");
-
+  const skalViseUndertittel =
+    props.organisasjonNavn && props.organisasjonNummer;
   return (
-    <InntektsmeldingSkjemaStateProvider>
+    <InntektsmeldingSkjemaStateProvider skjemaId={props.skjemaId}>
       <RotLayout
         background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
-        tittel={`Inntektsmelding ${formatYtelsesnavn(opplysninger.ytelse)}`}
+        tittel={`Inntektsmelding ${formatYtelsesnavn(props.ytelse)}`}
         undertittel={
-          <div className="flex gap-3">
-            <span>{opplysninger.arbeidsgiver.organisasjonNavn}</span>
-            <span aria-hidden="true">|</span>
-            <span className="text-nowrap">
-              Org.nr.: {opplysninger.arbeidsgiver.organisasjonNummer}
-            </span>
-          </div>
+          skalViseUndertittel && (
+            <div className="flex gap-3">
+              <span>{props.organisasjonNavn}</span>
+              <span aria-hidden="true">|</span>
+              <span className="text-nowrap">
+                Org.nr.: {props.organisasjonNummer}
+              </span>
+            </div>
+          )
         }
       >
         <Outlet />
