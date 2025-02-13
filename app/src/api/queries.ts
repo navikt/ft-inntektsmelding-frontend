@@ -5,6 +5,7 @@ import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjem
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
 import { parseStorageItem } from "~/features/usePersistedState.tsx";
 import {
+  feilmeldingSchema,
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
   OpplysningerRequest,
@@ -208,9 +209,17 @@ export async function hentOpplysninger(
       body: JSON.stringify(opplysningerRequest),
     },
   );
-
   if (!response.ok) {
-    throw new Error("Kunne ikke hente opplysninger.");
+    const json = await response.json();
+    const parsedFeil = feilmeldingSchema.safeParse(json);
+    if (!parsedFeil.success) {
+      logDev("error", parsedFeil.error);
+      throw new Error("Kunne ikke hente opplysninger");
+    }
+    if (parsedFeil.data?.type === "INGEN_SAK_FUNNET") {
+      throw new Error(parsedFeil.data?.type);
+    }
+    throw new Error("Kunne ikke hente opplysninger");
   }
 
   const json = await response.json();
