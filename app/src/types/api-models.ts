@@ -189,6 +189,17 @@ export const grunnbeløpSchema = z.object({
   virkningstidspunktForMinsteinntekt: z.string(),
 });
 
+export const feilmeldingSchema = z.object({
+  callId: z.string(),
+  feilmelding: z.string(),
+  type: z.enum([
+    "INGEN_SAK_FUNNET",
+    "GENERELL_FEIL",
+    "TOMT_RESULTAT_FEIL",
+    "MANGLER_TILGANG_FEIL",
+  ]),
+});
+
 export const organisasjonsnummerSchema = z
   .string()
   .regex(/^\d+$/, "Må være tall")

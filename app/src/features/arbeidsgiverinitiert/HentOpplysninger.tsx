@@ -166,6 +166,7 @@ export const HentOpplysninger = () => {
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
             <HentPersonError error={hentPersonMutation.error} />
+            <HentOpplysningerError error={opprettOpplysningerMutation.error} />
             {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
                 className="w-fit"
@@ -228,6 +229,26 @@ function HentPersonError({ error }: { error: Error | null }) {
           dere i Aa-registeret. Den ansatte må være registrert i Aa-registeret
           for å kunne sende inn inntektsmelding.{" "}
         </BodyShort>
+      </Alert>
+    );
+  }
+
+  return <Alert variant="error">{error.message}</Alert>;
+}
+
+function HentOpplysningerError({ error }: { error: Error | null }) {
+  if (!error) {
+    return null;
+  }
+  const { ytelseType } = route.useSearch();
+  if (error?.message === "INGEN_SAK_FUNNET") {
+    return (
+      <Alert variant="warning">
+        <Heading level="3" size="small">
+          Kan ikke opprette inntektsmelding
+        </Heading>
+        Du kan ikke sende inn inntektsmelding på {formatYtelsesnavn(ytelseType)}{" "}
+        på denne personen
       </Alert>
     );
   }
