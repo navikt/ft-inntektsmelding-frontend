@@ -293,7 +293,13 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await naturalytelserBlokk
     .getByLabel("Naturalytelse som faller bort")
     .selectOption("Bil");
-  await naturalytelserBlokk.getByText("Fra og med").fill("20.06.2024"); // TODO: kan denne være før startdato?
+  await naturalytelserBlokk.getByText("Fra og med").fill("20.05.2024");
+  await expectError({
+    page: naturalytelserBlokk,
+    label: "Fra og med",
+    error: "Må være etter første uttaksdag",
+  });
+  await naturalytelserBlokk.getByText("Fra og med").fill("31.05.2024");
   await naturalytelserBlokk.getByText("Verdi pr. måned").fill("2500");
   await naturalytelserBlokk
     .locator(
@@ -306,7 +312,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     label: "Til og med",
     error: "Må oppgis",
   });
-  await naturalytelserBlokk.getByText("Til og med").fill("10.06.2024");
+  await naturalytelserBlokk.getByText("Til og med").fill("10.05.2024");
   await expectError({
     page: naturalytelserBlokk,
     label: "Til og med",

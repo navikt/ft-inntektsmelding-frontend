@@ -162,7 +162,7 @@ export function Steg2InntektOgRefusjon() {
             opplysninger={opplysninger}
           />
           <UtbetalingOgRefusjon />
-          <Naturalytelser />
+          <Naturalytelser opplysninger={opplysninger} />
           <div className="flex gap-4 justify-center">
             <Button
               as={Link}
