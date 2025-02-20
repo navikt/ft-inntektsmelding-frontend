@@ -29,12 +29,26 @@ Start frontenden ved å gå til `app`-mappen og kjøre `npm run dev:fp` eller `n
 cd app && npm run dev:fp
 ```
 
+## Inntektsmelding
+
 1) For FP, gå til [https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on) for å utvikle lokalt!
    For K9 [https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on)
+   [Dokumentasjon for kobling mot lokal devserver](https://github.com/navikt/vite-mode)
 
 2) Logg inn! Her vil du få muligheten til å velge hvilken testbruker du ønsker å logge inn med. Følg guiden for testbrukere under.
 
 3) Finn uløste og tidligere innsendte inntektsmeldinger på https://arbeidsgiver.intern.dev.nav.no/min-side-arbeidsgiver/saksoversikt på temaet du vil teste.
+
+## Refusjon for omsorgspenger
+
+1) Gå til [https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on) for å gå mot vite devserver.
+   [Dokumentasjon for kobling mot lokal devserver](https://github.com/navikt/vite-mode)
+ 
+2) Logg inn! Følg guiden for testbrukere under.
+
+3) Gå mot denne [URLen](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/${ORGNR}/1-intro).
+   Bytt ut ${ORGNR} med orgnummeret som er knyttet til testbrukeren du logget inn med.
+   
 
 
 ## Testbrukere
