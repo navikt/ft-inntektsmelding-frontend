@@ -50,17 +50,19 @@ export const DateRangePickerWrapped = forwardRef<
   });
   return (
     <DatePicker {...datepickerProps}>
-      <HStack align="center" gap="4" justify="center" ref={ref} wrap>
+      <HStack align="baseline" gap="4" ref={ref}>
         <DatePicker.Input
           {...fromInputProps}
-          error={fromFieldState.error?.message}
+          error={fromFieldState.isTouched && fromFieldState.error?.message}
           label="Fra og med"
+          onBlur={fromField.onBlur}
           ref={fromField.ref}
         />
         <DatePicker.Input
           {...toInputProps}
-          error={toFieldState.error?.message}
+          error={toFieldState.isTouched && toFieldState.error?.message}
           label="Til og med"
+          onBlur={toField.onBlur}
           ref={toField.ref}
         />
       </HStack>

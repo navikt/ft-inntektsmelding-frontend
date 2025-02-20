@@ -7,11 +7,13 @@ import {
 import {
   Alert,
   BodyLong,
+  BodyShort,
   Button,
   GuidePanel,
   Heading,
   HGrid,
   HStack,
+  List,
   Radio,
   RadioGroup,
   TextField,
@@ -25,6 +27,7 @@ import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePic
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { hasAbsenceInDateRange } from "./utils.ts";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   useDocumentTitle(
@@ -62,6 +65,16 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   );
 
   const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
+  const fraværHeleDager = watch("fraværHeleDager");
+  const fraværDelerAvDagen = watch("fraværDelerAvDagen");
+  const årForRefusjon = watch("årForRefusjon");
+
+  const fraværErInnenforDatoer = hasAbsenceInDateRange(
+    fraværHeleDager,
+    fraværDelerAvDagen,
+    `${årForRefusjon}-01-01`,
+    `${årForRefusjon}-10-01`,
+  );
   return (
     <div>
       <Heading level="1" size="large">
@@ -70,16 +83,20 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       <OmsorgspengerFremgangsindikator aktivtSteg={3} />
       <GuidePanel className="mb-4">
         <BodyLong>
-          Oppgi kun dager dere søker refusjon for. Har det vært en varig
-          lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må
-          dere sende inn to søknader med periodene før og etter lønnsendring.
+          Her oppgir du de dagene dere har utbetalt lønn, og krever refusjon
+          fordi den ansatte brukte omsorgsdag.
+        </BodyLong>
+        <BodyLong>
+          Hvis dere kun har betalt lønn for deler av fraværet, må den ansatte
+          selv søke om utbetaling av omsorgspenger for de dagene dere ikke
+          utbetalte lønn.
         </BodyLong>
       </GuidePanel>
       <form onSubmit={onSubmit}>
         <VStack gap="4">
           <RadioGroup
             error={formState.errors.harDekket10FørsteOmsorgsdager?.message}
-            legend="Har dere dekket de 10 første omsorgsdagene i år?"
+            legend={`Har dere dekket de 10 første omsorgsdagene i ${årForRefusjon}?`}
             name={name}
           >
             <Radio value="ja" {...harDekket10FørsteOmsorgsdagerRadioGroupProps}>
@@ -96,16 +113,23 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             <Alert variant="info">
               <VStack gap="4">
                 <BodyLong>
-                  Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår
-                  for ansatte som har barn under 12 år, eller som fyller 12 år
-                  det gjeldende året. Du kan søke om utbetaling fra Nav fra og
-                  med den 11. dagen.
-                </BodyLong>
-                <BodyLong>
-                  Hvis den ansatte har kronisk sykt barn over 13 år, og ingen
-                  andre barn under 12 år, kan du søke om utbetaling fra første
+                  Arbeidsgiver har som hovedregel plikt til å dekke de første ti
+                  omsorgsdagene i kalenderåret. Hvis den ansatte har rett til
+                  mer enn ti omsorgsdager, kan dere søke refusjon fra 11.
                   fraværsdag.
                 </BodyLong>
+                <List>
+                  I noen situasjoner kan dere likevel søke om refusjon fra
+                  første fraværsdag. Det er aktuelt hvis:
+                  <List.Item>
+                    den ansatte ikke har jobbet fire uker før fraværet
+                  </List.Item>
+                  <List.Item>
+                    den ansatte sine barn fyller/er fylt 13 år, men har fått
+                    ekstra omsorgsdager for et barn på grunn av
+                    langvarig/kronisk sykdom eller funksjonshemning.
+                  </List.Item>
+                </List>
               </VStack>
             </Alert>
           )}
@@ -116,6 +140,30 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           )}
           <FraværHeleDagen />
           <FraværDelerAvDagen />
+
+          {fraværErInnenforDatoer && (
+            <Alert variant="info">
+              <VStack gap="4">
+                <BodyShort>
+                  Arbeidsgiver har som hovedregel plikt til å dekke de første ti
+                  omsorgsdagene i kalenderåret. Hvis den ansatte har rett til
+                  mer enn ti omsorgsdager, kan dere søke refusjon fra 11.
+                  fraværsdag.
+                </BodyShort>
+                <List>
+                  Du kan unntaksvis kreve refusjon for de første 10 dagene hvis:
+                  <List.Item>
+                    den ansatte ikke har jobbet fire uker før fraværet
+                  </List.Item>
+                  <List.Item>
+                    den ansatte sine barn fyller/er fylt 13 år, men har fått
+                    ekstra omsorgsdager for et barn på grunn av
+                    langvarig/kronisk sykdom eller funksjonshemning.
+                  </List.Item>
+                </List>
+              </VStack>
+            </Alert>
+          )}
 
           <div className="flex gap-4 mt-8">
             <Button
@@ -197,7 +245,7 @@ const FraværHeleDagen = () => {
           <div>
             <Button
               aria-label="Slett periode"
-              className="mt-10"
+              className="md:mt-10"
               icon={<TrashIcon />}
               onClick={() => {
                 remove(index);
@@ -241,94 +289,102 @@ const FraværDelerAvDagen = () => {
       <Heading level="3" size="small">
         Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
       </Heading>
-      {fields.map((periode, index) => (
-        <HGrid
-          className="border-l-4 border-bg-subtle pl-4 py-2"
-          columns={{ xs: 1, md: 4 }}
-          gap="4"
-          key={periode.id}
-        >
-          <DatePickerWrapped
+      {fields.map((periode, index) => {
+        return (
+          <HGrid
+            align="start"
+            className="border-l-4 border-bg-subtle pl-4 py-2"
+            columns={{ xs: 1, md: 4 }}
+            gap="4"
             key={periode.id}
-            label="Dato"
-            name={`fraværDelerAvDagen.${index}.dato`}
-            rules={{
-              required: "Du må oppgi dato",
-            }}
-          />
-          <TextField
-            label="Normal arbeidstid"
-            {...register(`fraværDelerAvDagen.${index}.normalArbeidstid`, {
-              validate: (value) => {
-                if (!value) {
-                  return "Du må oppgi antall timer";
-                }
-                if (Number.isNaN(Number(value))) {
-                  return "Antall timer må være et tall";
-                }
-                if (value <= 0) {
-                  return "Antall timer må være høyere enn 0";
-                }
-                if (value > 24) {
-                  return "Antall timer kan ikke være mer enn 24";
-                }
-              },
-            })}
-            error={
-              formState.errors.fraværDelerAvDagen?.[index]?.normalArbeidstid
-                ?.message
-            }
-          />
-          <TextField
-            label="Timer fravær"
-            {...register(`fraværDelerAvDagen.${index}.timerFravær`, {
-              validate: (value) => {
-                if (!value) {
-                  return "Du må oppgi antall timer";
-                }
-                if (Number.isNaN(Number(value))) {
-                  return "Antall timer må være et tall";
-                }
-                if (value <= 0) {
-                  return "Antall timer må være høyere enn 0";
-                }
-                if (value > 24) {
-                  return "Antall timer kan ikke være mer enn 24";
-                }
-
-                const normalArbeidstid = watch(
-                  `fraværDelerAvDagen.${index}.normalArbeidstid`,
-                );
-
-                if (
-                  normalArbeidstid &&
-                  Number(value) > Number(normalArbeidstid)
-                ) {
-                  return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
-                }
-              },
-            })}
-            error={
-              formState.errors.fraværDelerAvDagen?.[index]?.timerFravær?.message
-            }
-          />
-          <div>
-            <Button
-              aria-label="Slett periode"
-              className="mt-10"
-              icon={<TrashIcon />}
-              onClick={() => {
-                remove(index);
+          >
+            <DatePickerWrapped
+              key={periode.id}
+              label="Dato"
+              name={`fraværDelerAvDagen.${index}.dato`}
+              rules={{
+                required: "Du må oppgi dato",
               }}
-              size="small"
-              type="button"
-              variant="tertiary"
-            >
-              Slett
-            </Button>
-          </div>
-        </HGrid>
-      ))}
+            />
+            <TextField
+              label="Normal arbeidstid"
+              {...register(`fraværDelerAvDagen.${index}.normalArbeidstid`, {
+                validate: (value) => {
+                  if (!value) {
+                    return "Du må oppgi antall timer";
+                  }
+                  if (Number.isNaN(Number(value))) {
+                    return "Antall timer må være et tall";
+                  }
+                  if (value <= 0) {
+                    return "Antall timer må være høyere enn 0";
+                  }
+                  if (value > 24) {
+                    return "Antall timer kan ikke være mer enn 24";
+                  }
+                },
+              })}
+              error={
+                formState.touchedFields.fraværDelerAvDagen?.[index]
+                  ?.normalArbeidstid &&
+                formState.errors.fraværDelerAvDagen?.[index]?.normalArbeidstid
+                  ?.message
+              }
+            />
+            <TextField
+              label="Timer fravær"
+              {...register(`fraværDelerAvDagen.${index}.timerFravær`, {
+                validate: (value) => {
+                  if (!value) {
+                    return "Du må oppgi antall timer";
+                  }
+                  if (Number.isNaN(Number(value))) {
+                    return "Antall timer må være et tall";
+                  }
+                  if (value <= 0) {
+                    return "Antall timer må være høyere enn 0";
+                  }
+                  if (value > 24) {
+                    return "Antall timer kan ikke være mer enn 24";
+                  }
+
+                  const normalArbeidstid = watch(
+                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
+                  );
+
+                  if (
+                    normalArbeidstid &&
+                    Number(value) > Number(normalArbeidstid)
+                  ) {
+                    return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
+                  }
+                },
+              })}
+              error={
+                formState.touchedFields.fraværDelerAvDagen?.[index]
+                  ?.timerFravær &&
+                formState.errors.fraværDelerAvDagen?.[index]?.timerFravær
+                  ?.message
+              }
+            />
+            <div>
+              <Button
+                aria-label="Slett periode"
+                className="md:mt-10"
+                icon={<TrashIcon />}
+                onClick={() => {
+                  remove(index);
+                }}
+                size="small"
+                type="button"
+                variant="tertiary"
+              >
+                Slett
+              </Button>
+            </div>
+          </HGrid>
+        );
+      })}
       <div>
         <Button
           icon={<PlusIcon />}
