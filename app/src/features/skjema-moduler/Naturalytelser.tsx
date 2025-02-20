@@ -10,6 +10,7 @@ import {
   Stack,
   VStack,
 } from "@navikt/ds-react";
+import { isBefore } from "date-fns";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
@@ -18,6 +19,7 @@ import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePicke
 import {
   Naturalytelsetype,
   NaturalytelseTypeSchema,
+  OpplysningerDto,
 } from "~/types/api-models.ts";
 
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
@@ -30,7 +32,11 @@ export const NATURALYTELSE_SOM_MISTES_TEMPLATE = {
   inkluderTom: undefined,
 };
 
-export function Naturalytelser() {
+type NaturalytelserProps = {
+  opplysninger: OpplysningerDto;
+};
+
+export function Naturalytelser({ opplysninger }: NaturalytelserProps) {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { name, ...radioGroupProps } = register("misterNaturalytelser", {
@@ -70,7 +76,9 @@ export function Naturalytelser() {
           Nei
         </Radio>
       </RadioGroup>
-      {misterNaturalytelser === "ja" ? <MisterNaturalytelser /> : undefined}
+      {misterNaturalytelser === "ja" ? (
+        <MisterNaturalytelser opplysninger={opplysninger} />
+      ) : undefined}
     </VStack>
   );
 }
@@ -99,7 +107,7 @@ const naturalytelser: Record<Naturalytelsetype, string> = {
   ANNET: "Annet",
 };
 
-function MisterNaturalytelser() {
+function MisterNaturalytelser({ opplysninger }: NaturalytelserProps) {
   const { control, register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const { fields, append, remove } = useFieldArray({
@@ -185,7 +193,15 @@ function MisterNaturalytelser() {
               <DatePickerWrapped
                 label="Fra og med"
                 name={`bortfaltNaturalytelsePerioder.${index}.fom` as const}
-                rules={{ required: "Må oppgis" }}
+                rules={{
+                  required: "Må oppgis",
+                  validate: (date: string) => {
+                    return (
+                      !isBefore(date, opplysninger.førsteUttaksdato) ||
+                      "Må være etter første uttaksdag"
+                    );
+                  },
+                }}
               />
 
               <FormattertTallTextField
