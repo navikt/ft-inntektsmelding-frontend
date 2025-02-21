@@ -1,4 +1,9 @@
-import { DatePicker, HStack, useRangeDatepicker } from "@navikt/ds-react";
+import {
+  DatePicker,
+  DatePickerProps,
+  HStack,
+  useRangeDatepicker,
+} from "@navikt/ds-react";
 import { forwardRef } from "react";
 import { RegisterOptions, useController } from "react-hook-form";
 
@@ -12,6 +17,7 @@ type DateRangePickerWrappedProps = {
     fom: RegisterOptions;
     tom: RegisterOptions;
   };
+  datepickerProps?: DatePickerProps;
 };
 
 export const DateRangePickerWrapped = forwardRef<

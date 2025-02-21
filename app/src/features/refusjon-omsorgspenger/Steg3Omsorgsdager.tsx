@@ -27,7 +27,11 @@ import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePic
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
-import { hasAbsenceInDateRange } from "./utils.ts";
+import {
+  beregnGyldigDatoIntervall,
+  hasAbsenceInDateRange,
+  utledDefaultMonthDatepicker,
+} from "./utils.ts";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   useDocumentTitle(
@@ -157,14 +161,7 @@ const FraværHeleDagen = () => {
   });
 
   const årForRefusjon = Number(watch("årForRefusjon"));
-  const iDag = new Date();
-  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
-  const maxDato = årForRefusjon
-    ? new Date(årForRefusjon, iDag.getMonth(), iDag.getDate())
-    : new Date();
-  const minDato = årForRefusjon
-    ? new Date(årForRefusjon, 0, 1)
-    : førsteDagAvIfjor;
+  const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
 
   return (
     <VStack gap="4">
@@ -178,6 +175,9 @@ const FraværHeleDagen = () => {
           key={periode.id}
         >
           <DateRangePickerWrapped
+            datepickerProps={{
+              defaultMonth: utledDefaultMonthDatepicker(årForRefusjon),
+            }}
             maxDato={maxDato}
             minDato={minDato}
             name={`fraværHeleDager.${index}`}
@@ -237,12 +237,15 @@ const FraværHeleDagen = () => {
 };
 
 const FraværDelerAvDagen = () => {
-  const { control, register, formState, watch, clearErrors } =
+  const { control, register, formState, watch, clearErrors, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværDelerAvDagen",
   });
+  const årForRefusjon = Number(watch("årForRefusjon"));
+
+  const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
   return (
     <VStack gap="4">
       <Heading level="3" size="small">
@@ -258,6 +261,11 @@ const FraværDelerAvDagen = () => {
             key={periode.id}
           >
             <DatePickerWrapped
+              datepickerProps={{
+                toDate: maxDato,
+                fromDate: minDato,
+                defaultMonth: utledDefaultMonthDatepicker(årForRefusjon),
+              }}
               key={periode.id}
               label="Dato"
               name={`fraværDelerAvDagen.${index}.dato`}
@@ -281,6 +289,14 @@ const FraværDelerAvDagen = () => {
                   if (value > 24) {
                     return "Antall timer kan ikke være mer enn 24";
                   }
+                },
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.target.value;
+                  const valueWithoutCommas = value.replaceAll(",", ".");
+                  setValue(
+                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
+                    valueWithoutCommas as unknown as number,
+                  );
                 },
               })}
               error={
@@ -317,6 +333,14 @@ const FraværDelerAvDagen = () => {
                   ) {
                     return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
                   }
+                },
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  const value = e.target.value;
+                  const valueWithoutCommas = value.replaceAll(",", ".");
+                  setValue(
+                    `fraværDelerAvDagen.${index}.timerFravær`,
+                    valueWithoutCommas as unknown as number,
+                  );
                 },
               })}
               error={

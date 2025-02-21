@@ -62,3 +62,23 @@ export function hasAbsenceInDateRange(
       hasPartialDayAbsenceInRange(fraværDelerAvDagen, startDate, endDate))
   );
 }
+
+export function beregnGyldigDatoIntervall(årForRefusjon: number) {
+  const iDag = new Date();
+
+  if (årForRefusjon === iDag.getFullYear()) {
+    return { minDato: new Date(iDag.getFullYear(), 0, 1), maxDato: iDag };
+  }
+  const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
+  const sisteDagAvIfjor = new Date(new Date().getFullYear() - 1, 11, 31);
+
+  return { minDato: førsteDagAvIfjor, maxDato: sisteDagAvIfjor };
+}
+
+export function utledDefaultMonthDatepicker(årForRefusjon: number) {
+  const iDag = new Date();
+  if (årForRefusjon === iDag.getFullYear()) {
+    return iDag;
+  }
+  return new Date(`${årForRefusjon}-12-31`);
+}
