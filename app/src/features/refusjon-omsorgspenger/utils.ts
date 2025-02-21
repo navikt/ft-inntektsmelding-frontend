@@ -16,23 +16,15 @@ type FraværDelerAvDagenArray =
  */
 export function hasFullDayAbsenceInRange(
   fraværHeleDager: FraværPeriodeArray,
-  startDate: string,
-  endDate: string,
+  startDate: Date,
+  endDate: Date,
 ) {
   return fraværHeleDager?.some((fravær) => {
     return (
       (fravær.fom &&
-        isDateWithinRange(
-          new Date(fravær.fom),
-          new Date(startDate),
-          new Date(endDate),
-        )) ||
+        isDateWithinRange(new Date(fravær.fom), startDate, endDate)) ||
       (fravær.tom &&
-        isDateWithinRange(
-          new Date(fravær.tom),
-          new Date(startDate),
-          new Date(endDate),
-        ))
+        isDateWithinRange(new Date(fravær.tom), startDate, endDate))
     );
   });
 }
@@ -46,26 +38,22 @@ export function hasFullDayAbsenceInRange(
  */
 export function hasPartialDayAbsenceInRange(
   fraværDelerAvDagen: FraværDelerAvDagenArray,
-  startDate: string,
-  endDate: string,
+  startDate: Date,
+  endDate: Date,
 ) {
   return fraværDelerAvDagen?.some((fravær) => {
     if (!fravær?.dato) {
       return false;
     }
-    return isDateWithinRange(
-      new Date(fravær.dato),
-      new Date(startDate),
-      new Date(endDate),
-    );
+    return isDateWithinRange(new Date(fravær.dato), startDate, endDate);
   });
 }
 
 export function hasAbsenceInDateRange(
   fraværHeleDager: FraværPeriodeArray = [],
   fraværDelerAvDagen: FraværDelerAvDagenArray = [],
-  startDate: string,
-  endDate: string,
+  startDate: Date,
+  endDate: Date,
 ) {
   return (
     (fraværHeleDager?.length > 0 &&

@@ -7,12 +7,12 @@ import {
 import {
   Alert,
   BodyLong,
-  BodyShort,
   Button,
   GuidePanel,
   Heading,
   HGrid,
   HStack,
+  Label,
   List,
   Radio,
   RadioGroup,
@@ -72,8 +72,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const fraværErInnenforDatoer = hasAbsenceInDateRange(
     fraværHeleDager,
     fraværDelerAvDagen,
-    `${årForRefusjon}-01-01`,
-    `${årForRefusjon}-10-01`,
+    new Date(`${årForRefusjon}-01-01`),
+    new Date(`${årForRefusjon}-01-10`),
   );
   return (
     <div>
@@ -110,28 +110,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             </Radio>
           </RadioGroup>
           {harDekket10FørsteOmsorgsdager === "nei" && (
-            <Alert variant="info">
-              <VStack gap="4">
-                <BodyLong>
-                  Arbeidsgiver har som hovedregel plikt til å dekke de første ti
-                  omsorgsdagene i kalenderåret. Hvis den ansatte har rett til
-                  mer enn ti omsorgsdager, kan dere søke refusjon fra 11.
-                  fraværsdag.
-                </BodyLong>
-                <List>
-                  I noen situasjoner kan dere likevel søke om refusjon fra
-                  første fraværsdag. Det er aktuelt hvis:
-                  <List.Item>
-                    den ansatte ikke har jobbet fire uker før fraværet
-                  </List.Item>
-                  <List.Item>
-                    den ansatte sine barn fyller/er fylt 13 år, men har fått
-                    ekstra omsorgsdager for et barn på grunn av
-                    langvarig/kronisk sykdom eller funksjonshemning.
-                  </List.Item>
-                </List>
-              </VStack>
-            </Alert>
+            <TiFørsteOmsorgsdagerInfo />
           )}
           {formState.errors.fraværHeleDager?.message && (
             <Alert aria-live="polite" variant="error">
@@ -141,28 +120,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           <FraværHeleDagen />
           <FraværDelerAvDagen />
 
-          {fraværErInnenforDatoer && (
-            <Alert variant="info">
-              <VStack gap="4">
-                <BodyShort>
-                  Arbeidsgiver har som hovedregel plikt til å dekke de første ti
-                  omsorgsdagene i kalenderåret. Hvis den ansatte har rett til
-                  mer enn ti omsorgsdager, kan dere søke refusjon fra 11.
-                  fraværsdag.
-                </BodyShort>
-                <List>
-                  Du kan unntaksvis kreve refusjon for de første 10 dagene hvis:
-                  <List.Item>
-                    den ansatte ikke har jobbet fire uker før fraværet
-                  </List.Item>
-                  <List.Item>
-                    den ansatte sine barn fyller/er fylt 13 år, men har fått
-                    ekstra omsorgsdager for et barn på grunn av
-                    langvarig/kronisk sykdom eller funksjonshemning.
-                  </List.Item>
-                </List>
-              </VStack>
-            </Alert>
+          {fraværErInnenforDatoer && harDekket10FørsteOmsorgsdager === "ja" && (
+            <TiFørsteOmsorgsdagerInfo />
           )}
 
           <div className="flex gap-4 mt-8">
@@ -400,5 +359,30 @@ const FraværDelerAvDagen = () => {
         </Button>
       </div>
     </VStack>
+  );
+};
+
+const TiFørsteOmsorgsdagerInfo = () => {
+  return (
+    <Alert variant="info">
+      <VStack gap="4">
+        <Label>Arbeidsgivers plikt til å utbetale omsorgsdager</Label>
+        <BodyLong>
+          Som hovedregel har arbeidsgiver plikt til å dekke de første ti
+          omsorgsdagene i hvert kalenderår.
+        </BodyLong>
+        <List>
+          Du kan unntaksvis kreve refusjon for de første 10 dagene hvis:
+          <List.Item>
+            den ansatte ikke hadde jobbet fire uker før fraværet.
+          </List.Item>
+          <List.Item>
+            den ansatte sine barn fyller/er fylt 13 år, men har fått ekstra
+            omsorgsdager for et barn på grunn av langvarig/kronisk sykdom eller
+            funksjonshemning.
+          </List.Item>
+        </List>
+      </VStack>
+    </Alert>
   );
 };
