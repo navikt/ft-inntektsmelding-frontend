@@ -22,6 +22,7 @@ import {
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useFieldArray } from "react-hook-form";
 
+import { HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -127,6 +128,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           {fraværErInnenforDatoer && harDekket10FørsteOmsorgsdager === "ja" && (
             <TiFørsteOmsorgsdagerInfo />
           )}
+          <HjelpetekstReadMore header="Har den ansatte hatt en varig lønnsendring?">
+            Hvis dere krever refusjon for flere perioder, og den ansatte har
+            hatt varig lønnsendring mellom periodene, må dere sende to
+            refusjonskrav for periodene før og etter lønnsendring.
+          </HjelpetekstReadMore>
 
           <div className="flex gap-4 mt-8">
             <Button
