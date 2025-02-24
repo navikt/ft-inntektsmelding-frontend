@@ -9,9 +9,7 @@ type DatePickerWrappedProps = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- usikker på hvordan rules skal types, og om det er såå viktig.
   rules?: any;
   shouldUnregister?: boolean;
-  datepickerProps?: DatePickerProps & {
-    defaultMonth?: Date;
-  };
+  datepickerProps?: DatePickerProps;
 } & DateInputProps;
 
 export function DatePickerWrapped({
