@@ -23,7 +23,7 @@ type DateRangePickerWrappedProps = {
 export const DateRangePickerWrapped = forwardRef<
   HTMLDivElement,
   DateRangePickerWrappedProps
->(({ name, minDato, maxDato, rules }, ref) => {
+>(({ name, minDato, maxDato, rules, datepickerProps }, ref) => {
   const { field: fromField, fieldState: fromFieldState } = useController({
     name: `${name}.fom`,
     rules: rules?.fom,
@@ -32,7 +32,12 @@ export const DateRangePickerWrapped = forwardRef<
     name: `${name}.tom`,
     rules: rules?.tom,
   });
-  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
+  const {
+    datepickerProps: useRangeDatepickerProps,
+    toInputProps,
+    fromInputProps,
+  } = useRangeDatepicker({
+    ...datepickerProps,
     fromDate: minDato,
     toDate: maxDato,
     onRangeChange: (dateRange) => {
@@ -55,7 +60,7 @@ export const DateRangePickerWrapped = forwardRef<
     },
   });
   return (
-    <DatePicker {...datepickerProps}>
+    <DatePicker {...useRangeDatepickerProps}>
       <HStack align="baseline" gap="4" ref={ref}>
         <DatePicker.Input
           {...fromInputProps}
