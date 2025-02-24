@@ -77,3 +77,6 @@ PS: Vet ikke om denne brukeren har noe use case lenger. Ser ut som den mangler t
 - Legg inn BankID passord: qwer1234
 
 Det er også egne readmes for [appen](./app/README.md), [ende-til-ende-testing](./app/tests/README.md) og for [serveren](./server/README.md).
+
+## Kode generert av GitHub Copilot
+Dette repoet bruker GitHub Copilot til å generere kode.
