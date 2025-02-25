@@ -11,7 +11,7 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 
 import { lagFulltNavn } from "~/utils.ts";
 
@@ -19,12 +19,13 @@ import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
+import { mapSkjemaTilSendInntektsmeldingRequest } from "./utils.ts";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
-  const navigate = useNavigate();
+  const { handleSubmit } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   return (
     <div>
       <Heading level="1" size="large">
@@ -49,13 +50,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <Button
           icon={<PaperplaneIcon />}
           iconPosition="right"
-          onClick={() => {
-            alert("Søknad ikke egentlig sendt inn, men vi kan late som");
-            navigate({
-              from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-              to: "../6-kvittering",
-            });
-          }}
+          onClick={handleSubmit((values) =>
+            mapSkjemaTilSendInntektsmeldingRequest(values),
+          )}
           variant="primary"
         >
           Send inn
