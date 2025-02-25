@@ -79,9 +79,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
       <OmsorgspengerFremgangsindikator aktivtSteg={4} />
       <GuidePanel className="mb-4">
         <BodyLong>
-          Oppgi kun dager dere søker refusjon for. Har det vært en varig
-          lønnsendring mellom perioder som dere ønsker vi skal ta hensyn til, må
-          dere sende inn to søknader med periodene før og etter lønnsendring.
+          Vi har forhåndsutfylt beregnet månedsbeløp ut fra opplysninger i
+          A-ordningen. Vurder om beløpet er riktig, eller gjør endringer hvis
+          noe ikke stemmer. Beregnet månedslønn tilsvarer beløpet dere kan få i
+          refusjon.
         </BodyLong>
       </GuidePanel>
       <form onSubmit={onSubmit}>
