@@ -5,13 +5,13 @@ import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import isEqual from "lodash/isEqual";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
-import { ARBEIDSGIVER_INITERT_ID } from "~/api/queries.ts";
 import {
   InntektsmeldingSkjemaStateValid,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "~/features/useDocumentTitle";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
 import {

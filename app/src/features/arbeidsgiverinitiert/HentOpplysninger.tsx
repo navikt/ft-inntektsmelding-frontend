@@ -21,13 +21,10 @@ import {
 } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
-import {
-  ARBEIDSGIVER_INITERT_ID,
-  hentOpplysninger,
-  hentPersonFraFnr,
-} from "~/api/queries.ts";
+import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import {
   OpplysningerRequest,
   SlåOppArbeidstakerResponseDto,

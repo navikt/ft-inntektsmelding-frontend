@@ -4,6 +4,7 @@ import { z } from "zod";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
 import { parseStorageItem } from "~/features/usePersistedState.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import {
   feilmeldingSchema,
   grunnbeløpSchema,
@@ -17,7 +18,6 @@ import {
 import { logDev } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
-export const ARBEIDSGIVER_INITERT_ID = "agi";
 
 export const hentInntektsmeldingPdfUrl = (id: number) =>
   `${SERVER_URL}/imdialog/last-ned-pdf?id=${id}`;
