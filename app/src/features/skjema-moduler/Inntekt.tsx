@@ -22,7 +22,7 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import clsx from "clsx";
 import { isAfter } from "date-fns";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 import {
@@ -453,12 +453,6 @@ function Endringsårsaker({
     : Object.values(endringsårsak).filter(
         (årsak) => årsak.value !== "TARIFFENDRING",
       );
-
-  useEffect(() => {
-    if (fields.length <= 0) {
-      append(ENDRINGSÅRSAK_TEMPLATE);
-    }
-  }, []);
 
   return (
     <VStack gap="4">
