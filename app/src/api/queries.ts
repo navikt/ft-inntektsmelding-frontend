@@ -185,15 +185,7 @@ export async function hentPersonFraFnr(
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 
-  // MOCK
-  const data = parsedJson.data;
-  return {
-    ...data,
-    arbeidsforhold: [
-      data.arbeidsforhold[0],
-      { organisasjonsnavn: "TEST", organisasjonsnummer: "123_123_123" },
-    ],
-  };
+  return parsedJson.data;
 }
 
 export async function hentOpplysninger(
