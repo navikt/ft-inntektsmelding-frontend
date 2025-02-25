@@ -31,7 +31,7 @@ test("Ny ansatt", async ({ page }) => {
     await route.fulfill({ json: enkeltOpplysningerResponse });
   });
 
-  await page.getByLabel("Arbeidsgiver").selectOption("123_123_123");
+  await page.getByLabel("Arbeidsgiver").selectOption("974652293");
 
   await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
   await expect(
@@ -57,5 +57,5 @@ test("Kun kvinner kan søke SVP", async ({ page }) => {
 
   await page.getByRole("link", { name: "Klikk her" }).click();
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
-  await page.getByLabel("Arbeidsgiver").selectOption("123_123_123");
+  await page.getByLabel("Arbeidsgiver").selectOption("974652293");
 });

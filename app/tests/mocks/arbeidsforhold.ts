@@ -8,6 +8,10 @@ export const arbeidsforholdResponse = {
       organisasjonsnavn: "HELDIG SPRUDLENDE TIGER AS",
       organisasjonsnummer: "315786940",
     },
+    {
+      organisasjonsnavn: "NAV",
+      organisasjonsnummer: "974652293",
+    },
   ],
   kjønn: "MANN",
 } satisfies SlåOppArbeidstakerResponseDto;
