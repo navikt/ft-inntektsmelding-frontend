@@ -17,6 +17,7 @@ import {
 import { logDev } from "~/utils.ts";
 
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
+export const ARBEIDSGIVER_INITERT_ID = "agi";
 
 export const hentInntektsmeldingPdfUrl = (id: number) =>
   `${SERVER_URL}/imdialog/last-ned-pdf?id=${id}`;
@@ -49,8 +50,7 @@ async function hentGrunnbeløp() {
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
-  if (uuid === "custom-id") {
-    //TODO: konstant for custom uuid
+  if (uuid === ARBEIDSGIVER_INITERT_ID) {
     return [];
   }
   const response = await fetch(
@@ -117,11 +117,11 @@ export function mapInntektsmeldingResponseTilValidState(
 }
 
 export async function hentOpplysningerData(uuid: string) {
-  if (uuid === "custom-id") {
+  if (uuid === ARBEIDSGIVER_INITERT_ID) {
     // Da har vi en fakeId. Hent fra sessionstorage
     const opplysninger = parseStorageItem(
       sessionStorage,
-      "custom-id",
+      ARBEIDSGIVER_INITERT_ID,
       opplysningerSchema,
     );
     if (!opplysninger) {

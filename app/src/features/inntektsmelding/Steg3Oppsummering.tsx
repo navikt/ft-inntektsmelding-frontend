@@ -5,6 +5,7 @@ import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
 import isEqual from "lodash/isEqual";
 
 import { sendInntektsmelding } from "~/api/mutations.ts";
+import { ARBEIDSGIVER_INITERT_ID } from "~/api/queries.ts";
 import {
   InntektsmeldingSkjemaStateValid,
   useInntektsmeldingSkjema,
@@ -183,7 +184,7 @@ function lagSendInntektsmeldingRequest(
   );
 
   return {
-    foresporselUuid: id === "custom-id" ? undefined : id,
+    foresporselUuid: id === ARBEIDSGIVER_INITERT_ID ? undefined : id,
     aktorId: opplysninger.person.aktørId,
     ytelse: opplysninger.ytelse,
     arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,

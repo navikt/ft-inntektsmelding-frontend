@@ -21,7 +21,11 @@ import {
 } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
-import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
+import {
+  ARBEIDSGIVER_INITERT_ID,
+  hentOpplysninger,
+  hentPersonFraFnr,
+} from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
 import {
@@ -68,7 +72,7 @@ export const HentOpplysninger = () => {
         // 2. lagrer opplysningene i sessionStorage
         // 3. redirecter til samme sti som før
         // 4. komponenten leser ID og avgjør om den skal hente opplysninger fra Backend eller sessionstorage.
-        const fakeId = "custom-id";
+        const fakeId = ARBEIDSGIVER_INITERT_ID;
         const opplysningerMedId = {
           ...opplysninger,
           forespørselUuid: fakeId,
