@@ -13,6 +13,7 @@ import {
   opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist,
   opplysningerMedSisteMånedRapportert0,
 } from "../mocks/opplysninger.ts";
+import { enkelSendInntektsmeldingResponse } from "../mocks/send-inntektsmelding.ts";
 
 test("[08.05] Alle 3 måneder har rapportert inntekt", async ({ page }) => {
   await mockOpplysninger({ page, json: enkeltOpplysningerResponse });
@@ -226,8 +227,12 @@ test("A-inntekt er nede", async ({ page }) => {
   await mockInntektsmeldinger({
     page,
   });
+  await page.goto("/fp-im-dialog/1/dine-opplysninger");
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  // Fyll ut navn og telefonnummer på "dine-opplysninger steget"
+  await page.getByLabel("Navn").fill("Test Brukersen");
+  await page.getByLabel("Telefon").fill("13371337");
+  await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -254,4 +259,26 @@ test("A-inntekt er nede", async ({ page }) => {
   await expect(
     beregnetMånedslønn.getByTestId("alert-ikke-rapportert-frist-ikke-passert"),
   ).toBeVisible({ visible: false });
+
+  await page
+    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .click();
+
+  await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
+
+  await page.getByRole("button", { name: "Neste steg" }).click();
+
+  // Nå er vi på "oppsummering"-steget.
+  await expect(
+    page.getByRole("heading", { name: "Oppsummering" }),
+  ).toBeVisible();
+
+  await page.route(`**/*/imdialog/send-inntektsmelding`, async (route) => {
+    await route.fulfill({ json: enkelSendInntektsmeldingResponse });
+  });
+  await page.getByRole("button", { name: "Send inn" }).click();
+
+  await expect(
+    page.getByText("Vi har mottatt inntektsmeldingen"),
+  ).toBeVisible();
 });

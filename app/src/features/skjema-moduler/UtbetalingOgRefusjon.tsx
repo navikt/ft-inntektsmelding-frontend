@@ -53,6 +53,16 @@ export function UtbetalingOgRefusjon() {
     }
   }, [korrigertInntekt]);
 
+  // Denne bolken er kun relevant hvis A-inntekt er nede. Da vil bruker endre på inntekts-feltet.
+  // I alle andre tilfeller er det korrigertInntekt de vil endre.
+  // Dette fordi når A-inntekt er nede forventer vi ingen endringsårsak da bruker ikke fikk noen foreslått inntekt til å begynne med
+  const inntekt = watch("inntekt");
+  useEffect(() => {
+    if (inntekt) {
+      setValue("refusjon.0.beløp", inntekt);
+    }
+  }, [inntekt]);
+
   const skalRefunderes = watch("skalRefunderes");
 
   return (
