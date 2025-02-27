@@ -196,6 +196,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                 {...register("kontaktperson.telefonnummer", {
                   required:
                     "Du må fylle ut telefonnummeret til kontaktpersonen",
+                  validate: (data) =>
+                    /^(\d{8}|\+\d+)$/.test(data) ||
+                    "Telefonnummer må være 8 siffer eller ha landskode",
                 })}
                 error={formState.errors.kontaktperson?.telefonnummer?.message}
               />
