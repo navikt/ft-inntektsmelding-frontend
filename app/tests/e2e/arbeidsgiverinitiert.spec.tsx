@@ -39,6 +39,33 @@ test("Ny ansatt", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("Skal ikke kunne velge NEI på refusjon hvis AGI", async ({ page }) => {
+  await mockHentPersonOgArbeidsforhold({ page });
+
+  await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
+
+  await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
+  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
+  await page.getByLabel("Første fraværsdag").fill("01.4.2024");
+  await page.getByRole("button", { name: "Hent opplysninger" }).click();
+
+  await page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
+    await route.fulfill({ json: enkeltOpplysningerResponse });
+  });
+
+  await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+
+  await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
+  await page.getByLabel("Telefon").fill("13371337");
+  await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
+
+  await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
+  await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
+  await expect(page.getByRole("button", { name: "Neste steg" })).toBeVisible({
+    visible: false,
+  });
+});
+
 test("Kun kvinner kan søke SVP", async ({ page }) => {
   await mockHentPersonOgArbeidsforhold({ page });
 
