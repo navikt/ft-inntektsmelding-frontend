@@ -40,16 +40,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   });
 
   const { name: harUtbetaltLønnName, ...harUtbetaltLønnRadioGroupProps } =
-    register("harUtbetaltLønn", {
-      required: "Du må svare på om dere har utbetalt lønn under fraværet",
-    });
+    register("harUtbetaltLønn");
 
-  const { name: årForRefusjonName, ...årForRefusjonRadioGroupProps } = register(
-    "årForRefusjon",
-    {
-      required: "Du må svare på hvilket år du søker refusjon for",
-    },
-  );
+  const { name: årForRefusjonName, ...årForRefusjonRadioGroupProps } =
+    register("årForRefusjon");
 
   return (
     <div>
@@ -113,10 +107,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
             legend="Hvilket år søker dere refusjon for?"
             name={årForRefusjonName}
           >
-            <Radio value={iFjor} {...årForRefusjonRadioGroupProps}>
+            <Radio value={String(iFjor)} {...årForRefusjonRadioGroupProps}>
               {iFjor}
             </Radio>
-            <Radio value={iÅr} {...årForRefusjonRadioGroupProps}>
+            <Radio value={String(iÅr)} {...årForRefusjonRadioGroupProps}>
               {iÅr}
             </Radio>
           </RadioGroup>

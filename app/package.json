@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@grafana/faro-react": "1.13.1",
+    "@hookform/resolvers": "4.1.2",
     "@navikt/aksel-icons": "7.12.2",
     "@navikt/ds-css": "7.12.2",
     "@navikt/ds-react": "7.12.2",

@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,7 +10,25 @@ import { beløpSchema, lagFulltNavn } from "~/utils";
 
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
-export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
+// Step 1: Refusjon (Intro)
+// her har vi en preprocess fordi feltene er radio knapper og blir null når ingen radios er checked
+export const Steg1RefusjonSchema = z.object({
+  harUtbetaltLønn: z.preprocess(
+    (val) => val || "",
+    z.string().min(1, {
+      message: "Du må svare på om dere har utbetalt lønn under fraværet",
+    }),
+  ),
+  årForRefusjon: z.preprocess(
+    (val) => val || "",
+    z.string().min(1, {
+      message: "Du må svare på hvilket år du søker refusjon for",
+    }),
+  ),
+});
+
+// Step 2: Den ansatte og arbeidsgiver (Employee and employer)
+export const Steg2AnsattOgArbeidsgiverSchema = z.object({
   kontaktperson: z
     .object({
       navn: z.string(),
@@ -20,10 +39,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   ansattesFornavn: z.string().optional(),
   ansattesEtternavn: z.string().optional(),
   ansattesAktørId: z.string().optional(),
-  årForRefusjon: z.string().optional(),
-  harUtbetaltLønn: z.string().optional(),
   organisasjonsnummer: z.string(),
   valgtArbeidsforhold: z.string().optional(),
+});
+
+// Step 3: Omsorgsdager (Care days)
+export const Steg3OmsorgsdagerSchema = z.object({
   harDekket10FørsteOmsorgsdager: z.string().optional(),
   fraværHeleDager: z
     .array(
@@ -42,6 +63,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
       }),
     )
     .optional(),
+});
+
+// Step 4: Beregnet månedslønn (Calculated monthly salary)
+export const Steg4BeregnetMånedslonnSchema = z.object({
   inntekt: beløpSchema,
   korrigertInntekt: beløpSchema.optional(),
   endringAvInntektÅrsaker: z.array(
@@ -77,6 +102,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
   ),
 });
 
+// Combined schema for the entire form
+export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
+  // Steg 1
+  ...Steg1RefusjonSchema.shape,
+  // Steg 2
+  ...Steg2AnsattOgArbeidsgiverSchema.shape,
+  // Steg 3
+  ...Steg3OmsorgsdagerSchema.shape,
+  // Steg 4
+  ...Steg4BeregnetMånedslonnSchema.shape,
+});
+
 export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<
   typeof RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema
 >;
@@ -86,12 +123,25 @@ type Props = {
 };
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
   const opplysninger = useInnloggetBruker();
+
   const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
+    resolver: zodResolver(RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema),
     defaultValues: {
+      // Default values for Step 1
+      harUtbetaltLønn: "",
+      årForRefusjon: "",
+      // Default values for Step 2
       kontaktperson: {
         navn: lagFulltNavn(opplysninger),
         telefonnummer: opplysninger.telefon,
       },
+      // Default values for Step 3
+      fraværHeleDager: [],
+      fraværDelerAvDagen: [],
+      // Default values for Step 4
+      endringAvInntektÅrsaker: [],
+      refusjon: [],
+      bortfaltNaturalytelsePerioder: [],
     },
   });
   return <FormProvider {...formArgs}>{children}</FormProvider>;
@@ -100,3 +150,11 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
 export const useRefusjonOmsorgspengerArbeidsgiverFormContext = () => {
   return useFormContext<RefusjonOmsorgspengerArbeidsgiverSkjemaState>();
 };
+
+// Export functions to get validation schema for each step
+export const getSteg1Schema = () => Steg1RefusjonSchema;
+export const getSteg2Schema = () => Steg2AnsattOgArbeidsgiverSchema;
+export const getSteg3Schema = () => Steg3OmsorgsdagerSchema;
+export const getSteg4Schema = () => Steg4BeregnetMånedslonnSchema;
+export const getFullSchema = () =>
+  RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema;
