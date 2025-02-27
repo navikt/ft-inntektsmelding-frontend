@@ -61,9 +61,7 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI", async ({ page }) => {
 
   await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
   await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
-  await expect(page.getByRole("button", { name: "Neste steg" })).toBeVisible({
-    visible: false,
-  });
+  await expect(page.getByRole("button", { name: "Neste steg" })).toBeDisabled();
 });
 
 test("Kun kvinner kan søke SVP", async ({ page }) => {

@@ -27,6 +27,7 @@ import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
 
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
@@ -45,7 +46,7 @@ export function UtbetalingOgRefusjon() {
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
-  console.log(opplysninger.forespørselUuid)
+  console.log(opplysninger.forespørselUuid);
   const korrigertInntekt = watch("korrigertInntekt");
   useEffect(() => {
     if (korrigertInntekt) {
@@ -115,9 +116,16 @@ export function UtbetalingOgRefusjon() {
       {skalRefunderes === "JA_VARIERENDE_REFUSJON" ? (
         <VarierendeRefusjon />
       ) : undefined}
-      {skalRefunderes === "NEI" && !opplysninger.forespørselUuid && (
-        <Alert variant="warning">oh nonono</Alert>
-      )}
+      {skalRefunderes === "NEI" &&
+        opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID && (
+          <Alert variant="warning">
+            <Heading level="2" size="small">
+              Inntektsmelding kan ikke sendes inn
+            </Heading>
+            Dersom du ikke krever refusjon så trenger du ikke sende inn ny
+            inntektsmelding for den nyansatte
+          </Alert>
+        )}
     </VStack>
   );
 }
