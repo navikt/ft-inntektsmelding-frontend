@@ -92,6 +92,14 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
         navn: lagFulltNavn(opplysninger),
         telefonnummer: opplysninger.telefon,
       },
+      endringAvInntektÅrsaker: [
+        {
+          årsak: "",
+          fom: "",
+          tom: "",
+          bleKjentFom: "",
+        },
+      ],
     },
   });
   return <FormProvider {...formArgs}>{children}</FormProvider>;
