@@ -122,8 +122,8 @@ export function UtbetalingOgRefusjon() {
             <Heading level="2" size="small">
               Inntektsmelding kan ikke sendes inn
             </Heading>
-            Dersom du ikke krever refusjon så trenger du ikke sende inn ny
-            inntektsmelding for den nyansatte
+            Det er ikke nødvendig å sende inn inntektsmelding dersom du ikke
+            krever refusjon for den nyansatte.
           </Alert>
         )}
     </VStack>
