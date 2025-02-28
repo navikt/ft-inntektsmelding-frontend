@@ -46,7 +46,6 @@ export function UtbetalingOgRefusjon() {
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
   });
-  console.log(opplysninger.forespørselUuid);
   const korrigertInntekt = watch("korrigertInntekt");
   useEffect(() => {
     if (korrigertInntekt) {
