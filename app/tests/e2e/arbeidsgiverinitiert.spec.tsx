@@ -39,7 +39,9 @@ test("Ny ansatt", async ({ page }) => {
   ).toBeVisible();
 });
 
-test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({ page }) => {
+test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
+  page,
+}) => {
   await mockHentPersonOgArbeidsforhold({ page });
 
   await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
@@ -61,7 +63,9 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({ pag
 
   await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
   await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
-  await expect(page.getByText("Inntektsmelding kan ikke sendes inn")).toBeVisible();
+  await expect(
+    page.getByText("Inntektsmelding kan ikke sendes inn"),
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Neste steg" })).toBeDisabled();
 });
 
