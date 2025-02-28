@@ -124,11 +124,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                 >
                   {data.arbeidsforhold.map((arbeidsforhold) => (
                     <option
-                      key={arbeidsforhold.organisasjonsnummer}
-                      value={arbeidsforhold.organisasjonsnummer}
+                      key={arbeidsforhold.arbeidsforholdId}
+                      value={arbeidsforhold.arbeidsforholdId}
                     >
-                      {arbeidsforhold.organisasjonsnavn} (
-                      {arbeidsforhold.organisasjonsnummer})
+                      {arbeidsforhold.organisasjonsnummer} (
+                      {arbeidsforhold.arbeidsforholdId})
                     </option>
                   ))}
                 </Select>
