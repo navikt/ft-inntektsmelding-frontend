@@ -126,7 +126,7 @@ export function Inntekt({
           inputMode="numeric"
           label="Beregnet måndslønn"
           min={0}
-          name="korrigertInntekt"
+          name="inntekt"
           required
         />
       ) : isOpen ? (

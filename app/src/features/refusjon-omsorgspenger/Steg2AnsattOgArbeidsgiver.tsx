@@ -205,14 +205,14 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             </div>
           </div>
           <Alert variant="info">
-            <Heading level="3" size="small">
-              Stemmer opplysningene?
+            <Heading level="3" size="xsmall" spacing>
+              Er kontaktinformasjonen riktig?
             </Heading>
             <BodyLong>
-              Har vi spørsmål til refusjonskravet er det viktig at vi når rett
-              person, bruk derfor direktenummer fremfor sentralbordnummer. Endre
-              til annen kontaktperson dersom du vet du vil være utilgjengelig
-              fremover.
+              Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi får
+              kontakt med deg. Bruk derfor direktenummeret ditt i stedet for
+              nummeret til sentralbordet. Hvis du vet at du vil være
+              utilgjengelig fremover, kan du endre til en annen kontaktperson.
             </BodyLong>
           </Alert>
         </Informasjonsseksjon>

@@ -1,4 +1,9 @@
-import { DatePicker, HStack, useRangeDatepicker } from "@navikt/ds-react";
+import {
+  DatePicker,
+  DatePickerProps,
+  HStack,
+  useRangeDatepicker,
+} from "@navikt/ds-react";
 import { forwardRef } from "react";
 import { RegisterOptions, useController } from "react-hook-form";
 
@@ -12,12 +17,13 @@ type DateRangePickerWrappedProps = {
     fom: RegisterOptions;
     tom: RegisterOptions;
   };
+  datepickerProps?: DatePickerProps;
 };
 
 export const DateRangePickerWrapped = forwardRef<
   HTMLDivElement,
   DateRangePickerWrappedProps
->(({ name, minDato, maxDato, rules }, ref) => {
+>(({ name, minDato, maxDato, rules, datepickerProps }, ref) => {
   const { field: fromField, fieldState: fromFieldState } = useController({
     name: `${name}.fom`,
     rules: rules?.fom,
@@ -26,7 +32,12 @@ export const DateRangePickerWrapped = forwardRef<
     name: `${name}.tom`,
     rules: rules?.tom,
   });
-  const { datepickerProps, toInputProps, fromInputProps } = useRangeDatepicker({
+  const {
+    datepickerProps: useRangeDatepickerProps,
+    toInputProps,
+    fromInputProps,
+  } = useRangeDatepicker({
+    ...datepickerProps,
     fromDate: minDato,
     toDate: maxDato,
     onRangeChange: (dateRange) => {
@@ -49,18 +60,20 @@ export const DateRangePickerWrapped = forwardRef<
     },
   });
   return (
-    <DatePicker {...datepickerProps}>
-      <HStack align="center" gap="4" justify="center" ref={ref} wrap>
+    <DatePicker {...useRangeDatepickerProps}>
+      <HStack align="baseline" gap="4" ref={ref}>
         <DatePicker.Input
           {...fromInputProps}
-          error={fromFieldState.error?.message}
+          error={fromFieldState.isTouched && fromFieldState.error?.message}
           label="Fra og med"
+          onBlur={fromField.onBlur}
           ref={fromField.ref}
         />
         <DatePicker.Input
           {...toInputProps}
-          error={toFieldState.error?.message}
+          error={toFieldState.isTouched && toFieldState.error?.message}
           label="Til og med"
+          onBlur={toField.onBlur}
           ref={toField.ref}
         />
       </HStack>

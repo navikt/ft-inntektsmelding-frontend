@@ -4,6 +4,7 @@ import { z } from "zod";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
 import { parseStorageItem } from "~/features/usePersistedState.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import {
   feilmeldingSchema,
   grunnbeløpSchema,
@@ -49,8 +50,7 @@ async function hentGrunnbeløp() {
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
-  if (uuid === "custom-id") {
-    //TODO: konstant for custom uuid
+  if (uuid === ARBEIDSGIVER_INITERT_ID) {
     return [];
   }
   const response = await fetch(
@@ -117,11 +117,11 @@ export function mapInntektsmeldingResponseTilValidState(
 }
 
 export async function hentOpplysningerData(uuid: string) {
-  if (uuid === "custom-id") {
+  if (uuid === ARBEIDSGIVER_INITERT_ID) {
     // Da har vi en fakeId. Hent fra sessionstorage
     const opplysninger = parseStorageItem(
       sessionStorage,
-      "custom-id",
+      ARBEIDSGIVER_INITERT_ID,
       opplysningerSchema,
     );
     if (!opplysninger) {
@@ -185,15 +185,7 @@ export async function hentPersonFraFnr(
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 
-  // MOCK
-  const data = parsedJson.data;
-  return {
-    ...data,
-    arbeidsforhold: [
-      data.arbeidsforhold[0],
-      { organisasjonsnavn: "TEST", organisasjonsnummer: "123_123_123" },
-    ],
-  };
+  return parsedJson.data;
 }
 
 export async function hentOpplysninger(

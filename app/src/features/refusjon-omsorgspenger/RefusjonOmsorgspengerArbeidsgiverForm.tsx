@@ -139,9 +139,16 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
       fraværHeleDager: [],
       fraværDelerAvDagen: [],
       // Default values for Step 4
-      endringAvInntektÅrsaker: [],
       refusjon: [],
       bortfaltNaturalytelsePerioder: [],
+      endringAvInntektÅrsaker: [
+        {
+          årsak: "",
+          fom: "",
+          tom: "",
+          bleKjentFom: "",
+        },
+      ],
     },
   });
   return <FormProvider {...formArgs}>{children}</FormProvider>;

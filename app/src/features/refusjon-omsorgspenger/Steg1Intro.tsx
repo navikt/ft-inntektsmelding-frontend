@@ -57,14 +57,14 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
             Hei {capitalizeSetning(innloggetBruker.fornavn)}!
           </Heading>
           <BodyLong>
-            Dere kan søke om refusjon av omsorgspenger for bruk av omsorgsdager
-            opptil tre måneder tilbake i tid, regnet fra måneden før vi mottar
-            søknaden deres.
+            Her kan du søke om refusjon for en ansatt som har vært hjemme med
+            sykt barn.
           </BodyLong>
           <BodyLong>
-            Dere kan kun søke om utbetaling for ett og samme år. Det betyr at
-            hvis dere skal søke om utbetaling for både {iFjor} og {iÅr}, må dere
-            sende to separate søknader.
+            {`Du kan søke for perioder inntil tre måneder tilbake i tid. Du kan
+            kun søke om utbetaling innenfor ett kalenderår av gangen. Det betyr
+            at hvis du skal søke om refusjon for perioder i både ${iFjor} og
+            ${iÅr}, må du sende to separate søknader.`}
           </BodyLong>
         </VStack>
       </GuidePanel>
@@ -85,20 +85,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
           {harUtbetaltLønn === "nei" && (
             <Alert variant="warning">
               <Heading level="3" size="small" spacing>
-                Arbeidsgivers plikt til å betale omsorgsdager
+                Arbeidsgivers plikt til å utbetale omsorgsdager
               </Heading>
               <BodyLong spacing>
-                Hvis arbeidstakeren har jobbet hos dere i 4 uker eller mer,
-                plikter dere å utbetale lønn for alle omsorgsdagene som
-                arbeidstakeren har rett til å bruke.
+                Hvis den ansatte har jobbet hos dere i minst fire uker, plikter
+                dere å utbetale lønn for alle omsorgsdagene som den ansatte har
+                rett til å bruke.
               </BodyLong>
               <BodyLong>
-                Hvis den ansatte har vært i jobb i mindre enn 4 uker, kan den
-                ansatte søke om utbetaling direkte fra Nav. Den ansatte må søke
-                om omsorgspenger før dere kan sende inn inntektsmelding. Varsel
-                med oppgave blir tilgjengelig i{" "}
-                <Link href="/saksoversikt">saksoversikten</Link> når den ansatte
-                har sendt inn søknad til oss.
+                Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
+                selv søke om utbetaling av omsorgspenger. Når vi får søknad fra
+                den ansatte, ber vi dere om en inntektsmelding som en oppgave i{" "}
+                <Link href="/saksoversikt">saksoversikten</Link>.
               </BodyLong>
             </Alert>
           )}
