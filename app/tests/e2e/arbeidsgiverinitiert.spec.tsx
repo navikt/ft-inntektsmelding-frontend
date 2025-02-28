@@ -3,13 +3,15 @@ import { expectError, mockHentPersonOgArbeidsforhold } from "tests/mocks/utils";
 
 import { enkeltOpplysningerResponse } from "../mocks/opplysninger.ts";
 
+const FAKE_FNR = "09810198874";
+
 test("Ny ansatt", async ({ page }) => {
   await mockHentPersonOgArbeidsforhold({ page });
 
   await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
 
   await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-  await page.getByLabel("Ansattes fødselsnummer").fill("0981019887");
+  await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR.slice(2));
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
   await expectError({
@@ -23,7 +25,7 @@ test("Ny ansatt", async ({ page }) => {
     error: "Må oppgis",
   });
 
-  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
+  await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
   await page.getByLabel("Første fraværsdag").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
@@ -47,7 +49,7 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
   await page.goto("/fp-im-dialog/opprett?ytelseType=FORELDREPENGER");
 
   await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
+  await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
   await page.getByLabel("Første fraværsdag").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
@@ -75,7 +77,7 @@ test("Kun kvinner kan søke SVP", async ({ page }) => {
   await page.goto("/fp-im-dialog/opprett?ytelseType=SVANGERSKAPSPENGER");
 
   await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-  await page.getByLabel("Ansattes fødselsnummer").fill("09810198874");
+  await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
   await page.getByLabel("Første fraværsdag").fill("01.8.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
