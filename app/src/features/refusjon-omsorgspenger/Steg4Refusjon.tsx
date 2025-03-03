@@ -15,7 +15,10 @@ import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  Step4FormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   useDocumentTitle(
@@ -23,7 +26,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   );
 
   const { handleSubmit, getValues, setValue } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step4FormData>();
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit((skjemadata) => {

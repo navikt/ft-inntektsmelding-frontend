@@ -20,7 +20,10 @@ import { lagFulltNavn } from "~/utils.ts";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  Step2FormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   useDocumentTitle(
@@ -29,7 +32,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   const navigate = useNavigate();
   const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step2FormData>();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
     hentArbeidstakerOptions(fødselsnummer ?? ""),

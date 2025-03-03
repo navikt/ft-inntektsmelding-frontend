@@ -18,7 +18,10 @@ import { lagFulltNavn } from "~/utils.ts";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { sendInntektsmeldingOmsorgspengerRefusjonMutation } from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  FullFormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
 import { mapSkjemaTilSendInntektsmeldingRequest } from "./utils.ts";
 
@@ -26,7 +29,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
-  const { handleSubmit } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { handleSubmit } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<FullFormData>();
   const { mutate: sendInntektsmeldingOmsorgspengerRefusjon } =
     sendInntektsmeldingOmsorgspengerRefusjonMutation();
   return (

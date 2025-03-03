@@ -113,9 +113,7 @@ export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<
 const schemaForStep = (step: 1 | 2 | 3 | 4 | 5) => {
   switch (step) {
     case 1: {
-      return Steg1RefusjonSchema.extend(
-        Steg2AnsattOgArbeidsgiverSchema.partial().shape,
-      );
+      return Steg1RefusjonSchema;
     }
     case 2: {
       return z.object({
@@ -165,6 +163,13 @@ const schemaForStep = (step: 1 | 2 | 3 | 4 | 5) => {
 
 type SchemaTypes = z.infer<ReturnType<typeof schemaForStep>>;
 
+// Direct inference from Zod schemas using the getter functions
+export type Step1FormData = z.infer<ReturnType<typeof getSteg1Schema>>;
+export type Step2FormData = z.infer<ReturnType<typeof getSteg2Schema>>;
+export type Step3FormData = z.infer<ReturnType<typeof getSteg3Schema>>;
+export type Step4FormData = z.infer<ReturnType<typeof getSteg4Schema>>;
+export type FullFormData = z.infer<ReturnType<typeof getFullSchema>>;
+
 type Props = {
   children: React.ReactNode;
   step: 1 | 2 | 3 | 4 | 5;
@@ -185,16 +190,22 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({
         navn: lagFulltNavn(innloggetBruker),
         telefonnummer: innloggetBruker.telefon,
       },
-      ansattesFødselsnummer: "",
-      ansattesFornavn: "",
     },
   });
 
   return <FormProvider {...formArgs}>{children}</FormProvider>;
 };
 
-export const useRefusjonOmsorgspengerArbeidsgiverFormContext = () => {
-  return useFormContext<RefusjonOmsorgspengerArbeidsgiverSkjemaState>();
+export const useRefusjonOmsorgspengerArbeidsgiverFormContext = <
+  T extends
+    | Step1FormData
+    | Step2FormData
+    | Step3FormData
+    | Step4FormData
+    | FullFormData,
+>() => {
+  // If T is a step number, use StepFormData, otherwise use the provided type
+  return useFormContext<T | FullFormData>();
 };
 
 // Export functions to get validation schema for each step

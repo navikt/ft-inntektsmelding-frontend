@@ -16,7 +16,10 @@ import { capitalizeSetning } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  Step1FormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
@@ -29,7 +32,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const iFjor = iÅr - 1;
 
   const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step1FormData>();
   const harUtbetaltLønn = watch("harUtbetaltLønn");
   const onSubmit = handleSubmit(() => {
     navigate({

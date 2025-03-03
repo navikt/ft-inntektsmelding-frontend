@@ -27,7 +27,10 @@ import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  Step3FormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import {
   beregnGyldigDatoIntervall,
   hasAbsenceInDateRange,
@@ -40,7 +43,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   );
 
   const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit(() => {
@@ -149,7 +152,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 
 const FraværHeleDagen = () => {
   const { control, watch, clearErrors } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
@@ -233,7 +236,7 @@ const FraværHeleDagen = () => {
 
 const FraværDelerAvDagen = () => {
   const { control, register, formState, watch, clearErrors, setValue } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværDelerAvDagen",
