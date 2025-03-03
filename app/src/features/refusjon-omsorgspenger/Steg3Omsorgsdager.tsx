@@ -36,25 +36,14 @@ import {
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   useDocumentTitle(
-    "Omsorgsdager – søknad om refusjon av omsorgspenger for arbeidsgiver",
+    "Omsorgsdager - søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { register, formState, watch, handleSubmit, setError } =
+  const { register, formState, watch, handleSubmit } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const navigate = useNavigate();
-  const onSubmit = handleSubmit((formData) => {
-    if (
-      formData.fraværHeleDager?.length === 0 &&
-      formData.fraværDelerAvDagen?.length === 0
-    ) {
-      setError("fraværHeleDager", {
-        message:
-          "Du må oppgi minst én periode med fravær – enten hele dagen eller deler av dagen",
-      });
-      return;
-    }
-
+  const onSubmit = handleSubmit(() => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
       to: "../4-refusjon",
@@ -280,41 +269,8 @@ const FraværDelerAvDagen = () => {
               }}
             />
             <TextField
-              label="Normal arbeidstid"
-              {...register(`fraværDelerAvDagen.${index}.normalArbeidstid`, {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi antall timer";
-                  }
-                  if (Number.isNaN(Number(value))) {
-                    return "Antall timer må være et tall";
-                  }
-                  if (value <= 0) {
-                    return "Antall timer må være høyere enn 0";
-                  }
-                  if (value > 24) {
-                    return "Antall timer kan ikke være mer enn 24";
-                  }
-                },
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  const valueWithoutCommas = value.replaceAll(",", ".");
-                  setValue(
-                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
-                    valueWithoutCommas as unknown as number,
-                  );
-                },
-              })}
-              error={
-                formState.touchedFields.fraværDelerAvDagen?.[index]
-                  ?.normalArbeidstid &&
-                formState.errors.fraværDelerAvDagen?.[index]?.normalArbeidstid
-                  ?.message
-              }
-            />
-            <TextField
               label="Timer fravær"
-              {...register(`fraværDelerAvDagen.${index}.timerFravær`, {
+              {...register(`fraværDelerAvDagen.${index}.timer`, {
                 validate: (value) => {
                   if (!value) {
                     return "Du må oppgi antall timer";
@@ -322,38 +278,25 @@ const FraværDelerAvDagen = () => {
                   if (Number.isNaN(Number(value))) {
                     return "Antall timer må være et tall";
                   }
-                  if (value <= 0) {
+                  if (Number(value) <= 0) {
                     return "Antall timer må være høyere enn 0";
                   }
-                  if (value > 24) {
+                  if (Number(value) > 24) {
                     return "Antall timer kan ikke være mer enn 24";
-                  }
-
-                  const normalArbeidstid = watch(
-                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
-                  );
-
-                  if (
-                    normalArbeidstid &&
-                    Number(value) > Number(normalArbeidstid)
-                  ) {
-                    return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
                   }
                 },
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = e.target.value;
                   const valueWithoutCommas = value.replaceAll(",", ".");
                   setValue(
-                    `fraværDelerAvDagen.${index}.timerFravær`,
-                    valueWithoutCommas as unknown as number,
+                    `fraværDelerAvDagen.${index}.timer`,
+                    valueWithoutCommas as unknown as string,
                   );
                 },
               })}
               error={
-                formState.touchedFields.fraværDelerAvDagen?.[index]
-                  ?.timerFravær &&
-                formState.errors.fraværDelerAvDagen?.[index]?.timerFravær
-                  ?.message
+                formState.touchedFields.fraværDelerAvDagen?.[index]?.timer &&
+                formState.errors.fraværDelerAvDagen?.[index]?.timer?.message
               }
             />
             <div>

@@ -31,7 +31,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const { register, formState, watch, handleSubmit } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const harUtbetaltLønn = watch("harUtbetaltLønn");
-
   const onSubmit = handleSubmit(() => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",

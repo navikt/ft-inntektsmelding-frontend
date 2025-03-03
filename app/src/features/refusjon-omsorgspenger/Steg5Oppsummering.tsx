@@ -16,6 +16,7 @@ import { Link } from "@tanstack/react-router";
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
+import { sendInntektsmeldingOmsorgspengerRefusjonMutation } from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
@@ -26,6 +27,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
   const { handleSubmit } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { mutate: sendInntektsmeldingOmsorgspengerRefusjon } =
+    sendInntektsmeldingOmsorgspengerRefusjonMutation();
   return (
     <div>
       <Heading level="1" size="large">
@@ -50,9 +53,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <Button
           icon={<PaperplaneIcon />}
           iconPosition="right"
-          onClick={handleSubmit((values) =>
-            mapSkjemaTilSendInntektsmeldingRequest(values),
-          )}
+          onClick={handleSubmit((values) => {
+            const request = mapSkjemaTilSendInntektsmeldingRequest(values);
+            sendInntektsmeldingOmsorgspengerRefusjon(request);
+          })}
           variant="primary"
         >
           Send inn
@@ -76,7 +80,7 @@ const OppsummeringRefusjon = () => {
             Utbetaler dere lønn under fraværet, og krever refusjon?
           </FormSummaryLabel>
           <FormSummaryValue>
-            {getValues("skalRefunderes") ? "Ja" : "Nei"}
+            {getValues("harUtbetaltLønn") ? "Ja" : "Nei"}
           </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
@@ -197,9 +201,8 @@ const OppsummeringOmsorgsdager = () => {
                     {fravær.dato
                       ? new Date(fravær.dato).toLocaleDateString("nb-no")
                       : null}
-                    : {fravær.timerFravær}{" "}
-                    {fravær.timerFravær === 1 ? "time" : "timer"} (
-                    {fravær.normalArbeidstid} timer normal arbeidstid)
+                    : {fravær.timer}{" "}
+                    {Number(fravær.timer) === 1 ? "time" : "timer"}
                   </ListItem>
                 ))}
               </List>

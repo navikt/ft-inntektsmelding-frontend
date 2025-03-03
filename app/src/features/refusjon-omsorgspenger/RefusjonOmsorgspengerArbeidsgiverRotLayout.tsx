@@ -11,6 +11,8 @@ import { useInnloggetBruker } from "./useInnloggetBruker";
 export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
   const innloggetBruker = useInnloggetBruker();
   const location = useLocation();
+  const step = location.pathname.split("/").pop();
+  const stepNumber = step ? Number.parseInt(step) : 1;
 
   useEffect(() => {
     setBreadcrumbs([
@@ -27,7 +29,9 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
 
   const erPåKvitteringssiden = location.pathname.includes("kvittering");
   return (
-    <RefusjonOmsorgspengerArbeidsgiverForm>
+    <RefusjonOmsorgspengerArbeidsgiverForm
+      step={stepNumber as 1 | 2 | 3 | 4 | 5}
+    >
       <RotLayout
         background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
         medHvitBoks={!erPåKvitteringssiden}

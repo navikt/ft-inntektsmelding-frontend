@@ -13,6 +13,7 @@ import {
 import { idnr } from "@navikt/fnrvalidator";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";

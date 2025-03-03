@@ -2,10 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
-import {
-  EndringAvInntektÅrsakerSchema,
-  NaturalytelseTypeSchema,
-} from "~/types/api-models";
+import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 
 import { useInnloggetBruker } from "./useInnloggetBruker";
@@ -29,81 +26,76 @@ export const Steg1RefusjonSchema = z.object({
 
 // Step 2: Den ansatte og arbeidsgiver (Employee and employer)
 export const Steg2AnsattOgArbeidsgiverSchema = z.object({
-  kontaktperson: z
-    .object({
-      navn: z.string(),
-      telefonnummer: z.string(),
-    })
-    .optional(),
-  ansattesFødselsnummer: z.string().optional(),
+  kontaktperson: z.object({
+    navn: z.string().min(1, {
+      message: "Du må oppgi navn på kontaktperson",
+    }),
+    telefonnummer: z.string().min(1, {
+      message: "Du må oppgi et telefonnummer for kontaktpersonen",
+    }),
+  }),
+  ansattesFødselsnummer: z.string().min(1, {
+    message: "Du må oppgi fødselsnummer for den ansatte",
+  }),
   ansattesFornavn: z.string().optional(),
   ansattesEtternavn: z.string().optional(),
   ansattesAktørId: z.string().optional(),
-  organisasjonsnummer: z.string(),
+  organisasjonsnummer: z.string().min(1, {
+    message: "Du må oppgi et organisasjonsnummer",
+  }),
   valgtArbeidsforhold: z.string().optional(),
 });
 
 // Step 3: Omsorgsdager (Care days)
 export const Steg3OmsorgsdagerSchema = z.object({
-  harDekket10FørsteOmsorgsdager: z.string().optional(),
-  fraværHeleDager: z
-    .array(
-      z.object({
-        fom: z.string().optional(),
-        tom: z.string().optional(),
+  harDekket10FørsteOmsorgsdager: z.preprocess(
+    (val) => val || "",
+    z.string().min(1, {
+      message: "Du må svare på om dere har dekket 10 første omsorgsdager",
+    }),
+  ),
+  fraværHeleDager: z.array(
+    z.object({
+      fom: z.string().min(1, {
+        message: "Du må oppgi en fra og med dato",
       }),
-    )
-    .optional(),
-  fraværDelerAvDagen: z
-    .array(
-      z.object({
-        dato: z.string().optional(),
-        normalArbeidstid: z.number().optional(),
-        timerFravær: z.number().optional(),
+      tom: z.string().min(1, {
+        message: "Du må oppgi en til og med dato",
       }),
-    )
-    .optional(),
+    }),
+  ),
+  fraværDelerAvDagen: z.array(
+    z.object({
+      dato: z.string().min(1, {
+        message: "Du må oppgi en dato",
+      }),
+      timer: z.string().min(1, {
+        message: "Du må oppgi antall timer",
+      }),
+    }),
+  ),
 });
 
 // Step 4: Beregnet månedslønn (Calculated monthly salary)
 export const Steg4BeregnetMånedslonnSchema = z.object({
-  inntekt: beløpSchema,
+  inntekt: beløpSchema.optional(),
   korrigertInntekt: beløpSchema.optional(),
-  endringAvInntektÅrsaker: z.array(
-    z.object({
-      årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
-      fom: z.string().optional(),
-      tom: z.string().optional(),
-      bleKjentFom: z.string().optional(),
-    }),
-  ),
-  skalRefunderes: z
-    .union([
-      z.literal("JA_LIK_REFUSJON"),
-      z.literal("JA_VARIERENDE_REFUSJON"),
-      z.literal("NEI"),
-    ])
+  endringAvInntektÅrsaker: z
+    .array(
+      z.object({
+        årsak: EndringAvInntektÅrsakerSchema,
+        fom: z.string().optional(),
+        tom: z.string().optional(),
+        bleKjentFom: z.string().optional(),
+      }),
+    )
     .optional(),
-  refusjon: z.array(
-    z.object({
-      fom: z.string().optional(),
-      beløp: beløpSchema,
-    }),
-  ),
-  misterNaturalytelser: z.boolean().optional(),
-  bortfaltNaturalytelsePerioder: z.array(
-    z.object({
-      navn: z.union([NaturalytelseTypeSchema, z.literal("")]),
-      beløp: beløpSchema,
-      fom: z.string().optional(),
-      tom: z.string().optional(),
-      inkluderTom: z.boolean(),
-    }),
-  ),
 });
 
 // Combined schema for the entire form
 export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
+  // Add steg field to track current step
+  steg: z.number().int().min(1).max(5),
   // Steg 1
   ...Steg1RefusjonSchema.shape,
   // Steg 2
@@ -118,39 +110,86 @@ export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<
   typeof RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema
 >;
 
+const schemaForStep = (step: 1 | 2 | 3 | 4 | 5) => {
+  switch (step) {
+    case 1: {
+      return Steg1RefusjonSchema.extend(
+        Steg2AnsattOgArbeidsgiverSchema.partial().shape,
+      );
+    }
+    case 2: {
+      return z.object({
+        ...Steg1RefusjonSchema.shape,
+        ...Steg2AnsattOgArbeidsgiverSchema.shape,
+      });
+    }
+    case 3: {
+      return z
+        .object({
+          ...Steg1RefusjonSchema.shape,
+          ...Steg2AnsattOgArbeidsgiverSchema.shape,
+          ...Steg3OmsorgsdagerSchema.shape,
+        })
+        .refine(
+          (data) => {
+            return (
+              data.fraværHeleDager.length > 0 ||
+              data.fraværDelerAvDagen.length > 0
+            );
+          },
+          {
+            message:
+              "Du må oppgi fravær enten som hele dager eller deler av dager",
+            path: ["fraværHeleDager"],
+          },
+        );
+    }
+    case 4: {
+      return z.object({
+        ...Steg1RefusjonSchema.shape,
+        ...Steg2AnsattOgArbeidsgiverSchema.shape,
+        ...Steg3OmsorgsdagerSchema.shape,
+        ...Steg4BeregnetMånedslonnSchema.shape,
+      });
+    }
+    case 5: {
+      return z.object({
+        ...Steg1RefusjonSchema.shape,
+        ...Steg2AnsattOgArbeidsgiverSchema.shape,
+        ...Steg3OmsorgsdagerSchema.shape,
+        ...Steg4BeregnetMånedslonnSchema.shape,
+      });
+    }
+  }
+};
+
+type SchemaTypes = z.infer<ReturnType<typeof schemaForStep>>;
+
 type Props = {
   children: React.ReactNode;
+  step: 1 | 2 | 3 | 4 | 5;
 };
-export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const opplysninger = useInnloggetBruker();
-
-  const formArgs = useForm<RefusjonOmsorgspengerArbeidsgiverSkjemaState>({
-    resolver: zodResolver(RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema),
+export const RefusjonOmsorgspengerArbeidsgiverForm = ({
+  step,
+  children,
+}: Props) => {
+  const innloggetBruker = useInnloggetBruker();
+  const formArgs = useForm<SchemaTypes>({
+    resolver: zodResolver(schemaForStep(step)),
     defaultValues: {
       // Default values for Step 1
       harUtbetaltLønn: "",
       årForRefusjon: "",
       // Default values for Step 2
       kontaktperson: {
-        navn: lagFulltNavn(opplysninger),
-        telefonnummer: opplysninger.telefon,
+        navn: lagFulltNavn(innloggetBruker),
+        telefonnummer: innloggetBruker.telefon,
       },
-      // Default values for Step 3
-      fraværHeleDager: [],
-      fraværDelerAvDagen: [],
-      // Default values for Step 4
-      refusjon: [],
-      bortfaltNaturalytelsePerioder: [],
-      endringAvInntektÅrsaker: [
-        {
-          årsak: "",
-          fom: "",
-          tom: "",
-          bleKjentFom: "",
-        },
-      ],
+      ansattesFødselsnummer: "",
+      ansattesFornavn: "",
     },
   });
+
   return <FormProvider {...formArgs}>{children}</FormProvider>;
 };
 

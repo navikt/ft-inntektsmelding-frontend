@@ -1,63 +1,47 @@
+import { isDateWithinRange } from "~/utils/date-utils";
+
+import { RefusjonOmsorgspengerDto } from "./api/mutations";
 import { RefusjonOmsorgspengerArbeidsgiverSkjemaState } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+
+const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
+  if (value === "ja") {
+    return true;
+  }
+  return false;
+};
 
 export const mapSkjemaTilSendInntektsmeldingRequest = (
   skjemaState: RefusjonOmsorgspengerArbeidsgiverSkjemaState,
-) => {
+): RefusjonOmsorgspengerDto => {
   const startdato = `${skjemaState.årForRefusjon}-01-01`;
   const inntekt = skjemaState.korrigertInntekt || skjemaState.inntekt;
   return {
-    ...skjemaState,
-    inntekt: inntekt,
+    kontaktperson: {
+      navn: skjemaState.kontaktperson.navn,
+      telefonnummer: skjemaState.kontaktperson.telefonnummer,
+    },
+    inntekt: inntekt as number,
     startdato: startdato,
     ytelse: "OMSORGSPENGER",
-    aktorId: skjemaState.ansattesAktørId,
+    aktorId: skjemaState.ansattesAktørId as string,
     arbeidsgiverIdent: skjemaState.organisasjonsnummer,
     refusjon: [
       {
         fom: startdato,
-        beløp: inntekt,
+        beløp: inntekt as number,
       },
     ],
+    omsorgspenger: {
+      harUtbetaltPliktigeDager: mapJaNeiTilBoolean(
+        skjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",
+      ),
+      fraværHeleDager: skjemaState.fraværHeleDager,
+      fraværDelerAvDagen: skjemaState.fraværDelerAvDagen,
+    },
+    bortfaltNaturalytelsePerioder: [],
+    endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker || [],
   };
 };
-
-const data = {
-  kontaktperson: {
-    navn: "Klar Jordbær",
-    telefonnummer: "3",
-  },
-  harUtbetaltLønn: "ja",
-  årForRefusjon: "2025",
-  ansattesFødselsnummer: "28869097804",
-  ansattesFornavn: "MOTIVERT",
-  ansattesEtternavn: "HAUK",
-  ansattesAktørId: "2277843203541",
-  organisasjonsnummer: "315786940",
-  harDekket10FørsteOmsorgsdager: "ja",
-  fraværHeleDager: [
-    {
-      fom: "2025-01-06",
-      tom: "2025-01-07",
-    },
-  ],
-  fraværDelerAvDagen: [
-    {
-      normalArbeidstid: "7.5",
-      timerFravær: "7.2",
-      dato: "2025-02-01",
-    },
-  ],
-  korrigertInntekt: "60000",
-  endringAvInntektÅrsaker: [
-    {
-      fom: "2025-01-01",
-      ignorerTom: false,
-      årsak: "VARIG_LØNNSENDRING",
-    },
-  ],
-  bortfaltNaturalytelsePerioder: [],
-};
-import { isDateWithinRange } from "~/utils/date-utils";
 
 type FraværPeriodeArray =
   RefusjonOmsorgspengerArbeidsgiverSkjemaState["fraværHeleDager"];
