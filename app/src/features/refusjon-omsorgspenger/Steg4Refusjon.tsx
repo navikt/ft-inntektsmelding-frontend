@@ -29,18 +29,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const onSubmit = handleSubmit((skjemadata) => {
     const { korrigertInntekt } = skjemadata;
 
-    const bortfaltNaturalytelsePerioder = skjemadata.misterNaturalytelser
-      ? skjemadata.bortfaltNaturalytelsePerioder.map((naturalYtelse) => ({
-          ...naturalYtelse,
-          inkluderTom: naturalYtelse.inkluderTom,
-        }))
-      : [];
-
     setValue(
       "endringAvInntektÅrsaker",
       korrigertInntekt ? skjemadata.endringAvInntektÅrsaker : [],
     );
-    setValue("bortfaltNaturalytelsePerioder", bortfaltNaturalytelsePerioder);
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
       to: "../5-oppsummering",

@@ -217,7 +217,7 @@ const FraværHeleDagen = () => {
         <Button
           icon={<PlusIcon />}
           onClick={() => {
-            append({});
+            append({ fom: "", tom: "" });
             clearErrors("fraværHeleDager");
           }}
           size="small"
@@ -321,7 +321,7 @@ const FraværDelerAvDagen = () => {
         <Button
           icon={<PlusIcon />}
           onClick={() => {
-            append({});
+            append({ dato: "", timer: "" });
             clearErrors("fraværDelerAvDagen");
           }}
           size="small"
