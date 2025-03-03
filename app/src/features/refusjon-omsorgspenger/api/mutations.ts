@@ -42,4 +42,7 @@ export const sendInntektsmeldingOmsorgspengerRefusjonMutation = () =>
         },
       );
     },
+    onSuccess: () => {
+      alert("Inntektsmelding sendt");
+    },
   });
