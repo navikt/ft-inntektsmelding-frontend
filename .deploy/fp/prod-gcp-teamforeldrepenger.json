@@ -1,7 +1,0 @@
-{
-  "ingresses": ["https://arbeidsgiver.nav.no/fp-im-dialog"],
-  "minReplicas": "2",
-  "maxReplicas": "4",
-  "API_SCOPE": "prod-gcp:teamforeldrepenger:fpinntektsmelding",
-  "ENV": "prod"
-}
