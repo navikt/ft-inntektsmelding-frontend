@@ -45,7 +45,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <OppsummeringOmsorgsdager />
         <OppsummeringMånedslønn />
       </VStack>
-      <div className="flex gap-4">
+      <div className="flex gap-4 mt-4">
         <Button
           as={Link}
           icon={<ArrowLeftIcon />}

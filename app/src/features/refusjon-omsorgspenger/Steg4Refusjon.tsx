@@ -10,6 +10,7 @@ import {
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -61,6 +62,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
       organisasjonsnummer: getValues("organisasjonsnummer")!,
     }),
   );
+
+  useEffect(() => {
+    if (inntektsopplysninger?.gjennomsnittLønn) {
+      setValue("inntekt", inntektsopplysninger.gjennomsnittLønn);
+    }
+  }, [inntektsopplysninger]);
 
   if (!førsteFraværsdato) {
     throw new Error("Ingen fraværsdato funnet");
