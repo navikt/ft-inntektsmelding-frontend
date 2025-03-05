@@ -10,7 +10,6 @@ import {
   Button,
   GuidePanel,
   Heading,
-  HGrid,
   HStack,
   Label,
   List,
@@ -251,10 +250,9 @@ const FraværDelerAvDagen = () => {
       </Heading>
       {fields.map((periode, index) => {
         return (
-          <HGrid
+          <HStack
             align="start"
             className="border-l-4 border-bg-subtle pl-4 py-2"
-            columns={{ xs: 1, md: 4 }}
             gap="4"
             key={periode.id}
           >
@@ -317,7 +315,7 @@ const FraværDelerAvDagen = () => {
                 Slett
               </Button>
             </div>
-          </HGrid>
+          </HStack>
         );
       })}
       <div>
