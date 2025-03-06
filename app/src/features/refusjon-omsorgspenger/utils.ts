@@ -1,7 +1,7 @@
 import { isDateWithinRange } from "~/utils/date-utils";
 
 import { RefusjonOmsorgspengerDto } from "./api/mutations";
-import { RefusjonOmsorgspengerArbeidsgiverSkjemaState } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { RefusjonOmsorgspengerFormData } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
   if (value === "ja") {
@@ -11,20 +11,25 @@ const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
 };
 
 export const mapSkjemaTilSendInntektsmeldingRequest = (
-  skjemaState: RefusjonOmsorgspengerArbeidsgiverSkjemaState,
+  skjemaState: RefusjonOmsorgspengerFormData,
 ): RefusjonOmsorgspengerDto => {
-  const startdato = `${skjemaState.årForRefusjon}-01-01`;
-  const inntekt = skjemaState.korrigertInntekt || skjemaState.inntekt;
+  const validatedSkjemaState = skjemaState as RefusjonOmsorgspengerFormData & {
+    endringAvInntektÅrsaker: RefusjonOmsorgspengerDto["endringAvInntektÅrsaker"];
+  };
+
+  const startdato = `${validatedSkjemaState.årForRefusjon}-01-01`;
+  const inntekt =
+    validatedSkjemaState.korrigertInntekt || validatedSkjemaState.inntekt;
   return {
     kontaktperson: {
-      navn: skjemaState.kontaktperson.navn,
-      telefonnummer: skjemaState.kontaktperson.telefonnummer,
+      navn: validatedSkjemaState.kontaktperson.navn,
+      telefonnummer: validatedSkjemaState.kontaktperson.telefonnummer,
     },
     inntekt: inntekt as number,
     startdato: startdato,
     ytelse: "OMSORGSPENGER",
-    aktorId: skjemaState.ansattesAktørId as string,
-    arbeidsgiverIdent: skjemaState.organisasjonsnummer,
+    aktorId: validatedSkjemaState.ansattesAktørId as string,
+    arbeidsgiverIdent: validatedSkjemaState.organisasjonsnummer as string,
     refusjon: [
       {
         fom: startdato,
@@ -33,20 +38,21 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
     ],
     omsorgspenger: {
       harUtbetaltPliktigeDager: mapJaNeiTilBoolean(
-        skjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",
+        validatedSkjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",
       ),
-      fraværHeleDager: skjemaState.fraværHeleDager,
-      fraværDelerAvDagen: skjemaState.fraværDelerAvDagen,
+      fraværHeleDager: validatedSkjemaState.fraværHeleDager,
+      fraværDelerAvDagen: validatedSkjemaState.fraværDelerAvDagen,
     },
     bortfaltNaturalytelsePerioder: [],
-    endringAvInntektÅrsaker: skjemaState.endringAvInntektÅrsaker || [],
+    endringAvInntektÅrsaker: validatedSkjemaState.korrigertInntekt
+      ? validatedSkjemaState.endringAvInntektÅrsaker
+      : [],
   };
 };
 
-type FraværPeriodeArray =
-  RefusjonOmsorgspengerArbeidsgiverSkjemaState["fraværHeleDager"];
+type FraværPeriodeArray = RefusjonOmsorgspengerFormData["fraværHeleDager"];
 type FraværDelerAvDagenArray =
-  RefusjonOmsorgspengerArbeidsgiverSkjemaState["fraværDelerAvDagen"];
+  RefusjonOmsorgspengerFormData["fraværDelerAvDagen"];
 
 /**
  * Checks if any of the full day absence periods overlap with the given date range

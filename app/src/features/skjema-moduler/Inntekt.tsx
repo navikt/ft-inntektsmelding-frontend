@@ -59,7 +59,7 @@ export function Inntekt({
   harEksisterendeInntektsmeldinger,
 }: InntektProps) {
   const { skjæringstidspunkt, person, inntektsopplysninger } = opplysninger;
-  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const { watch, setValue } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
@@ -133,14 +133,20 @@ export function Inntekt({
         <EndreMånedslønn
           gjennomsnittLønn={inntektsopplysninger.gjennomsnittLønn}
           harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setValue("meta.skalKorrigereInntekt", false);
+          }}
           skjæringstidspunkt={skjæringstidspunkt}
         />
       ) : (
         <Button
           className="w-max"
           icon={<PencilIcon />}
-          onClick={onOpen}
+          onClick={() => {
+            onOpen();
+            setValue("meta.skalKorrigereInntekt", true);
+          }}
           size="medium"
           type="button"
           variant="secondary"

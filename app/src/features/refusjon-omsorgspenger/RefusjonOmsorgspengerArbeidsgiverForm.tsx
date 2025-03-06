@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { idnr } from "@navikt/fnrvalidator";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { z } from "zod";
 
@@ -7,211 +8,266 @@ import { beløpSchema, lagFulltNavn } from "~/utils";
 
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
-// Step 1: Refusjon (Intro)
-// her har vi en preprocess fordi feltene er radio knapper og blir null når ingen radios er checked
-export const Steg1RefusjonSchema = z.object({
-  harUtbetaltLønn: z.preprocess(
-    (val) => val || "",
-    z.string().min(1, {
-      message: "Du må svare på om dere har utbetalt lønn under fraværet",
+// Create a single unified form schema
+export const RefusjonOmsorgspengerSchema = z
+  .object({
+    meta: z.object({
+      step: z.number().min(1).max(5),
+      skalKorrigereInntekt: z.boolean(),
     }),
-  ),
-  årForRefusjon: z.preprocess(
-    (val) => val || "",
-    z.string().min(1, {
-      message: "Du må svare på hvilket år du søker refusjon for",
-    }),
-  ),
-});
+    // Steg 1 fields
+    harUtbetaltLønn: z.preprocess((val) => val || "", z.string()),
+    årForRefusjon: z.preprocess((val) => val || "", z.string()),
 
-// Step 2: Den ansatte og arbeidsgiver (Employee and employer)
-export const Steg2AnsattOgArbeidsgiverSchema = z.object({
-  kontaktperson: z.object({
-    navn: z.string().min(1, {
-      message: "Du må oppgi navn på kontaktperson",
+    // Steg 2 fields
+    kontaktperson: z.object({
+      navn: z.string(),
+      telefonnummer: z.string(),
     }),
-    telefonnummer: z.string().min(1, {
-      message: "Du må oppgi et telefonnummer for kontaktpersonen",
-    }),
-  }),
-  ansattesFødselsnummer: z.string().min(1, {
-    message: "Du må oppgi fødselsnummer for den ansatte",
-  }),
-  ansattesFornavn: z.string().optional(),
-  ansattesEtternavn: z.string().optional(),
-  ansattesAktørId: z.string().optional(),
-  organisasjonsnummer: z.string().min(1, {
-    message: "Du må oppgi et organisasjonsnummer",
-  }),
-  valgtArbeidsforhold: z.string().optional(),
-});
+    ansattesFødselsnummer: z.string().optional(),
+    ansattesFornavn: z.string().optional(),
+    ansattesEtternavn: z.string().optional(),
+    ansattesAktørId: z.string().optional(),
+    organisasjonsnummer: z.string().optional(),
+    valgtArbeidsforhold: z.string().optional(),
 
-// Step 3: Omsorgsdager (Care days)
-export const Steg3OmsorgsdagerSchema = z.object({
-  harDekket10FørsteOmsorgsdager: z.preprocess(
-    (val) => val || "",
-    z.string().min(1, {
-      message: "Du må svare på om dere har dekket 10 første omsorgsdager",
-    }),
-  ),
-  fraværHeleDager: z.array(
-    z.object({
-      fom: z.string().min(1, {
-        message: "Du må oppgi en fra og med dato",
-      }),
-      tom: z.string().min(1, {
-        message: "Du må oppgi en til og med dato",
-      }),
-    }),
-  ),
-  fraværDelerAvDagen: z.array(
-    z.object({
-      dato: z.string().min(1, {
-        message: "Du må oppgi en dato",
-      }),
-      timer: z.string().min(1, {
-        message: "Du må oppgi antall timer",
-      }),
-    }),
-  ),
-});
-
-// Step 4: Beregnet månedslønn (Calculated monthly salary)
-export const Steg4BeregnetMånedslonnSchema = z.object({
-  inntekt: beløpSchema.optional(),
-  korrigertInntekt: beløpSchema.optional(),
-  endringAvInntektÅrsaker: z
-    .array(
+    // Steg 3 fields
+    harDekket10FørsteOmsorgsdager: z.preprocess((val) => val || "", z.string()),
+    fraværHeleDager: z.array(
       z.object({
-        årsak: EndringAvInntektÅrsakerSchema,
-        fom: z.string().optional(),
-        tom: z.string().optional(),
-        bleKjentFom: z.string().optional(),
+        fom: z.string(),
+        tom: z.string(),
       }),
-    )
-    .optional(),
-});
+    ),
+    fraværDelerAvDagen: z.array(
+      z.object({
+        dato: z.string(),
+        timer: z.string(),
+      }),
+    ),
 
-// Combined schema for the entire form
-export const RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema = z.object({
-  // Add steg field to track current step
-  steg: z.number().int().min(1).max(5),
-  // Steg 1
-  ...Steg1RefusjonSchema.shape,
-  // Steg 2
-  ...Steg2AnsattOgArbeidsgiverSchema.shape,
-  // Steg 3
-  ...Steg3OmsorgsdagerSchema.shape,
-  // Steg 4
-  ...Steg4BeregnetMånedslonnSchema.shape,
-});
+    // Steg 4 fields
+    inntekt: beløpSchema.optional(),
+    korrigertInntekt: beløpSchema.optional(),
+    endringAvInntektÅrsaker: z
+      .array(
+        z.object({
+          årsak: EndringAvInntektÅrsakerSchema.or(z.literal("")),
+          fom: z.string().optional(),
+          tom: z.string().optional(),
+          bleKjentFom: z.string().optional(),
+        }),
+      )
+      .optional(),
+  })
+  .superRefine((data, ctx) => {
+    // Validations for Step 1
+    if (data.meta.step >= 1) {
+      if (!data.harUtbetaltLønn) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må svare på om dere har utbetalt lønn under fraværet",
+          path: ["harUtbetaltLønn"],
+        });
+      }
+      if (!data.årForRefusjon) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må svare på hvilket år du søker refusjon for",
+          path: ["årForRefusjon"],
+        });
+      }
+    }
 
-export type RefusjonOmsorgspengerArbeidsgiverSkjemaState = z.infer<
-  typeof RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema
+    // Validations for Step 2
+    if (data.meta.step >= 2) {
+      if (!data.kontaktperson?.navn) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi navn på kontaktperson",
+          path: ["kontaktperson", "navn"],
+        });
+      }
+      if (!data.kontaktperson?.telefonnummer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi et telefonnummer for kontaktpersonen",
+          path: ["kontaktperson", "telefonnummer"],
+        });
+      }
+      if (!/^(\d{8}|\+\d+)$/.test(data.kontaktperson.telefonnummer)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Telefonnummer må være 8 siffer, eller 10 siffer med landkode",
+          path: ["kontaktperson", "telefonnummer"],
+        });
+      }
+      if (!data.ansattesFødselsnummer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi fødselsnummer eller d-nummer for den ansatte",
+          path: ["ansattesFødselsnummer"],
+        });
+      }
+      if (data.ansattesFødselsnummer) {
+        const validationResult = idnr(data.ansattesFødselsnummer);
+        const ugyldig = validationResult.status !== "valid";
+
+        if (ugyldig) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Fødselsnummer eller d-nummer er ikke gyldig",
+            path: ["ansattesFødselsnummer"],
+          });
+        }
+      }
+      if (!data.organisasjonsnummer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi et organisasjonsnummer",
+          path: ["organisasjonsnummer"],
+        });
+      }
+    }
+
+    // Validations for Step 3
+    if (data.meta.step >= 3) {
+      if (!data.harDekket10FørsteOmsorgsdager) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må svare på om dere har dekket 10 første omsorgsdager",
+          path: ["harDekket10FørsteOmsorgsdager"],
+        });
+      }
+
+      const hasHeleDager = data.fraværHeleDager.length > 0;
+      const hasDelerAvDagen = data.fraværDelerAvDagen.length > 0;
+
+      if (!hasHeleDager && !hasDelerAvDagen) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message:
+            "Du må oppgi fravær enten som hele dager eller deler av dager",
+          path: ["fraværHeleDager"],
+        });
+      }
+
+      // Validate each item in fraværHeleDager array
+      for (const [index, dag] of data.fraværHeleDager.entries()) {
+        if (!dag.fom) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en fra og med dato",
+            path: ["fraværHeleDager", index, "fom"],
+          });
+        }
+        if (!dag.tom) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en til og med dato",
+            path: ["fraværHeleDager", index, "tom"],
+          });
+        }
+      }
+
+      // Validate each item in fraværDelerAvDagen array
+      for (const [index, del] of data.fraværDelerAvDagen.entries()) {
+        if (!del.dato) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en dato",
+            path: ["fraværDelerAvDagen", index, "dato"],
+          });
+        }
+        if (!del.timer) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi antall timer",
+            path: ["fraværDelerAvDagen", index, "timer"],
+          });
+        }
+      }
+    }
+
+    // Validations for Step 4
+    if (data.meta.step >= 4) {
+      // eslint-disable-next-line unicorn/no-lonely-if
+      if (!data.meta.skalKorrigereInntekt && !data.inntekt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi enten korrigert inntekt eller inntekt",
+          path: ["korrigertInntekt", "inntekt"],
+        });
+      }
+      if (data.meta.skalKorrigereInntekt) {
+        if (!data.korrigertInntekt) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi korrigert inntekt",
+            path: ["korrigertInntekt"],
+          });
+        }
+        if (data.endringAvInntektÅrsaker) {
+          for (const [index, årsak] of data.endringAvInntektÅrsaker.entries()) {
+            if (!årsak.årsak) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: "Du må oppgi en endringsårsak",
+                path: ["endringAvInntektÅrsaker", index, "årsak"],
+              });
+            }
+          }
+        } else {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi endringsårsaker",
+            path: ["endringAvInntektÅrsaker"],
+          });
+        }
+      }
+    }
+  });
+
+// Define form data type based on the schema
+export type RefusjonOmsorgspengerFormData = z.infer<
+  typeof RefusjonOmsorgspengerSchema
 >;
-
-const schemaForStep = (step: 1 | 2 | 3 | 4 | 5) => {
-  switch (step) {
-    case 1: {
-      return Steg1RefusjonSchema;
-    }
-    case 2: {
-      return z.object({
-        ...Steg1RefusjonSchema.shape,
-        ...Steg2AnsattOgArbeidsgiverSchema.shape,
-      });
-    }
-    case 3: {
-      return z
-        .object({
-          ...Steg1RefusjonSchema.shape,
-          ...Steg2AnsattOgArbeidsgiverSchema.shape,
-          ...Steg3OmsorgsdagerSchema.shape,
-        })
-        .refine(
-          (data) => {
-            return (
-              data.fraværHeleDager.length > 0 ||
-              data.fraværDelerAvDagen.length > 0
-            );
-          },
-          {
-            message:
-              "Du må oppgi fravær enten som hele dager eller deler av dager",
-            path: ["fraværHeleDager"],
-          },
-        );
-    }
-    case 4: {
-      return z.object({
-        ...Steg1RefusjonSchema.shape,
-        ...Steg2AnsattOgArbeidsgiverSchema.shape,
-        ...Steg3OmsorgsdagerSchema.shape,
-        ...Steg4BeregnetMånedslonnSchema.shape,
-      });
-    }
-    case 5: {
-      return z.object({
-        ...Steg1RefusjonSchema.shape,
-        ...Steg2AnsattOgArbeidsgiverSchema.shape,
-        ...Steg3OmsorgsdagerSchema.shape,
-        ...Steg4BeregnetMånedslonnSchema.shape,
-      });
-    }
-  }
-};
-
-type SchemaTypes = z.infer<ReturnType<typeof schemaForStep>>;
-
-// Direct inference from Zod schemas using the getter functions
-export type Step1FormData = z.infer<ReturnType<typeof getSteg1Schema>>;
-export type Step2FormData = z.infer<ReturnType<typeof getSteg2Schema>>;
-export type Step3FormData = z.infer<ReturnType<typeof getSteg3Schema>>;
-export type Step4FormData = z.infer<ReturnType<typeof getSteg4Schema>>;
-export type FullFormData = z.infer<ReturnType<typeof getFullSchema>>;
 
 type Props = {
   children: React.ReactNode;
-  step: 1 | 2 | 3 | 4 | 5;
 };
-export const RefusjonOmsorgspengerArbeidsgiverForm = ({
-  step,
-  children,
-}: Props) => {
+
+export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
   const innloggetBruker = useInnloggetBruker();
-  const formArgs = useForm<SchemaTypes>({
-    resolver: zodResolver(schemaForStep(step)),
+
+  const form = useForm<RefusjonOmsorgspengerFormData>({
+    resolver: zodResolver(RefusjonOmsorgspengerSchema),
     defaultValues: {
-      // Default values for Step 1
-      harUtbetaltLønn: "",
-      årForRefusjon: "",
-      // Default values for Step 2
-      kontaktperson: {
-        navn: lagFulltNavn(innloggetBruker),
-        telefonnummer: innloggetBruker.telefon,
+      meta: {
+        step: 1,
+        skalKorrigereInntekt: false,
       },
+      fraværHeleDager: [],
+      fraværDelerAvDagen: [],
+      kontaktperson: {
+        navn: innloggetBruker?.fornavn ? lagFulltNavn(innloggetBruker) : "",
+        telefonnummer: innloggetBruker?.telefon || "",
+      },
+      endringAvInntektÅrsaker: [
+        {
+          årsak: "",
+          fom: "",
+          tom: "",
+        },
+      ],
     },
+    mode: "onChange",
   });
 
-  return <FormProvider {...formArgs}>{children}</FormProvider>;
+  return <FormProvider {...form}>{children}</FormProvider>;
 };
 
-export const useRefusjonOmsorgspengerArbeidsgiverFormContext = <
-  T extends
-    | Step1FormData
-    | Step2FormData
-    | Step3FormData
-    | Step4FormData
-    | FullFormData,
->() => {
-  // If T is a step number, use StepFormData, otherwise use the provided type
-  return useFormContext<T | FullFormData>();
+export const useRefusjonOmsorgspengerArbeidsgiverFormContext = () => {
+  return useFormContext<RefusjonOmsorgspengerFormData>();
 };
-
-// Export functions to get validation schema for each step
-export const getSteg1Schema = () => Steg1RefusjonSchema;
-export const getSteg2Schema = () => Steg2AnsattOgArbeidsgiverSchema;
-export const getSteg3Schema = () => Steg3OmsorgsdagerSchema;
-export const getSteg4Schema = () => Steg4BeregnetMånedslonnSchema;
-export const getFullSchema = () =>
-  RefusjonOmsorgspengerArbeidsgiverSkjemaStateSchema;

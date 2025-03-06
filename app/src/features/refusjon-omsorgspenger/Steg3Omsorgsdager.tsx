@@ -19,6 +19,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "../Hjelpetekst.tsx";
@@ -26,10 +27,7 @@ import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import {
-  Step3FormData,
-  useRefusjonOmsorgspengerArbeidsgiverFormContext,
-} from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import {
   beregnGyldigDatoIntervall,
   hasAbsenceInDateRange,
@@ -42,7 +40,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   );
 
   const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit(() => {
@@ -150,8 +148,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 };
 
 const FraværHeleDagen = () => {
-  const { control, watch, clearErrors } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
+  const { control, watch, clearErrors, setValue } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  useEffect(() => {
+    setValue("meta.step", 3);
+  }, []);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
@@ -235,7 +238,7 @@ const FraværHeleDagen = () => {
 
 const FraværDelerAvDagen = () => {
   const { control, register, formState, watch, clearErrors, setValue } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step3FormData>();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværDelerAvDagen",

@@ -10,9 +10,9 @@ import {
   Select,
   TextField,
 } from "@navikt/ds-react";
-import { idnr } from "@navikt/fnrvalidator";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";
@@ -20,10 +20,7 @@ import { lagFulltNavn } from "~/utils.ts";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import {
-  Step2FormData,
-  useRefusjonOmsorgspengerArbeidsgiverFormContext,
-} from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   useDocumentTitle(
@@ -31,12 +28,16 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   );
 
   const navigate = useNavigate();
-  const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step2FormData>();
+  const { register, formState, watch, handleSubmit, setValue } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
     hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
+
+  useEffect(() => {
+    setValue("meta.step", 2);
+  }, []);
 
   const fantIngenPersoner =
     error && "feilkode" in error && error.feilkode === "fant ingen personer";
@@ -66,12 +67,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             <TextField
               className="flex-1"
               label="Ansattes fødselsnummer (11 siffer)"
-              {...register("ansattesFødselsnummer", {
-                required: "Du må fylle ut fødselsnummeret til den ansatte",
-                validate: (value) =>
-                  (value && idnr(value).status === "valid") ||
-                  "Du må fylle ut et gyldig fødselsnummer",
-              })}
+              {...register("ansattesFødselsnummer")}
               error={formState.errors.ansattesFødselsnummer?.message}
             />
             <div className="flex-1 flex flex-col">
@@ -182,13 +178,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             <div className="flex-1">
               <TextField
                 label="Navn"
-                {...register("kontaktperson.navn", {
-                  required: "Du må fylle ut navnet til kontaktpersonen",
-                  maxLength: {
-                    value: 100,
-                    message: "Navn kan ikke være lenger enn 100 tegn",
-                  },
-                })}
+                {...register("kontaktperson.navn")}
                 error={formState.errors.kontaktperson?.navn?.message}
               />
             </div>
@@ -196,13 +186,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <TextField
                 label="Telefonnummer"
                 type="tel"
-                {...register("kontaktperson.telefonnummer", {
-                  required:
-                    "Du må fylle ut telefonnummeret til kontaktpersonen",
-                  validate: (data) =>
-                    /^(\d{8}|\+\d+)$/.test(data) ||
-                    "Telefonnummer må være 8 siffer eller ha landskode",
-                })}
+                {...register("kontaktperson.telefonnummer")}
                 error={formState.errors.kontaktperson?.telefonnummer?.message}
               />
             </div>

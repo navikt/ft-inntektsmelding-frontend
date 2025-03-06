@@ -12,16 +12,14 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
 import { Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { sendInntektsmeldingOmsorgspengerRefusjonMutation } from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import {
-  FullFormData,
-  useRefusjonOmsorgspengerArbeidsgiverFormContext,
-} from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
 import { mapSkjemaTilSendInntektsmeldingRequest } from "./utils.ts";
 
@@ -29,8 +27,14 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   useDocumentTitle(
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
-  const { handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<FullFormData>();
+
+  const { handleSubmit, setValue } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  useEffect(() => {
+    setValue("meta.step", 5);
+  }, []);
+
   const { mutate: sendInntektsmeldingOmsorgspengerRefusjon } =
     sendInntektsmeldingOmsorgspengerRefusjonMutation();
   return (

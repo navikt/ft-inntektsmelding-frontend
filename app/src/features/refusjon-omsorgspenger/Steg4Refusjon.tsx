@@ -1,4 +1,8 @@
-import { ArrowLeftIcon, ArrowRightIcon } from "@navikt/aksel-icons";
+import {
+  ArrowCirclepathIcon,
+  ArrowLeftIcon,
+  ArrowRightIcon,
+} from "@navikt/aksel-icons";
 import {
   Alert,
   BodyLong,
@@ -16,10 +20,7 @@ import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import {
-  Step4FormData,
-  useRefusjonOmsorgspengerArbeidsgiverFormContext,
-} from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   useDocumentTitle(
@@ -27,7 +28,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   );
 
   const { handleSubmit, getValues, setValue } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step4FormData>();
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  useEffect(() => {
+    setValue("meta.step", 4);
+  }, []);
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit((skjemadata) => {
@@ -55,6 +60,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     data: inntektsopplysninger,
     isLoading,
     isError,
+    refetch,
   } = useQuery(
     hentInntektsopplysningerOptions({
       skjæringstidspunkt: førsteFraværsdato!,
@@ -108,9 +114,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
               <Loader />
             </div>
           ) : isError ? (
-            <Alert variant="error">
-              Inntektsopplysninger kunne ikke hentes.
-            </Alert>
+            <>
+              <Alert variant="error">
+                Inntektsopplysninger kunne ikke hentes.
+              </Alert>
+              <Button
+                icon={<ArrowCirclepathIcon />}
+                onClick={() => refetch()}
+                variant="secondary"
+              >
+                Forsøk å hente inntektsopplysninger på nytt
+              </Button>
+            </>
           ) : null}
           <div className="flex gap-4">
             <Button

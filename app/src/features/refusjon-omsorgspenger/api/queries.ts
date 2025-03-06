@@ -1,3 +1,4 @@
+import { idnr } from "@navikt/fnrvalidator";
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -39,7 +40,7 @@ export const hentArbeidstakerOptions = (fødselsnummer: string) => {
   >({
     queryKey: ["arbeidstaker-oppslag", fødselsnummer],
     queryFn: ({ queryKey }) => hentArbeidstaker(queryKey[1]),
-    enabled: fødselsnummer.length === 11,
+    enabled: idnr(fødselsnummer).status === "valid",
     staleTime: Infinity,
     retry: false,
     refetchOnMount: false,

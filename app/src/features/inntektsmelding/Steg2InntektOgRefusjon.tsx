@@ -32,6 +32,9 @@ import { useDocumentTitle } from "../useDocumentTitle";
 type JaNei = "ja" | "nei";
 
 export type InntektOgRefusjonForm = {
+  meta: {
+    skalKorrigereInntekt: boolean;
+  };
   skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   misterNaturalytelser: JaNei;
   bortfaltNaturalytelsePerioder: NaturalytelserSomMistesForm[];

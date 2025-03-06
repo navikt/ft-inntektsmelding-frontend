@@ -11,15 +11,13 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { capitalizeSetning } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import {
-  Step1FormData,
-  useRefusjonOmsorgspengerArbeidsgiverFormContext,
-} from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
@@ -31,8 +29,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
 
-  const { register, formState, watch, handleSubmit } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext<Step1FormData>();
+  const { register, formState, watch, handleSubmit, setValue } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const harUtbetaltLønn = watch("harUtbetaltLønn");
   const onSubmit = handleSubmit(() => {
     navigate({
@@ -40,6 +38,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
       to: "../2-ansatt-og-arbeidsgiver",
     });
   });
+
+  useEffect(() => {
+    setValue("meta.step", 1);
+  }, []);
 
   const { name: harUtbetaltLønnName, ...harUtbetaltLønnRadioGroupProps } =
     register("harUtbetaltLønn");
