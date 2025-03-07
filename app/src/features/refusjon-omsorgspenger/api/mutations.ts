@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { MutationOptions, useMutation } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { SERVER_URL } from "~/api/mutations";
@@ -24,14 +24,35 @@ const RefusjonOmsorgspengerDtoSchema =
     }),
   });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const RefusjonOmsorgspengerResponseDtoSchema =
+  RefusjonOmsorgspengerDtoSchema.extend({
+    id: z.number(),
+    inntektsmeldingsId: z.number(),
+  });
+
 export type RefusjonOmsorgspengerDto = z.infer<
   typeof RefusjonOmsorgspengerDtoSchema
 >;
 
-export const sendInntektsmeldingOmsorgspengerRefusjonMutation = () =>
-  useMutation({
-    mutationFn: (request: RefusjonOmsorgspengerDto) => {
-      return fetch(
+export type RefusjonOmsorgspengerResponseDto = z.infer<
+  typeof RefusjonOmsorgspengerResponseDtoSchema
+>;
+
+export const sendInntektsmeldingOmsorgspengerRefusjonMutation = (
+  options: MutationOptions<
+    RefusjonOmsorgspengerResponseDto,
+    Error,
+    RefusjonOmsorgspengerDto
+  >,
+) =>
+  useMutation<
+    RefusjonOmsorgspengerResponseDto,
+    Error,
+    RefusjonOmsorgspengerDto
+  >({
+    mutationFn: async (request: RefusjonOmsorgspengerDto) => {
+      const response = await fetch(
         `${SERVER_URL}/imdialog/send-inntektsmelding/omsorgspenger-refusjon`,
         {
           method: "POST",
@@ -41,8 +62,10 @@ export const sendInntektsmeldingOmsorgspengerRefusjonMutation = () =>
           body: JSON.stringify(request),
         },
       );
+      if (!response.ok) {
+        throw new Error("Noe gikk galt.");
+      }
+      return response.json() as Promise<RefusjonOmsorgspengerResponseDto>;
     },
-    onSuccess: () => {
-      alert("Inntektsmelding sendt");
-    },
+    ...options,
   });

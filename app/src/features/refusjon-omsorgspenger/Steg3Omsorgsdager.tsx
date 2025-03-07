@@ -39,10 +39,28 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     "Omsorgsdager - søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { register, formState, watch, handleSubmit } =
+  const { register, formState, watch, handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setValue("meta.step", 3);
+    if (getValues("meta.harSendtSøknad")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+        to: "../6-kvittering",
+      });
+    }
+
+    if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+        to: "../1-intro",
+      });
+    }
+  }, []);
+
   const onSubmit = handleSubmit(() => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",

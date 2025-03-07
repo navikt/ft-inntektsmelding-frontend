@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
+import { validateInntekt } from "~/validators";
 
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
@@ -14,6 +15,8 @@ export const RefusjonOmsorgspengerSchema = z
     meta: z.object({
       step: z.number().min(1).max(5),
       skalKorrigereInntekt: z.boolean(),
+      harSendtSøknad: z.boolean(),
+      innsendtSøknadId: z.number().optional(),
     }),
     // Steg 1 fields
     harUtbetaltLønn: z.preprocess((val) => val || "", z.string()),
@@ -62,7 +65,7 @@ export const RefusjonOmsorgspengerSchema = z
   })
   .superRefine((data, ctx) => {
     // Validations for Step 1
-    if (data.meta.step >= 1) {
+    if (data.meta.step === 1 || data.meta.step === 5) {
       if (!data.harUtbetaltLønn) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -80,7 +83,7 @@ export const RefusjonOmsorgspengerSchema = z
     }
 
     // Validations for Step 2
-    if (data.meta.step >= 2) {
+    if (data.meta.step === 2 || data.meta.step === 5) {
       if (!data.kontaktperson?.navn) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -132,7 +135,7 @@ export const RefusjonOmsorgspengerSchema = z
     }
 
     // Validations for Step 3
-    if (data.meta.step >= 3) {
+    if (data.meta.step === 3 || data.meta.step === 5) {
       if (!data.harDekket10FørsteOmsorgsdager) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -191,7 +194,7 @@ export const RefusjonOmsorgspengerSchema = z
     }
 
     // Validations for Step 4
-    if (data.meta.step >= 4) {
+    if (data.meta.step === 4 || data.meta.step === 5) {
       // eslint-disable-next-line unicorn/no-lonely-if
       if (!data.meta.skalKorrigereInntekt && !data.inntekt) {
         ctx.addIssue({
@@ -200,11 +203,19 @@ export const RefusjonOmsorgspengerSchema = z
           path: ["korrigertInntekt", "inntekt"],
         });
       }
-      if (data.meta.skalKorrigereInntekt) {
-        if (!data.korrigertInntekt) {
+      if (data.meta.skalKorrigereInntekt && !data.korrigertInntekt) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Du må oppgi korrigert inntekt",
+          path: ["korrigertInntekt"],
+        });
+      }
+      if (data.korrigertInntekt) {
+        const feilmelding = validateInntekt(data.korrigertInntekt, 0);
+        if (typeof feilmelding === "string") {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Du må oppgi korrigert inntekt",
+            message: feilmelding,
             path: ["korrigertInntekt"],
           });
         }
@@ -247,6 +258,7 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
       meta: {
         step: 1,
         skalKorrigereInntekt: false,
+        harSendtSøknad: false,
       },
       fraværHeleDager: [],
       fraværDelerAvDagen: [],

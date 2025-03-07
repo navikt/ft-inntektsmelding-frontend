@@ -23,12 +23,17 @@ import {
 import { id } from "date-fns/locale";
 import { ReactNode } from "react";
 
-import { useDocumentTitle } from "../useDocumentTitle";
+import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 
+import { useDocumentTitle } from "../useDocumentTitle";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 export const Steg6Kvittering = () => {
   useDocumentTitle(
     "Kvittering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
+
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
   return (
     <div>
       <div className="mx-4">
@@ -79,8 +84,10 @@ export const Steg6Kvittering = () => {
           </Button>
           <Button
             as="a"
-            download={`søknad-refusjon-omsorgspenger-${id}.pdf`}
-            href="#"
+            download={`refusjon-omsorgspenger-søknad-kvittering-${id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(
+              getValues("meta.innsendtSøknadId") as number,
+            )}
             icon={<DownloadIcon />}
             iconPosition="left"
             variant="secondary"

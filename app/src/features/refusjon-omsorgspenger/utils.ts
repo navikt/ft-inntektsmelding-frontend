@@ -10,6 +10,32 @@ const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
   return false;
 };
 
+export const utledFørsteFraværsdag = (
+  fraværHeleDager: FraværPeriodeArray,
+  fraværDelerAvDagen: FraværDelerAvDagenArray,
+) => {
+  const førsteFraværsdagHeleDager = fraværHeleDager.sort((a, b) => {
+    return new Date(a.fom).getTime() - new Date(b.fom).getTime();
+  })[0]?.fom;
+  const førsteFraværsdagDelerAvDagen = fraværDelerAvDagen.sort((a, b) => {
+    return new Date(a.dato).getTime() - new Date(b.dato).getTime();
+  })[0]?.dato;
+
+  if (førsteFraværsdagHeleDager && førsteFraværsdagDelerAvDagen) {
+    return new Date(førsteFraværsdagHeleDager).getTime() <
+      new Date(førsteFraværsdagDelerAvDagen).getTime()
+      ? førsteFraværsdagHeleDager
+      : førsteFraværsdagDelerAvDagen;
+  }
+  return førsteFraværsdagHeleDager || førsteFraværsdagDelerAvDagen;
+};
+
+const YYYYMMDD = (dato: string) => {
+  const datoObjekt = new Date(dato);
+  // YYYY-MM-DD
+  return datoObjekt.toISOString().split("T")[0];
+};
+
 export const mapSkjemaTilSendInntektsmeldingRequest = (
   skjemaState: RefusjonOmsorgspengerFormData,
 ): RefusjonOmsorgspengerDto => {
@@ -17,7 +43,12 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
     endringAvInntektÅrsaker: RefusjonOmsorgspengerDto["endringAvInntektÅrsaker"];
   };
 
-  const startdato = `${validatedSkjemaState.årForRefusjon}-01-01`;
+  const førsteFraværsdag = YYYYMMDD(
+    utledFørsteFraværsdag(
+      validatedSkjemaState.fraværHeleDager,
+      validatedSkjemaState.fraværDelerAvDagen,
+    ),
+  );
   const inntekt =
     validatedSkjemaState.korrigertInntekt || validatedSkjemaState.inntekt;
   return {
@@ -26,13 +57,13 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
       telefonnummer: validatedSkjemaState.kontaktperson.telefonnummer,
     },
     inntekt: inntekt as number,
-    startdato: startdato,
+    startdato: førsteFraværsdag,
     ytelse: "OMSORGSPENGER",
     aktorId: validatedSkjemaState.ansattesAktørId as string,
     arbeidsgiverIdent: validatedSkjemaState.organisasjonsnummer as string,
     refusjon: [
       {
-        fom: startdato,
+        fom: førsteFraværsdag,
         beløp: inntekt as number,
       },
     ],

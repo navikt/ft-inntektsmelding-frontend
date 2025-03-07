@@ -28,7 +28,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   );
 
   const navigate = useNavigate();
-  const { register, formState, watch, handleSubmit, setValue } =
+  const { register, formState, watch, handleSubmit, setValue, getValues } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
@@ -37,6 +37,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   useEffect(() => {
     setValue("meta.step", 2);
+    if (getValues("meta.harSendtSøknad")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
+        to: "../6-kvittering",
+      });
+    }
   }, []);
 
   const fantIngenPersoner =

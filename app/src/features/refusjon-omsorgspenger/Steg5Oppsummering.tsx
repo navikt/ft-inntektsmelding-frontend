@@ -11,13 +11,16 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { sendInntektsmeldingOmsorgspengerRefusjonMutation } from "./api/mutations.ts";
+import {
+  RefusjonOmsorgspengerResponseDto,
+  sendInntektsmeldingOmsorgspengerRefusjonMutation,
+} from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
@@ -28,15 +31,32 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     "Oppsummering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { handleSubmit, setValue } =
+  const { handleSubmit, setValue, getValues } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const navigate = useNavigate();
+  const navigateTilKvittering = () => {
+    navigate({
+      from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
+      to: "../6-kvittering",
+    });
+  };
 
   useEffect(() => {
     setValue("meta.step", 5);
+    if (getValues("meta.harSendtSøknad")) {
+      navigateTilKvittering();
+    }
   }, []);
 
-  const { mutate: sendInntektsmeldingOmsorgspengerRefusjon } =
-    sendInntektsmeldingOmsorgspengerRefusjonMutation();
+  const { mutate: sendInntektsmeldingOmsorgspengerRefusjon, isPending } =
+    sendInntektsmeldingOmsorgspengerRefusjonMutation({
+      onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
+        setValue("meta.harSendtSøknad", true);
+        setValue("meta.innsendtSøknadId", v.id);
+        navigateTilKvittering();
+      },
+    });
+
   return (
     <div>
       <Heading level="1" size="large">
@@ -61,6 +81,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <Button
           icon={<PaperplaneIcon />}
           iconPosition="right"
+          loading={isPending}
           onClick={handleSubmit((values) => {
             const request = mapSkjemaTilSendInntektsmeldingRequest(values);
             sendInntektsmeldingOmsorgspengerRefusjon(request);

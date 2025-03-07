@@ -2,6 +2,7 @@ import { TextField, TextFieldProps } from "@navikt/ds-react";
 import { useController } from "react-hook-form";
 
 import { formatStrengTilTall } from "~/utils.ts";
+import { validateInntekt } from "~/validators";
 
 type FormattertTallTextFieldProps = TextFieldProps & {
   name: string;
@@ -22,27 +23,7 @@ export const FormattertTallTextField = ({
     name,
     rules: {
       required: required ? "Må oppgis" : false,
-      validate: (v) => {
-        const asNumber = formatStrengTilTall(v);
-        if (Number.isNaN(asNumber)) {
-          return "Må være et tall";
-        }
-
-        // Backend aksepterer tall med maks 20 siffer. Velger MAX_SAFE_INTEGER som grense for å være under 20 siffer
-        if (asNumber > Number.MAX_SAFE_INTEGER) {
-          return "Beløpet er for stort";
-        }
-
-        if (asNumber < (min ?? -Infinity)) {
-          return `Beløpet må være ${min} eller høyere`;
-        }
-
-        if (asNumber > (max ?? Infinity)) {
-          return `Beløpet må være ${max} eller lavere`;
-        }
-
-        return true;
-      },
+      validate: (v) => validateInntekt(v, min, max),
     },
   });
 

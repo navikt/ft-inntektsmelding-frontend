@@ -29,12 +29,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
 
   const { handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setValue("meta.step", 4);
+    if (getValues("meta.harSendtSøknad")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
+        to: "../6-kvittering",
+      });
+    }
   }, []);
 
-  const navigate = useNavigate();
   const onSubmit = handleSubmit((skjemadata) => {
     const { korrigertInntekt } = skjemadata;
 
