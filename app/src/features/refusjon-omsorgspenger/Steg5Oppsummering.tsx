@@ -17,7 +17,10 @@ import { useEffect } from "react";
 import { lagFulltNavn } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
-import { sendInntektsmeldingOmsorgspengerRefusjonMutation } from "./api/mutations.ts";
+import {
+  RefusjonOmsorgspengerResponseDto,
+  sendInntektsmeldingOmsorgspengerRefusjonMutation,
+} from "./api/mutations.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker.tsx";
@@ -47,8 +50,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
 
   const { mutate: sendInntektsmeldingOmsorgspengerRefusjon, isPending } =
     sendInntektsmeldingOmsorgspengerRefusjonMutation({
-      onSuccess: () => {
+      onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
         setValue("meta.harSendtSøknad", true);
+        setValue("meta.innsendtSøknadId", v.id);
         navigateTilKvittering();
       },
     });

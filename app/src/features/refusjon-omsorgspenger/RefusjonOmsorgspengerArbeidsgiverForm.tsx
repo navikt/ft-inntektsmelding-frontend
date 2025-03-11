@@ -78,6 +78,7 @@ export const RefusjonOmsorgspengerSchema = baseSchema.extend({
     skalKorrigereInntekt: z.boolean(),
     harSendtSøknad: z.boolean(),
     forrigeSøknad: baseSchema.optional(),
+    innsendtSøknadId: z.number().optional(),
   }),
 });
 

@@ -8,10 +8,12 @@ import {
 import {
   Alert,
   BodyLong,
+  BodyShort,
   Button,
   ExpansionCard,
   Heading,
   HStack,
+  Link,
   useId,
   VStack,
 } from "@navikt/ds-react";
@@ -33,7 +35,6 @@ export const Steg6Kvittering = () => {
   );
 
   const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
-
   return (
     <div>
       <div className="mx-4">
@@ -62,19 +63,39 @@ export const Steg6Kvittering = () => {
             icon={<ClockIcon />}
             question="Hvor lang er saksbehandlingstiden?"
           >
-            TODO
+            <Link href="https://www.nav.no/arbeidsgiver/saksbehandlingstider#omsorgspenger-hjemme-med-sykt-barn-dager">
+              Her finner du oversikt over saksbehandlingstiden til Nav.
+            </Link>{" "}
+            Vi tar kontakt hvis vi trenger flere opplysninger.
           </FaqItem>
           <FaqItem
             icon={<SackKronerIcon />}
             question="Når blir refusjon utbetalt?"
           >
-            TODO
+            Refusjon utbetales ved hvert månedsskifte, etter at søknaden er
+            behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver har
+            registrert i Altinn. Du får ikke beskjed når søknaden er behandlet,
+            og må derfor ha dialog med den ansatte om status på søknad og
+            utbetaling av refusjon.
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
             question="Hvordan korrigere hvis noe er feil?"
           >
-            TODO
+            <BodyShort>
+              Du finner inntektsmeldingen ved å logge inn på Min Side
+              Arbeidsgiver. Der kan du se inntektsmeldingen, og eventuelt endre
+              informasjonen. Når vi får inn en ny eller endret inntektsmelding,
+              revurderer vi saken. Hvis arbeidsgiveren har fått for mye
+              utbetalt, trekkes dette i neste utbetaling.
+            </BodyShort>
+            <Link
+              className="mt-4"
+              href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
+            >
+              Her finner du informasjon om hvordan du kan endre en
+              inntektsmelding.
+            </Link>
           </FaqItem>
         </VStack>
 
