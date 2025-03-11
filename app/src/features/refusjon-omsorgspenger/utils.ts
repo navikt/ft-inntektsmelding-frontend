@@ -1,6 +1,10 @@
+import { OpplysningerDto } from "~/types/api-models";
 import { isDateWithinRange } from "~/utils/date-utils";
 
-import { RefusjonOmsorgspengerDto } from "./api/mutations";
+import {
+  RefusjonOmsorgspengerDto,
+  RefusjonOmsorgspengerResponseDto,
+} from "./api/mutations";
 import { RefusjonOmsorgspengerFormData } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
@@ -81,6 +85,50 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
   };
 };
 
+export const mapSendInntektsmeldingTilSkjema = (
+  opplysninger: OpplysningerDto,
+  inntektsmelding: RefusjonOmsorgspengerResponseDto,
+) => {
+  return {
+    meta: {
+      step: 5,
+      skalKorrigereInntekt: !!inntektsmelding.endringAvInntektÅrsaker?.length,
+      harSendtSøknad: false,
+    },
+    kontaktperson: {
+      navn: inntektsmelding.kontaktperson.navn,
+      telefonnummer: inntektsmelding.kontaktperson.telefonnummer,
+    },
+    fraværHeleDager: inntektsmelding.omsorgspenger.fraværHeleDager ?? [],
+    fraværDelerAvDagen: inntektsmelding.omsorgspenger.fraværDelerAvDagen ?? [],
+    harDekket10FørsteOmsorgsdager: inntektsmelding.omsorgspenger
+      .harUtbetaltPliktigeDager
+      ? "ja"
+      : "nei",
+    korrigertInntekt: inntektsmelding.endringAvInntektÅrsaker?.length
+      ? inntektsmelding.inntekt
+      : undefined,
+    inntekt: inntektsmelding.endringAvInntektÅrsaker?.length
+      ? undefined
+      : inntektsmelding.inntekt,
+    endringAvInntektÅrsaker: inntektsmelding.endringAvInntektÅrsaker,
+    organisasjonsnummer: inntektsmelding.arbeidsgiverIdent,
+    ansattesAktørId: inntektsmelding.aktorId,
+    ansattesFødselsnummer: opplysninger.person.fødselsnummer,
+    ansattesFornavn: opplysninger.person.fornavn,
+    ansattesEtternavn: opplysninger.person.etternavn,
+    årForRefusjon: new Date(
+      utledFørsteFraværsdag(
+        inntektsmelding.omsorgspenger?.fraværHeleDager ?? [],
+        inntektsmelding.omsorgspenger?.fraværDelerAvDagen ?? [],
+      ),
+    )
+      .getFullYear()
+      .toString(),
+    harUtbetaltLønn: "ja",
+  } satisfies RefusjonOmsorgspengerFormData;
+};
+
 type FraværPeriodeArray = RefusjonOmsorgspengerFormData["fraværHeleDager"];
 type FraværDelerAvDagenArray =
   RefusjonOmsorgspengerFormData["fraværDelerAvDagen"];
@@ -159,4 +207,19 @@ export function utledDefaultMonthDatepicker(årForRefusjon: number) {
     return iDag;
   }
   return new Date(`${årForRefusjon}-12-31`);
+}
+
+export function finnSenesteInntektsmelding(
+  inntektsmeldinger: RefusjonOmsorgspengerResponseDto[],
+) {
+  const medOpprettetTidspunkt = inntektsmeldinger.filter(
+    (im) => !!im.opprettetTidspunkt,
+  );
+  const [sisteInntektsmelding] = medOpprettetTidspunkt.sort(
+    (a, b) =>
+      new Date(b.opprettetTidspunkt).getTime() -
+      new Date(a.opprettetTidspunkt).getTime(),
+  );
+
+  return sisteInntektsmelding;
 }

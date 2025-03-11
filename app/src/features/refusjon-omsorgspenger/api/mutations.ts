@@ -8,27 +8,31 @@ import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models.ts";
 const RefusjonOmsorgspengerDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
     omsorgspenger: z.object({
-      fraværHeleDager: z.array(
-        z.object({
-          fom: z.string(),
-          tom: z.string(),
-        }),
-      ),
-      fraværDelerAvDagen: z.array(
-        z.object({
-          dato: z.string(),
-          timer: z.string(),
-        }),
-      ),
+      fraværHeleDager: z
+        .array(
+          z.object({
+            fom: z.string(),
+            tom: z.string(),
+          }),
+        )
+        .optional(),
+      fraværDelerAvDagen: z
+        .array(
+          z.object({
+            dato: z.string(),
+            timer: z.string(),
+          }),
+        )
+        .optional(),
       harUtbetaltPliktigeDager: z.boolean(),
     }),
   });
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const RefusjonOmsorgspengerResponseDtoSchema =
+export const RefusjonOmsorgspengerResponseDtoSchema =
   RefusjonOmsorgspengerDtoSchema.extend({
     id: z.number(),
-    inntektsmeldingsId: z.number(),
+    opprettetTidspunkt: z.string(),
   });
 
 export type RefusjonOmsorgspengerDto = z.infer<

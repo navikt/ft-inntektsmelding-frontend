@@ -1,69 +1,88 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { idnr } from "@navikt/fnrvalidator";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { getRouteApi } from "@tanstack/react-router";
+import {
+  DeepPartial,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
 import { z } from "zod";
 
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, lagFulltNavn } from "~/utils";
 import { validateInntekt } from "~/validators";
 
-import { useInnloggetBruker } from "./useInnloggetBruker";
+import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
+import {
+  finnSenesteInntektsmelding,
+  mapSendInntektsmeldingTilSkjema,
+} from "./utils";
 
 // Create a single unified form schema
-export const RefusjonOmsorgspengerSchema = z
-  .object({
-    meta: z.object({
-      step: z.number().min(1).max(5),
-      skalKorrigereInntekt: z.boolean(),
-      harSendtSøknad: z.boolean(),
-      innsendtSøknadId: z.number().optional(),
+const baseSchema = z.object({
+  meta: z.object({
+    step: z.number().min(1).max(5),
+    skalKorrigereInntekt: z.boolean(),
+    harSendtSøknad: z.boolean(),
+  }),
+  // Steg 1 fields
+  harUtbetaltLønn: z.preprocess((val) => val || "", z.string()),
+  årForRefusjon: z.preprocess((val) => val || "", z.string()),
+
+  // Steg 2 fields
+  kontaktperson: z.object({
+    navn: z.string(),
+    telefonnummer: z.string(),
+  }),
+  ansattesFødselsnummer: z.string().optional(),
+  ansattesFornavn: z.string().optional(),
+  ansattesEtternavn: z.string().optional(),
+  ansattesAktørId: z.string().optional(),
+  organisasjonsnummer: z.string().optional(),
+  valgtArbeidsforhold: z.string().optional(),
+
+  // Steg 3 fields
+  harDekket10FørsteOmsorgsdager: z.preprocess((val) => val || "", z.string()),
+  fraværHeleDager: z.array(
+    z.object({
+      fom: z.string(),
+      tom: z.string(),
     }),
-    // Steg 1 fields
-    harUtbetaltLønn: z.preprocess((val) => val || "", z.string()),
-    årForRefusjon: z.preprocess((val) => val || "", z.string()),
-
-    // Steg 2 fields
-    kontaktperson: z.object({
-      navn: z.string(),
-      telefonnummer: z.string(),
+  ),
+  fraværDelerAvDagen: z.array(
+    z.object({
+      dato: z.string(),
+      timer: z.string(),
     }),
-    ansattesFødselsnummer: z.string().optional(),
-    ansattesFornavn: z.string().optional(),
-    ansattesEtternavn: z.string().optional(),
-    ansattesAktørId: z.string().optional(),
-    organisasjonsnummer: z.string().optional(),
-    valgtArbeidsforhold: z.string().optional(),
+  ),
 
-    // Steg 3 fields
-    harDekket10FørsteOmsorgsdager: z.preprocess((val) => val || "", z.string()),
-    fraværHeleDager: z.array(
+  // Steg 4 fields
+  inntekt: beløpSchema.optional(),
+  korrigertInntekt: beløpSchema.optional(),
+  endringAvInntektÅrsaker: z
+    .array(
       z.object({
-        fom: z.string(),
-        tom: z.string(),
+        årsak: EndringAvInntektÅrsakerSchema.or(z.literal("")),
+        fom: z.string().optional(),
+        tom: z.string().optional(),
+        bleKjentFom: z.string().optional(),
       }),
-    ),
-    fraværDelerAvDagen: z.array(
-      z.object({
-        dato: z.string(),
-        timer: z.string(),
-      }),
-    ),
+    )
+    .optional(),
+});
 
-    // Steg 4 fields
-    inntekt: beløpSchema.optional(),
-    korrigertInntekt: beløpSchema.optional(),
-    endringAvInntektÅrsaker: z
-      .array(
-        z.object({
-          årsak: EndringAvInntektÅrsakerSchema.or(z.literal("")),
-          fom: z.string().optional(),
-          tom: z.string().optional(),
-          bleKjentFom: z.string().optional(),
-        }),
-      )
-      .optional(),
-  })
-  .superRefine((data, ctx) => {
+export const RefusjonOmsorgspengerSchema = baseSchema.extend({
+  meta: z.object({
+    step: z.number().min(1).max(5),
+    skalKorrigereInntekt: z.boolean(),
+    harSendtSøknad: z.boolean(),
+    forrigeSøknad: baseSchema.optional(),
+  }),
+});
+
+export const RefusjonOmsorgspengerSchemaMedValidering =
+  RefusjonOmsorgspengerSchema.superRefine((data, ctx) => {
     // Validations for Step 1
     if (data.meta.step === 1 || data.meta.step === 5) {
       if (!data.harUtbetaltLønn) {
@@ -199,14 +218,16 @@ export const RefusjonOmsorgspengerSchema = z
       if (!data.meta.skalKorrigereInntekt && !data.inntekt) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Du må oppgi enten korrigert inntekt eller inntekt",
-          path: ["korrigertInntekt", "inntekt"],
+          message:
+            "Månedsinntekten er satt til kr 0. Dersom dere har utbetalt lønn og krever refusjon må månedsinntekten være større en kr 0.",
+          path: ["inntekt"],
         });
       }
       if (data.meta.skalKorrigereInntekt && !data.korrigertInntekt) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "Du må oppgi korrigert inntekt",
+          message:
+            "Månedsinntekten er satt til kr 0. Dersom dere har utbetalt lønn og krever refusjon må månedsinntekten være større en kr 0.",
           path: ["korrigertInntekt"],
         });
       }
@@ -242,19 +263,31 @@ export const RefusjonOmsorgspengerSchema = z
 
 // Define form data type based on the schema
 export type RefusjonOmsorgspengerFormData = z.infer<
-  typeof RefusjonOmsorgspengerSchema
+  typeof RefusjonOmsorgspengerSchemaMedValidering
 >;
 
 type Props = {
   children: React.ReactNode;
 };
-
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
-  const innloggetBruker = useInnloggetBruker();
+  const route = getRouteApi("/refusjon-omsorgspenger/$organisasjonsnummer");
 
-  const form = useForm<RefusjonOmsorgspengerFormData>({
-    resolver: zodResolver(RefusjonOmsorgspengerSchema),
-    defaultValues: {
+  const { eksisterendeInntektsmeldinger, opplysninger, innloggetBruker } =
+    route.useLoaderData();
+  const { id } = route.useSearch();
+  let defaultValues: DeepPartial<RefusjonOmsorgspengerFormData>;
+
+  if (id) {
+    const sisteInntektsmelding = finnSenesteInntektsmelding(
+      eksisterendeInntektsmeldinger as RefusjonOmsorgspengerResponseDto[],
+    );
+
+    defaultValues = mapSendInntektsmeldingTilSkjema(
+      opplysninger,
+      sisteInntektsmelding,
+    );
+  } else {
+    defaultValues = {
       meta: {
         step: 1,
         skalKorrigereInntekt: false,
@@ -273,8 +306,14 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
           tom: "",
         },
       ],
-    },
-    mode: "onChange",
+    };
+  }
+
+  const form = useForm<RefusjonOmsorgspengerFormData>({
+    resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),
+    defaultValues,
+    mode: "onSubmit",
+    reValidateMode: "onChange",
   });
 
   return <FormProvider {...form}>{children}</FormProvider>;
