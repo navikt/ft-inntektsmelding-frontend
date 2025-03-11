@@ -15,12 +15,18 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
+
+import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  RefusjonOmsorgspengerFormData,
+  useRefusjonOmsorgspengerArbeidsgiverFormContext,
+} from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   useDocumentTitle(
@@ -95,8 +101,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
         <BodyLong>
           Vi har forhåndsutfylt beregnet månedsbeløp ut fra opplysninger i
           A-ordningen. Vurder om beløpet er riktig, eller gjør endringer hvis
-          noe ikke stemmer. Beregnet månedslønn tilsvarer beløpet dere kan få i
-          refusjon.
+          noe ikke stemmer. Beregnet månedslønn danner grunnlaget for hva dere
+          kan få i refusjon. Hvis fraværet er lavere enn 100 prosent, tar Nav
+          hensyn til det når vi utbetaler refusjon. Refusjonen vil være
+          begrenset opp til en maksimal årslønn på seks ganger grunnbeløpet (6G)
         </BodyLong>
       </GuidePanel>
       <form onSubmit={onSubmit}>
@@ -114,7 +122,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
                 inntektsopplysninger,
                 skjæringstidspunkt: førsteFraværsdato,
               }}
-            />
+            >
+              <Over6GAlert />
+            </Inntekt>
           ) : isLoading ? (
             <div className="my-4 flex justify-center">
               <Loader />
@@ -133,6 +143,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
               </Button>
             </>
           ) : null}
+          <InntektAlert />
           <div className="flex gap-4">
             <Button
               as={Link}
@@ -157,3 +168,41 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     </div>
   );
 };
+
+function Over6GAlert() {
+  const { watch } = useFormContext<RefusjonOmsorgspengerFormData>();
+  const GRUNNBELØP = useQuery(hentGrunnbeløpOptions()).data;
+
+  const inntekt = watch("inntekt");
+  const korrigertInntekt = watch("korrigertInntekt");
+  const valgtInntekt = Number(korrigertInntekt) || Number(inntekt);
+  const inntektErOver0Kr = valgtInntekt > 0;
+  const erInntektOver6G =
+    !Number.isNaN(valgtInntekt) &&
+    inntektErOver0Kr &&
+    valgtInntekt * 12 > 6 * GRUNNBELØP;
+
+  if (erInntektOver6G) {
+    return (
+      <Alert variant="info">
+        Nav utbetaler opptil 6G av årslønnen. Du skal likevel føre opp den
+        lønnen dere utbetaler til den ansatte i sin helhet.
+      </Alert>
+    );
+  }
+  return null;
+}
+
+function InntektAlert() {
+  const { formState } = useFormContext<RefusjonOmsorgspengerFormData>();
+  const error = formState.errors.inntekt;
+
+  if (error) {
+    return (
+      <Alert variant="error">
+        <BodyLong>{error.message}</BodyLong>
+      </Alert>
+    );
+  }
+  return null;
+}

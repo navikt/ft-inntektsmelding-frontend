@@ -48,7 +48,8 @@ cd app && npm run dev:fp
 
 3) Gå mot denne [URLen](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/${ORGNR}/1-intro).
    Bytt ut ${ORGNR} med orgnummeret som er knyttet til testbrukeren du logget inn med.
-   
+   Her er et eksempel: https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/315786940/1-intro
+   Logg inn med testid 16878397960
 
 
 ## Testbrukere

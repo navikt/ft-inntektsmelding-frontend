@@ -53,10 +53,12 @@ type InntektProps = {
     "skjæringstidspunkt" | "person" | "inntektsopplysninger"
   >;
   harEksisterendeInntektsmeldinger: boolean;
+  children?: React.ReactNode;
 };
 export function Inntekt({
   opplysninger,
   harEksisterendeInntektsmeldinger,
+  children,
 }: InntektProps) {
   const { skjæringstidspunkt, person, inntektsopplysninger } = opplysninger;
   const { watch, setValue } = useFormContext<InntektOgRefusjonForm>();
@@ -154,7 +156,7 @@ export function Inntekt({
           Endre månedslønn
         </Button>
       )}
-
+      {children}
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
           Er månedslønnen riktig?

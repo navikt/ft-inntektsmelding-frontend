@@ -149,8 +149,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                 <div className="flex-1">
                   <Label>Virksomhetsnavn</Label>
                   <BodyShort>
-                    {/* TODO: Hente ut navn på ansettelsesforhold */}
-                    {data.arbeidsforhold[0].organisasjonsnummer}
+                    {`${data.arbeidsforhold[0].organisasjonsnavn} (${data.arbeidsforhold[0].organisasjonsnummer})`}
                   </BodyShort>
                   <input
                     type="hidden"

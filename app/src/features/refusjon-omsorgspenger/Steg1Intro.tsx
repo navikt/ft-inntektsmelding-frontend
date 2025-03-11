@@ -92,9 +92,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
                 Arbeidsgivers plikt til å utbetale omsorgsdager
               </Heading>
               <BodyLong spacing>
-                Hvis den ansatte har jobbet hos dere i minst fire uker, plikter
-                dere å utbetale lønn for alle omsorgsdagene som den ansatte har
-                rett til å bruke.
+                Hvis arbeidsforholdet hos dere har vart i minst fire uker,
+                plikter dere å utbetale lønn for alle omsorgsdagene som den
+                ansatte har rett til å bruke
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
