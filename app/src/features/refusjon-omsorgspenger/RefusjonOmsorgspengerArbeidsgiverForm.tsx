@@ -9,6 +9,7 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 
+import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt";
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, finnSenesteInntektsmelding, lagFulltNavn } from "~/utils";
 import { validateInntekt, validateTimer } from "~/validators";
@@ -290,14 +291,32 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
         }
         if (data.endringAvInntektÅrsaker) {
           for (const [index, årsak] of data.endringAvInntektÅrsaker.entries()) {
-            if (!årsak.årsak) {
+            if (årsak.årsak) {
+              // Validate required fields based on the selected årsak
+              const påkrevdeFelter = PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak.årsak];
+
+              if (påkrevdeFelter.fom && !årsak.fom) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "Du må oppgi fra og med dato",
+                  path: ["endringAvInntektÅrsaker", index, "fom"],
+                });
+              }
+
+              if (påkrevdeFelter.tom && !årsak.tom) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "Du må oppgi til og med dato",
+                  path: ["endringAvInntektÅrsaker", index, "tom"],
+                });
+              }
+            } else {
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message: "Du må oppgi en endringsårsak",
                 path: ["endringAvInntektÅrsaker", index, "årsak"],
               });
             }
-            // TODO: Validate that fom and tom based on årsak
           }
         } else {
           ctx.addIssue({
