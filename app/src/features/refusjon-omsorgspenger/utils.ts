@@ -208,18 +208,3 @@ export function utledDefaultMonthDatepicker(årForRefusjon: number) {
   }
   return new Date(`${årForRefusjon}-12-31`);
 }
-
-export function finnSenesteInntektsmelding(
-  inntektsmeldinger: RefusjonOmsorgspengerResponseDto[],
-) {
-  const medOpprettetTidspunkt = inntektsmeldinger.filter(
-    (im) => !!im.opprettetTidspunkt,
-  );
-  const [sisteInntektsmelding] = medOpprettetTidspunkt.sort(
-    (a, b) =>
-      new Date(b.opprettetTidspunkt).getTime() -
-      new Date(a.opprettetTidspunkt).getTime(),
-  );
-
-  return sisteInntektsmelding;
-}

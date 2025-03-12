@@ -48,11 +48,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   }, []);
 
   const onSubmit = handleSubmit((skjemadata) => {
-    const { korrigertInntekt } = skjemadata;
+    const { korrigertInntekt, endringAvInntektÅrsaker } = skjemadata;
 
     setValue(
       "endringAvInntektÅrsaker",
-      korrigertInntekt ? skjemadata.endringAvInntektÅrsaker : [],
+      korrigertInntekt ? endringAvInntektÅrsaker : [],
     );
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",

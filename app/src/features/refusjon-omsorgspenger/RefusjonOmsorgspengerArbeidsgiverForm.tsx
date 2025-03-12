@@ -10,14 +10,11 @@ import {
 import { z } from "zod";
 
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
-import { beløpSchema, lagFulltNavn } from "~/utils";
+import { beløpSchema, finnSenesteInntektsmelding, lagFulltNavn } from "~/utils";
 import { validateInntekt } from "~/validators";
 
 import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
-import {
-  finnSenesteInntektsmelding,
-  mapSendInntektsmeldingTilSkjema,
-} from "./utils";
+import { mapSendInntektsmeldingTilSkjema } from "./utils";
 
 // Create a single unified form schema
 const baseSchema = z.object({
