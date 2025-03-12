@@ -1,7 +1,6 @@
 import {
   DatePicker,
   DatePickerProps,
-  HStack,
   useRangeDatepicker,
 } from "@navikt/ds-react";
 import { forwardRef } from "react";
@@ -42,11 +41,9 @@ export const DateRangePickerWrapped = forwardRef<
     toDate: maxDato,
     onRangeChange: (dateRange) => {
       fromField.onChange(
-        dateRange?.from ? formatIsoDatostempel(dateRange.from) : undefined,
+        dateRange?.from ? formatIsoDatostempel(dateRange.from) : "",
       );
-      toField.onChange(
-        dateRange?.to ? formatIsoDatostempel(dateRange.to) : undefined,
-      );
+      toField.onChange(dateRange?.to ? formatIsoDatostempel(dateRange.to) : "");
     },
     onValidate: (dateRange) => {
       if (dateRange?.from && dateRange?.to) {
@@ -61,9 +58,10 @@ export const DateRangePickerWrapped = forwardRef<
   });
   return (
     <DatePicker {...useRangeDatepickerProps}>
-      <HStack align="baseline" gap="4" ref={ref}>
+      <div className="flex gap-4 w-full items-baseline" ref={ref}>
         <DatePicker.Input
           {...fromInputProps}
+          className="w-full max-w-[50%]"
           error={fromFieldState.isTouched && fromFieldState.error?.message}
           label="Fra og med"
           onBlur={fromField.onBlur}
@@ -71,12 +69,13 @@ export const DateRangePickerWrapped = forwardRef<
         />
         <DatePicker.Input
           {...toInputProps}
+          className="w-full max-w-[50%]"
           error={toFieldState.isTouched && toFieldState.error?.message}
           label="Til og med"
           onBlur={toField.onBlur}
           ref={toField.ref}
         />
-      </HStack>
+      </div>
     </DatePicker>
   );
 });

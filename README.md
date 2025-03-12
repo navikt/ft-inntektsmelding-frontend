@@ -29,6 +29,9 @@ Start frontenden ved å gå til `app`-mappen og kjøre `npm run dev:fp` eller `n
 cd app && npm run dev:fp
 ```
 
+## Hovedside for min side arbeidsgiver
+   https://arbeidsgiver.intern.dev.nav.no/min-side-arbeidsgiver/
+
 ## Inntektsmelding
 
 1) For FP, gå til [https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on) for å utvikle lokalt!

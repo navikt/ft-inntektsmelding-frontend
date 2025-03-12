@@ -44,6 +44,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 
   const navigate = useNavigate();
 
+  const årForRefusjon = watch("årForRefusjon");
+  const harUtbetaltLønn = watch("harUtbetaltLønn");
+
   useEffect(() => {
     setValue("meta.step", 3);
     if (getValues("meta.harSendtSøknad")) {
@@ -53,7 +56,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       });
     }
 
-    if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
+    if (!årForRefusjon || !harUtbetaltLønn) {
       navigate({
         from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
         to: "../1-intro",
@@ -79,7 +82,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
   const fraværHeleDager = watch("fraværHeleDager");
   const fraværDelerAvDagen = watch("fraværDelerAvDagen");
-  const årForRefusjon = watch("årForRefusjon");
 
   const fraværErInnenforDatoer = hasAbsenceInDateRange(
     fraværHeleDager,
@@ -138,7 +140,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           <HjelpetekstReadMore header="Har den ansatte hatt en varig lønnsendring?">
             Hvis dere krever refusjon for flere perioder, og den ansatte har
             hatt varig lønnsendring mellom periodene, må dere sende to
-            refusjonskrav for periodene før og etter lønnsendring.
+            refusjonskrav. En for perioder før og en etter lønnsendring.
           </HjelpetekstReadMore>
 
           <div className="flex gap-4 mt-8">
@@ -199,25 +201,6 @@ const FraværHeleDagen = () => {
             maxDato={maxDato}
             minDato={minDato}
             name={`fraværHeleDager.${index}`}
-            rules={{
-              fom: {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi fra og med dato";
-                  }
-                },
-              },
-              tom: {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi til og med dato";
-                  }
-                  if (periode.fom && value < periode.fom) {
-                    return "Til og med dato må være etter fra og med dato";
-                  }
-                },
-              },
-            }}
           />
           <div>
             <Button
@@ -293,20 +276,6 @@ const FraværDelerAvDagen = () => {
             <TextField
               label="Timer fravær"
               {...register(`fraværDelerAvDagen.${index}.timer`, {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi antall timer";
-                  }
-                  if (Number.isNaN(Number(value))) {
-                    return "Antall timer må være et tall";
-                  }
-                  if (Number(value) <= 0) {
-                    return "Antall timer må være høyere enn 0";
-                  }
-                  if (Number(value) > 24) {
-                    return "Antall timer kan ikke være mer enn 24";
-                  }
-                },
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = e.target.value;
                   const valueWithoutCommas = value.replaceAll(",", ".");

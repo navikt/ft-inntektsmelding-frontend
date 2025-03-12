@@ -11,10 +11,13 @@ import { z } from "zod";
 
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, finnSenesteInntektsmelding, lagFulltNavn } from "~/utils";
-import { validateInntekt } from "~/validators";
+import { validateInntekt, validateTimer } from "~/validators";
 
 import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
-import { mapSendInntektsmeldingTilSkjema } from "./utils";
+import {
+  datoErInnenforGyldigDatoIntervall,
+  mapSendInntektsmeldingTilSkjema,
+} from "./utils";
 
 // Create a single unified form schema
 const baseSchema = z.object({
@@ -174,37 +177,84 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       }
 
       // Validate each item in fraværHeleDager array
-      for (const [index, dag] of data.fraværHeleDager.entries()) {
-        if (!dag.fom) {
+      for (const [index, periode] of data.fraværHeleDager.entries()) {
+        if (!periode.fom) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Du må oppgi en fra og med dato",
             path: ["fraværHeleDager", index, "fom"],
           });
         }
-        if (!dag.tom) {
+        if (!periode.tom) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Du må oppgi en til og med dato",
             path: ["fraværHeleDager", index, "tom"],
           });
         }
+        if (
+          periode.fom &&
+          !datoErInnenforGyldigDatoIntervall(
+            periode.fom,
+            Number(data.årForRefusjon),
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+            path: ["fraværHeleDager", index, "fom"],
+          });
+        }
+        if (
+          periode.tom &&
+          !datoErInnenforGyldigDatoIntervall(
+            periode.tom,
+            Number(data.årForRefusjon),
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+            path: ["fraværHeleDager", index, "tom"],
+          });
+        }
       }
 
       // Validate each item in fraværDelerAvDagen array
-      for (const [index, del] of data.fraværDelerAvDagen.entries()) {
-        if (!del.dato) {
+      for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
+        if (!dag.dato) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Du må oppgi en dato",
             path: ["fraværDelerAvDagen", index, "dato"],
           });
         }
-        if (!del.timer) {
+        if (dag.timer) {
+          const feilmelding = validateTimer(dag.timer);
+          if (typeof feilmelding === "string") {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: feilmelding,
+              path: ["fraværDelerAvDagen", index, "timer"],
+            });
+          }
+        } else {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message: "Du må oppgi antall timer",
             path: ["fraværDelerAvDagen", index, "timer"],
+          });
+        }
+        if (
+          !datoErInnenforGyldigDatoIntervall(
+            dag.dato,
+            Number(data.årForRefusjon),
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+            path: ["fraværDelerAvDagen", index, "dato"],
           });
         }
       }
@@ -247,11 +297,12 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
                 path: ["endringAvInntektÅrsaker", index, "årsak"],
               });
             }
+            // TODO: Validate that fom and tom based on årsak
           }
         } else {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: "Du må oppgi endringsårsaker",
+            message: "Du må oppgi endringsårsak",
             path: ["endringAvInntektÅrsaker"],
           });
         }

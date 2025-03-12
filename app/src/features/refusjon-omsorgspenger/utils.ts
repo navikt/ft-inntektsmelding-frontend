@@ -208,3 +208,12 @@ export function utledDefaultMonthDatepicker(årForRefusjon: number) {
   }
   return new Date(`${årForRefusjon}-12-31`);
 }
+
+export function datoErInnenforGyldigDatoIntervall(dato: string, år: number) {
+  const gyldigDatoIntervall = beregnGyldigDatoIntervall(år);
+  const datoObjekt = new Date(dato);
+  return (
+    datoObjekt >= gyldigDatoIntervall.minDato &&
+    datoObjekt <= gyldigDatoIntervall.maxDato
+  );
+}
