@@ -64,8 +64,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={5} />
       <VStack gap="4">
-        <OppsummeringArbeidsgiverOgAnsatt />
         <OppsummeringRefusjon />
+        <OppsummeringArbeidsgiverOgAnsatt />
         <OppsummeringOmsorgsdager />
         <OppsummeringMånedslønn />
       </VStack>
