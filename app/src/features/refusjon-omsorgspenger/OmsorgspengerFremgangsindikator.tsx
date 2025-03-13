@@ -13,7 +13,7 @@ export const OmsorgspengerFremgangsindikator = ({
       interactiveSteps={false}
       totalSteps={5}
     >
-      <FormProgress.Step>Refusjon</FormProgress.Step>
+      <FormProgress.Step>Om refusjon</FormProgress.Step>
       <FormProgress.Step>Den ansatte og arbeidsgiver</FormProgress.Step>
       <FormProgress.Step>Omsorgsdager</FormProgress.Step>
       <FormProgress.Step>Beregnet månedslønn</FormProgress.Step>
