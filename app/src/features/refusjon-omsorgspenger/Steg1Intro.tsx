@@ -52,7 +52,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   return (
     <div>
       <Heading level="1" size="large">
-        Om refusjonskravet
+        Om refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={1} />
       <GuidePanel className="mb-4">

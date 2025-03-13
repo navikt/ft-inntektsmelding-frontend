@@ -102,7 +102,7 @@ const OppsummeringRefusjon = () => {
   return (
     <FormSummary>
       <FormSummaryHeader>
-        <FormSummaryHeading level="3">Om refusjonskravet</FormSummaryHeading>
+        <FormSummaryHeading level="3">Om refusjon</FormSummaryHeading>
         <FormSummaryEditLink as={Link} to="../1-intro" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
