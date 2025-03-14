@@ -42,11 +42,11 @@ export const Steg6Kvittering = () => {
           <CheckmarkIcon aria-hidden fontSize="2.5em" />
         </div>
         <Heading className="mt-6 mb-12 text-center" level="2" size="small">
-          Søknad om refusjon er sendt
+          Refusjonskrav om omsorgspenger er sendt
         </Heading>
         <Alert className="mb-12" variant="success">
           <Heading className="mb-2" level="3" size="medium">
-            Vi har mottatt søknaden
+            Vi har mottatt refusjonskravet
           </Heading>
           <BodyLong>
             Vi har mottatt søknad om refusjon av omsorgspenger. Saken ligger nå
