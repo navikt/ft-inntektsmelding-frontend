@@ -113,7 +113,7 @@ export const Steg6Kvittering = () => {
             iconPosition="left"
             variant="secondary"
           >
-            Last ned kvitteringen
+            Last ned refusjonskrav
           </Button>
         </HStack>
       </div>
