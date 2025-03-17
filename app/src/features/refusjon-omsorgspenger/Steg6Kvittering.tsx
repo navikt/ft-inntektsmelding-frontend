@@ -72,20 +72,20 @@ export const Steg6Kvittering = () => {
             icon={<SackKronerIcon />}
             question="Når blir refusjon utbetalt?"
           >
-            Refusjon utbetales ved hvert månedsskifte, etter at søknaden er
-            behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver har
-            registrert i Altinn. Du får ikke beskjed når søknaden er behandlet,
-            og må derfor ha dialog med den ansatte om status på søknad og
-            utbetaling av refusjon.
+            Refusjon utbetales ved hvert månedsskifte, etter at refusjonskravet
+            er behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver
+            har registrert i Altinn. Du får ikke beskjed når refusjonskravet er
+            behandlet, og må derfor følge med på oppgjørsrapport K27 om status
+            og utbetaling av refusjon.
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
             question="Hvordan korrigere hvis noe er feil?"
           >
             <BodyShort>
-              Du finner inntektsmeldingen ved å logge inn på Min Side
-              Arbeidsgiver. Der kan du se inntektsmeldingen, og eventuelt endre
-              informasjonen. Når vi får inn en ny eller endret inntektsmelding,
+              Du finner refusjonskravet ved å logge inn på Min Side
+              Arbeidsgiver. Der kan du se refusjonskravet, og eventuelt endre
+              informasjonen. Når vi får inn et nytt eller endret refusjonskrav,
               revurderer vi saken. Hvis arbeidsgiveren har fått for mye
               utbetalt, trekkes dette i neste utbetaling.
             </BodyShort>
@@ -93,8 +93,8 @@ export const Steg6Kvittering = () => {
               className="mt-4"
               href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
             >
-              Her finner du informasjon om hvordan du kan endre en
-              inntektsmelding.
+              Her finner du informasjon om hvordan du kan endre et
+              refusjonskrav/inntektsmelding.
             </Link>
           </FaqItem>
         </VStack>
