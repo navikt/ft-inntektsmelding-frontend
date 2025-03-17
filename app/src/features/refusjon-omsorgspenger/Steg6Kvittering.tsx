@@ -76,7 +76,7 @@ export const Steg6Kvittering = () => {
             er behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver
             har registrert i Altinn. Du får ikke beskjed når refusjonskravet er
             behandlet, og må derfor følge med på oppgjørsrapport K27 om status
-            og utbetaling av refusjon.
+            på refusjonskravet og utbetaling av refusjon.
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
