@@ -33,8 +33,8 @@ export const validateTimer = (v: string | number) => {
   if (Number.isNaN(Number(v))) {
     return "Antall timer må være et tall";
   }
-  if (Number(v) <= 0) {
-    return "Antall timer må være høyere enn 0";
+  if (Number(v) < 0) {
+    return "Antall timer må være 0 eller høyere";
   }
   if (Number(v) > 24) {
     return "Antall timer kan ikke være mer enn 24";

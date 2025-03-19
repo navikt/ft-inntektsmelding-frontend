@@ -17,6 +17,8 @@ import { validateInntekt, validateTimer } from "~/validators";
 import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
 import {
   datoErInnenforGyldigDatoIntervall,
+  hasFullDayAbsenceInRange,
+  hasPartialDayAbsenceInRange,
   mapSendInntektsmeldingTilSkjema,
 } from "./utils";
 
@@ -219,44 +221,89 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
             path: ["fraværHeleDager", index, "tom"],
           });
         }
-      }
-
-      // Validate each item in fraværDelerAvDagen array
-      for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
-        if (!dag.dato) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Du må oppgi en dato",
-            path: ["fraværDelerAvDagen", index, "dato"],
-          });
-        }
-        if (dag.timer) {
-          const feilmelding = validateTimer(dag.timer);
-          if (typeof feilmelding === "string") {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: feilmelding,
-              path: ["fraværDelerAvDagen", index, "timer"],
-            });
-          }
-        } else {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
-            message: "Du må oppgi antall timer",
-            path: ["fraværDelerAvDagen", index, "timer"],
-          });
-        }
         if (
-          !datoErInnenforGyldigDatoIntervall(
-            dag.dato,
-            Number(data.årForRefusjon),
+          hasFullDayAbsenceInRange(
+            [periode],
+            new Date(`${data.årForRefusjon}-01-01`),
+            new Date(`${data.årForRefusjon}-01-10`),
           )
         ) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
-            path: ["fraværDelerAvDagen", index, "dato"],
+            message:
+              "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 dagene av året",
+            path: ["fraværHeleDager", index, "fom"],
           });
+        }
+
+        // Validate each item in fraværDelerAvDagen array
+        for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
+          if (!dag.dato) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Du må oppgi en dato",
+              path: ["fraværDelerAvDagen", index, "dato"],
+            });
+          }
+          if (dag.dato) {
+            // Fravær deler av dag må ikke overlappe med fravær hele dager
+            const overlap = hasFullDayAbsenceInRange(
+              data.fraværHeleDager,
+              new Date(dag.dato),
+              new Date(dag.dato),
+            );
+            if (overlap) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message:
+                  "Fravær deler av dag må ikke overlappe med fravær hele dager",
+                path: ["fraværDelerAvDagen", index, "dato"],
+              });
+            }
+            if (
+              data.harDekket10FørsteOmsorgsdager &&
+              hasPartialDayAbsenceInRange(
+                [dag],
+                new Date(`${data.årForRefusjon}-01-01`),
+                new Date(`${data.årForRefusjon}-01-10`),
+              )
+            ) {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message:
+                  "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 dagene av året",
+                path: ["fraværDelerAvDagen", index, "dato"],
+              });
+            }
+          }
+          if (dag.timer) {
+            const feilmelding = validateTimer(dag.timer);
+            if (typeof feilmelding === "string") {
+              ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: feilmelding,
+                path: ["fraværDelerAvDagen", index, "timer"],
+              });
+            }
+          } else {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Du må oppgi antall timer",
+              path: ["fraværDelerAvDagen", index, "timer"],
+            });
+          }
+          if (
+            !datoErInnenforGyldigDatoIntervall(
+              dag.dato,
+              Number(data.årForRefusjon),
+            )
+          ) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+              path: ["fraværDelerAvDagen", index, "dato"],
+            });
+          }
         }
       }
     }
