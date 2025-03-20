@@ -40,9 +40,11 @@ export async function hentEksisterendeInntektsmeldinger(uuid: string) {
     .safeParse(json);
 
   if (!parsedJson.success) {
-    logDev("error", parsedJson.error);
-
-    throw new Error("Responsen fra serveren matchet ikke forventet format");
+    logDev(
+      "error",
+      "Responsen fra serveren matchet ikke forventet format",
+      parsedJson.error,
+    );
   }
 
   return parsedJson.data;
