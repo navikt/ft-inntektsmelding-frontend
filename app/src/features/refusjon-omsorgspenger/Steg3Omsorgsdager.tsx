@@ -45,7 +45,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const navigate = useNavigate();
 
   const årForRefusjon = watch("årForRefusjon");
-  const harUtbetaltLønn = watch("harUtbetaltLønn");
 
   useEffect(() => {
     setValue("meta.step", 3);
