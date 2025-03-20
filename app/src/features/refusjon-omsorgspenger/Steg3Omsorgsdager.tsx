@@ -56,12 +56,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
       });
     }
 
-    if (!årForRefusjon || !harUtbetaltLønn) {
-      navigate({
-        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
-        to: "../1-intro",
-      });
-    }
+    // if (!årForRefusjon || !harUtbetaltLønn) {
+    //   navigate({
+    //     from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+    //     to: "../1-intro",
+    //   });
+    // }
   }, []);
 
   const onSubmit = handleSubmit(() => {
