@@ -222,6 +222,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           });
         }
         if (
+          data.harDekket10FørsteOmsorgsdager === "ja" &&
           hasFullDayAbsenceInRange(
             [periode],
             new Date(`${data.årForRefusjon}-01-01`),
@@ -231,7 +232,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             message:
-              "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 dagene av året",
+              "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
             path: ["fraværHeleDager", index, "fom"],
           });
         }
@@ -261,7 +262,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
               });
             }
             if (
-              data.harDekket10FørsteOmsorgsdager &&
+              data.harDekket10FørsteOmsorgsdager === "ja" &&
               hasPartialDayAbsenceInRange(
                 [dag],
                 new Date(`${data.årForRefusjon}-01-01`),
@@ -271,7 +272,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
               ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 message:
-                  "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 dagene av året",
+                  "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
                 path: ["fraværDelerAvDagen", index, "dato"],
               });
             }
