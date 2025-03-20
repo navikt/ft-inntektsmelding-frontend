@@ -122,27 +122,19 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <>
                 <Select
                   label="Velg arbeidsforhold"
-                  {...register("valgtArbeidsforhold", {
-                    required: "Du må velge et arbeidsforhold",
-                  })}
-                  error={formState.errors.valgtArbeidsforhold?.message}
+                  {...register("organisasjonsnummer")}
+                  error={formState.errors.organisasjonsnummer?.message}
                 >
                   {data.arbeidsforhold.map((arbeidsforhold) => (
                     <option
-                      key={arbeidsforhold.arbeidsforholdId}
-                      value={arbeidsforhold.arbeidsforholdId}
+                      key={arbeidsforhold.organisasjonsnummer}
+                      value={arbeidsforhold.organisasjonsnummer}
                     >
                       {arbeidsforhold.organisasjonsnummer} (
-                      {arbeidsforhold.arbeidsforholdId})
+                      {arbeidsforhold.organisasjonsnavn})
                     </option>
                   ))}
                 </Select>
-                <input
-                  type="hidden"
-                  {...register("organisasjonsnummer", {
-                    value: data.arbeidsforhold[0].organisasjonsnummer,
-                  })}
-                />
               </>
             ) : harEttArbeidsforhold ? (
               <div className="flex gap-4">

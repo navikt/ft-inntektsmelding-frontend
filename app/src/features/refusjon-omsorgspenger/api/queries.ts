@@ -18,7 +18,6 @@ const ArbeidstakerOppslagDtoSchema = z.object({
     z.object({
       organisasjonsnavn: z.string(),
       organisasjonsnummer: z.string(),
-      arbeidsforholdId: z.string(),
     }),
   ),
 });

@@ -43,7 +43,6 @@ const baseSchema = z.object({
   ansattesEtternavn: z.string().optional(),
   ansattesAktørId: z.string().optional(),
   organisasjonsnummer: z.string().optional(),
-  valgtArbeidsforhold: z.string().optional(),
 
   // Steg 3 fields
   harDekket10FørsteOmsorgsdager: z.preprocess((val) => val || "", z.string()),
