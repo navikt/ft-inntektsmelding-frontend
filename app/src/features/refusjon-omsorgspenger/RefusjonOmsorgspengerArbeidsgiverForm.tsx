@@ -56,7 +56,7 @@ const baseSchema = z.object({
   fraværDelerAvDagen: z.array(
     z.object({
       dato: z.string(),
-      timer: z.string(),
+      timer: z.preprocess((val) => String(val) || "", z.string()),
     }),
   ),
 

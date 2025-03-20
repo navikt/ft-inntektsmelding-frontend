@@ -300,26 +300,28 @@ export const OppsummeringMånedslønn = () => {
             />
           </FormSummaryValue>
         </FormSummaryAnswer>
-        <FormSummaryAnswer>
-          <FormSummaryLabel>Årsaker til endring av inntekt</FormSummaryLabel>
-          <FormSummaryValue>
-            {getValues("endringAvInntektÅrsaker")?.map((årsak) => (
-              <div key={årsak.årsak}>
-                {endringsårsak.find((a) => a.value === årsak.årsak)?.label}
-                {årsak.fom && (
-                  <>
-                    {new Date(årsak.fom).toLocaleDateString("nb-no")}
-                    {årsak.tom &&
-                      ` til ${new Date(årsak.tom).toLocaleDateString("nb-no")}`}
-                  </>
-                )}
-              </div>
-            ))}
-            <ErrorMessage
-              message={formState.errors.endringAvInntektÅrsaker?.message}
-            />
-          </FormSummaryValue>
-        </FormSummaryAnswer>
+        {!!getValues("endringAvInntektÅrsaker")?.length && (
+          <FormSummaryAnswer>
+            <FormSummaryLabel>Årsaker til endring av inntekt</FormSummaryLabel>
+            <FormSummaryValue>
+              {getValues("endringAvInntektÅrsaker")?.map((årsak) => (
+                <div key={årsak.årsak}>
+                  {endringsårsak.find((a) => a.value === årsak.årsak)?.label}
+                  {årsak.fom && (
+                    <>
+                      {new Date(årsak.fom).toLocaleDateString("nb-no")}
+                      {årsak.tom &&
+                        ` til ${new Date(årsak.tom).toLocaleDateString("nb-no")}`}
+                    </>
+                  )}
+                </div>
+              ))}
+              <ErrorMessage
+                message={formState.errors.endringAvInntektÅrsaker?.message}
+              />
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        )}
       </FormSummaryAnswers>
     </FormSummary>
   );
