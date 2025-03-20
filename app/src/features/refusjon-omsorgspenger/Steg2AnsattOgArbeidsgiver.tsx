@@ -130,8 +130,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                       key={arbeidsforhold.organisasjonsnummer}
                       value={arbeidsforhold.organisasjonsnummer}
                     >
-                      {arbeidsforhold.organisasjonsnummer} (
-                      {arbeidsforhold.organisasjonsnavn})
+                      {arbeidsforhold.organisasjonsnavn} (
+                      {arbeidsforhold.organisasjonsnummer})
                     </option>
                   ))}
                 </Select>
