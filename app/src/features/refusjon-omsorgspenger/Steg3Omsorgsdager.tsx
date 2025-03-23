@@ -10,7 +10,6 @@ import {
   Button,
   GuidePanel,
   Heading,
-  HGrid,
   HStack,
   Label,
   List,
@@ -20,6 +19,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
 
 import { HjelpetekstReadMore } from "../Hjelpetekst.tsx";
@@ -36,25 +36,34 @@ import {
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   useDocumentTitle(
-    "Omsorgsdager – søknad om refusjon av omsorgspenger for arbeidsgiver",
+    "Omsorgsdager - søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const { register, formState, watch, handleSubmit, setError } =
+  const { register, formState, watch, handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const navigate = useNavigate();
-  const onSubmit = handleSubmit((formData) => {
-    if (
-      formData.fraværHeleDager?.length === 0 &&
-      formData.fraværDelerAvDagen?.length === 0
-    ) {
-      setError("fraværHeleDager", {
-        message:
-          "Du må oppgi minst én periode med fravær – enten hele dagen eller deler av dagen",
+
+  const årForRefusjon = watch("årForRefusjon");
+
+  useEffect(() => {
+    setValue("meta.step", 3);
+    if (getValues("meta.harSendtSøknad")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+        to: "../6-kvittering",
       });
-      return;
     }
 
+    // if (!årForRefusjon || !harUtbetaltLønn) {
+    //   navigate({
+    //     from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+    //     to: "../1-intro",
+    //   });
+    // }
+  }, []);
+
+  const onSubmit = handleSubmit(() => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
       to: "../4-refusjon",
@@ -72,7 +81,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
   const fraværHeleDager = watch("fraværHeleDager");
   const fraværDelerAvDagen = watch("fraværDelerAvDagen");
-  const årForRefusjon = watch("årForRefusjon");
 
   const fraværErInnenforDatoer = hasAbsenceInDateRange(
     fraværHeleDager,
@@ -131,7 +139,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
           <HjelpetekstReadMore header="Har den ansatte hatt en varig lønnsendring?">
             Hvis dere krever refusjon for flere perioder, og den ansatte har
             hatt varig lønnsendring mellom periodene, må dere sende to
-            refusjonskrav for periodene før og etter lønnsendring.
+            refusjonskrav. En for perioder før og en etter lønnsendring.
           </HjelpetekstReadMore>
 
           <div className="flex gap-4 mt-8">
@@ -159,8 +167,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 };
 
 const FraværHeleDagen = () => {
-  const { control, watch, clearErrors } =
+  const { control, watch, clearErrors, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  useEffect(() => {
+    setValue("meta.step", 3);
+  }, []);
+
   const { fields, append, remove } = useFieldArray({
     control,
     name: "fraværHeleDager",
@@ -187,25 +200,6 @@ const FraværHeleDagen = () => {
             maxDato={maxDato}
             minDato={minDato}
             name={`fraværHeleDager.${index}`}
-            rules={{
-              fom: {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi fra og med dato";
-                  }
-                },
-              },
-              tom: {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi til og med dato";
-                  }
-                  if (periode.fom && value < periode.fom) {
-                    return "Til og med dato må være etter fra og med dato";
-                  }
-                },
-              },
-            }}
           />
           <div>
             <Button
@@ -228,7 +222,7 @@ const FraværHeleDagen = () => {
         <Button
           icon={<PlusIcon />}
           onClick={() => {
-            append({});
+            append({ fom: "", tom: "" });
             clearErrors("fraværHeleDager");
           }}
           size="small"
@@ -259,10 +253,9 @@ const FraværDelerAvDagen = () => {
       </Heading>
       {fields.map((periode, index) => {
         return (
-          <HGrid
+          <HStack
             align="start"
             className="border-l-4 border-bg-subtle pl-4 py-2"
-            columns={{ xs: 1, md: 4 }}
             gap="4"
             key={periode.id}
           >
@@ -280,80 +273,20 @@ const FraværDelerAvDagen = () => {
               }}
             />
             <TextField
-              label="Normal arbeidstid"
-              {...register(`fraværDelerAvDagen.${index}.normalArbeidstid`, {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi antall timer";
-                  }
-                  if (Number.isNaN(Number(value))) {
-                    return "Antall timer må være et tall";
-                  }
-                  if (value <= 0) {
-                    return "Antall timer må være høyere enn 0";
-                  }
-                  if (value > 24) {
-                    return "Antall timer kan ikke være mer enn 24";
-                  }
-                },
-                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                  const value = e.target.value;
-                  const valueWithoutCommas = value.replaceAll(",", ".");
-                  setValue(
-                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
-                    valueWithoutCommas as unknown as number,
-                  );
-                },
-              })}
-              error={
-                formState.touchedFields.fraværDelerAvDagen?.[index]
-                  ?.normalArbeidstid &&
-                formState.errors.fraværDelerAvDagen?.[index]?.normalArbeidstid
-                  ?.message
-              }
-            />
-            <TextField
               label="Timer fravær"
-              {...register(`fraværDelerAvDagen.${index}.timerFravær`, {
-                validate: (value) => {
-                  if (!value) {
-                    return "Du må oppgi antall timer";
-                  }
-                  if (Number.isNaN(Number(value))) {
-                    return "Antall timer må være et tall";
-                  }
-                  if (value <= 0) {
-                    return "Antall timer må være høyere enn 0";
-                  }
-                  if (value > 24) {
-                    return "Antall timer kan ikke være mer enn 24";
-                  }
-
-                  const normalArbeidstid = watch(
-                    `fraværDelerAvDagen.${index}.normalArbeidstid`,
-                  );
-
-                  if (
-                    normalArbeidstid &&
-                    Number(value) > Number(normalArbeidstid)
-                  ) {
-                    return "Antall timer fravær kan ikke være mer enn normal arbeidstid";
-                  }
-                },
+              {...register(`fraværDelerAvDagen.${index}.timer`, {
                 onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
                   const value = e.target.value;
                   const valueWithoutCommas = value.replaceAll(",", ".");
                   setValue(
-                    `fraværDelerAvDagen.${index}.timerFravær`,
-                    valueWithoutCommas as unknown as number,
+                    `fraværDelerAvDagen.${index}.timer`,
+                    valueWithoutCommas as unknown as string,
                   );
                 },
               })}
               error={
-                formState.touchedFields.fraværDelerAvDagen?.[index]
-                  ?.timerFravær &&
-                formState.errors.fraværDelerAvDagen?.[index]?.timerFravær
-                  ?.message
+                formState.touchedFields.fraværDelerAvDagen?.[index]?.timer &&
+                formState.errors.fraværDelerAvDagen?.[index]?.timer?.message
               }
             />
             <div>
@@ -371,14 +304,14 @@ const FraværDelerAvDagen = () => {
                 Slett
               </Button>
             </div>
-          </HGrid>
+          </HStack>
         );
       })}
       <div>
         <Button
           icon={<PlusIcon />}
           onClick={() => {
-            append({});
+            append({ dato: "", timer: "" });
             clearErrors("fraværDelerAvDagen");
           }}
           size="small"

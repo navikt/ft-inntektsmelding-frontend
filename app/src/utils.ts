@@ -3,6 +3,8 @@ import { z } from "zod";
 import { mapInntektsmeldingResponseTilValidState } from "~/api/queries.ts";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
+import { RefusjonOmsorgspengerResponseDto } from "./features/refusjon-omsorgspenger/api/mutations";
+
 export function leggTilGenitiv(navn?: string) {
   if (!navn) {
     return navn;
@@ -191,11 +193,11 @@ export function slugify(text: string): string {
     .replaceAll(/[\s-]+/g, "-");
 }
 
-export function finnSenesteInntektsmelding(
-  inntektsmeldinger: ReturnType<
-    typeof mapInntektsmeldingResponseTilValidState
-  >[],
-) {
+export function finnSenesteInntektsmelding<
+  T extends
+    | ReturnType<typeof mapInntektsmeldingResponseTilValidState>
+    | RefusjonOmsorgspengerResponseDto,
+>(inntektsmeldinger: T[]) {
   const medOpprettetTidspunkt = inntektsmeldinger.filter(
     (im) => !!im.opprettetTidspunkt,
   );

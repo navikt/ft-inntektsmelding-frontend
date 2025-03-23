@@ -5,7 +5,7 @@ import {
 } from "~/types/api-models.ts";
 import { logDev } from "~/utils.ts";
 
-const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
+export const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
 
 export async function sendInntektsmelding(
   sendInntektsmeldingRequest: SendInntektsmeldingRequestDto,

@@ -53,13 +53,15 @@ type InntektProps = {
     "skjæringstidspunkt" | "person" | "inntektsopplysninger"
   >;
   harEksisterendeInntektsmeldinger: boolean;
+  children?: React.ReactNode;
 };
 export function Inntekt({
   opplysninger,
   harEksisterendeInntektsmeldinger,
+  children,
 }: InntektProps) {
   const { skjæringstidspunkt, person, inntektsopplysninger } = opplysninger;
-  const { watch } = useFormContext<InntektOgRefusjonForm>();
+  const { watch, setValue } = useFormContext<InntektOgRefusjonForm>();
   const { isOpen, onOpen, onClose } = useDisclosure(
     !!watch("korrigertInntekt"),
   );
@@ -133,14 +135,20 @@ export function Inntekt({
         <EndreMånedslønn
           gjennomsnittLønn={inntektsopplysninger.gjennomsnittLønn}
           harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
-          onClose={onClose}
+          onClose={() => {
+            onClose();
+            setValue("meta.skalKorrigereInntekt", false);
+          }}
           skjæringstidspunkt={skjæringstidspunkt}
         />
       ) : (
         <Button
           className="w-max"
           icon={<PencilIcon />}
-          onClick={onOpen}
+          onClick={() => {
+            onOpen();
+            setValue("meta.skalKorrigereInntekt", true);
+          }}
           size="medium"
           type="button"
           variant="secondary"
@@ -148,7 +156,7 @@ export function Inntekt({
           Endre månedslønn
         </Button>
       )}
-
+      {children}
       <HjelpetekstAlert>
         <Heading level="4" size="xsmall">
           Er månedslønnen riktig?

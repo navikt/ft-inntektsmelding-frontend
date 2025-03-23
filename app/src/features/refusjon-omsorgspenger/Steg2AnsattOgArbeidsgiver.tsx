@@ -10,9 +10,9 @@ import {
   Select,
   TextField,
 } from "@navikt/ds-react";
-import { idnr } from "@navikt/fnrvalidator";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";
@@ -28,12 +28,22 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   );
 
   const navigate = useNavigate();
-  const { register, formState, watch, handleSubmit } =
+  const { register, formState, watch, handleSubmit, setValue, getValues } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
     hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
+
+  useEffect(() => {
+    setValue("meta.step", 2);
+    if (getValues("meta.harSendtSøknad")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
+        to: "../6-kvittering",
+      });
+    }
+  }, []);
 
   const fantIngenPersoner =
     error && "feilkode" in error && error.feilkode === "fant ingen personer";
@@ -63,12 +73,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             <TextField
               className="flex-1"
               label="Ansattes fødselsnummer (11 siffer)"
-              {...register("ansattesFødselsnummer", {
-                required: "Du må fylle ut fødselsnummeret til den ansatte",
-                validate: (value) =>
-                  (value && idnr(value).status === "valid") ||
-                  "Du må fylle ut et gyldig fødselsnummer",
-              })}
+              {...register("ansattesFødselsnummer")}
               error={formState.errors.ansattesFødselsnummer?.message}
             />
             <div className="flex-1 flex flex-col">
@@ -117,35 +122,26 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <>
                 <Select
                   label="Velg arbeidsforhold"
-                  {...register("valgtArbeidsforhold", {
-                    required: "Du må velge et arbeidsforhold",
-                  })}
-                  error={formState.errors.valgtArbeidsforhold?.message}
+                  {...register("organisasjonsnummer")}
+                  error={formState.errors.organisasjonsnummer?.message}
                 >
                   {data.arbeidsforhold.map((arbeidsforhold) => (
                     <option
-                      key={arbeidsforhold.arbeidsforholdId}
-                      value={arbeidsforhold.arbeidsforholdId}
+                      key={arbeidsforhold.organisasjonsnummer}
+                      value={arbeidsforhold.organisasjonsnummer}
                     >
-                      {arbeidsforhold.organisasjonsnummer} (
-                      {arbeidsforhold.arbeidsforholdId})
+                      {arbeidsforhold.organisasjonsnavn} (
+                      {arbeidsforhold.organisasjonsnummer})
                     </option>
                   ))}
                 </Select>
-                <input
-                  type="hidden"
-                  {...register("organisasjonsnummer", {
-                    value: data.arbeidsforhold[0].organisasjonsnummer,
-                  })}
-                />
               </>
             ) : harEttArbeidsforhold ? (
               <div className="flex gap-4">
                 <div className="flex-1">
                   <Label>Virksomhetsnavn</Label>
                   <BodyShort>
-                    {/* TODO: Hente ut navn på ansettelsesforhold */}
-                    {data.arbeidsforhold[0].organisasjonsnummer}
+                    {data.arbeidsforhold[0].organisasjonsnavn}
                   </BodyShort>
                   <input
                     type="hidden"
@@ -179,13 +175,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
             <div className="flex-1">
               <TextField
                 label="Navn"
-                {...register("kontaktperson.navn", {
-                  required: "Du må fylle ut navnet til kontaktpersonen",
-                  maxLength: {
-                    value: 100,
-                    message: "Navn kan ikke være lenger enn 100 tegn",
-                  },
-                })}
+                {...register("kontaktperson.navn")}
                 error={formState.errors.kontaktperson?.navn?.message}
               />
             </div>
@@ -193,10 +183,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <TextField
                 label="Telefonnummer"
                 type="tel"
-                {...register("kontaktperson.telefonnummer", {
-                  required:
-                    "Du må fylle ut telefonnummeret til kontaktpersonen",
-                })}
+                {...register("kontaktperson.telefonnummer")}
                 error={formState.errors.kontaktperson?.telefonnummer?.message}
               />
             </div>

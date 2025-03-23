@@ -1,11 +1,137 @@
+import { OpplysningerDto } from "~/types/api-models";
 import { isDateWithinRange } from "~/utils/date-utils";
 
-import { RefusjonOmsorgspengerArbeidsgiverSkjemaState } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import {
+  RefusjonOmsorgspengerDto,
+  RefusjonOmsorgspengerResponseDto,
+} from "./api/mutations";
+import { RefusjonOmsorgspengerFormData } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
-type FraværPeriodeArray =
-  RefusjonOmsorgspengerArbeidsgiverSkjemaState["fraværHeleDager"];
+const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
+  if (value === "ja") {
+    return true;
+  }
+  return false;
+};
+
+export const utledFørsteFraværsdag = (
+  fraværHeleDager: FraværPeriodeArray,
+  fraværDelerAvDagen: FraværDelerAvDagenArray,
+) => {
+  const førsteFraværsdagHeleDager = fraværHeleDager.sort((a, b) => {
+    return new Date(a.fom).getTime() - new Date(b.fom).getTime();
+  })[0]?.fom;
+  const førsteFraværsdagDelerAvDagen = fraværDelerAvDagen.sort((a, b) => {
+    return new Date(a.dato).getTime() - new Date(b.dato).getTime();
+  })[0]?.dato;
+
+  if (førsteFraværsdagHeleDager && førsteFraværsdagDelerAvDagen) {
+    return new Date(førsteFraværsdagHeleDager).getTime() <
+      new Date(førsteFraværsdagDelerAvDagen).getTime()
+      ? førsteFraværsdagHeleDager
+      : førsteFraværsdagDelerAvDagen;
+  }
+  return førsteFraværsdagHeleDager || førsteFraværsdagDelerAvDagen;
+};
+
+const YYYYMMDD = (dato: string) => {
+  const datoObjekt = new Date(dato);
+  // YYYY-MM-DD
+  return datoObjekt.toISOString().split("T")[0];
+};
+
+export const mapSkjemaTilSendInntektsmeldingRequest = (
+  skjemaState: RefusjonOmsorgspengerFormData,
+): RefusjonOmsorgspengerDto => {
+  const validatedSkjemaState = skjemaState as RefusjonOmsorgspengerFormData & {
+    endringAvInntektÅrsaker: RefusjonOmsorgspengerDto["endringAvInntektÅrsaker"];
+  };
+
+  const førsteFraværsdag = YYYYMMDD(
+    utledFørsteFraværsdag(
+      validatedSkjemaState.fraværHeleDager,
+      validatedSkjemaState.fraværDelerAvDagen,
+    ),
+  );
+  const inntekt =
+    validatedSkjemaState.korrigertInntekt || validatedSkjemaState.inntekt;
+  return {
+    kontaktperson: {
+      navn: validatedSkjemaState.kontaktperson.navn,
+      telefonnummer: validatedSkjemaState.kontaktperson.telefonnummer,
+    },
+    inntekt: inntekt as number,
+    startdato: førsteFraværsdag,
+    ytelse: "OMSORGSPENGER",
+    aktorId: validatedSkjemaState.ansattesAktørId as string,
+    arbeidsgiverIdent: validatedSkjemaState.organisasjonsnummer as string,
+    refusjon: [
+      {
+        fom: førsteFraværsdag,
+        beløp: inntekt as number,
+      },
+    ],
+    omsorgspenger: {
+      harUtbetaltPliktigeDager: mapJaNeiTilBoolean(
+        validatedSkjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",
+      ),
+      fraværHeleDager: validatedSkjemaState.fraværHeleDager,
+      fraværDelerAvDagen: validatedSkjemaState.fraværDelerAvDagen,
+    },
+    bortfaltNaturalytelsePerioder: [],
+    endringAvInntektÅrsaker: validatedSkjemaState.korrigertInntekt
+      ? validatedSkjemaState.endringAvInntektÅrsaker
+      : [],
+  };
+};
+
+export const mapSendInntektsmeldingTilSkjema = (
+  opplysninger: OpplysningerDto,
+  inntektsmelding: RefusjonOmsorgspengerResponseDto,
+) => {
+  return {
+    meta: {
+      step: 5,
+      skalKorrigereInntekt: !!inntektsmelding.endringAvInntektÅrsaker?.length,
+      harSendtSøknad: false,
+    },
+    kontaktperson: {
+      navn: inntektsmelding.kontaktperson.navn,
+      telefonnummer: inntektsmelding.kontaktperson.telefonnummer,
+    },
+    fraværHeleDager: inntektsmelding.omsorgspenger.fraværHeleDager ?? [],
+    fraværDelerAvDagen: inntektsmelding.omsorgspenger.fraværDelerAvDagen ?? [],
+    harDekket10FørsteOmsorgsdager: inntektsmelding.omsorgspenger
+      .harUtbetaltPliktigeDager
+      ? "ja"
+      : "nei",
+    korrigertInntekt: inntektsmelding.endringAvInntektÅrsaker?.length
+      ? inntektsmelding.inntekt
+      : undefined,
+    inntekt: inntektsmelding.endringAvInntektÅrsaker?.length
+      ? undefined
+      : inntektsmelding.inntekt,
+    endringAvInntektÅrsaker: inntektsmelding.endringAvInntektÅrsaker,
+    organisasjonsnummer: inntektsmelding.arbeidsgiverIdent,
+    ansattesAktørId: inntektsmelding.aktorId,
+    ansattesFødselsnummer: opplysninger.person.fødselsnummer,
+    ansattesFornavn: opplysninger.person.fornavn,
+    ansattesEtternavn: opplysninger.person.etternavn,
+    årForRefusjon: new Date(
+      utledFørsteFraværsdag(
+        inntektsmelding.omsorgspenger?.fraværHeleDager ?? [],
+        inntektsmelding.omsorgspenger?.fraværDelerAvDagen ?? [],
+      ),
+    )
+      .getFullYear()
+      .toString(),
+    harUtbetaltLønn: "ja",
+  } satisfies RefusjonOmsorgspengerFormData;
+};
+
+type FraværPeriodeArray = RefusjonOmsorgspengerFormData["fraværHeleDager"];
 type FraværDelerAvDagenArray =
-  RefusjonOmsorgspengerArbeidsgiverSkjemaState["fraværDelerAvDagen"];
+  RefusjonOmsorgspengerFormData["fraværDelerAvDagen"];
 
 /**
  * Checks if any of the full day absence periods overlap with the given date range
@@ -81,4 +207,13 @@ export function utledDefaultMonthDatepicker(årForRefusjon: number) {
     return iDag;
   }
   return new Date(`${årForRefusjon}-12-31`);
+}
+
+export function datoErInnenforGyldigDatoIntervall(dato: string, år: number) {
+  const gyldigDatoIntervall = beregnGyldigDatoIntervall(år);
+  const datoObjekt = new Date(dato);
+  return (
+    datoObjekt >= gyldigDatoIntervall.minDato &&
+    datoObjekt <= gyldigDatoIntervall.maxDato
+  );
 }

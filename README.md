@@ -29,6 +29,9 @@ Start frontenden ved å gå til `app`-mappen og kjøre `npm run dev:fp` eller `n
 cd app && npm run dev:fp
 ```
 
+## Hovedside for min side arbeidsgiver
+   https://arbeidsgiver.intern.dev.nav.no/min-side-arbeidsgiver/
+
 ## Inntektsmelding
 
 1) For FP, gå til [https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on) for å utvikle lokalt!
@@ -48,7 +51,8 @@ cd app && npm run dev:fp
 
 3) Gå mot denne [URLen](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/${ORGNR}/1-intro).
    Bytt ut ${ORGNR} med orgnummeret som er knyttet til testbrukeren du logget inn med.
-   
+   Her er et eksempel: https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/315786940/1-intro
+   Logg inn med testid 16878397960
 
 
 ## Testbrukere
@@ -68,7 +72,7 @@ Tilgjengelige test-arbeidsgivere:
 
 Testbruker delt med sykepenger
 
-PS: Vet ikke om denne brukeren har noe use case lenger. Ser ut som den mangler tilganger
+PS: Vet ikke om denne brukeren har noe use case lenger. Ser ut som den mangler tilganger.
 
 - Velg BankID
 - Fødselsnummer: 10107400090

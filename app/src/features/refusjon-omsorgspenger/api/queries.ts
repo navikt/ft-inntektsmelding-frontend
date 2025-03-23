@@ -1,3 +1,4 @@
+import { idnr } from "@navikt/fnrvalidator";
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -15,8 +16,8 @@ const ArbeidstakerOppslagDtoSchema = z.object({
   }),
   arbeidsforhold: z.array(
     z.object({
+      organisasjonsnavn: z.string(),
       organisasjonsnummer: z.string(),
-      arbeidsforholdId: z.string(),
     }),
   ),
 });
@@ -39,7 +40,7 @@ export const hentArbeidstakerOptions = (fødselsnummer: string) => {
   >({
     queryKey: ["arbeidstaker-oppslag", fødselsnummer],
     queryFn: ({ queryKey }) => hentArbeidstaker(queryKey[1]),
-    enabled: fødselsnummer.length === 11,
+    enabled: idnr(fødselsnummer).status === "valid",
     staleTime: Infinity,
     retry: false,
     refetchOnMount: false,

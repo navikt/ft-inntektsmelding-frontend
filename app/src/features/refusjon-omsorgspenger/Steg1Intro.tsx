@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 
 import { capitalizeSetning } from "~/utils.ts";
 
@@ -28,10 +29,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
 
-  const { register, formState, watch, handleSubmit } =
+  const { register, formState, watch, handleSubmit, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const harUtbetaltLønn = watch("harUtbetaltLønn");
-
   const onSubmit = handleSubmit(() => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",
@@ -39,22 +39,20 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
     });
   });
 
-  const { name: harUtbetaltLønnName, ...harUtbetaltLønnRadioGroupProps } =
-    register("harUtbetaltLønn", {
-      required: "Du må svare på om dere har utbetalt lønn under fraværet",
-    });
+  useEffect(() => {
+    setValue("meta.step", 1);
+  }, []);
 
-  const { name: årForRefusjonName, ...årForRefusjonRadioGroupProps } = register(
-    "årForRefusjon",
-    {
-      required: "Du må svare på hvilket år du søker refusjon for",
-    },
-  );
+  const { name: harUtbetaltLønnName, ...harUtbetaltLønnRadioGroupProps } =
+    register("harUtbetaltLønn");
+
+  const { name: årForRefusjonName, ...årForRefusjonRadioGroupProps } =
+    register("årForRefusjon");
 
   return (
     <div>
       <Heading level="1" size="large">
-        Refusjon
+        Om refusjon
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={1} />
       <GuidePanel className="mb-4">
@@ -94,9 +92,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
                 Arbeidsgivers plikt til å utbetale omsorgsdager
               </Heading>
               <BodyLong spacing>
-                Hvis den ansatte har jobbet hos dere i minst fire uker, plikter
-                dere å utbetale lønn for alle omsorgsdagene som den ansatte har
-                rett til å bruke.
+                Hvis arbeidsforholdet hos dere har vart i minst fire uker,
+                plikter dere å utbetale lønn for alle omsorgsdagene som den
+                ansatte har rett til å bruke
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
@@ -111,10 +109,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
             legend="Hvilket år søker dere refusjon for?"
             name={årForRefusjonName}
           >
-            <Radio value={iFjor} {...årForRefusjonRadioGroupProps}>
+            <Radio value={String(iFjor)} {...årForRefusjonRadioGroupProps}>
               {iFjor}
             </Radio>
-            <Radio value={iÅr} {...årForRefusjonRadioGroupProps}>
+            <Radio value={String(iÅr)} {...årForRefusjonRadioGroupProps}>
               {iÅr}
             </Radio>
           </RadioGroup>

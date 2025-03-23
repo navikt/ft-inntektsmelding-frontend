@@ -8,10 +8,12 @@ import {
 import {
   Alert,
   BodyLong,
+  BodyShort,
   Button,
   ExpansionCard,
   Heading,
   HStack,
+  Link,
   useId,
   VStack,
 } from "@navikt/ds-react";
@@ -23,12 +25,16 @@ import {
 import { id } from "date-fns/locale";
 import { ReactNode } from "react";
 
-import { useDocumentTitle } from "../useDocumentTitle";
+import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 
+import { useDocumentTitle } from "../useDocumentTitle";
+import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 export const Steg6Kvittering = () => {
   useDocumentTitle(
     "Kvittering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
+
+  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   return (
     <div>
       <div className="mx-4">
@@ -36,11 +42,11 @@ export const Steg6Kvittering = () => {
           <CheckmarkIcon aria-hidden fontSize="2.5em" />
         </div>
         <Heading className="mt-6 mb-12 text-center" level="2" size="small">
-          Søknad om refusjon er sendt
+          Refusjonskrav om omsorgspenger er sendt
         </Heading>
         <Alert className="mb-12" variant="success">
           <Heading className="mb-2" level="3" size="medium">
-            Vi har mottatt søknaden
+            Vi har mottatt refusjonskravet
           </Heading>
           <BodyLong>
             Vi har mottatt søknad om refusjon av omsorgspenger. Saken ligger nå
@@ -57,19 +63,39 @@ export const Steg6Kvittering = () => {
             icon={<ClockIcon />}
             question="Hvor lang er saksbehandlingstiden?"
           >
-            TODO
+            <Link href="https://www.nav.no/arbeidsgiver/saksbehandlingstider#omsorgspenger-hjemme-med-sykt-barn-dager">
+              Her finner du oversikt over saksbehandlingstiden til Nav.
+            </Link>{" "}
+            Vi tar kontakt hvis vi trenger flere opplysninger.
           </FaqItem>
           <FaqItem
             icon={<SackKronerIcon />}
             question="Når blir refusjon utbetalt?"
           >
-            TODO
+            Refusjon utbetales ved hvert månedsskifte, etter at refusjonskravet
+            er behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver
+            har registrert i Altinn. Du får ikke beskjed når refusjonskravet er
+            behandlet, og må derfor følge med på oppgjørsrapport K27 om status
+            på refusjonskravet og utbetaling av refusjon.
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
             question="Hvordan korrigere hvis noe er feil?"
           >
-            TODO
+            <BodyShort>
+              Du finner refusjonskravet ved å logge inn på Min Side
+              Arbeidsgiver. Der kan du se refusjonskravet, og eventuelt endre
+              informasjonen. Når vi får inn et nytt eller endret refusjonskrav,
+              revurderer vi saken. Hvis arbeidsgiveren har fått for mye
+              utbetalt, trekkes dette i neste utbetaling.
+            </BodyShort>
+            <Link
+              className="mt-4"
+              href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
+            >
+              Her finner du informasjon om hvordan du kan endre et
+              refusjonskrav/inntektsmelding.
+            </Link>
           </FaqItem>
         </VStack>
 
@@ -79,13 +105,15 @@ export const Steg6Kvittering = () => {
           </Button>
           <Button
             as="a"
-            download={`søknad-refusjon-omsorgspenger-${id}.pdf`}
-            href="#"
+            download={`refusjon-omsorgspenger-søknad-kvittering-${id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(
+              getValues("meta.innsendtSøknadId") as number,
+            )}
             icon={<DownloadIcon />}
             iconPosition="left"
             variant="secondary"
           >
-            Last ned kvitteringen
+            Last ned refusjonskrav
           </Button>
         </HStack>
       </div>
