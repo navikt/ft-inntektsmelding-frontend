@@ -94,7 +94,7 @@ export const Route = createFileRoute(
 
       if (
         opplysninger.forespørselStatus === "UTGÅTT" &&
-        eksisterendeInntektsmeldinger.length === 0
+        eksisterendeInntektsmeldinger?.length === 0
       ) {
         throw new Error(FEILKODER.OPPGAVE_ER_UTGÅTT);
       }
