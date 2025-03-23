@@ -65,10 +65,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
             sykt barn.
           </BodyLong>
           <BodyLong>
-            {`Du kan søke for perioder inntil tre måneder tilbake i tid. Du kan
-            kun søke om utbetaling innenfor ett kalenderår av gangen. Det betyr
-            at hvis du skal søke om refusjon for perioder i både ${iFjor} og
-            ${iÅr}, må du sende to separate søknader.`}
+            {`Du kan søke for perioder inntil tre måneder tilbake i tid. Du kan kun søke om utbetaling innenfor ett kalenderår av gangen.
+            Det betyr at hvis du skal søke om refusjon for perioder i både ${iFjor} og ${iÅr}, må du sende to separate søknader.`}
+          </BodyLong>
+          <BodyLong>
+            Du må også sende inn som separate refusjonskrav hvis en har hatt
+            varig lønnsendring mellom periodene en søker refusjon for.
           </BodyLong>
         </VStack>
       </GuidePanel>
@@ -94,7 +96,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               <BodyLong spacing>
                 Hvis arbeidsforholdet hos dere har vart i minst fire uker,
                 plikter dere å utbetale lønn for alle omsorgsdagene som den
-                ansatte har rett til å bruke
+                ansatte har rett til å bruke.
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte

@@ -49,9 +49,9 @@ export const Steg6Kvittering = () => {
             Vi har mottatt refusjonskravet
           </Heading>
           <BodyLong>
-            Vi har mottatt søknad om refusjon av omsorgspenger. Saken ligger nå
-            til behandling hos oss. Vi tar kontakt hvis vi trenger flere
-            opplysninger fra deg. Vi har mottatt inntektsmeldingen
+            Vi har mottatt refusjonskrav for omsorgspenger. Saken ligger når til
+            behandling hos oss. Vi tar kontakt hvis vi trenger flere
+            opplysninger fra deg.
           </BodyLong>
         </Alert>
 
@@ -64,9 +64,10 @@ export const Steg6Kvittering = () => {
             question="Hvor lang er saksbehandlingstiden?"
           >
             <Link href="https://www.nav.no/arbeidsgiver/saksbehandlingstider#omsorgspenger-hjemme-med-sykt-barn-dager">
-              Her finner du oversikt over saksbehandlingstiden til Nav.
+              Her
             </Link>{" "}
-            Vi tar kontakt hvis vi trenger flere opplysninger.
+            finner du oversikt over saksbehandlingstiden til Nav. Vi tar kontakt
+            hvis vi trenger flere opplysninger.
           </FaqItem>
           <FaqItem
             icon={<SackKronerIcon />}
@@ -74,9 +75,9 @@ export const Steg6Kvittering = () => {
           >
             Refusjon utbetales ved hvert månedsskifte, etter at refusjonskravet
             er behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver
-            har registrert i Altinn. Du får ikke beskjed når refusjonskravet er
+            har registrert i Altinn. Du får ikke beskjed når søknaden er
             behandlet, og må derfor følge med på oppgjørsrapport K27 om status
-            på refusjonskravet og utbetaling av refusjon.
+            på søknad og utbetaling av refusjon.
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
@@ -93,9 +94,10 @@ export const Steg6Kvittering = () => {
               className="mt-4"
               href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
             >
-              Her finner du informasjon om hvordan du kan endre et
-              refusjonskrav/inntektsmelding.
-            </Link>
+              Her
+            </Link>{" "}
+            finner du informasjon om hvordan du kan endre et
+            refusjonskrav/inntektsmelding.
           </FaqItem>
         </VStack>
 

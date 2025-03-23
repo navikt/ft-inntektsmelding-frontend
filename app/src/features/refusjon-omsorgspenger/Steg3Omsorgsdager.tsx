@@ -7,7 +7,9 @@ import {
 import {
   Alert,
   BodyLong,
+  BodyShort,
   Button,
+  Detail,
   GuidePanel,
   Heading,
   HStack,
@@ -30,7 +32,6 @@ import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikat
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import {
   beregnGyldigDatoIntervall,
-  hasAbsenceInDateRange,
   utledDefaultMonthDatepicker,
 } from "./utils.ts";
 
@@ -54,14 +55,16 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
         to: "../6-kvittering",
       });
     }
-
-    // if (!årForRefusjon || !harUtbetaltLønn) {
-    //   navigate({
-    //     from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
-    //     to: "../1-intro",
-    //   });
-    // }
   }, []);
+
+  useEffect(() => {
+    if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+        to: "../1-intro",
+      });
+    }
+  }, [getValues("årForRefusjon"), getValues("harUtbetaltLønn")]);
 
   const onSubmit = handleSubmit(() => {
     navigate({
@@ -78,31 +81,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     },
   );
 
-  const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
-  const fraværHeleDager = watch("fraværHeleDager");
-  const fraværDelerAvDagen = watch("fraværDelerAvDagen");
-
-  const fraværErInnenforDatoer = hasAbsenceInDateRange(
-    fraværHeleDager,
-    fraværDelerAvDagen,
-    new Date(`${årForRefusjon}-01-01`),
-    new Date(`${årForRefusjon}-01-10`),
-  );
   return (
     <div>
       <Heading level="1" size="large">
-        Omsorgsdager dere søker utbetaling for
+        Omsorgsdager dere søker refusjon for
       </Heading>
       <OmsorgspengerFremgangsindikator aktivtSteg={3} />
       <GuidePanel className="mb-4">
         <BodyLong>
-          Her oppgir du de dagene dere har utbetalt lønn, og krever refusjon
-          fordi den ansatte brukte omsorgsdag.
+          Her oppgir du hvilke dager dere har utbetalt lønn og søker om refusjon
+          fordi den ansatte har brukt omsorgsdager. Dagene må være innenfor
+          samme kalenderår og kan ikke være frem i tid.
         </BodyLong>
         <BodyLong>
           Hvis dere kun har betalt lønn for deler av fraværet, må den ansatte
-          selv søke om utbetaling av omsorgspenger for de dagene dere ikke
-          utbetalte lønn.
+          selv søke om omsorgspenger for de dagene dere ikke har utbetalt lønn.
         </BodyLong>
       </GuidePanel>
       <form onSubmit={onSubmit}>
@@ -122,24 +115,44 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
               Nei
             </Radio>
           </RadioGroup>
-          {harDekket10FørsteOmsorgsdager === "nei" && (
-            <TiFørsteOmsorgsdagerInfo />
-          )}
+          <TiFørsteOmsorgsdagerInfo />
           {formState.errors.fraværHeleDager?.message && (
             <Alert aria-live="polite" variant="error">
               <BodyLong>{formState.errors.fraværHeleDager.message}</BodyLong>
             </Alert>
           )}
-          <FraværHeleDagen />
-          <FraværDelerAvDagen />
-
-          {fraværErInnenforDatoer && harDekket10FørsteOmsorgsdager === "ja" && (
-            <TiFørsteOmsorgsdagerInfo />
-          )}
-          <HjelpetekstReadMore header="Har den ansatte hatt en varig lønnsendring?">
-            Hvis dere krever refusjon for flere perioder, og den ansatte har
-            hatt varig lønnsendring mellom periodene, må dere sende to
-            refusjonskrav. En for perioder før og en etter lønnsendring.
+          <VStack gap="8">
+            <FraværHeleDagen />
+            <FraværDelerAvDagen />
+          </VStack>
+          <HjelpetekstReadMore header="Eksempler på hvordan du oppgir og omregner arbeidstid">
+            <Label>Eksempel 1:</Label>
+            <BodyLong>
+              Arbeidstaker jobber vanligvis 7,5 timer per dag og har vært borte
+              en halv dag.
+            </BodyLong>
+            <List>
+              <List.Item className="my-8">
+                Fraværet utgjør 3,75 timer, som skal avrundes til nærmeste halve
+                time. Dette betyr at du oppgir 4 timer i refusjonskravet. Ved
+                flere halve dager kan det oppgis som 3,5 og 4 timer annenhver
+                dag.
+              </List.Item>
+              <Label>Eksempel 2:</Label>
+              <BodyLong>
+                Arbeidstaker jobber vanligvis 9 timer per dag og er borte i 4 av
+                disse. Du deler da antall timer fravær på antall timer
+                arbeidstakeren skulle jobbet. Tallet du får ganger du med 7,5.
+              </BodyLong>
+              <List.Item className="my-8">
+                4 timer fravær / 9 timer arbeidstid = 0,440,44 × 7,5 = 3,33
+                timer, som avrundes til 3,5 timer i refusjonskravet
+              </List.Item>
+              <BodyLong>
+                Du kan regne på samme måste om ordinær arbeidstid er over eller
+                under 7,5 time.
+              </BodyLong>
+            </List>
           </HjelpetekstReadMore>
 
           <div className="flex gap-4 mt-8">
@@ -185,7 +198,7 @@ const FraværHeleDagen = () => {
   return (
     <VStack gap="4">
       <Heading level="3" size="small">
-        Oppgi dager hvor den ansatte har hatt fravær hele dagen
+        Hele dager dere søker refusjon for
       </Heading>
       {fields.map((periode, index) => (
         <HStack
@@ -247,10 +260,15 @@ const FraværDelerAvDagen = () => {
 
   const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
   return (
-    <VStack gap="4">
+    <VStack gap="2">
       <Heading level="3" size="small">
-        Oppgi dager hvor den ansatte har hatt fravær bare deler av dagen
+        Delvise dager dere søker refusjon for
       </Heading>
+      <BodyLong size="small" className="text-text-subtle">
+        Timer skal avrundes til nærmeste halve time og beregnes basert på en 7,5
+        timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær arbeidstid,
+        må fraværet omregnes.
+      </BodyLong>
       {fields.map((periode, index) => {
         return (
           <HStack
@@ -326,26 +344,38 @@ const FraværDelerAvDagen = () => {
 };
 
 const TiFørsteOmsorgsdagerInfo = () => {
-  return (
-    <Alert variant="info">
-      <VStack gap="4">
-        <Label>Arbeidsgivers plikt til å utbetale omsorgsdager</Label>
-        <BodyLong>
-          Som hovedregel har arbeidsgiver plikt til å dekke de første ti
-          omsorgsdagene i hvert kalenderår.
-        </BodyLong>
-        <List>
-          Du kan unntaksvis kreve refusjon for de første 10 dagene hvis:
-          <List.Item>
-            den ansatte ikke hadde jobbet fire uker før fraværet.
-          </List.Item>
-          <List.Item>
-            den ansatte sine barn fyller/er fylt 13 år, men har fått ekstra
-            omsorgsdager for et barn på grunn av langvarig/kronisk sykdom eller
-            funksjonshemning.
-          </List.Item>
-        </List>
-      </VStack>
-    </Alert>
-  );
+  const { watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
+  if (harDekket10FørsteOmsorgsdager === "ja") {
+    return (
+      <Alert variant="info">
+        <BodyShort>
+          Du kan søke om utbetaling fra NAV fra og med den 11. dagen.
+        </BodyShort>
+        <BodyShort>
+          Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre barn
+          under 12 år, kan du søke om utbetaling fra første fraværsdag.
+        </BodyShort>
+      </Alert>
+    );
+  }
+
+  if (harDekket10FørsteOmsorgsdager === "nei") {
+    return (
+      <Alert variant="info">
+        <VStack gap="4">
+          <BodyLong>
+            Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår for
+            ansatte som har barn under 12 år, eller som fyller 12 år det
+            gjeldende året. Du kan søke om utbetaling fra NAV fra og med den 11.
+            dagen.
+          </BodyLong>
+          <BodyLong>
+            Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre
+            barn under 12 år, kan du søke om utbetaling fra første fraværsdag.
+          </BodyLong>
+        </VStack>
+      </Alert>
+    );
+  }
 };
