@@ -72,7 +72,7 @@ Tilgjengelige test-arbeidsgivere:
 
 Testbruker delt med sykepenger
 
-PS: Vet ikke om denne brukeren har noe use case lenger. Ser ut som den mangler tilganger
+PS: Vet ikke om denne brukeren har noe use case lenger. Ser ut som den mangler tilganger.
 
 - Velg BankID
 - Fødselsnummer: 10107400090
