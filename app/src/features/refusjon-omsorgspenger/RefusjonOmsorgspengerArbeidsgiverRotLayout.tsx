@@ -1,5 +1,3 @@
-import { XMarkIcon } from "@navikt/aksel-icons";
-import { Button, HStack } from "@navikt/ds-react";
 import { setBreadcrumbs } from "@navikt/nav-dekoratoren-moduler";
 import { Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -31,6 +29,7 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
       <RefusjonOmsorgspengerArbeidsgiverForm>
         <RotLayout
           background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
+          medAvbrytKnapp={!erPåKvitteringssiden}
           medHjelpetekstToggle={!erPåKvitteringssiden}
           medHvitBoks={!erPåKvitteringssiden}
           tittel="Søknad om refusjon for omsorgspenger"
@@ -45,18 +44,6 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
           }
         >
           <Outlet />
-          {!erPåKvitteringssiden && (
-            <HStack align="center" justify="center">
-              <Button
-                as="a"
-                href="/min-side-arbeidsgiver"
-                icon={<XMarkIcon />}
-                variant="tertiary"
-              >
-                Avbryt
-              </Button>
-            </HStack>
-          )}
         </RotLayout>
       </RefusjonOmsorgspengerArbeidsgiverForm>
     </div>

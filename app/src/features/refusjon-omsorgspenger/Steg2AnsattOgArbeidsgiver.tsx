@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
 import { lagFulltNavn } from "~/utils.ts";
 
+import { HjelpetekstAlert } from "../Hjelpetekst.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
@@ -62,7 +63,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   const fulltNavn = data ? lagFulltNavn(data.personinformasjon) : "";
 
   return (
-    <div>
+    <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
@@ -188,7 +189,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               />
             </div>
           </div>
-          <Alert variant="info">
+          <HjelpetekstAlert>
             <Heading level="3" size="xsmall" spacing>
               Er kontaktinformasjonen riktig?
             </Heading>
@@ -198,7 +199,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               nummeret til sentralbordet. Hvis du vet at du vil være
               utilgjengelig fremover, kan du endre til en annen kontaktperson.
             </BodyLong>
-          </Alert>
+          </HjelpetekstAlert>
         </Informasjonsseksjon>
 
         <div className="flex gap-4">

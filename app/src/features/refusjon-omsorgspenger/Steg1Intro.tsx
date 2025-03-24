@@ -50,7 +50,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
     register("årForRefusjon");
 
   return (
-    <div>
+    <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
         Om refusjon
       </Heading>

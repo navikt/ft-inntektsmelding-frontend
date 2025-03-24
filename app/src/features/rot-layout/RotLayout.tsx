@@ -1,4 +1,12 @@
-import { Detail, Heading, HStack, Page, PageProps } from "@navikt/ds-react";
+import { XMarkIcon } from "@navikt/aksel-icons";
+import {
+  Button,
+  Detail,
+  Heading,
+  HStack,
+  Page,
+  PageProps,
+} from "@navikt/ds-react";
 
 import { HjelpetekstToggle } from "../Hjelpetekst";
 import illustrasjonUrl from "./illustrasjon.svg";
@@ -16,6 +24,8 @@ type RotLayoutProps = {
   medHvitBoks?: boolean;
   /** Flagg som viser hjelpetekst-toggle */
   medHjelpetekstToggle?: boolean;
+  /** Flagg som viser en avbryt knapp */
+  medAvbrytKnapp?: boolean;
 };
 
 /**
@@ -29,6 +39,7 @@ export const RotLayout = ({
   medHjelpetekstToggle = false,
   background = "bg-subtle",
   medHvitBoks = false,
+  medAvbrytKnapp = false,
 }: RotLayoutProps) => {
   return (
     <main id="maincontent">
@@ -62,6 +73,18 @@ export const RotLayout = ({
             children
           )}
         </Page.Block>
+        {medAvbrytKnapp && (
+          <HStack align="center" justify="center">
+            <Button
+              as="a"
+              href="/min-side-arbeidsgiver"
+              icon={<XMarkIcon />}
+              variant="tertiary"
+            >
+              Avbryt
+            </Button>
+          </HStack>
+        )}
       </Page>
     </main>
   );
