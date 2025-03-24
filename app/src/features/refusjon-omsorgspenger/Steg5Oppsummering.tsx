@@ -309,6 +309,7 @@ export const OppsummeringMånedslønn = () => {
                   {endringsårsak.find((a) => a.value === årsak.årsak)?.label}
                   {årsak.fom && (
                     <>
+                      {" "}
                       {new Date(årsak.fom).toLocaleDateString("nb-no")}
                       {årsak.tom &&
                         ` til ${new Date(årsak.tom).toLocaleDateString("nb-no")}`}

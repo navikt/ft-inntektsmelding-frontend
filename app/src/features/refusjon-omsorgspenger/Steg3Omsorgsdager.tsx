@@ -9,7 +9,6 @@ import {
   BodyLong,
   BodyShort,
   Button,
-  Detail,
   GuidePanel,
   Heading,
   HStack,
@@ -57,14 +56,14 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
-      navigate({
-        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
-        to: "../1-intro",
-      });
-    }
-  }, [getValues("årForRefusjon"), getValues("harUtbetaltLønn")]);
+  // useEffect(() => {
+  //   if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
+  //     navigate({
+  //       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+  //       to: "../1-intro",
+  //     });
+  //   }
+  // }, [getValues("årForRefusjon"), getValues("harUtbetaltLønn")]);
 
   const onSubmit = handleSubmit(() => {
     navigate({

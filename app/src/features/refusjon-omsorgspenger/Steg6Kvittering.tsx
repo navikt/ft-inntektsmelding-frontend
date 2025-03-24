@@ -63,41 +63,51 @@ export const Steg6Kvittering = () => {
             icon={<ClockIcon />}
             question="Hvor lang er saksbehandlingstiden?"
           >
-            <Link href="https://www.nav.no/arbeidsgiver/saksbehandlingstider#omsorgspenger-hjemme-med-sykt-barn-dager">
-              Her
-            </Link>{" "}
-            finner du oversikt over saksbehandlingstiden til Nav. Vi tar kontakt
-            hvis vi trenger flere opplysninger.
+            <BodyLong>
+              <Link href="https://www.nav.no/arbeidsgiver/saksbehandlingstider#omsorgspenger-hjemme-med-sykt-barn-dager">
+                Her
+              </Link>{" "}
+              finner du oversikt over saksbehandlingstiden til Nav. Vi tar
+              kontakt hvis vi trenger flere opplysninger.
+            </BodyLong>
           </FaqItem>
           <FaqItem
             icon={<SackKronerIcon />}
             question="Når blir refusjon utbetalt?"
           >
-            Refusjon utbetales ved hvert månedsskifte, etter at refusjonskravet
-            er behandlet. Vi utbetaler til det kontonummeret som arbeidsgiver
-            har registrert i Altinn. Du får ikke beskjed når søknaden er
-            behandlet, og må derfor følge med på oppgjørsrapport K27 om status
-            på søknad og utbetaling av refusjon.
+            <BodyLong>
+              Refusjon utbetales ved hvert månedsskifte, etter at
+              refusjonskravet er behandlet. Vi utbetaler til det kontonummeret
+              som arbeidsgiver har registrert i Altinn.{" "}
+            </BodyLong>
+            <BodyLong>
+              Du får ikke beskjed når søknaden er behandlet, og må derfor følge
+              med på oppgjørsrapport K27 om status på søknad og utbetaling av
+              refusjon.
+            </BodyLong>
           </FaqItem>
           <FaqItem
             icon={<DocPencilIcon />}
             question="Hvordan korrigere hvis noe er feil?"
           >
-            <BodyShort>
+            <BodyLong>
               Du finner refusjonskravet ved å logge inn på Min Side
               Arbeidsgiver. Der kan du se refusjonskravet, og eventuelt endre
               informasjonen. Når vi får inn et nytt eller endret refusjonskrav,
-              revurderer vi saken. Hvis arbeidsgiveren har fått for mye
-              utbetalt, trekkes dette i neste utbetaling.
-            </BodyShort>
-            <Link
-              className="mt-4"
-              href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
-            >
-              Her
-            </Link>{" "}
-            finner du informasjon om hvordan du kan endre et
-            refusjonskrav/inntektsmelding.
+              revurderer vi saken.
+              Hvis arbeidsgiveren har fått for mye utbetalt, trekkes dette i
+              neste utbetaling.
+            </BodyLong>
+            <BodyLong>
+              <Link
+                className="mt-4"
+                href="https://www.nav.no/arbeidsgiver/omsorgspenger#inntektsmelding"
+              >
+                Her
+              </Link>{" "}
+              finner du informasjon om hvordan du kan endre et
+              refusjonskrav/inntektsmelding.
+            </BodyLong>
           </FaqItem>
         </VStack>
 
