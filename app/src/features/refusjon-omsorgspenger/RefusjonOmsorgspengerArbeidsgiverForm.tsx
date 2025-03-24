@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { idnr } from "@navikt/fnrvalidator";
 import { getRouteApi } from "@tanstack/react-router";
+import { isBefore } from "date-fns";
 import {
   DeepPartial,
   FormProvider,
@@ -21,7 +22,6 @@ import {
   hasPartialDayAbsenceInRange,
   mapSendInntektsmeldingTilSkjema,
 } from "./utils";
-import { isBefore } from "date-fns";
 
 // Create a single unified form schema
 const baseSchema = z.object({
