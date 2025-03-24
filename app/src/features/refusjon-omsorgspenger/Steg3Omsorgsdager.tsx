@@ -263,7 +263,7 @@ const FraværDelerAvDagen = () => {
       <Heading level="3" size="small">
         Delvise dager dere søker refusjon for
       </Heading>
-      <BodyLong size="small" className="text-text-subtle">
+      <BodyLong className="text-text-subtle" size="small">
         Timer skal avrundes til nærmeste halve time og beregnes basert på en 7,5
         timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær arbeidstid,
         må fraværet omregnes.

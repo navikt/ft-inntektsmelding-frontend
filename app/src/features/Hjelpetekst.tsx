@@ -81,7 +81,7 @@ export function HjelpetekstToggle() {
 export function HjelpetekstReadMore({
   header,
   children,
-  size
+  size,
 }: Pick<ReadMoreProps, "children" | "size"> & { header: string }) {
   const { vis } = useHjelpetekst().visHjelpetekster;
   const [åpen, setÅpen] = useState(false);
