@@ -44,6 +44,8 @@ export const DateRangePickerWrapped = forwardRef<
         dateRange?.from ? formatIsoDatostempel(dateRange.from) : "",
       );
       toField.onChange(dateRange?.to ? formatIsoDatostempel(dateRange.to) : "");
+      fromField.onBlur();
+      toField.onBlur();
     },
     onValidate: (dateRange) => {
       if (dateRange?.from && dateRange?.to) {
