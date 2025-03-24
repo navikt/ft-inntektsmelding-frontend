@@ -26,8 +26,10 @@ export function DatePickerWrapped({
   });
   const datePickerProperties = useDatepicker({
     ...datepickerProps,
-    onDateChange: (date) =>
-      field.onChange(date ? formatIsoDatostempel(date) : undefined),
+    onDateChange: (date) => {
+      field.onChange(date ? formatIsoDatostempel(date) : undefined);
+      field.onBlur();
+    },
     defaultSelected: field.value ? new Date(field.value) : undefined,
   });
 

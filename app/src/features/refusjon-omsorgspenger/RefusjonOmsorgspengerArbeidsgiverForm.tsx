@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { idnr } from "@navikt/fnrvalidator";
 import { getRouteApi } from "@tanstack/react-router";
+import { isBefore } from "date-fns";
 import {
   DeepPartial,
   FormProvider,
@@ -69,6 +70,7 @@ const baseSchema = z.object({
         fom: z.string().optional(),
         tom: z.string().optional(),
         bleKjentFom: z.string().optional(),
+        ignorerTom: z.boolean().optional(),
       }),
     )
     .optional(),
@@ -340,9 +342,10 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           for (const [index, årsak] of data.endringAvInntektÅrsaker.entries()) {
             if (årsak.årsak) {
               // Validate required fields based on the selected årsak
-              const påkrevdeFelter = PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak.årsak];
+              const endringsårsakRules =
+                PÅKREVDE_ENDRINGSÅRSAK_FELTER[årsak.årsak];
 
-              if (påkrevdeFelter.fom && !årsak.fom) {
+              if (endringsårsakRules.fom && !årsak.fom) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,
                   message: "Du må oppgi fra og med dato",
@@ -350,7 +353,24 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
                 });
               }
 
-              if (påkrevdeFelter.tom && !årsak.tom) {
+              if (
+                årsak.tom &&
+                årsak.fom &&
+                isBefore(new Date(årsak.tom), new Date(årsak.fom))
+              ) {
+                ctx.addIssue({
+                  code: z.ZodIssueCode.custom,
+                  message: "Fra og med dato må være før til og med dato",
+                  path: ["endringAvInntektÅrsaker", index, "fom"],
+                });
+              }
+
+              if (
+                endringsårsakRules.tom &&
+                !årsak.tom &&
+                (!endringsårsakRules.tomErValgfritt ||
+                  (endringsårsakRules.tomErValgfritt && !årsak.ignorerTom))
+              ) {
                 ctx.addIssue({
                   code: z.ZodIssueCode.custom,
                   message: "Du må oppgi til og med dato",
@@ -428,7 +448,7 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
     resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),
     defaultValues,
     mode: "onSubmit",
-    reValidateMode: "onChange",
+    reValidateMode: "onBlur",
   });
 
   return <FormProvider {...form}>{children}</FormProvider>;

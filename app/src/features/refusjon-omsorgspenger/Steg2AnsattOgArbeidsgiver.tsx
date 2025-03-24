@@ -13,10 +13,12 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
+import { Controller } from "react-hook-form";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
-import { lagFulltNavn } from "~/utils.ts";
+import { formatFodselsnummer, lagFulltNavn } from "~/utils.ts";
 
+import { HjelpetekstAlert } from "../Hjelpetekst.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
@@ -28,8 +30,15 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   );
 
   const navigate = useNavigate();
-  const { register, formState, watch, handleSubmit, setValue, getValues } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const {
+    register,
+    formState,
+    watch,
+    handleSubmit,
+    setValue,
+    getValues,
+    control,
+  } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const fødselsnummer = watch("ansattesFødselsnummer");
   const { data, error, isLoading } = useQuery(
     hentArbeidstakerOptions(fødselsnummer ?? ""),
@@ -60,9 +69,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   });
 
   const fulltNavn = data ? lagFulltNavn(data.personinformasjon) : "";
-
   return (
-    <div>
+    <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
         Den ansatte og arbeidsgiver
       </Heading>
@@ -70,11 +78,21 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
       <form className="space-y-4" onSubmit={onSubmit}>
         <Informasjonsseksjon tittel="Den ansatte">
           <div className="flex gap-4 flex-col md:flex-row">
-            <TextField
-              className="flex-1"
-              label="Ansattes fødselsnummer (11 siffer)"
-              {...register("ansattesFødselsnummer")}
-              error={formState.errors.ansattesFødselsnummer?.message}
+            <Controller
+              control={control}
+              name="ansattesFødselsnummer"
+              render={({ field }) => (
+                <TextField
+                  className="flex-1"
+                  error={formState.errors.ansattesFødselsnummer?.message}
+                  label="Ansattes fødselsnummer (11 siffer)"
+                  onChange={(e) => {
+                    // Store raw value without spaces in form state
+                    field.onChange(e.target.value.replaceAll(/\s/g, ""));
+                  }}
+                  value={formatFodselsnummer(field.value || "")}
+                />
+              )}
             />
             <div className="flex-1 flex flex-col">
               <Label>Navn</Label>
@@ -188,7 +206,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               />
             </div>
           </div>
-          <Alert variant="info">
+          <HjelpetekstAlert>
             <Heading level="3" size="xsmall" spacing>
               Er kontaktinformasjonen riktig?
             </Heading>
@@ -198,7 +216,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               nummeret til sentralbordet. Hvis du vet at du vil være
               utilgjengelig fremover, kan du endre til en annen kontaktperson.
             </BodyLong>
-          </Alert>
+          </HjelpetekstAlert>
         </Informasjonsseksjon>
 
         <div className="flex gap-4">

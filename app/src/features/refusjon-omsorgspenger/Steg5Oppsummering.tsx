@@ -14,7 +14,7 @@ import { ListItem } from "@navikt/ds-react/List";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import { lagFulltNavn } from "~/utils.ts";
+import { formatFodselsnummer, formatKroner, lagFulltNavn } from "~/utils.ts";
 
 import { endringsårsak } from "../skjema-moduler/Inntekt.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -59,7 +59,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     });
 
   return (
-    <div>
+    <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
         Oppsummering
       </Heading>
@@ -184,7 +184,7 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
               fornavn: getValues("ansattesFornavn")!,
               etternavn: getValues("ansattesEtternavn")!,
             })}
-            , {getValues("ansattesFødselsnummer")?.slice(0, 6)}
+            , {formatFodselsnummer(getValues("ansattesFødselsnummer"))}
             <ErrorMessage
               message={formState.errors.ansattesFødselsnummer?.message}
             />
@@ -279,19 +279,17 @@ export const OppsummeringMånedslønn = () => {
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">
-          Beregnet månedslønn og refusjonskrav
+          Beregnet månedslønn for refusjon
         </FormSummaryHeading>
         <FormSummaryEditLink as={Link} to="../4-refusjon" />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
-          <FormSummaryLabel>
-            Beregnet månedslønn og refusjonskrav
-          </FormSummaryLabel>
+          <FormSummaryLabel>Beregnet månedslønn</FormSummaryLabel>
           <FormSummaryValue>
-            {getValues("korrigertInntekt") || getValues("inntekt")}
-            {" "}
-            kr
+            {formatKroner(
+              getValues("korrigertInntekt") || getValues("inntekt"),
+            )}
             <ErrorMessage
               message={
                 formState.errors.korrigertInntekt?.message ||
@@ -309,6 +307,7 @@ export const OppsummeringMånedslønn = () => {
                   {endringsårsak.find((a) => a.value === årsak.årsak)?.label}
                   {årsak.fom && (
                     <>
+                      {" "}
                       {new Date(årsak.fom).toLocaleDateString("nb-no")}
                       {årsak.tom &&
                         ` til ${new Date(årsak.tom).toLocaleDateString("nb-no")}`}

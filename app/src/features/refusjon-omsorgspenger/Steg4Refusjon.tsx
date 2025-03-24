@@ -92,7 +92,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   }
 
   return (
-    <div>
+    <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
         Beregnet månedslønn for refusjon
       </Heading>
@@ -104,7 +104,8 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
           noe ikke stemmer. Beregnet månedslønn danner grunnlaget for hva dere
           kan få i refusjon. Hvis fraværet er lavere enn 100 prosent, tar Nav
           hensyn til det når vi utbetaler refusjon. Refusjonen vil være
-          begrenset opp til en maksimal årslønn på seks ganger grunnbeløpet (6G)
+          begrenset opp til en maksimal årslønn på seks ganger grunnbeløpet
+          (6G).
         </BodyLong>
       </GuidePanel>
       <form onSubmit={onSubmit}>

@@ -58,6 +58,12 @@ export function formatTelefonnummer(telefonnummer: string): string {
   return `${tegn.slice(0, 2)} ${tegn.slice(2, 4)} ${tegn.slice(4, 6)} ${tegn.slice(6)}`;
 }
 
+export function formatFodselsnummer(value: string | undefined) {
+  if (!value) return "";
+  if (value.length <= 6) return value;
+  return `${value.slice(0, 6)} ${value.slice(6)}`;
+}
+
 export function capitalizeSetning(setning?: string) {
   if (!setning) {
     return setning;
