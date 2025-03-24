@@ -8,7 +8,6 @@ import {
 import {
   Alert,
   BodyLong,
-  BodyShort,
   Button,
   ExpansionCard,
   Heading,
@@ -94,9 +93,8 @@ export const Steg6Kvittering = () => {
               Du finner refusjonskravet ved å logge inn på Min Side
               Arbeidsgiver. Der kan du se refusjonskravet, og eventuelt endre
               informasjonen. Når vi får inn et nytt eller endret refusjonskrav,
-              revurderer vi saken.
-              Hvis arbeidsgiveren har fått for mye utbetalt, trekkes dette i
-              neste utbetaling.
+              revurderer vi saken. Hvis arbeidsgiveren har fått for mye
+              utbetalt, trekkes dette i neste utbetaling.
             </BodyLong>
             <BodyLong>
               <Link
