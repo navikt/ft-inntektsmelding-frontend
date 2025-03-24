@@ -61,7 +61,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
   });
 
   const fulltNavn = data ? lagFulltNavn(data.personinformasjon) : "";
-
   return (
     <div className="bg-bg-default rounded-md flex flex-col gap-6">
       <Heading level="1" size="large">
@@ -82,7 +81,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
                   e.target.value.replaceAll(/\s/g, ""),
                 );
               }}
-              value={formatFodselsnummer(getValues("ansattesFødselsnummer"))}
+              value={formatFodselsnummer(watch("ansattesFødselsnummer"))}
             />
             <div className="flex-1 flex flex-col">
               <Label>Navn</Label>

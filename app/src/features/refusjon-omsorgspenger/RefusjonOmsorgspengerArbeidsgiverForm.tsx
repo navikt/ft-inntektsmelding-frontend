@@ -428,7 +428,7 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
     resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),
     defaultValues,
     mode: "onSubmit",
-    reValidateMode: "onChange",
+    reValidateMode: "onBlur",
   });
 
   return <FormProvider {...form}>{children}</FormProvider>;
