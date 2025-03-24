@@ -161,6 +161,7 @@ export function Steg2InntektOgRefusjon() {
           </Heading>
           <Fremgangsindikator aktivtSteg={2} />
           <Ytelsesperiode />
+          <hr />
           <Inntekt
             harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
             opplysninger={opplysninger}

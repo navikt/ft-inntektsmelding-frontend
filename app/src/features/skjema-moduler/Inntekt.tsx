@@ -81,7 +81,6 @@ export function Inntekt({
 
   return (
     <div className="flex flex-col gap-4">
-      <hr />
       <Heading id="beregnet-manedslonn" level="4" size="medium">
         Beregnet månedslønn
       </Heading>
