@@ -15,7 +15,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { Informasjonsseksjon } from "~/features/Informasjonsseksjon";
-import { lagFulltNavn } from "~/utils.ts";
+import { formatFodselsnummer, lagFulltNavn } from "~/utils.ts";
 
 import { HjelpetekstAlert } from "../Hjelpetekst.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -76,6 +76,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               label="Ansattes fødselsnummer (11 siffer)"
               {...register("ansattesFødselsnummer")}
               error={formState.errors.ansattesFødselsnummer?.message}
+              onChange={(e) => {
+                setValue(
+                  "ansattesFødselsnummer",
+                  e.target.value.replaceAll(/\s/g, ""),
+                );
+              }}
+              value={formatFodselsnummer(getValues("ansattesFødselsnummer"))}
             />
             <div className="flex-1 flex flex-col">
               <Label>Navn</Label>
