@@ -23,7 +23,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
 
-import { HjelpetekstReadMore } from "../Hjelpetekst.tsx";
+import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
@@ -347,7 +347,7 @@ const TiFørsteOmsorgsdagerInfo = () => {
   const harDekket10FørsteOmsorgsdager = watch("harDekket10FørsteOmsorgsdager");
   if (harDekket10FørsteOmsorgsdager === "ja") {
     return (
-      <Alert variant="info">
+      <HjelpetekstAlert>
         <BodyShort>
           Du kan søke om utbetaling fra NAV fra og med den 11. dagen.
         </BodyShort>
@@ -355,13 +355,13 @@ const TiFørsteOmsorgsdagerInfo = () => {
           Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre barn
           under 12 år, kan du søke om utbetaling fra første fraværsdag.
         </BodyShort>
-      </Alert>
+      </HjelpetekstAlert>
     );
   }
 
   if (harDekket10FørsteOmsorgsdager === "nei") {
     return (
-      <Alert variant="info">
+      <HjelpetekstAlert>
         <VStack gap="4">
           <BodyLong>
             Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår for
@@ -374,7 +374,7 @@ const TiFørsteOmsorgsdagerInfo = () => {
             barn under 12 år, kan du søke om utbetaling fra første fraværsdag.
           </BodyLong>
         </VStack>
-      </Alert>
+      </HjelpetekstAlert>
     );
   }
 };

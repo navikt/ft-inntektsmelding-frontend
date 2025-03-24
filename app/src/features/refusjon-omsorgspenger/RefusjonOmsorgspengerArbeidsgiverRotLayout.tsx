@@ -27,35 +27,38 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
 
   const erPåKvitteringssiden = location.pathname.includes("kvittering");
   return (
-    <RefusjonOmsorgspengerArbeidsgiverForm>
-      <RotLayout
-        background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
-        medHvitBoks={!erPåKvitteringssiden}
-        tittel="Søknad om refusjon for omsorgspenger"
-        undertittel={
-          <div className="flex gap-3">
-            <span>{innloggetBruker.organisasjonsnavn}</span>
-            <span aria-hidden="true">|</span>
-            <span className="text-nowrap">
-              Org.nr.: {innloggetBruker.organisasjonsnummer}
-            </span>
-          </div>
-        }
-      >
-        <Outlet />
-        {!erPåKvitteringssiden && (
-          <HStack align="center" justify="center">
-            <Button
-              as="a"
-              href="/min-side-arbeidsgiver"
-              icon={<XMarkIcon />}
-              variant="tertiary"
-            >
-              Avbryt
-            </Button>
-          </HStack>
-        )}
-      </RotLayout>
-    </RefusjonOmsorgspengerArbeidsgiverForm>
+    <div>
+      <RefusjonOmsorgspengerArbeidsgiverForm>
+        <RotLayout
+          background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
+          medHjelpetekstToggle={!erPåKvitteringssiden}
+          medHvitBoks={!erPåKvitteringssiden}
+          tittel="Søknad om refusjon for omsorgspenger"
+          undertittel={
+            <div className="flex gap-3">
+              <span>{innloggetBruker.organisasjonsnavn}</span>
+              <span aria-hidden="true">|</span>
+              <span className="text-nowrap">
+                Org.nr.: {innloggetBruker.organisasjonsnummer}
+              </span>
+            </div>
+          }
+        >
+          <Outlet />
+          {!erPåKvitteringssiden && (
+            <HStack align="center" justify="center">
+              <Button
+                as="a"
+                href="/min-side-arbeidsgiver"
+                icon={<XMarkIcon />}
+                variant="tertiary"
+              >
+                Avbryt
+              </Button>
+            </HStack>
+          )}
+        </RotLayout>
+      </RefusjonOmsorgspengerArbeidsgiverForm>
+    </div>
   );
 };

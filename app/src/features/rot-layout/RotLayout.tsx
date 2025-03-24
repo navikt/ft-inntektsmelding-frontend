@@ -1,5 +1,6 @@
 import { Detail, Heading, HStack, Page, PageProps } from "@navikt/ds-react";
 
+import { HjelpetekstToggle } from "../Hjelpetekst";
 import illustrasjonUrl from "./illustrasjon.svg";
 
 type RotLayoutProps = {
@@ -13,6 +14,8 @@ type RotLayoutProps = {
   background?: PageProps["background"];
   /** Flagg som wrapper innholdet i en hvit boks */
   medHvitBoks?: boolean;
+  /** Flagg som viser hjelpetekst-toggle */
+  medHjelpetekstToggle?: boolean;
 };
 
 /**
@@ -23,6 +26,7 @@ export const RotLayout = ({
   tittel,
   undertittel,
   children,
+  medHjelpetekstToggle = false,
   background = "bg-subtle",
   medHvitBoks = false,
 }: RotLayoutProps) => {
@@ -49,6 +53,7 @@ export const RotLayout = ({
           </Page.Block>
         </Page.Block>
         <Page.Block width="md">
+          {medHjelpetekstToggle && <HjelpetekstToggle />}
           {medHvitBoks ? (
             <div className="bg-bg-default px-5 py-6 rounded-md flex gap-6 flex-col mt-2">
               {children}
