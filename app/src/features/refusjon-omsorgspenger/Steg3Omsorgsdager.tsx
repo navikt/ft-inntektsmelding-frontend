@@ -1,6 +1,7 @@
 import "@navikt/ds-css/darkside";
 
 import {
+  ArrowDownIcon,
   ArrowLeftIcon,
   ArrowRightIcon,
   PlusIcon,
@@ -26,7 +27,7 @@ import {
 } from "@navikt/ds-react";
 import { Theme } from "@navikt/ds-react/Theme";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 
 import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
@@ -473,20 +474,33 @@ const TidligereInnsendinger = ({
     år: årForRefusjon as string,
   });
 
-  const tidligereInnsendinger = inntektsmeldinger?.map((inntektsmelding) => {
-    return {
-      id: inntektsmelding.id,
-      opprettetDato: new Date(inntektsmelding.opprettetTidspunkt),
-      heleDager: inntektsmelding.omsorgspenger.fraværHeleDager,
-      delviseDager: inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
-        (dag) => Number(dag.timer) > 0,
-      ),
-      dagerSomSkalTrekkes:
-        inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
-          (dag) => Number(dag.timer) === 0,
+  const tidligereInnsendinger =
+    inntektsmeldinger?.map((inntektsmelding) => {
+      return {
+        id: inntektsmelding.id,
+        opprettetDato: new Date(inntektsmelding.opprettetTidspunkt),
+        heleDager: inntektsmelding.omsorgspenger.fraværHeleDager,
+        delviseDager: inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
+          (dag) => Number(dag.timer) > 0,
         ),
-    };
-  });
+        dagerSomSkalTrekkes:
+          inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
+            (dag) => Number(dag.timer) === 0,
+          ),
+      };
+    }) || [];
+
+  const [antallInnsendingerSomSkalVises, setAntallInnsendingerSomSkalVises] =
+    useState(5);
+
+  const visFlereInnsendinger = () => {
+    setAntallInnsendingerSomSkalVises(antallInnsendingerSomSkalVises + 5);
+  };
+
+  const innsendingerSomSkalVises = tidligereInnsendinger?.slice(
+    0,
+    antallInnsendingerSomSkalVises,
+  );
 
   return (
     <Box className="bg-bg-subtle p-4">
@@ -499,7 +513,7 @@ const TidligereInnsendinger = ({
       <Theme theme="dark">
         <Accordion className="bg-bg-subtle mt-4" indent>
           <div className="flex flex-col gap-4 text-text-default">
-            {tidligereInnsendinger?.map((innsending) => (
+            {innsendingerSomSkalVises?.map((innsending) => (
               <Accordion.Item key={innsending.id}>
                 <Accordion.Header className="text-text-action">
                   Refusjonskrav - sendt inn{" "}
@@ -526,17 +540,19 @@ const TidligereInnsendinger = ({
                       innsending.delviseDager?.length > 0 && (
                         <div>
                           <Dropdown.Menu.Divider />
-                          <Label className="mt-4">
-                            Delvise dager dere søkte refusjon for
-                          </Label>
-                          <List className="flex flex-col gap-2 mt-1">
-                            {innsending.delviseDager?.map((dag) => (
-                              <List.Item key={dag.dato}>
-                                {new Date(dag.dato).toLocaleDateString("nb-NO")}{" "}
-                                - {dag.timer}
-                              </List.Item>
-                            ))}
-                          </List>
+                          <div className="mt-4">
+                            <Label>Delvise dager dere søkte refusjon for</Label>
+                            <List className="flex flex-col gap-2 mt-1">
+                              {innsending.delviseDager?.map((dag) => (
+                                <List.Item key={dag.dato}>
+                                  {new Date(dag.dato).toLocaleDateString(
+                                    "nb-NO",
+                                  )}{" "}
+                                  - {dag.timer} timer
+                                </List.Item>
+                              ))}
+                            </List>
+                          </div>
                         </div>
                       )}
                     {innsending.dagerSomSkalTrekkes &&
@@ -564,6 +580,17 @@ const TidligereInnsendinger = ({
           </div>
         </Accordion>
       </Theme>
+      {tidligereInnsendinger.length > antallInnsendingerSomSkalVises && (
+        <Button
+          className="mt-4"
+          icon={<ArrowDownIcon />}
+          onClick={visFlereInnsendinger}
+          type="button"
+          variant="tertiary"
+        >
+          Vis flere
+        </Button>
+      )}
     </Box>
   );
 };
