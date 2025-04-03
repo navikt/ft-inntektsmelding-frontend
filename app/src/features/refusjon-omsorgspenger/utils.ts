@@ -1,5 +1,9 @@
 import { OpplysningerDto } from "~/types/api-models";
-import { isDateWithinRange } from "~/utils/date-utils";
+import {
+  dagerTilPerioder,
+  isDateWithinRange,
+  periodeTilDager,
+} from "~/utils/date-utils";
 
 import {
   RefusjonOmsorgspengerDto,
@@ -47,10 +51,18 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
     endringAvInntektÅrsaker: RefusjonOmsorgspengerDto["endringAvInntektÅrsaker"];
   };
 
+  const trukketDager = validatedSkjemaState.dagerSomSkalTrekkes
+    .flatMap((dager) => periodeTilDager(dager))
+    .map((dag) => ({ dato: YYYYMMDD(dag.toISOString()), timer: "0" }));
+
+  const fraværDelerAvDagen = [
+    ...validatedSkjemaState.fraværDelerAvDagen,
+    ...trukketDager,
+  ];
   const førsteFraværsdag = YYYYMMDD(
     utledFørsteFraværsdag(
       validatedSkjemaState.fraværHeleDager,
-      validatedSkjemaState.fraværDelerAvDagen,
+      fraværDelerAvDagen,
     ),
   );
   const inntekt =
@@ -76,7 +88,7 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
         validatedSkjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",
       ),
       fraværHeleDager: validatedSkjemaState.fraværHeleDager,
-      fraværDelerAvDagen: validatedSkjemaState.fraværDelerAvDagen,
+      fraværDelerAvDagen,
     },
     bortfaltNaturalytelsePerioder: [],
     endringAvInntektÅrsaker: validatedSkjemaState.korrigertInntekt
@@ -89,6 +101,17 @@ export const mapSendInntektsmeldingTilSkjema = (
   opplysninger: OpplysningerDto,
   inntektsmelding: RefusjonOmsorgspengerResponseDto,
 ) => {
+  const delvisFravær =
+    inntektsmelding.omsorgspenger?.fraværDelerAvDagen?.filter(
+      (dager) => Number(dager.timer) > 0,
+    );
+
+  const dagerSomSkalTrekkes = inntektsmelding.omsorgspenger?.fraværDelerAvDagen
+    ?.filter((dager) => Number(dager.timer) === 0)
+    .map((dager) => dager.dato);
+
+  const dagerSomSkalTrekkesPerioder = dagerTilPerioder(dagerSomSkalTrekkes);
+
   return {
     meta: {
       step: 5,
@@ -100,7 +123,8 @@ export const mapSendInntektsmeldingTilSkjema = (
       telefonnummer: inntektsmelding.kontaktperson.telefonnummer,
     },
     fraværHeleDager: inntektsmelding.omsorgspenger.fraværHeleDager ?? [],
-    fraværDelerAvDagen: inntektsmelding.omsorgspenger.fraværDelerAvDagen ?? [],
+    fraværDelerAvDagen: delvisFravær ?? [],
+    dagerSomSkalTrekkes: dagerSomSkalTrekkesPerioder ?? [],
     harDekket10FørsteOmsorgsdager: inntektsmelding.omsorgspenger
       .harUtbetaltPliktigeDager
       ? "ja"
@@ -196,8 +220,14 @@ export function beregnGyldigDatoIntervall(årForRefusjon: number) {
     return { minDato: new Date(iDag.getFullYear(), 0, 1), maxDato: iDag };
   }
   const førsteDagAvIfjor = new Date(new Date().getFullYear() - 1, 0, 1);
-  const sisteDagAvIfjor = new Date(new Date().getFullYear() - 1, 11, 31);
-
+  const sisteDagAvIfjor = new Date(
+    new Date().getFullYear() - 1,
+    11,
+    31,
+    23,
+    59,
+    59,
+  );
   return { minDato: førsteDagAvIfjor, maxDato: sisteDagAvIfjor };
 }
 

@@ -202,6 +202,8 @@ const OppsummeringOmsorgsdager = () => {
   const harFraværHeleDager = (fraværHeleDager?.length ?? 0) > 0;
   const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
   const harFraværDelerAvDagen = (fraværDelerAvDagen?.length ?? 0) > 0;
+  const dagerSomSkalTrekkes = getValues("dagerSomSkalTrekkes");
+  const harDagerSomSkalTrekkes = (dagerSomSkalTrekkes?.length ?? 0) > 0;
   return (
     <FormSummary>
       <FormSummaryHeader>
@@ -249,15 +251,17 @@ const OppsummeringOmsorgsdager = () => {
           <FormSummaryValue>
             {harFraværDelerAvDagen ? (
               <List>
-                {fraværDelerAvDagen?.map((fravær, index) => (
-                  <ListItem key={index}>
-                    {fravær.dato
-                      ? new Date(fravær.dato).toLocaleDateString("nb-no")
-                      : null}
-                    : {fravær.timer}{" "}
-                    {Number(fravær.timer) === 1 ? "time" : "timer"}
-                  </ListItem>
-                ))}
+                {fraværDelerAvDagen
+                  ?.filter((fravær) => Number(fravær.timer) > 0)
+                  .map((fravær, index) => (
+                    <ListItem key={index}>
+                      {new Date(fravær.dato).toLocaleDateString("nb-no")}
+                      {fravær.timer &&
+                        ` (${fravær.timer} ${
+                          Number(fravær.timer) === 1 ? "time" : "timer"
+                        })`}
+                    </ListItem>
+                  ))}
               </List>
             ) : (
               "Ingen dager med fravær bare deler av dagen"
@@ -267,6 +271,21 @@ const OppsummeringOmsorgsdager = () => {
             />
           </FormSummaryValue>
         </FormSummaryAnswer>
+        {harDagerSomSkalTrekkes && (
+          <FormSummaryAnswer>
+            <FormSummaryLabel>Dager som skal trekkes</FormSummaryLabel>
+            <FormSummaryValue>
+              <List>
+                {dagerSomSkalTrekkes?.map((dag, index) => (
+                  <ListItem key={index}>
+                    {new Date(dag.fom).toLocaleDateString("nb-no")}–
+                    {new Date(dag.tom).toLocaleDateString("nb-no")}
+                  </ListItem>
+                ))}
+              </List>
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        )}
       </FormSummaryAnswers>
     </FormSummary>
   );

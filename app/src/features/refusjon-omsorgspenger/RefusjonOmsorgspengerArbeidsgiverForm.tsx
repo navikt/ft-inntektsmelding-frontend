@@ -59,6 +59,12 @@ const baseSchema = z.object({
       timer: z.preprocess((val) => String(val) || "", z.string()),
     }),
   ),
+  dagerSomSkalTrekkes: z.array(
+    z.object({
+      fom: z.string(),
+      tom: z.string(),
+    }),
+  ),
 
   // Steg 4 fields
   inntekt: beløpSchema.optional(),
@@ -237,75 +243,129 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
             path: ["fraværHeleDager", index, "fom"],
           });
         }
+      }
 
-        // Validate each item in fraværDelerAvDagen array
-        for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
-          if (!dag.dato) {
+      // Validate each item in fraværDelerAvDagen array
+      for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
+        if (!dag.dato) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en dato",
+            path: ["fraværDelerAvDagen", index, "dato"],
+          });
+        }
+        if (dag.dato) {
+          // Fravær deler av dag må ikke overlappe med fravær hele dager
+          const overlap = hasFullDayAbsenceInRange(
+            data.fraværHeleDager,
+            new Date(dag.dato),
+            new Date(dag.dato),
+          );
+          if (overlap) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: "Du må oppgi en dato",
+              message:
+                "Fravær deler av dag må ikke overlappe med fravær hele dager",
               path: ["fraværDelerAvDagen", index, "dato"],
             });
           }
-          if (dag.dato) {
-            // Fravær deler av dag må ikke overlappe med fravær hele dager
-            const overlap = hasFullDayAbsenceInRange(
-              data.fraværHeleDager,
-              new Date(dag.dato),
-              new Date(dag.dato),
-            );
-            if (overlap) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message:
-                  "Fravær deler av dag må ikke overlappe med fravær hele dager",
-                path: ["fraværDelerAvDagen", index, "dato"],
-              });
-            }
-            if (
-              data.harDekket10FørsteOmsorgsdager === "ja" &&
-              hasPartialDayAbsenceInRange(
-                [dag],
-                new Date(`${data.årForRefusjon}-01-01`),
-                new Date(`${data.årForRefusjon}-01-10`),
-              )
-            ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message:
-                  "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
-                path: ["fraværDelerAvDagen", index, "dato"],
-              });
-            }
-          }
-          if (dag.timer) {
-            const feilmelding = validateTimer(dag.timer);
-            if (typeof feilmelding === "string") {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: feilmelding,
-                path: ["fraværDelerAvDagen", index, "timer"],
-              });
-            }
-          } else {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: "Du må oppgi antall timer",
-              path: ["fraværDelerAvDagen", index, "timer"],
-            });
-          }
           if (
-            !datoErInnenforGyldigDatoIntervall(
-              dag.dato,
-              Number(data.årForRefusjon),
+            data.harDekket10FørsteOmsorgsdager === "ja" &&
+            hasPartialDayAbsenceInRange(
+              [dag],
+              new Date(`${data.årForRefusjon}-01-01`),
+              new Date(`${data.årForRefusjon}-01-10`),
             )
           ) {
             ctx.addIssue({
               code: z.ZodIssueCode.custom,
-              message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+              message:
+                "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
               path: ["fraværDelerAvDagen", index, "dato"],
             });
           }
+        }
+        if (dag.timer) {
+          const feilmelding = validateTimer(dag.timer);
+          if (typeof feilmelding === "string") {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: feilmelding,
+              path: ["fraværDelerAvDagen", index, "timer"],
+            });
+          }
+        } else {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi antall timer",
+            path: ["fraværDelerAvDagen", index, "timer"],
+          });
+        }
+        if (
+          !datoErInnenforGyldigDatoIntervall(
+            dag.dato,
+            Number(data.årForRefusjon),
+          )
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
+            path: ["fraværDelerAvDagen", index, "dato"],
+          });
+        }
+      }
+      // Validate each item in dagerSomSkalTrekkes array
+      for (const [index, dag] of data.dagerSomSkalTrekkes.entries()) {
+        if (!dag.fom) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en fra og med dato",
+            path: ["dagerSomSkalTrekkes", index, "fom"],
+          });
+        }
+        if (!dag.tom) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Du må oppgi en til og med dato",
+            path: ["dagerSomSkalTrekkes", index, "tom"],
+          });
+        }
+        if (
+          dag.fom &&
+          dag.tom &&
+          isBefore(new Date(dag.tom), new Date(dag.fom))
+        ) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Fra og med dato må være før til og med dato",
+            path: ["dagerSomSkalTrekkes", index, "fom"],
+          });
+        }
+        // kan ikke overlappe med fravær hele dager
+        const overlap = hasFullDayAbsenceInRange(
+          data.fraværHeleDager,
+          new Date(dag.fom),
+          new Date(dag.tom),
+        );
+        if (overlap) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Dagene kan ikke overlappe med fravær hele dager",
+            path: ["dagerSomSkalTrekkes", index, "fom"],
+          });
+        }
+        // kan ikke overlappe med fravær deler av dag
+        const overlapDelerAvDag = hasPartialDayAbsenceInRange(
+          data.fraværDelerAvDagen,
+          new Date(dag.fom),
+          new Date(dag.tom),
+        );
+        if (overlapDelerAvDag) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: "Dagene kan ikke overlappe med fravær deler av dag",
+            path: ["dagerSomSkalTrekkes", index, "fom"],
+          });
         }
       }
     }
@@ -430,6 +490,7 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
       },
       fraværHeleDager: [],
       fraværDelerAvDagen: [],
+      dagerSomSkalTrekkes: [],
       kontaktperson: {
         navn: innloggetBruker?.fornavn ? lagFulltNavn(innloggetBruker) : "",
         telefonnummer: innloggetBruker?.telefon || "",

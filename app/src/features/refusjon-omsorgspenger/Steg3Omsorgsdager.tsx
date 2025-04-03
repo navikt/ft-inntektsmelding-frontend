@@ -1,3 +1,5 @@
+import "@navikt/ds-css/darkside";
+
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -5,10 +7,13 @@ import {
   TrashIcon,
 } from "@navikt/aksel-icons";
 import {
+  Accordion,
   Alert,
   BodyLong,
   BodyShort,
+  Box,
   Button,
+  Dropdown,
   GuidePanel,
   Heading,
   HStack,
@@ -19,6 +24,7 @@ import {
   TextField,
   VStack,
 } from "@navikt/ds-react";
+import { Theme } from "@navikt/ds-react/Theme";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -27,6 +33,7 @@ import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useHentInntektsmeldingForÅr } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import {
@@ -42,9 +49,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const { register, formState, watch, handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
-  const navigate = useNavigate();
-
   const årForRefusjon = watch("årForRefusjon");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setValue("meta.step", 3);
@@ -121,38 +128,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             </Alert>
           )}
           <VStack gap="8">
+            <TidligereInnsendinger årForRefusjon={årForRefusjon} />
             <FraværHeleDagen />
             <FraværDelerAvDagen />
+            <DagerSomSkalTrekkes />
           </VStack>
-          <HjelpetekstReadMore header="Eksempler på hvordan du oppgir og omregner arbeidstid">
-            <Label>Eksempel 1:</Label>
-            <BodyLong>
-              Arbeidstaker jobber vanligvis 7,5 timer per dag og har vært borte
-              en halv dag.
-            </BodyLong>
-            <List>
-              <List.Item className="my-8">
-                Fraværet utgjør 3,75 timer, som skal avrundes til nærmeste halve
-                time. Dette betyr at du oppgir 4 timer i refusjonskravet. Ved
-                flere halve dager kan det oppgis som 3,5 og 4 timer annenhver
-                dag.
-              </List.Item>
-              <Label>Eksempel 2:</Label>
-              <BodyLong>
-                Arbeidstaker jobber vanligvis 9 timer per dag og er borte i 4 av
-                disse. Du deler da antall timer fravær på antall timer
-                arbeidstakeren skulle jobbet. Tallet du får ganger du med 7,5.
-              </BodyLong>
-              <List.Item className="my-8">
-                4 timer fravær / 9 timer arbeidstid = 0,440,44 × 7,5 = 3,33
-                timer, som avrundes til 3,5 timer i refusjonskravet
-              </List.Item>
-              <BodyLong>
-                Du kan regne på samme måste om ordinær arbeidstid er over eller
-                under 7,5 time.
-              </BodyLong>
-            </List>
-          </HjelpetekstReadMore>
 
           <div className="flex gap-4 mt-8">
             <Button
@@ -263,11 +243,7 @@ const FraværDelerAvDagen = () => {
       <Heading level="3" size="small">
         Delvise dager dere søker refusjon for
       </Heading>
-      <BodyLong className="text-text-subtle" size="small">
-        Timer skal avrundes til nærmeste halve time og beregnes basert på en 7,5
-        timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær arbeidstid,
-        må fraværet omregnes.
-      </BodyLong>
+
       {fields.map((periode, index) => {
         return (
           <HStack
@@ -324,6 +300,44 @@ const FraværDelerAvDagen = () => {
           </HStack>
         );
       })}
+      {fields.length > 0 && (
+        <>
+          <BodyLong className="text-text-subtle" size="small">
+            Timer skal avrundes til nærmeste halve time og beregnes basert på en
+            7,5 timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær
+            arbeidstid, må fraværet omregnes.
+          </BodyLong>
+          <HjelpetekstReadMore header="Eksempler på hvordan du oppgir og omregner arbeidstid">
+            <Label>Eksempel 1:</Label>
+            <BodyLong>
+              Arbeidstaker jobber vanligvis 7,5 timer per dag og har vært borte
+              en halv dag.
+            </BodyLong>
+            <List>
+              <List.Item className="my-8">
+                Fraværet utgjør 3,75 timer, som skal avrundes til nærmeste halve
+                time. Dette betyr at du oppgir 4 timer i refusjonskravet. Ved
+                flere halve dager kan det oppgis som 3,5 og 4 timer annenhver
+                dag.
+              </List.Item>
+              <Label>Eksempel 2:</Label>
+              <BodyLong>
+                Arbeidstaker jobber vanligvis 9 timer per dag og er borte i 4 av
+                disse. Du deler da antall timer fravær på antall timer
+                arbeidstakeren skulle jobbet. Tallet du får ganger du med 7,5.
+              </BodyLong>
+              <List.Item className="my-8">
+                4 timer fravær / 9 timer arbeidstid = 0,440,44 × 7,5 = 3,33
+                timer, som avrundes til 3,5 timer i refusjonskravet
+              </List.Item>
+              <BodyLong>
+                Du kan regne på samme måste om ordinær arbeidstid er over eller
+                under 7,5 time.
+              </BodyLong>
+            </List>
+          </HjelpetekstReadMore>
+        </>
+      )}
       <div>
         <Button
           icon={<PlusIcon />}
@@ -336,6 +350,71 @@ const FraværDelerAvDagen = () => {
           variant="secondary"
         >
           Legg til dag
+        </Button>
+      </div>
+    </VStack>
+  );
+};
+
+const DagerSomSkalTrekkes = () => {
+  const { control, watch, clearErrors } =
+    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "dagerSomSkalTrekkes",
+  });
+
+  const årForRefusjon = Number(watch("årForRefusjon"));
+  const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
+
+  return (
+    <VStack gap="4">
+      <Heading level="3" size="small">
+        Dager dere ønsker å trekke
+      </Heading>
+      {fields.map((periode, index) => (
+        <HStack
+          className="border-l-4 border-bg-subtle pl-4 py-2"
+          gap="4"
+          key={periode.id}
+        >
+          <DateRangePickerWrapped
+            datepickerProps={{
+              defaultMonth: utledDefaultMonthDatepicker(årForRefusjon),
+            }}
+            maxDato={maxDato}
+            minDato={minDato}
+            name={`dagerSomSkalTrekkes.${index}`}
+          />
+          <div>
+            <Button
+              aria-label="Slett periode"
+              className="md:mt-10"
+              icon={<TrashIcon />}
+              onClick={() => {
+                remove(index);
+              }}
+              size="small"
+              type="button"
+              variant="tertiary"
+            >
+              Slett
+            </Button>
+          </div>
+        </HStack>
+      ))}
+      <div>
+        <Button
+          icon={<PlusIcon />}
+          onClick={() => {
+            append({ fom: "", tom: "" }, { shouldFocus: false });
+            clearErrors("dagerSomSkalTrekkes");
+          }}
+          size="small"
+          type="button"
+          variant="secondary"
+        >
+          Legg til periode
         </Button>
       </div>
     </VStack>
@@ -377,4 +456,114 @@ const TiFørsteOmsorgsdagerInfo = () => {
       </HjelpetekstAlert>
     );
   }
+};
+
+const TidligereInnsendinger = ({
+  årForRefusjon,
+}: {
+  årForRefusjon: string;
+}) => {
+  const { watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const ansattesAktørId = watch("ansattesAktørId");
+  const organisasjonsnummer = watch("organisasjonsnummer");
+
+  const { data: inntektsmeldinger } = useHentInntektsmeldingForÅr({
+    aktørId: ansattesAktørId as string,
+    arbeidsgiverIdent: organisasjonsnummer as string,
+    år: årForRefusjon as string,
+  });
+
+  const tidligereInnsendinger = inntektsmeldinger?.map((inntektsmelding) => {
+    return {
+      id: inntektsmelding.id,
+      opprettetDato: new Date(inntektsmelding.opprettetTidspunkt),
+      heleDager: inntektsmelding.omsorgspenger.fraværHeleDager,
+      delviseDager: inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
+        (dag) => Number(dag.timer) > 0,
+      ),
+      dagerSomSkalTrekkes:
+        inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
+          (dag) => Number(dag.timer) === 0,
+        ),
+    };
+  });
+
+  return (
+    <Box className="bg-bg-subtle p-4">
+      <div className="flex justify-between">
+        <Label size="small">
+          {`Tidligere innsendinger for ${årForRefusjon}`}
+        </Label>
+        <BodyShort size="small">FRA NAV</BodyShort>
+      </div>
+      <Theme theme="dark">
+        <Accordion className="bg-bg-subtle mt-4" indent>
+          <div className="flex flex-col gap-4 text-text-default">
+            {tidligereInnsendinger?.map((innsending) => (
+              <Accordion.Item key={innsending.id}>
+                <Accordion.Header className="text-text-action">
+                  Refusjonskrav - sendt inn{" "}
+                  {innsending.opprettetDato.toLocaleDateString("nb-NO")}
+                </Accordion.Header>
+                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid border-surface-neutral-subtle">
+                  <div className="flex flex-col gap-4">
+                    {innsending.heleDager &&
+                      innsending.heleDager?.length > 0 && (
+                        <div>
+                          <Label>Hele dager dere søkte refusjon for</Label>
+                          <List className="flex flex-col gap-2 mt-1">
+                            {innsending.heleDager?.map((dag) => (
+                              <List.Item key={dag.fom}>
+                                {new Date(dag.fom).toLocaleDateString("nb-NO")}{" "}
+                                -{" "}
+                                {new Date(dag.tom).toLocaleDateString("nb-NO")}
+                              </List.Item>
+                            ))}
+                          </List>
+                        </div>
+                      )}
+                    {innsending.delviseDager &&
+                      innsending.delviseDager?.length > 0 && (
+                        <div>
+                          <Dropdown.Menu.Divider />
+                          <Label className="mt-4">
+                            Delvise dager dere søkte refusjon for
+                          </Label>
+                          <List className="flex flex-col gap-2 mt-1">
+                            {innsending.delviseDager?.map((dag) => (
+                              <List.Item key={dag.dato}>
+                                {new Date(dag.dato).toLocaleDateString("nb-NO")}{" "}
+                                - {dag.timer}
+                              </List.Item>
+                            ))}
+                          </List>
+                        </div>
+                      )}
+                    {innsending.dagerSomSkalTrekkes &&
+                      innsending.dagerSomSkalTrekkes?.length > 0 && (
+                        <div>
+                          <Dropdown.Menu.Divider />
+                          <div className="mt-4">
+                            <Label>Dager dere ønsker å trekke</Label>
+                            <List className="flex flex-col gap-2 mt-1">
+                              {innsending.dagerSomSkalTrekkes?.map((dag) => (
+                                <List.Item key={dag.dato}>
+                                  {new Date(dag.dato).toLocaleDateString(
+                                    "nb-NO",
+                                  )}
+                                </List.Item>
+                              ))}
+                            </List>
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                </Accordion.Content>
+              </Accordion.Item>
+            ))}
+          </div>
+        </Accordion>
+      </Theme>
+    </Box>
+  );
 };
