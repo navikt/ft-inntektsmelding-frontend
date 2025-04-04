@@ -35,6 +35,7 @@ import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { RefusjonOmsorgspengerResponseDto } from "./api/mutations.ts";
 import { useHentInntektsmeldingForÅr } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
@@ -54,6 +55,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
   const årForRefusjon = watch("årForRefusjon");
 
   const navigate = useNavigate();
+
+  const { data: inntektsmeldingerForÅr } = useHentInntektsmeldingForÅr({
+    aktørId: watch("ansattesAktørId") as string,
+    arbeidsgiverIdent: watch("organisasjonsnummer") as string,
+    år: årForRefusjon as string,
+  });
 
   useEffect(() => {
     setValue("meta.step", 3);
@@ -130,10 +137,13 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             </Alert>
           )}
           <VStack gap="8">
-            <TidligereInnsendinger årForRefusjon={årForRefusjon} />
+            <TidligereInnsendinger
+              inntektsmeldinger={inntektsmeldingerForÅr}
+              årForRefusjon={årForRefusjon}
+            />
             <FraværHeleDagen />
             <FraværDelerAvDagen />
-            <DagerSomSkalTrekkes />
+            <DagerSomSkalTrekkes inntektsmeldinger={inntektsmeldingerForÅr} />
           </VStack>
 
           <div className="flex gap-4 mt-8">
@@ -358,7 +368,11 @@ const FraværDelerAvDagen = () => {
   );
 };
 
-const DagerSomSkalTrekkes = () => {
+const DagerSomSkalTrekkes = ({
+  inntektsmeldinger,
+}: {
+  inntektsmeldinger: RefusjonOmsorgspengerResponseDto[] | undefined;
+}) => {
   const { control, watch, clearErrors } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -366,9 +380,12 @@ const DagerSomSkalTrekkes = () => {
     name: "dagerSomSkalTrekkes",
   });
 
+  if (!inntektsmeldinger || inntektsmeldinger.length === 0) {
+    return null;
+  }
+
   const årForRefusjon = Number(watch("årForRefusjon"));
   const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
-
   return (
     <VStack gap="4">
       <Heading level="3" size="small">
@@ -462,18 +479,14 @@ const TiFørsteOmsorgsdagerInfo = () => {
 
 const TidligereInnsendinger = ({
   årForRefusjon,
+  inntektsmeldinger,
 }: {
   årForRefusjon: string;
+  inntektsmeldinger: RefusjonOmsorgspengerResponseDto[] | undefined;
 }) => {
-  const { watch } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
-  const ansattesAktørId = watch("ansattesAktørId");
-  const organisasjonsnummer = watch("organisasjonsnummer");
-
-  const { data: inntektsmeldinger } = useHentInntektsmeldingForÅr({
-    aktørId: ansattesAktørId as string,
-    arbeidsgiverIdent: organisasjonsnummer as string,
-    år: årForRefusjon as string,
-  });
+  if (!inntektsmeldinger || inntektsmeldinger.length === 0) {
+    return null;
+  }
 
   const tidligereInnsendinger =
     inntektsmeldinger?.map((inntektsmelding) => {
@@ -505,6 +518,7 @@ const TidligereInnsendinger = ({
 
   const harFlereInnsendingerEnnAntallSomVises =
     tidligereInnsendinger.length > antallInnsendingerSomSkalVises;
+
   return (
     <Box className="bg-bg-subtle p-4">
       <div className="flex justify-between">

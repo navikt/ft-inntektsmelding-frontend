@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 /**
  * Checks if a date is within a range of two dates (inclusive)
  * @param date The date to check
@@ -74,11 +76,13 @@ export const dagerTilPerioder = (
 };
 
 export const periodeTilDager = (periode: { fom: string; tom: string }) => {
-  const fom = new Date(periode.fom);
-  const tom = new Date(periode.tom);
+  const fom = dayjs(periode.fom);
+  const tom = dayjs(periode.tom);
+  const diffInDays = tom.diff(fom, "day");
   const dager = [];
-  for (let i = 0; i < tom.getTime() - fom.getTime(); i += 24 * 60 * 60 * 1000) {
-    dager.push(new Date(fom.getTime() + i));
+  for (let i = 0; i <= diffInDays; i++) {
+    dager.push(fom.add(i, "day").toDate());
   }
+
   return dager;
 };
