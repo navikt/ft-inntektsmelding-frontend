@@ -14,6 +14,7 @@ import {
   BodyShort,
   Box,
   Button,
+  Detail,
   Dropdown,
   GuidePanel,
   Heading,
@@ -502,6 +503,8 @@ const TidligereInnsendinger = ({
     antallInnsendingerSomSkalVises,
   );
 
+  const harFlereInnsendingerEnnAntallSomVises =
+    tidligereInnsendinger.length > antallInnsendingerSomSkalVises;
   return (
     <Box className="bg-bg-subtle p-4">
       <div className="flex justify-between">
@@ -510,9 +513,17 @@ const TidligereInnsendinger = ({
         </Label>
         <BodyShort size="small">FRA NAV</BodyShort>
       </div>
+      {tidligereInnsendinger.length > 5 && (
+        <Detail>
+          {`Viser ${Math.min(
+            antallInnsendingerSomSkalVises,
+            tidligereInnsendinger.length,
+          )} av ${tidligereInnsendinger.length} innsendinger`}
+        </Detail>
+      )}
       <Theme theme="dark">
         <Accordion className="bg-bg-subtle mt-4" indent>
-          <div className="flex flex-col gap-4 text-text-default">
+          <div className="flex flex-col text-text-default">
             {innsendingerSomSkalVises?.map((innsending) => (
               <Accordion.Item key={innsending.id}>
                 <Accordion.Header className="text-text-action">
@@ -580,11 +591,12 @@ const TidligereInnsendinger = ({
           </div>
         </Accordion>
       </Theme>
-      {tidligereInnsendinger.length > antallInnsendingerSomSkalVises && (
+      {harFlereInnsendingerEnnAntallSomVises && (
         <Button
-          className="mt-4"
+          className="mt-2"
           icon={<ArrowDownIcon />}
           onClick={visFlereInnsendinger}
+          size="small"
           type="button"
           variant="tertiary"
         >
