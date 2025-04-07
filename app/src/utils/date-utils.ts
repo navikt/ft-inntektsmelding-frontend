@@ -44,8 +44,8 @@ export const dagerTilPerioder = (
 
   const perioder: { fom: string; tom: string }[] = [];
   let currentPeriod = {
-    fom: sortedDager[0].toISOString().split("T")[0],
-    tom: sortedDager[0].toISOString().split("T")[0],
+    fom: dayjs(sortedDager[0]).format("YYYY-MM-DD"),
+    tom: dayjs(sortedDager[0]).format("YYYY-MM-DD"),
   };
 
   for (let i = 1; i < sortedDager.length; i++) {
@@ -58,13 +58,13 @@ export const dagerTilPerioder = (
 
     if (diffInDays === 1) {
       // Extend current period
-      currentPeriod.tom = currentDate.toISOString().split("T")[0];
+      currentPeriod.tom = dayjs(currentDate).format("YYYY-MM-DD");
     } else {
       // Save current period and start a new one
       perioder.push(currentPeriod);
       currentPeriod = {
-        fom: currentDate.toISOString().split("T")[0],
-        tom: currentDate.toISOString().split("T")[0],
+        fom: dayjs(currentDate).format("YYYY-MM-DD"),
+        tom: dayjs(currentDate).format("YYYY-MM-DD"),
       };
     }
   }

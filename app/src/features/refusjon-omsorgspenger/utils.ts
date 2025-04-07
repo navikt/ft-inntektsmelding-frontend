@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import { OpplysningerDto } from "~/types/api-models";
 import {
   dagerTilPerioder,
@@ -38,33 +40,31 @@ export const utledFørsteFraværsdag = (
   return førsteFraværsdagHeleDager || førsteFraværsdagDelerAvDagen;
 };
 
-const YYYYMMDD = (dato: string) => {
-  const datoObjekt = new Date(dato);
-  // YYYY-MM-DD
-  return datoObjekt.toISOString().split("T")[0];
-};
-
 export const mapSkjemaTilSendInntektsmeldingRequest = (
   skjemaState: RefusjonOmsorgspengerFormData,
 ): RefusjonOmsorgspengerDto => {
   const validatedSkjemaState = skjemaState as RefusjonOmsorgspengerFormData & {
     endringAvInntektÅrsaker: RefusjonOmsorgspengerDto["endringAvInntektÅrsaker"];
   };
-
   const trukketDager = validatedSkjemaState.dagerSomSkalTrekkes
     .flatMap((dager) => periodeTilDager(dager))
-    .map((dag) => ({ dato: YYYYMMDD(dag.toISOString()), timer: "0" }));
+    .map((dag) => {
+      return {
+        dato: dayjs(dag).format("YYYY-MM-DD"),
+        timer: "0",
+      };
+    });
 
   const fraværDelerAvDagen = [
     ...validatedSkjemaState.fraværDelerAvDagen,
     ...trukketDager,
   ];
-  const førsteFraværsdag = YYYYMMDD(
+  const førsteFraværsdag = dayjs(
     utledFørsteFraværsdag(
       validatedSkjemaState.fraværHeleDager,
       fraværDelerAvDagen,
     ),
-  );
+  ).format("YYYY-MM-DD");
   const inntekt =
     validatedSkjemaState.korrigertInntekt || validatedSkjemaState.inntekt;
   return {
