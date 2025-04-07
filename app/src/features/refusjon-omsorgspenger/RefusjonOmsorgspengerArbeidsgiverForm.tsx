@@ -176,12 +176,13 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
       const hasHeleDager = data.fraværHeleDager.length > 0;
       const hasDelerAvDagen = data.fraværDelerAvDagen.length > 0;
+      const hasDagerSomSkalTrekkes = data.dagerSomSkalTrekkes.length > 0;
 
-      if (!hasHeleDager && !hasDelerAvDagen) {
+      if (!hasHeleDager && !hasDelerAvDagen && !hasDagerSomSkalTrekkes) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message:
-            "Du må oppgi fravær enten som hele dager eller deler av dager",
+            "Du må oppgi fravær enten som hele dager, deler av dager eller dager som skal trekkes",
           path: ["fraværHeleDager"],
         });
       }
