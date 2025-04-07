@@ -143,7 +143,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             />
             <FraværHeleDagen />
             <FraværDelerAvDagen />
-            <DagerSomSkalTrekkes inntektsmeldinger={inntektsmeldingerForÅr} />
+            <DagerSomSkalTrekkes />
           </VStack>
 
           <div className="flex gap-4 mt-8">
@@ -368,21 +368,13 @@ const FraværDelerAvDagen = () => {
   );
 };
 
-const DagerSomSkalTrekkes = ({
-  inntektsmeldinger,
-}: {
-  inntektsmeldinger: RefusjonOmsorgspengerResponseDto[] | undefined;
-}) => {
+const DagerSomSkalTrekkes = () => {
   const { control, watch, clearErrors } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "dagerSomSkalTrekkes",
   });
-
-  if (!inntektsmeldinger || inntektsmeldinger.length === 0) {
-    return null;
-  }
 
   const årForRefusjon = Number(watch("årForRefusjon"));
   const { minDato, maxDato } = beregnGyldigDatoIntervall(årForRefusjon);
