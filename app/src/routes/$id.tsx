@@ -1,5 +1,5 @@
 import { BodyShort, Loader } from "@navikt/ds-react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 import {
   hentEksisterendeInntektsmeldinger,
@@ -36,6 +36,17 @@ export const Route = createFileRoute("/$id")({
       hentOpplysningerData(params.id),
       hentEksisterendeInntektsmeldinger(params.id),
     ]);
+    if (opplysninger.ytelse === "OMSORGSPENGER") {
+      return redirect({
+        to: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
+        params: {
+          organisasjonsnummer: opplysninger.arbeidsgiver.organisasjonNummer,
+        },
+        search: {
+          id: opplysninger.forespørselUuid,
+        },
+      });
+    }
 
     if (
       opplysninger.forespørselStatus === "UTGÅTT" &&
