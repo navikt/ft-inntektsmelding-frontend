@@ -103,8 +103,7 @@ export const Steg6Kvittering = () => {
               >
                 Her
               </Link>{" "}
-              finner du informasjon om hvordan du kan endre et
-              refusjonskrav/inntektsmelding.
+              finner du informasjon om hvordan du kan endre et refusjonskrav.
             </BodyLong>
           </FaqItem>
         </VStack>

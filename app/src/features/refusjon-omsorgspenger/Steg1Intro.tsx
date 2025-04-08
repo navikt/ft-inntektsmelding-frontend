@@ -5,12 +5,11 @@ import {
   Button,
   GuidePanel,
   Heading,
-  Link,
   Radio,
   RadioGroup,
   VStack,
 } from "@navikt/ds-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { capitalizeSetning } from "~/utils.ts";
@@ -26,6 +25,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const innloggetBruker = useInnloggetBruker();
 
   const navigate = useNavigate();
+  const { id } = useSearch({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",
+  });
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
 
@@ -36,6 +38,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",
       to: "../2-ansatt-og-arbeidsgiver",
+      search: { id },
     });
   });
 
@@ -100,9 +103,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
-                selv søke om utbetaling av omsorgspenger. Når vi får søknad fra
-                den ansatte, ber vi dere om en inntektsmelding som en oppgave i{" "}
-                <Link href="/saksoversikt">saksoversikten</Link>.
+                selv søke om utbetaling av omsorgspenger. Vi jobber med en ny
+                løsning for innsending av inntektsmelding når dere ikke skal ha
+                refusjon. Inntil videre må dere bruker arbeidsgivers eget lønns-
+                og personalsystem eller Altinn for å sende inntektsmelding i
+                saker uten refusjon.
               </BodyLong>
             </Alert>
           )}
