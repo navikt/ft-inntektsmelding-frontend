@@ -5,7 +5,6 @@ import {
   Button,
   GuidePanel,
   Heading,
-  Link,
   Radio,
   RadioGroup,
   VStack,
@@ -100,9 +99,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
-                selv søke om utbetaling av omsorgspenger. Når vi får søknad fra
-                den ansatte, ber vi dere om en inntektsmelding som en oppgave i{" "}
-                <Link href="/saksoversikt">saksoversikten</Link>.
+                selv søke om utbetaling av omsorgspenger. Vi jobber med en ny
+                løsning for innsending av inntektsmelding når dere ikke skal ha
+                refusjon. Inntil videre må dere bruker arbeidsgivers eget lønns-
+                og personalsystem eller Altinn for å sende inntektsmelding i
+                saker uten refusjon.
               </BodyLong>
             </Alert>
           )}

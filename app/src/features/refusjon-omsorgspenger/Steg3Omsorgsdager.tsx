@@ -438,13 +438,10 @@ const TiFørsteOmsorgsdagerInfo = () => {
   if (harDekket10FørsteOmsorgsdager === "ja") {
     return (
       <HjelpetekstAlert>
-        <BodyShort>
-          Du kan søke om utbetaling fra NAV fra og med den 11. dagen.
-        </BodyShort>
-        <BodyShort>
-          Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre barn
-          under 12 år, kan du søke om utbetaling fra første fraværsdag.
-        </BodyShort>
+        Du kan søke om utbetaling fra Nav fra og med den 11. dagen hvis den
+        ansatte har rett på flere enn 10 omsorgsdager. Ved kronisk sykt barn
+        over 13 år, og ingen andre barn under 12 år, kan du søke om utbetaling
+        fra første fraværsdag.
       </HjelpetekstAlert>
     );
   }
@@ -454,14 +451,18 @@ const TiFørsteOmsorgsdagerInfo = () => {
       <HjelpetekstAlert>
         <VStack gap="4">
           <BodyLong>
-            Bedriften må dekke de første 10 omsorgsdagene hvert kalenderår for
+            Dere må dekke de første 10 omsorgsdagene hvert kalenderår for
             ansatte som har barn under 12 år, eller som fyller 12 år det
-            gjeldende året. Du kan søke om utbetaling fra NAV fra og med den 11.
-            dagen.
+            gjeldende året. Du kan søke om refusjon fra Nav fra og med den 11.
+            dagen hvis den ansatte har rett på flere enn 10 omsorgsdager.
           </BodyLong>
+          <BodyShort>
+            Ved kronisk sykt barn over 13 år, og ingen andre barn under 12 år,
+            kan du søke om utbetaling fra første fraværsdag.
+          </BodyShort>
           <BodyLong>
-            Hvis den ansatte har kronisk sykt barn over 13 år, og ingen andre
-            barn under 12 år, kan du søke om utbetaling fra første fraværsdag.
+            Hvis den ansatte ikke har jobbet fire uker før fraværet, kan en
+            unntaksvis søke om refusjon fra første fraværsdag.
           </BodyLong>
         </VStack>
       </HjelpetekstAlert>

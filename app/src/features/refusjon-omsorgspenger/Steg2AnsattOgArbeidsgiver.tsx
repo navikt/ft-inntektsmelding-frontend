@@ -211,7 +211,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               Er kontaktinformasjonen riktig?
             </Heading>
             <BodyLong>
-              Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi får
+              Hvis vi har spørsmål om refusjonskravet, er det viktig at vi får
               kontakt med deg. Bruk derfor direktenummeret ditt i stedet for
               nummeret til sentralbordet. Hvis du vet at du vil være
               utilgjengelig fremover, kan du endre til en annen kontaktperson.
