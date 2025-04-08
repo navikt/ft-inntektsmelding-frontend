@@ -37,7 +37,7 @@ export const Route = createFileRoute("/$id")({
       hentEksisterendeInntektsmeldinger(params.id),
     ]);
     if (opplysninger.ytelse === "OMSORGSPENGER") {
-      return redirect({
+      redirect({
         to: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
         params: {
           organisasjonsnummer: opplysninger.arbeidsgiver.organisasjonNummer,
@@ -45,6 +45,7 @@ export const Route = createFileRoute("/$id")({
         search: {
           id: opplysninger.forespørselUuid,
         },
+        throw: true,
       });
     }
 
