@@ -62,10 +62,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
 
   const fraværHeleDager = getValues("fraværHeleDager");
   const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+  const dagerSomSkalTrekkes = getValues("dagerSomSkalTrekkes");
 
   const førsteFraværsdato = [
     ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
     ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
+    ...(dagerSomSkalTrekkes?.map((dag) => dag.fom) ?? []),
   ].sort()[0];
 
   const {

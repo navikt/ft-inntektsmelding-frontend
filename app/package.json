@@ -15,7 +15,8 @@
     "lint:fix": "eslint --fix",
     "stylelint": "stylelint '**/*.{tsx,css}'",
     "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
-    "bundle-visualizer": "npx vite-bundle-visualizer"
+    "bundle-visualizer": "npx vite-bundle-visualizer",
+    "test:unit": "vitest src/**/*.spec.ts"
   },
   "dependencies": {
     "@grafana/faro-react": "1.13.3",
@@ -69,6 +70,7 @@
     "typescript": "5.7.3",
     "typescript-eslint": "8.24.1",
     "vite": "6.1.1",
-    "vite-size": "0.0.5"
+    "vite-size": "0.0.5",
+    "vitest": "^3.1.1"
   }
 }

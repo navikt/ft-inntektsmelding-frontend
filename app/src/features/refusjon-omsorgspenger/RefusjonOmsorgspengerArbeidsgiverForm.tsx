@@ -13,6 +13,7 @@ import { z } from "zod";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt";
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
 import { beløpSchema, finnSenesteInntektsmelding, lagFulltNavn } from "~/utils";
+import { perioderOverlapper, periodeTilDager } from "~/utils/date-utils";
 import { validateInntekt, validateTimer } from "~/validators";
 
 import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
@@ -343,11 +344,10 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           });
         }
         // kan ikke overlappe med fravær hele dager
-        const overlap = hasFullDayAbsenceInRange(
-          data.fraværHeleDager,
-          new Date(dag.fom),
-          new Date(dag.tom),
-        );
+        const overlap = perioderOverlapper(data.fraværHeleDager, [
+          { fom: dag.fom, tom: dag.tom },
+        ]);
+
         if (overlap) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
@@ -356,11 +356,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           });
         }
         // kan ikke overlappe med fravær deler av dag
-        const overlapDelerAvDag = hasPartialDayAbsenceInRange(
-          data.fraværDelerAvDagen,
-          new Date(dag.fom),
-          new Date(dag.tom),
-        );
+        const dager = periodeTilDager({ fom: dag.fom, tom: dag.tom });
+        const overlapDelerAvDag = dager.some((dag) => {
+          return hasPartialDayAbsenceInRange(
+            data.fraværDelerAvDagen,
+            new Date(dag),
+            new Date(dag),
+          );
+        });
         if (overlapDelerAvDag) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,

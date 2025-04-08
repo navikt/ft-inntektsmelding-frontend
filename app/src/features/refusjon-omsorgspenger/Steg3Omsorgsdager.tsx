@@ -53,7 +53,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
   const årForRefusjon = watch("årForRefusjon");
-
+  const harUtbetaltLønn = watch("harUtbetaltLønn");
   const navigate = useNavigate();
 
   const { data: inntektsmeldingerForÅr } = useHentInntektsmeldingForÅr({
@@ -72,14 +72,14 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (!getValues("årForRefusjon") || !getValues("harUtbetaltLønn")) {
-  //     navigate({
-  //       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
-  //       to: "../1-intro",
-  //     });
-  //   }
-  // }, [getValues("årForRefusjon"), getValues("harUtbetaltLønn")]);
+  useEffect(() => {
+    if (!årForRefusjon || !harUtbetaltLønn) {
+      navigate({
+        from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+        to: "../1-intro",
+      });
+    }
+  }, [årForRefusjon, harUtbetaltLønn]);
 
   const onSubmit = handleSubmit(() => {
     navigate({

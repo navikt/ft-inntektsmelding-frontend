@@ -81,8 +81,20 @@ export const periodeTilDager = (periode: { fom: string; tom: string }) => {
   const diffInDays = tom.diff(fom, "day");
   const dager = [];
   for (let i = 0; i <= diffInDays; i++) {
-    dager.push(fom.add(i, "day").toDate());
+    dager.push(fom.add(i, "day").format("YYYY-MM-DD"));
   }
-
   return dager;
+};
+
+export const perioderOverlapper = (
+  perioder: { fom: string; tom: string }[],
+  perioder2: { fom: string; tom: string }[],
+) => {
+  const flattenPerioder = perioder.flatMap((p) => periodeTilDager(p));
+  const flattenPerioder2 = perioder2.flatMap((p) => periodeTilDager(p));
+  return flattenPerioder.some((dag) => {
+    return flattenPerioder2.some((dag2) => {
+      return dayjs(dag).isSame(dag2, "day");
+    });
+  });
 };
