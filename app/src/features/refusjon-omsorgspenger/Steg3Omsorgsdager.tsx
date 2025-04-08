@@ -27,7 +27,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { Theme } from "@navikt/ds-react/Theme";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 
@@ -51,6 +51,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 
   const { register, formState, watch, handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  const { id } = useSearch({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
+  });
 
   const årForRefusjon = watch("årForRefusjon");
   const harUtbetaltLønn = watch("harUtbetaltLønn");
@@ -85,6 +89,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
       to: "../4-refusjon",
+      search: { id },
     });
   });
 
@@ -150,7 +155,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             <Button
               as={Link}
               icon={<ArrowLeftIcon />}
-              to="../2-ansatt-og-arbeidsgiver"
+              to={
+                id
+                  ? `../2-ansatt-og-arbeidsgiver?id=${id}`
+                  : "../2-ansatt-og-arbeidsgiver"
+              }
               variant="secondary"
             >
               Forrige steg
