@@ -1,7 +1,5 @@
 import { XMarkIcon } from "@navikt/aksel-icons";
 import {
-  Alert,
-  BodyShort,
   Button,
   Detail,
   Heading,
@@ -46,20 +44,6 @@ export const RotLayout = ({
   return (
     <main id="maincontent">
       <Page background={background}>
-        <Alert className="flex justify-center" variant="warning">
-          <div>
-            <Heading level="3" size="small" spacing>
-              Viktig informasjon
-            </Heading>
-            <div className="flex flex-col gap-2">
-              <BodyShort>
-                På grunn av oppdateringer kan det oppleves ustabilitet i skjema
-                for inntektsmelding torsdag 10. april 2025. Dersom du opplever
-                problemer, vennligst prøv igjen senere.
-              </BodyShort>
-            </div>
-          </div>
-        </Alert>
         <Page.Block className="bg-bg-default border-border-focus-on-inverted border-b-4 py-5">
           <Page.Block width="md">
             <HStack align="center">
