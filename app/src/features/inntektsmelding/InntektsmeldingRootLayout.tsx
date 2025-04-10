@@ -25,6 +25,8 @@ export const InntektsmeldingRootLayout = () => {
   );
 };
 
+// asd
+
 type InntektsmeldingRootLayoutProps = {
   ytelse: string;
   organisasjonNavn?: string;
