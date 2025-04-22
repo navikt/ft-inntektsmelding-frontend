@@ -44,7 +44,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
 
   useEffect(() => {
     setValue("meta.step", 5);
-    if (getValues("meta.harSendtSøknad")) {
+    if (getValues("meta.innsendtSøknadId")) {
       navigateTilKvittering();
     }
   }, []);
@@ -52,7 +52,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
   const { mutate: sendInntektsmeldingOmsorgspengerRefusjon, isPending } =
     sendInntektsmeldingOmsorgspengerRefusjonMutation({
       onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
-        setValue("meta.harSendtSøknad", true);
         setValue("meta.innsendtSøknadId", v.id);
         navigateTilKvittering();
       },

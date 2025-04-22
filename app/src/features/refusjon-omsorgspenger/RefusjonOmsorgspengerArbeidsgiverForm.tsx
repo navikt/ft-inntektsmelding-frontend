@@ -12,15 +12,13 @@ import { z } from "zod";
 
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt";
 import { EndringAvInntektÅrsakerSchema } from "~/types/api-models";
-import { beløpSchema, finnSenesteInntektsmelding, lagFulltNavn } from "~/utils";
+import { beløpSchema, lagFulltNavn } from "~/utils";
 import { validateInntekt, validateTimer } from "~/validators";
 
-import { RefusjonOmsorgspengerResponseDto } from "./api/mutations";
 import {
   datoErInnenforGyldigDatoIntervall,
   hasFullDayAbsenceInRange,
   hasPartialDayAbsenceInRange,
-  mapSendInntektsmeldingTilSkjema,
 } from "./utils";
 
 // Create a single unified form schema
@@ -80,9 +78,9 @@ export const RefusjonOmsorgspengerSchema = baseSchema.extend({
   meta: z.object({
     step: z.number().min(1).max(5),
     skalKorrigereInntekt: z.boolean(),
-    harSendtSøknad: z.boolean(),
-    forrigeSøknad: baseSchema.optional(),
+    startdato: z.string().optional(),
     innsendtSøknadId: z.number().optional(),
+    opprettetTidspunkt: z.string().optional(),
   }),
 });
 
@@ -407,42 +405,27 @@ type Props = {
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({ children }: Props) => {
   const route = getRouteApi("/refusjon-omsorgspenger/$organisasjonsnummer");
 
-  const { eksisterendeInntektsmeldinger, opplysninger, innloggetBruker } =
-    route.useLoaderData();
-  const { id } = route.useSearch();
-  let defaultValues: DeepPartial<RefusjonOmsorgspengerFormData>;
+  const { innloggetBruker } = route.useLoaderData();
 
-  if (id) {
-    const sisteInntektsmelding = finnSenesteInntektsmelding(
-      eksisterendeInntektsmeldinger as RefusjonOmsorgspengerResponseDto[],
-    );
-
-    defaultValues = mapSendInntektsmeldingTilSkjema(
-      opplysninger,
-      sisteInntektsmelding,
-    );
-  } else {
-    defaultValues = {
-      meta: {
-        step: 1,
-        skalKorrigereInntekt: false,
-        harSendtSøknad: false,
+  const defaultValues: DeepPartial<RefusjonOmsorgspengerFormData> = {
+    meta: {
+      step: 1,
+      skalKorrigereInntekt: false,
+    },
+    fraværHeleDager: [],
+    fraværDelerAvDagen: [],
+    kontaktperson: {
+      navn: innloggetBruker?.fornavn ? lagFulltNavn(innloggetBruker) : "",
+      telefonnummer: innloggetBruker?.telefon || "",
+    },
+    endringAvInntektÅrsaker: [
+      {
+        årsak: "",
+        fom: "",
+        tom: "",
       },
-      fraværHeleDager: [],
-      fraværDelerAvDagen: [],
-      kontaktperson: {
-        navn: innloggetBruker?.fornavn ? lagFulltNavn(innloggetBruker) : "",
-        telefonnummer: innloggetBruker?.telefon || "",
-      },
-      endringAvInntektÅrsaker: [
-        {
-          årsak: "",
-          fom: "",
-          tom: "",
-        },
-      ],
-    };
-  }
+    ],
+  };
 
   const form = useForm<RefusjonOmsorgspengerFormData>({
     resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),

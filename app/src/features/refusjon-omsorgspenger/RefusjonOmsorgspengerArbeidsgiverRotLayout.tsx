@@ -24,13 +24,14 @@ export const RefusjonOmsorgspengerArbeidsgiverRotLayout = () => {
   }, [location.pathname]);
 
   const erPåKvitteringssiden = location.pathname.includes("kvittering");
+  const erPåVisSiden = location.pathname.includes("vis");
   return (
     <div>
       <RefusjonOmsorgspengerArbeidsgiverForm>
         <RotLayout
           background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
-          medAvbrytKnapp={!erPåKvitteringssiden}
-          medHjelpetekstToggle={!erPåKvitteringssiden}
+          medAvbrytKnapp={!erPåKvitteringssiden && !erPåVisSiden}
+          medHjelpetekstToggle={!erPåKvitteringssiden && !erPåVisSiden}
           medHvitBoks={!erPåKvitteringssiden}
           tittel="Søknad om refusjon for omsorgspenger"
           undertittel={

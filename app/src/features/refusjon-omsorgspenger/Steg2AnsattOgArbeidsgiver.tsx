@@ -46,7 +46,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   useEffect(() => {
     setValue("meta.step", 2);
-    if (getValues("meta.harSendtSøknad")) {
+    if (getValues("meta.innsendtSøknadId")) {
       navigate({
         from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
         to: "../6-kvittering",

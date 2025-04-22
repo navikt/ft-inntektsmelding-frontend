@@ -42,6 +42,7 @@ import {
   formatOppramsing,
   leggTilGenitiv,
 } from "~/utils.ts";
+import { navnPåMåned } from "~/utils/date-utils";
 
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
@@ -714,11 +715,3 @@ export const PÅKREVDE_ENDRINGSÅRSAK_FELTER = {
   EndringAvInntektÅrsaker & "",
   { fom: boolean; tom: boolean; bleKjentFom: boolean; tomErValgfritt?: boolean }
 >;
-
-function navnPåMåned(date: string) {
-  const måned = new Intl.DateTimeFormat("no", { month: "long" }).format(
-    new Date(date),
-  );
-
-  return capitalizeSetning(måned) ?? "";
-}

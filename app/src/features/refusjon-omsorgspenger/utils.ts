@@ -93,7 +93,9 @@ export const mapSendInntektsmeldingTilSkjema = (
     meta: {
       step: 5,
       skalKorrigereInntekt: !!inntektsmelding.endringAvInntektÅrsaker?.length,
-      harSendtSøknad: false,
+      innsendtSøknadId: inntektsmelding.id,
+      startdato: inntektsmelding.startdato,
+      opprettetTidspunkt: inntektsmelding.opprettetTidspunkt,
     },
     kontaktperson: {
       navn: inntektsmelding.kontaktperson.navn,
@@ -117,14 +119,7 @@ export const mapSendInntektsmeldingTilSkjema = (
     ansattesFødselsnummer: opplysninger.person.fødselsnummer,
     ansattesFornavn: opplysninger.person.fornavn,
     ansattesEtternavn: opplysninger.person.etternavn,
-    årForRefusjon: new Date(
-      utledFørsteFraværsdag(
-        inntektsmelding.omsorgspenger?.fraværHeleDager ?? [],
-        inntektsmelding.omsorgspenger?.fraværDelerAvDagen ?? [],
-      ),
-    )
-      .getFullYear()
-      .toString(),
+    årForRefusjon: new Date(inntektsmelding.startdato).getFullYear().toString(),
     harUtbetaltLønn: "ja",
   } satisfies RefusjonOmsorgspengerFormData;
 };

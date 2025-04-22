@@ -14,7 +14,7 @@ const InntektsmeldingContainer = () => {
   useEffect(() => {
     if (opplysninger.ytelse === "OMSORGSPENGER") {
       navigate({
-        to: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
+        to: "/refusjon-omsorgspenger/$organisasjonsnummer/vis",
         params: {
           organisasjonsnummer: opplysninger.arbeidsgiver.organisasjonNummer,
         },

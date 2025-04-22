@@ -48,7 +48,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
 
   useEffect(() => {
     setValue("meta.step", 3);
-    if (getValues("meta.harSendtSøknad")) {
+    if (getValues("meta.innsendtSøknadId")) {
       navigate({
         from: "/refusjon-omsorgspenger/$organisasjonsnummer/3-omsorgsdager",
         to: "../6-kvittering",
