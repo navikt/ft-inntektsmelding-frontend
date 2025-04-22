@@ -13,7 +13,7 @@ import {
   VStack,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -36,6 +36,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
   const { handleSubmit, getValues, setValue } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const navigate = useNavigate();
+  const { id } = useSearch({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
+  });
 
   useEffect(() => {
     setValue("meta.step", 4);
@@ -57,15 +60,18 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
       to: "../5-oppsummering",
+      search: { id },
     });
   });
 
   const fraværHeleDager = getValues("fraværHeleDager");
   const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+  const dagerSomSkalTrekkes = getValues("dagerSomSkalTrekkes");
 
   const førsteFraværsdato = [
     ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
     ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
+    ...(dagerSomSkalTrekkes?.map((dag) => dag.fom) ?? []),
   ].sort()[0];
 
   const {
@@ -149,7 +155,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
             <Button
               as={Link}
               icon={<ArrowLeftIcon />}
-              to="../3-omsorgsdager"
+              to={id ? `../3-omsorgsdager?id=${id}` : "../3-omsorgsdager"}
               variant="secondary"
             >
               Forrige steg

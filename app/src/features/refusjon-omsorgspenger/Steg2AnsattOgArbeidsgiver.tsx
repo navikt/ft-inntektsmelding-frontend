@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 
@@ -44,6 +44,10 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
+  const { id } = useSearch({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
+  });
+
   useEffect(() => {
     setValue("meta.step", 2);
     if (getValues("meta.innsendtSøknadId")) {
@@ -65,6 +69,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
+      search: { id },
     });
   });
 
@@ -211,7 +216,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               Er kontaktinformasjonen riktig?
             </Heading>
             <BodyLong>
-              Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi får
+              Hvis vi har spørsmål om refusjonskravet, er det viktig at vi får
               kontakt med deg. Bruk derfor direktenummeret ditt i stedet for
               nummeret til sentralbordet. Hvis du vet at du vil være
               utilgjengelig fremover, kan du endre til en annen kontaktperson.
@@ -223,7 +228,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <Button
             as={Link}
             icon={<ArrowLeftIcon />}
-            to="../1-intro"
+            to={id ? `../1-intro?id=${id}` : "../1-intro"}
             variant="secondary"
           >
             Forrige steg
