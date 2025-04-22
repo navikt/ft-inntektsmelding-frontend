@@ -228,7 +228,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <Button
             as={Link}
             icon={<ArrowLeftIcon />}
-            to={id ? `../1-intro?id=${id}` : "../1-intro"}
+            to={"../1-intro"}
             variant="secondary"
           >
             Forrige steg

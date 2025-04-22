@@ -12,12 +12,11 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
-import { getRouteApi, Link } from "@tanstack/react-router";
+import { getRouteApi, Link, useSearch } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries.ts";
 import {
-  finnSenesteInntektsmelding,
   formatDatoTidKort,
   formatFodselsnummer,
   formatKroner,
@@ -27,7 +26,6 @@ import { navnPåMåned } from "~/utils/date-utils.ts";
 
 import { endringsårsak } from "../skjema-moduler/Inntekt.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
-import { RefusjonOmsorgspengerResponseDto } from "./api/mutations.ts";
 import {
   RefusjonOmsorgspengerFormData,
   RefusjonOmsorgspengerSchemaMedValidering,
@@ -43,14 +41,20 @@ export const VisInnsendtRefusjonskrav = () => {
 
   const route = getRouteApi("/refusjon-omsorgspenger/$organisasjonsnummer");
   const { eksisterendeInntektsmeldinger, opplysninger } = route.useLoaderData();
-  const sisteInntektsmelding = finnSenesteInntektsmelding(
-    eksisterendeInntektsmeldinger as RefusjonOmsorgspengerResponseDto[],
+  const { id } = useSearch({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/vis",
+  });
+  const inntektsmelding = eksisterendeInntektsmeldinger?.find(
+    (inntektsmelding) => inntektsmelding.foresporselUuid === id,
   );
-  const { getValues } = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+
+  if (!inntektsmelding) {
+    return <div>Inntektsmelding ikke funnet</div>;
+  }
 
   const defaultValues = mapSendInntektsmeldingTilSkjema(
     opplysninger,
-    sisteInntektsmelding,
+    inntektsmelding,
   );
 
   const form = useForm<RefusjonOmsorgspengerFormData>({
@@ -61,11 +65,10 @@ export const VisInnsendtRefusjonskrav = () => {
   });
 
   const måneder = [
-    ...(sisteInntektsmelding?.omsorgspenger.fraværHeleDager?.flatMap((dag) => [
+    ...(inntektsmelding?.omsorgspenger.fraværHeleDager?.map((dag) =>
       navnPåMåned(dag.fom).toLowerCase(),
-      navnPåMåned(dag.tom).toLowerCase(),
-    ]) ?? []),
-    ...(sisteInntektsmelding?.omsorgspenger.fraværDelerAvDagen?.map((dag) =>
+    ) ?? []),
+    ...(inntektsmelding?.omsorgspenger.fraværDelerAvDagen?.map((dag) =>
       navnPåMåned(dag.dato).toLowerCase(),
     ) ?? []),
   ];
@@ -85,7 +88,7 @@ export const VisInnsendtRefusjonskrav = () => {
           <Detail uppercase>
             sendt inn{" "}
             {formatDatoTidKort(
-              new Date(sisteInntektsmelding?.opprettetTidspunkt || ""),
+              new Date(inntektsmelding?.opprettetTidspunkt || ""),
             )}
           </Detail>
         </div>
@@ -111,10 +114,8 @@ export const VisInnsendtRefusjonskrav = () => {
         <div className="flex justify-around">
           <Button
             as="a"
-            download={`refusjon-omsorgspenger-søknad-kvittering-${getValues("meta.innsendtSøknadId")}.pdf`}
-            href={hentInntektsmeldingPdfUrl(
-              getValues("meta.innsendtSøknadId") as number,
-            )}
+            download={`refusjon-omsorgspenger-søknad-kvittering-${inntektsmelding?.id}.pdf`}
+            href={hentInntektsmeldingPdfUrl(inntektsmelding?.id)}
             icon={<DownloadIcon />}
             iconPosition="left"
             variant="tertiary"

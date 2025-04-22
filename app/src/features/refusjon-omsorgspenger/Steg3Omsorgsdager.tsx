@@ -155,11 +155,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
             <Button
               as={Link}
               icon={<ArrowLeftIcon />}
-              to={
-                id
-                  ? `../2-ansatt-og-arbeidsgiver?id=${id}`
-                  : "../2-ansatt-og-arbeidsgiver"
-              }
+              to={"../2-ansatt-og-arbeidsgiver"}
               variant="secondary"
             >
               Forrige steg

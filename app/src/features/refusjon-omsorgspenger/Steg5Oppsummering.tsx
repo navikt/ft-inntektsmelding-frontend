@@ -11,7 +11,7 @@ import {
   FormSummaryValue,
 } from "@navikt/ds-react/FormSummary";
 import { ListItem } from "@navikt/ds-react/List";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { formatFodselsnummer, formatKroner, lagFulltNavn } from "~/utils.ts";
@@ -49,10 +49,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     }
   }, []);
 
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-  });
-
   const { mutate: sendInntektsmeldingOmsorgspengerRefusjon, isPending } =
     sendInntektsmeldingOmsorgspengerRefusjonMutation({
       onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
@@ -77,7 +73,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <Button
           as={Link}
           icon={<ArrowLeftIcon />}
-          to={id ? `../4-refusjon?id=${id}` : "../4-refusjon"}
+          to={"../4-refusjon"}
           variant="secondary"
         >
           Forrige steg
@@ -102,17 +98,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
 const OppsummeringRefusjon = () => {
   const { getValues, formState } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-  });
   return (
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">Om refusjon</FormSummaryHeading>
-        <FormSummaryEditLink
-          as={Link}
-          to={id ? `../1-intro?id=${id}` : "../1-intro"}
-        />
+        <FormSummaryEditLink as={Link} to={"../1-intro"} />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -142,23 +132,13 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
   const { getValues, formState } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
   const innloggetBruker = useInnloggetBruker();
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-  });
   return (
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">
           Arbeidsgiver og den ansatte
         </FormSummaryHeading>
-        <FormSummaryEditLink
-          as={Link}
-          to={
-            id
-              ? `../2-ansatt-og-arbeidsgiver?id=${id}`
-              : "../2-ansatt-og-arbeidsgiver"
-          }
-        />
+        <FormSummaryEditLink as={Link} to={"../2-ansatt-og-arbeidsgiver"} />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -217,9 +197,6 @@ const OppsummeringArbeidsgiverOgAnsatt = () => {
 const OppsummeringOmsorgsdager = () => {
   const { getValues, formState } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-  });
 
   const fraværHeleDager = getValues("fraværHeleDager");
   const harFraværHeleDager = (fraværHeleDager?.length ?? 0) > 0;
@@ -233,10 +210,7 @@ const OppsummeringOmsorgsdager = () => {
         <FormSummaryHeading level="3">
           Omsorgsdager dere søker utbetaling for
         </FormSummaryHeading>
-        <FormSummaryEditLink
-          as={Link}
-          to={id ? `../3-omsorgsdager?id=${id}` : "../3-omsorgsdager"}
-        />
+        <FormSummaryEditLink as={Link} to={"../3-omsorgsdager"} />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -321,20 +295,13 @@ export const OppsummeringMånedslønn = () => {
   const { getValues, formState } =
     useRefusjonOmsorgspengerArbeidsgiverFormContext();
 
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering",
-  });
-
   return (
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">
           Beregnet månedslønn for refusjon
         </FormSummaryHeading>
-        <FormSummaryEditLink
-          as={Link}
-          to={id ? `../4-refusjon?id=${id}` : "../4-refusjon"}
-        />
+        <FormSummaryEditLink as={Link} to={"../4-refusjon"} />
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
