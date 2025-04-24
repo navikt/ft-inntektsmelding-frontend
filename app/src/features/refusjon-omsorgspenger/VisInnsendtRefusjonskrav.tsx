@@ -63,13 +63,16 @@ export const VisInnsendtRefusjonskrav = () => {
 
   const sisteMåned = unikeMåneder?.[unikeMåneder.length - 1];
 
+  const månedtekst =
+    unikeMåneder.length === 1
+      ? `for ${unikeMåneder[0]}`
+      : `for ${unikeMåneder?.slice(0, -1).join(", ")} og ${sisteMåned}`;
   return (
     <FormProvider {...form}>
       <div className="bg-bg-default rounded-md flex flex-col gap-6">
         <div>
           <Heading level="2" size="medium">
-            {`Innsendt refusjonskrav (for dager i ${måneder?.slice(0, -1).join(", ")}
-         og ${sisteMåned})`}
+            {`Innsendt refusjonskrav ${månedtekst}`}
           </Heading>
           <Detail uppercase>
             sendt inn{" "}
