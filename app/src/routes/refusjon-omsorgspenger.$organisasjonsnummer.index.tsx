@@ -1,28 +1,19 @@
-import {
-  createFileRoute,
-  redirect,
-  useParams,
-  useSearch,
-} from "@tanstack/react-router";
+import { createFileRoute, redirect, useParams } from "@tanstack/react-router";
 
 export const Route = createFileRoute(
   "/refusjon-omsorgspenger/$organisasjonsnummer/",
 )({
   component: () => {
-    const { id } = useSearch({
-      from: "/refusjon-omsorgspenger/$organisasjonsnummer",
-    });
-
-    const { organisasjonsnummer } = useParams({
-      from: "/refusjon-omsorgspenger/$organisasjonsnummer",
+    const { organisasjonsnummer, id } = useParams({
+      from: "/refusjon-omsorgspenger/$organisasjonsnummer/$id",
     });
 
     if (id) {
       return redirect({
-        to: "/refusjon-omsorgspenger/$organisasjonsnummer/vis",
-        search: { id },
+        to: "/refusjon-omsorgspenger/$organisasjonsnummer/$id",
         params: {
           organisasjonsnummer,
+          id,
         },
       });
     }

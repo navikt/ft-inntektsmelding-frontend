@@ -38,11 +38,9 @@ export const Route = createFileRoute("/$id")({
     ]);
     if (opplysninger.ytelse === "OMSORGSPENGER") {
       redirect({
-        to: "/refusjon-omsorgspenger/$organisasjonsnummer/vis",
+        to: "/refusjon-omsorgspenger/$organisasjonsnummer/$id",
         params: {
           organisasjonsnummer: opplysninger.arbeidsgiver.organisasjonNummer,
-        },
-        search: {
           id: opplysninger.forespørselUuid,
         },
         throw: true,

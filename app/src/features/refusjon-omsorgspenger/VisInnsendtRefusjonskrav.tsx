@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DownloadIcon } from "@navikt/aksel-icons";
 import { Alert, Button, Detail, Heading, VStack } from "@navikt/ds-react";
-import { getRouteApi, Link, useSearch } from "@tanstack/react-router";
+import { getRouteApi, Link, useParams } from "@tanstack/react-router";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries.ts";
@@ -24,11 +24,12 @@ export const VisInnsendtRefusjonskrav = () => {
     "Innsendt refusjonskrav – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
 
-  const route = getRouteApi("/refusjon-omsorgspenger/$organisasjonsnummer");
+  const route = getRouteApi("/refusjon-omsorgspenger/$organisasjonsnummer/$id");
   const { eksisterendeInntektsmeldinger, opplysninger } = route.useLoaderData();
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/vis",
+  const { id } = useParams({
+    from: "/refusjon-omsorgspenger/$organisasjonsnummer/$id",
   });
+
   const inntektsmelding = eksisterendeInntektsmeldinger?.find(
     (inntektsmelding) => inntektsmelding.foresporselUuid === id,
   );
