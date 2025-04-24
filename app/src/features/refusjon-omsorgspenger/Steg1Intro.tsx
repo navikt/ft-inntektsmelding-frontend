@@ -9,7 +9,7 @@ import {
   RadioGroup,
   VStack,
 } from "@navikt/ds-react";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import { capitalizeSetning } from "~/utils.ts";
@@ -25,9 +25,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
   const innloggetBruker = useInnloggetBruker();
 
   const navigate = useNavigate();
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",
-  });
   const iÅr = new Date().getFullYear();
   const iFjor = iÅr - 1;
 
@@ -38,7 +35,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/1-intro",
       to: "../2-ansatt-og-arbeidsgiver",
-      search: { id },
     });
   });
 

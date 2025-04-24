@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@navikt/ds-react";
 import { useQuery } from "@tanstack/react-query";
-import { Link, useNavigate, useSearch } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { Controller } from "react-hook-form";
 
@@ -44,10 +44,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     hentArbeidstakerOptions(fødselsnummer ?? ""),
   );
 
-  const { id } = useSearch({
-    from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
-  });
-
   useEffect(() => {
     setValue("meta.step", 2);
     if (getValues("meta.innsendtSøknadId")) {
@@ -69,7 +65,6 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
     navigate({
       from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
       to: "../3-omsorgsdager",
-      search: { id },
     });
   });
 
