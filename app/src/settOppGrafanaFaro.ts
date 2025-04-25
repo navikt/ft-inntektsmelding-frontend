@@ -1,5 +1,4 @@
-import { initializeFaro } from "@grafana/faro-web-sdk";
-import { TracingInstrumentation } from "@grafana/faro-web-tracing";
+import { getWebInstrumentations, initializeFaro } from "@grafana/faro-web-sdk";
 
 if (import.meta.env.PROD) {
   initializeFaro({
@@ -9,7 +8,7 @@ if (import.meta.env.PROD) {
     app: {
       name: lagGrafanaAppName(),
     },
-    instrumentations: [new TracingInstrumentation()],
+    instrumentations: [...getWebInstrumentations({ captureConsole: true })],
   });
 }
 
