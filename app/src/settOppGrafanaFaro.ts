@@ -9,10 +9,7 @@ if (import.meta.env.PROD) {
     app: {
       name: lagGrafanaAppName(),
     },
-    instrumentations: [
-      ...getWebInstrumentations({ captureConsole: true }),
-      new TracingInstrumentation(),
-    ],
+    instrumentations: [new TracingInstrumentation()],
   });
 }
 
