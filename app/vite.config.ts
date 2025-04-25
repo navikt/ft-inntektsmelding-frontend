@@ -18,4 +18,7 @@ export default defineConfig({
     },
     origin: "http://localhost:5173",
   },
+  build: {
+    sourcemap: true,
+  },
 });
