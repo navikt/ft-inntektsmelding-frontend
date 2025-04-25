@@ -1,4 +1,4 @@
-import { getWebInstrumentations, initializeFaro } from "@grafana/faro-web-sdk";
+import { initializeFaro } from "@grafana/faro-web-sdk";
 import { TracingInstrumentation } from "@grafana/faro-web-tracing";
 
 if (import.meta.env.PROD) {
