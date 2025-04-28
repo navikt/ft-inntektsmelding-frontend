@@ -383,6 +383,7 @@ const DagerSomSkalTrekkes = () => {
       <Heading level="3" size="small">
         Dager dere ønsker å trekke
       </Heading>
+
       {fields.map((periode, index) => (
         <HStack
           className="border-l-4 border-bg-subtle pl-4 py-2"
@@ -414,6 +415,15 @@ const DagerSomSkalTrekkes = () => {
           </div>
         </HStack>
       ))}
+      {fields.length > 0 && (
+        <>
+          <BodyLong className="text-text-subtle" size="small">
+            Timer skal avrundes til nærmeste halve time og beregnes basert på en
+            7,5 timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær
+            arbeidstid, må fraværet omregnes.
+          </BodyLong>
+        </>
+      )}
       <div>
         <Button
           icon={<PlusIcon />}
