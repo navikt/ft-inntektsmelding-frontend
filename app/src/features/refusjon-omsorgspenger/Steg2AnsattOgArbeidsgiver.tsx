@@ -46,7 +46,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
 
   useEffect(() => {
     setValue("meta.step", 2);
-    if (getValues("meta.harSendtSøknad")) {
+    if (getValues("meta.innsendtSøknadId")) {
       navigate({
         from: "/refusjon-omsorgspenger/$organisasjonsnummer/2-ansatt-og-arbeidsgiver",
         to: "../6-kvittering",
@@ -140,7 +140,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <>
                 <Select
                   label="Velg arbeidsforhold"
-                  {...register("organisasjonsnummer")}
+                  {...register("organisasjonsnummer", {
+                    value: "",
+                  })}
                   error={formState.errors.organisasjonsnummer?.message}
                 >
                   {data.arbeidsforhold.map((arbeidsforhold) => (
@@ -211,7 +213,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               Er kontaktinformasjonen riktig?
             </Heading>
             <BodyLong>
-              Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi får
+              Hvis vi har spørsmål om refusjonskravet, er det viktig at vi får
               kontakt med deg. Bruk derfor direktenummeret ditt i stedet for
               nummeret til sentralbordet. Hvis du vet at du vil være
               utilgjengelig fremover, kan du endre til en annen kontaktperson.
@@ -223,7 +225,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
           <Button
             as={Link}
             icon={<ArrowLeftIcon />}
-            to="../1-intro"
+            to={"../1-intro"}
             variant="secondary"
           >
             Forrige steg

@@ -1,10 +1,72 @@
 import { idnr } from "@navikt/fnrvalidator";
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
 import { logDev } from "~/utils";
 
+import {
+  RefusjonOmsorgspengerResponseDto,
+  RefusjonOmsorgspengerResponseDtoSchema,
+} from "./mutations";
+
 const SERVER_URL = `${import.meta.env.BASE_URL}/server/api`;
+
+interface InntektsmeldingForÅrPayload {
+  aktørId: string;
+  arbeidsgiverIdent: string;
+  år: string;
+}
+
+export const useHentInntektsmeldingForÅr = (
+  payload: InntektsmeldingForÅrPayload,
+) => {
+  const hentInntektsmeldinger = async () => {
+    try {
+      const params = new URLSearchParams({
+        aktørId: payload.aktørId,
+        arbeidsgiverIdent: payload.arbeidsgiverIdent,
+        år: payload.år,
+      });
+
+      const response = await fetch(
+        `${SERVER_URL}/imdialog/inntektsmeldinger-for-aar?${params.toString()}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch inntektsmeldinger: ${response.statusText}`,
+        );
+      }
+      const parsedJson = z
+        .array(RefusjonOmsorgspengerResponseDtoSchema)
+        .safeParse(await response.json());
+      if (!parsedJson.success) {
+        logDev("error", "henting inntektsmelding feilet", parsedJson.error);
+        throw new Error("henting inntektsmelding feilet");
+      }
+      return parsedJson.data;
+    } catch (error) {
+      logDev("error", "henting inntektsmelding feilet", error);
+      throw error;
+    }
+  };
+
+  return useQuery<
+    RefusjonOmsorgspengerResponseDto[],
+    Error,
+    RefusjonOmsorgspengerResponseDto[],
+    ["inntektsmeldinger-for-aar", InntektsmeldingForÅrPayload]
+  >({
+    queryKey: ["inntektsmeldinger-for-aar", payload],
+    queryFn: hentInntektsmeldinger,
+  });
+};
 
 const ArbeidstakerOppslagDtoSchema = z.object({
   personinformasjon: z.object({

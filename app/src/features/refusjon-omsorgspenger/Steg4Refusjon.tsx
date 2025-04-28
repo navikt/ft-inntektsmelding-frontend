@@ -39,7 +39,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
 
   useEffect(() => {
     setValue("meta.step", 4);
-    if (getValues("meta.harSendtSøknad")) {
+    if (getValues("meta.innsendtSøknadId")) {
       navigate({
         from: "/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon",
         to: "../6-kvittering",
@@ -62,10 +62,12 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
 
   const fraværHeleDager = getValues("fraværHeleDager");
   const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
+  const dagerSomSkalTrekkes = getValues("dagerSomSkalTrekkes");
 
   const førsteFraværsdato = [
     ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
     ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
+    ...(dagerSomSkalTrekkes?.map((dag) => dag.fom) ?? []),
   ].sort()[0];
 
   const {

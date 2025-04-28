@@ -33,6 +33,7 @@ export const RefusjonOmsorgspengerResponseDtoSchema =
   RefusjonOmsorgspengerDtoSchema.extend({
     id: z.number(),
     opprettetTidspunkt: z.string(),
+    innsendtTidspunkt: z.string().optional(),
   });
 
 export type RefusjonOmsorgspengerDto = z.infer<
