@@ -1,21 +1,28 @@
-import { createFileRoute, getRouteApi } from "@tanstack/react-router";
-
-const route = getRouteApi("/$id");
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$id/")({
-  component: () => {
-    const params = route.useParams();
-    const navigate = route.useNavigate();
-    const { eksisterendeInntektsmeldinger } = route.useLoaderData();
-
+  loader: async ({ params, parentMatchPromise }) => {
+    const { loaderData } = await parentMatchPromise;
+    const eksisterendeInntektsmeldinger =
+      loaderData?.eksisterendeInntektsmeldinger;
+    if (!eksisterendeInntektsmeldinger) {
+      throw new Error("No loader data");
+    }
     if (eksisterendeInntektsmeldinger[0] === undefined) {
-      return navigate({
-        from: "/$id",
+      redirect({
         to: "/$id/dine-opplysninger",
+        params,
         replace: true,
+        throw: true,
+      });
+    } else {
+      redirect({
+        to: "/$id/vis",
+        params,
+        replace: true,
+        throw: true,
       });
     }
-
-    return navigate({ to: "/$id/vis", params, replace: true });
   },
+  component: () => null,
 });

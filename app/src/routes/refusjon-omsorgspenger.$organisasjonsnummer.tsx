@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { hentInnloggetBrukerDataOptions } from "~/features/refusjon-omsorgspenger/api/queries";
 import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverRotLayout";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { queryClient } from "~/main";
 
 export const Route = createFileRoute(
@@ -12,12 +11,10 @@ export const Route = createFileRoute(
 )({
   component: RefusjonOmsorgspengerArbeidsgiverRotLayout,
   pendingComponent: () => (
-    <RotLayout medHvitBoks={true} tittel="Inntektsmelding" undertittel={null}>
-      <div className="my-6 flex flex-col items-center gap-4">
-        <Loader className="mx-auto" size="2xlarge" />
-        <BodyShort className="text-center">Henter opplysninger…</BodyShort>
-      </div>
-    </RotLayout>
+    <div className="my-6 flex flex-col items-center gap-4">
+      <Loader className="mx-auto" size="2xlarge" />
+      <BodyShort className="text-center">Henter opplysninger…</BodyShort>
+    </div>
   ),
   loader: async ({ params }) => {
     const organisasjonsnummerSchema = z

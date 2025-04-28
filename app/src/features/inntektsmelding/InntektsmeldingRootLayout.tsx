@@ -15,7 +15,6 @@ const route = getRouteApi("/$id");
 export const InntektsmeldingRootLayout = () => {
   const { id } = route.useParams();
   const opplysninger = useOpplysninger();
-
   return (
     <InntektsmeldingRootLayoutComponent
       skjemaId={id}
@@ -35,7 +34,6 @@ export const InntektsmeldingRootLayoutComponent = (
   props: InntektsmeldingRootLayoutProps,
 ) => {
   const location = useLocation();
-
   useEffect(() => {
     setBreadcrumbs([
       {

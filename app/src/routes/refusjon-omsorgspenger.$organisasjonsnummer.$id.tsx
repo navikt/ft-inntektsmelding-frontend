@@ -7,7 +7,6 @@ import { SERVER_URL } from "~/api/mutations";
 import { hentOpplysningerData } from "~/api/queries";
 import { RefusjonOmsorgspengerResponseDtoSchema } from "~/features/refusjon-omsorgspenger/api/mutations";
 import { VisInnsendtRefusjonskrav } from "~/features/refusjon-omsorgspenger/VisInnsendtRefusjonskrav";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { logDev } from "~/utils";
 
 import { ARBEIDSGIVER_INITERT_ID } from "./opprett";
@@ -54,12 +53,10 @@ export const Route = createFileRoute(
 )({
   component: RouteComponent,
   pendingComponent: () => (
-    <RotLayout medHvitBoks={true} tittel="Inntektsmelding" undertittel={null}>
-      <div className="my-6 flex flex-col items-center gap-4">
-        <Loader className="mx-auto" size="2xlarge" />
-        <BodyShort className="text-center">Henter opplysninger…</BodyShort>
-      </div>
-    </RotLayout>
+    <div className="my-6 flex flex-col items-center gap-4">
+      <Loader className="mx-auto" size="2xlarge" />
+      <BodyShort className="text-center">Henter opplysninger…</BodyShort>
+    </div>
   ),
   loader: async ({ params }) => {
     const [opplysninger, eksisterendeInntektsmeldinger] = await Promise.all([
