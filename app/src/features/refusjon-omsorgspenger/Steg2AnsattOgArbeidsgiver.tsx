@@ -140,7 +140,9 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
               <>
                 <Select
                   label="Velg arbeidsforhold"
-                  {...register("organisasjonsnummer")}
+                  {...register("organisasjonsnummer", {
+                    value: "",
+                  })}
                   error={formState.errors.organisasjonsnummer?.message}
                 >
                   {data.arbeidsforhold.map((arbeidsforhold) => (
