@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
-import { Button, Heading, VStack } from "@navikt/ds-react";
+import { Alert, Button, Heading, VStack } from "@navikt/ds-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 
@@ -39,13 +39,16 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
     }
   }, []);
 
-  const { mutate: sendInntektsmeldingOmsorgspengerRefusjon, isPending } =
-    sendInntektsmeldingOmsorgspengerRefusjonMutation({
-      onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
-        setValue("meta.innsendtSøknadId", v.id);
-        navigateTilKvittering();
-      },
-    });
+  const {
+    mutate: sendInntektsmeldingOmsorgspengerRefusjon,
+    isPending,
+    isError,
+  } = sendInntektsmeldingOmsorgspengerRefusjonMutation({
+    onSuccess: (v: RefusjonOmsorgspengerResponseDto) => {
+      setValue("meta.innsendtSøknadId", v.id);
+      navigateTilKvittering();
+    },
+  });
 
   return (
     <div className="bg-bg-default rounded-md flex flex-col gap-6">
@@ -59,6 +62,11 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
         <OppsummeringOmsorgsdager redigerbar={true} />
         <OppsummeringMånedslønn redigerbar={true} />
       </VStack>
+      {isError && (
+        <Alert variant="error">
+          Noe gikk galt. Vennligst prøv igjen senere.
+        </Alert>
+      )}
       <div className="flex gap-4 mt-4">
         <Button
           as={Link}
