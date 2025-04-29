@@ -90,9 +90,12 @@ export const Steg6Kvittering = () => {
             question="Hvordan korrigere hvis noe er feil?"
           >
             <BodyLong>
-              Du finner refusjonskravet ved å logge inn på Min Side
-              Arbeidsgiver. Der kan du se refusjonskravet, og eventuelt endre
-              informasjonen. Når vi får inn et nytt eller endret refusjonskrav,
+              Du finner innsendte refusjonskrav på{" "}
+              <Link href="/min-side-arbeidsgiver/saksoversikt">
+                saksoversikten på Min side - arbeidsgiver
+              </Link>
+              . Der kan du se alle innsendte refusjonskrav, og eventuelt sende
+              inn et nytt for å endre. Når vi får inn ett nytt refusjonskrav,
               revurderer vi saken. Hvis arbeidsgiveren har fått for mye
               utbetalt, trekkes dette i neste utbetaling.
             </BodyLong>
