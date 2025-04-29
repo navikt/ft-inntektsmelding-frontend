@@ -72,7 +72,7 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
       navn: validatedSkjemaState.kontaktperson.navn,
       telefonnummer: validatedSkjemaState.kontaktperson.telefonnummer,
     },
-    inntekt: inntekt as number,
+    inntekt: Number(String(inntekt).replaceAll(",", ".")),
     startdato: førsteFraværsdag,
     ytelse: "OMSORGSPENGER",
     aktorId: validatedSkjemaState.ansattesAktørId as string,
@@ -80,7 +80,7 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
     refusjon: [
       {
         fom: førsteFraværsdag,
-        beløp: inntekt as number,
+        beløp: Number(String(inntekt).replaceAll(",", ".")),
       },
     ],
     omsorgspenger: {

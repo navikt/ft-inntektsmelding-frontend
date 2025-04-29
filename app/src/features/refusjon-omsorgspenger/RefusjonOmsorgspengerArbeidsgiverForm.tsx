@@ -294,6 +294,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
               path: ["fraværDelerAvDagen", index, "timer"],
             });
           }
+          // kun to desimaler
+          if (dag.timer.split(".")?.[1]?.length > 2) {
+            ctx.addIssue({
+              code: z.ZodIssueCode.custom,
+              message: "Timer kan ikke ha mer enn 2 desimaler",
+              path: ["fraværDelerAvDagen", index, "timer"],
+            });
+          }
         } else {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
