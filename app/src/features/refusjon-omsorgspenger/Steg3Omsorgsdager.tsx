@@ -418,9 +418,10 @@ const DagerSomSkalTrekkes = () => {
       {fields.length > 0 && (
         <>
           <BodyLong className="text-text-subtle" size="small">
-            Timer skal avrundes til nærmeste halve time og beregnes basert på en
-            7,5 timers arbeidsdag. Hvis arbeidstakeren har en annen ordinær
-            arbeidstid, må fraværet omregnes.
+            Dager eller perioder du legger inn her vil trekke/korrigere
+            tidligere innsendt refusjonskrav for de samme dagene. Skal du endre
+            en dag fra hel dag med refusjon til delvis dag med refusjon, må du
+            bruke feltet over &quot;Delvise dager dere søker refusjon for&quot;.
           </BodyLong>
         </>
       )}
@@ -448,10 +449,10 @@ const TiFørsteOmsorgsdagerInfo = () => {
   if (harDekket10FørsteOmsorgsdager === "ja") {
     return (
       <HjelpetekstAlert>
-        Du kan søke om utbetaling fra Nav fra og med den 11. dagen hvis den
+        Du kan søke om refusjon fra Nav fra og med den 11. dagen hvis den
         ansatte har rett på flere enn 10 omsorgsdager. Ved kronisk sykt barn
-        over 13 år, og ingen andre barn under 12 år, kan du søke om utbetaling
-        fra første fraværsdag.
+        over 13 år, og ingen andre barn under 12 år, kan du søke om refusjon fra
+        første fraværsdag.
       </HjelpetekstAlert>
     );
   }
@@ -468,7 +469,7 @@ const TiFørsteOmsorgsdagerInfo = () => {
           </BodyLong>
           <BodyShort>
             Ved kronisk sykt barn over 13 år, og ingen andre barn under 12 år,
-            kan du søke om utbetaling fra første fraværsdag.
+            kan du søke om refusjon fra første fraværsdag.
           </BodyShort>
           <BodyLong>
             Hvis den ansatte ikke har jobbet fire uker før fraværet, kan en

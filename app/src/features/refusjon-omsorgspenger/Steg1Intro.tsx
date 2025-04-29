@@ -64,7 +64,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
             sykt barn.
           </BodyLong>
           <BodyLong>
-            {`Du kan søke for perioder inntil tre måneder tilbake i tid. Du kan kun søke om utbetaling innenfor ett kalenderår av gangen.
+            {`Du kan søke for perioder inntil tre måneder tilbake i tid. Du kan kun søke om refusjon innenfor ett kalenderår av gangen.
             Det betyr at hvis du skal søke om refusjon for perioder i både ${iFjor} og ${iÅr}, må du sende to separate søknader.`}
           </BodyLong>
           <BodyLong>
@@ -99,7 +99,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
               </BodyLong>
               <BodyLong>
                 Hvis dere ikke har utbetalt lønn under fraværet, kan den ansatte
-                selv søke om utbetaling av omsorgspenger. Vi jobber med en ny
+                selv søke om refusjon av omsorgspenger. Vi jobber med en ny
                 løsning for innsending av inntektsmelding når dere ikke skal ha
                 refusjon. Inntil videre må dere bruker arbeidsgivers eget lønns-
                 og personalsystem eller Altinn for å sende inntektsmelding i

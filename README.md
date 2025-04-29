@@ -53,6 +53,7 @@ cd app && npm run dev:fp
    Bytt ut ${ORGNR} med orgnummeret som er knyttet til testbrukeren du logget inn med.
    Her er et eksempel: https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/refusjon-omsorgspenger/315786940/1-intro
    Logg inn med testid 16878397960
+   Bruk 28869097804 som arbeidstaker i søknaden
 
 
 ## Testbrukere
@@ -68,6 +69,8 @@ Tilgjengelige test-arbeidsgivere:
 * Orgnr: 315630304 - LAV BLØT KATT MOSKUS. Kontaktperson hos arbeidsgiver:22810699640 FANTASILØS LAMPE
 * Orgnnr: 311536753- TROSSIG NATURSTRIDIG TIGER AS. Kontaktperson hos arbeidsgiver: 09810198874 UTØRST GALLUPMÅLING
 * Orgnr: 315853370 - INTERESSANT INTUITIV KATT DIAMETER. Kontaktperson hos arbeidsgiver: 09810198874 UTØRST GALLUPMÅLING
+
+For å finne arbeidstakere, søk på organisasjonen i Dolly https://dolly.ekstern.dev.nav.no/tenor/organisasjoner og finn arbeidstakere under arbeidsforhold.
 
 
 Testbruker delt med sykepenger
