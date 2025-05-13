@@ -451,7 +451,7 @@ const TiFørsteOmsorgsdagerInfo = () => {
       <HjelpetekstAlert>
         Du kan søke om refusjon fra Nav fra og med den 11. dagen hvis den
         ansatte har rett på flere enn 10 omsorgsdager. Ved kronisk sykt barn
-        over 13 år, og ingen andre barn under 12 år, kan du søke om refusjon fra
+        over 12 år, og ingen andre barn under 13 år, kan du søke om refusjon fra
         første fraværsdag.
       </HjelpetekstAlert>
     );
@@ -468,7 +468,7 @@ const TiFørsteOmsorgsdagerInfo = () => {
             dagen hvis den ansatte har rett på flere enn 10 omsorgsdager.
           </BodyLong>
           <BodyShort>
-            Ved kronisk sykt barn over 13 år, og ingen andre barn under 12 år,
+            Ved kronisk sykt barn over 12 år, og ingen andre barn under 13 år,
             kan du søke om refusjon fra første fraværsdag.
           </BodyShort>
           <BodyLong>
