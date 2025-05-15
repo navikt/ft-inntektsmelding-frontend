@@ -97,7 +97,15 @@ export const VisInnsendtRefusjonskrav = () => {
         <VStack gap="4">
           <OppsummeringRefusjon redigerbar={false} />
           <OppsummeringArbeidsgiverOgAnsatt redigerbar={false} />
-          <OppsummeringOmsorgsdager redigerbar={false} />
+          <OppsummeringOmsorgsdager
+            dagerSomSkalTrekkes={form.getValues("dagerSomSkalTrekkes")}
+            fraværDelerAvDagen={form.getValues("fraværDelerAvDagen")}
+            fraværHeleDager={form.getValues("fraværHeleDager")}
+            harDekket10FørsteOmsorgsdager={
+              form.getValues("harDekket10FørsteOmsorgsdager") === "ja"
+            }
+            redigerbar={false}
+          />
           <OppsummeringMånedslønn redigerbar={false} />
         </VStack>
         <div className="flex justify-around">
