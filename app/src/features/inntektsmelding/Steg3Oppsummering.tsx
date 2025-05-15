@@ -20,6 +20,7 @@ import {
   formatYtelsesnavn,
 } from "~/utils";
 
+import { refusjonForOmsorgspenger } from "../refusjon-omsorgspenger/utils";
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
 import { useOpplysninger } from "./useOpplysninger";
 
@@ -191,10 +192,16 @@ function lagSendInntektsmeldingRequest(
     kontaktperson: skjemaState.kontaktperson,
     startdato: opplysninger.førsteUttaksdato,
     inntekt: formatStrengTilTall(gjeldendeInntekt),
-    refusjon: refusjon.map((r) => ({
-      ...r,
-      beløp: formatStrengTilTall(r.beløp),
-    })),
+    refusjon:
+      opplysninger.ytelse === "OMSORGSPENGER"
+        ? refusjonForOmsorgspenger(
+            opplysninger.førsteUttaksdato,
+            gjeldendeInntekt,
+          )
+        : refusjon.map((r) => ({
+            ...r,
+            beløp: formatStrengTilTall(r.beløp),
+          })),
     bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
       skjemaState.bortfaltNaturalytelsePerioder,
     ),
