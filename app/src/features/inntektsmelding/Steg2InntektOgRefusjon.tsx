@@ -188,7 +188,8 @@ export function Steg2InntektOgRefusjon() {
             <Button
               disabled={
                 watch("skalRefunderes") === "NEI" &&
-                opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
+                (opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID ||
+                  opplysninger.ytelse === "OMSORGSPENGER")
               }
               icon={<ArrowRightIcon />}
               iconPosition="right"
@@ -213,7 +214,6 @@ function Ytelsesperiode() {
   const { person, ytelse, førsteUttaksdato } = opplysninger;
 
   const førsteDag = capitalize(formatDatoLang(new Date(førsteUttaksdato)));
-
   if (ytelse === "OMSORGSPENGER") {
     return null;
   }
