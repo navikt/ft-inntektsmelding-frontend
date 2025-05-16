@@ -20,6 +20,20 @@ const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
   return false;
 };
 
+export const refusjonForOmsorgspenger = (
+  førsteFraværsdag: string,
+  beløp:
+    | RefusjonOmsorgspengerFormData["korrigertInntekt"]
+    | RefusjonOmsorgspengerFormData["inntekt"],
+) => {
+  return [
+    {
+      fom: førsteFraværsdag,
+      beløp: Number(String(beløp).replaceAll(",", ".")),
+    },
+  ];
+};
+
 export const utledFørsteFraværsdag = (
   fraværHeleDager: FraværPeriodeArray,
   fraværDelerAvDagen: FraværDelerAvDagenArray,
@@ -77,12 +91,7 @@ export const mapSkjemaTilSendInntektsmeldingRequest = (
     ytelse: "OMSORGSPENGER",
     aktorId: validatedSkjemaState.ansattesAktørId as string,
     arbeidsgiverIdent: validatedSkjemaState.organisasjonsnummer as string,
-    refusjon: [
-      {
-        fom: førsteFraværsdag,
-        beløp: Number(String(inntekt).replaceAll(",", ".")),
-      },
-    ],
+    refusjon: refusjonForOmsorgspenger(førsteFraværsdag, inntekt),
     omsorgspenger: {
       harUtbetaltPliktigeDager: mapJaNeiTilBoolean(
         validatedSkjemaState.harDekket10FørsteOmsorgsdager as "ja" | "nei",

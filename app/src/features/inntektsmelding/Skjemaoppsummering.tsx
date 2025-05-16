@@ -1,6 +1,7 @@
 import { FormSummary, List, VStack } from "@navikt/ds-react";
 import { Link } from "@tanstack/react-router";
 
+import { OppsummeringOmsorgsdager } from "~/components/oppsummering/OppsummeringOmsorgsdager";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import { REFUSJON_RADIO_VALG } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
@@ -21,187 +22,69 @@ type SkjemaoppsummeringProps = {
   opplysninger: OpplysningerDto;
   skjemaState: InntektsmeldingSkjemaStateValid;
 };
+
 export const Skjemaoppsummering = ({
   opplysninger,
   skjemaState,
 }: SkjemaoppsummeringProps) => {
   const kanEndres = opplysninger.forespørselStatus !== "UTGÅTT";
+
+  if (opplysninger.ytelse === "OMSORGSPENGER") {
+    return (
+      <VStack gap="4">
+        <ArbeidsgiverOgAnsattOppsummering
+          kanEndres={kanEndres}
+          opplysninger={opplysninger}
+          skjemaState={skjemaState}
+        />
+        <OppsummeringOmsorgsdager
+          dagerSomSkalTrekkes={[]}
+          fraværDelerAvDagen={[]}
+          fraværHeleDager={[]}
+          harUtbetaltLønn={skjemaState.skalRefunderes === "JA_LIK_REFUSJON"}
+          redigerbar={false}
+        />
+        <InntektOppsummering
+          kanEndres={kanEndres}
+          opplysninger={opplysninger}
+          skjemaState={skjemaState}
+        />
+      </VStack>
+    );
+  }
   return (
     <VStack gap="4">
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">
-            Arbeidsgiver og den ansatte
-          </FormSummary.Heading>
-          {kanEndres && (
-            <FormSummary.EditLink
-              aria-label="Endre dine opplysninger"
-              as={Link}
-              to="../dine-opplysninger"
-            />
-          )}
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>Arbeidsgiver</FormSummary.Label>
-            <FormSummary.Value>
-              {opplysninger.arbeidsgiver.organisasjonNavn}, org.nr.{" "}
-              {opplysninger.arbeidsgiver.organisasjonNummer}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          <FormSummary.Answer>
-            <FormSummary.Label>Kontaktperson</FormSummary.Label>
-            <FormSummary.Value>
-              {formatterKontaktperson(skjemaState.kontaktperson)}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          <FormSummary.Answer>
-            <FormSummary.Label>Den ansatte</FormSummary.Label>
-            <FormSummary.Value>
-              {lagFulltNavn(opplysninger.person)}
-              {", "}
-              {formatFødselsnummer(opplysninger.person.fødselsnummer)}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-        </FormSummary.Answers>
-      </FormSummary>
-
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">
-            Første dag med {formatYtelsesnavn(opplysninger.ytelse)}
-          </FormSummary.Heading>
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>Fra og med</FormSummary.Label>
-            <FormSummary.Value>
-              {formatDatoLang(new Date(opplysninger.førsteUttaksdato))}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-        </FormSummary.Answers>
-      </FormSummary>
-
-      <InntektSummary opplysninger={opplysninger} skjemaState={skjemaState} />
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">
-            Utbetaling og refusjon
-          </FormSummary.Heading>
-          {kanEndres && (
-            <FormSummary.EditLink
-              aria-label="Endre utbetaling og refusjon"
-              as={Link}
-              to="../inntekt-og-refusjon#refusjon"
-            />
-          )}
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>
-              Betaler dere lønn under fraværet og krever refusjon?
-            </FormSummary.Label>
-            <FormSummary.Value>
-              {REFUSJON_RADIO_VALG[skjemaState.skalRefunderes]}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          {skjemaState.skalRefunderes === "JA_LIK_REFUSJON" && (
-            <FormSummary.Answer>
-              <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
-              <FormSummary.Value>
-                {formatKroner(skjemaState.refusjon[0].beløp)}
-              </FormSummary.Value>
-            </FormSummary.Answer>
-          )}
-          {skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON" && (
-            <FormSummary.Answer>
-              <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
-              <FormSummary.Value>
-                <FormSummary.Answers>
-                  {skjemaState.refusjon.map((endring) => (
-                    <FormSummary.Answer
-                      key={endring.fom!.toString() + endring?.beløp}
-                    >
-                      <FormSummary.Label>
-                        Refusjonsbeløp per måned
-                      </FormSummary.Label>
-                      <FormSummary.Value>
-                        {formatKroner(endring.beløp)} (fra og med{" "}
-                        {formatDatoLang(new Date(endring.fom!))})
-                      </FormSummary.Value>
-                    </FormSummary.Answer>
-                  ))}
-                </FormSummary.Answers>
-              </FormSummary.Value>
-            </FormSummary.Answer>
-          )}
-        </FormSummary.Answers>
-      </FormSummary>
-
-      <FormSummary>
-        <FormSummary.Header>
-          <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-          {kanEndres && (
-            <FormSummary.EditLink
-              aria-label="Endre naturalytelser"
-              as={Link}
-              to="../inntekt-og-refusjon#naturalytelser"
-            />
-          )}
-        </FormSummary.Header>
-        <FormSummary.Answers>
-          <FormSummary.Answer>
-            <FormSummary.Label>
-              Har den ansatte naturalytelser som faller bort ved fraværet?
-            </FormSummary.Label>
-            <FormSummary.Value>
-              {skjemaState.misterNaturalytelser ? "Ja" : "Nei"}
-            </FormSummary.Value>
-          </FormSummary.Answer>
-          {skjemaState.misterNaturalytelser && (
-            <FormSummary.Answer>
-              <FormSummary.Label>
-                Naturalytelser som faller bort
-              </FormSummary.Label>
-              <FormSummary.Value>
-                <FormSummary.Answers>
-                  {skjemaState.bortfaltNaturalytelsePerioder.map(
-                    (naturalytelse) => {
-                      return (
-                        <FormSummary.Answer
-                          key={`${naturalytelse.navn}-${naturalytelse.fom}`}
-                        >
-                          <FormSummary.Label>
-                            {formatYtelsesnavn(naturalytelse.navn, true)}
-                          </FormSummary.Label>
-                          <FormSummary.Value>
-                            {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
-                          </FormSummary.Value>
-                        </FormSummary.Answer>
-                      );
-                    },
-                  )}
-                </FormSummary.Answers>
-              </FormSummary.Value>
-            </FormSummary.Answer>
-          )}
-        </FormSummary.Answers>
-      </FormSummary>
+      <ArbeidsgiverOgAnsattOppsummering
+        kanEndres={kanEndres}
+        opplysninger={opplysninger}
+        skjemaState={skjemaState}
+      />
+      <FørsteDagOppsummering opplysninger={opplysninger} />
+      <InntektOppsummering
+        kanEndres={kanEndres}
+        opplysninger={opplysninger}
+        skjemaState={skjemaState}
+      />
+      <UtbetalingOgRefusjonOppsummering
+        kanEndres={kanEndres}
+        skjemaState={skjemaState}
+      />
+      <NaturalytelserOppsummering
+        kanEndres={kanEndres}
+        skjemaState={skjemaState}
+      />
     </VStack>
   );
 };
 
-function InntektSummary({
-  skjemaState,
+function InntektOppsummering({
+  kanEndres,
   opplysninger,
-}: SkjemaoppsummeringProps) {
-  // Hvis oppsummeringen vises etter utfylt skjema (url: .../oppsummering) så er "korrigertInntekt" populert og vi bruker den som lønn.
-  // Hvis den brukes til å vise eksisterende IM (url: .../vis) så må vi bruke registrert inntekt,
-  // og sammenligne med gj.snitt fra opplysninger for å bedømme om den har blitt endret eller ikke.
+  skjemaState,
+}: SkjemaoppsummeringProps & { kanEndres: boolean }) {
   const harEndretInntekt = skjemaState.endringAvInntektÅrsaker.length > 0;
   const estimertInntekt = opplysninger.inntektsopplysninger.gjennomsnittLønn;
   const gjeldendeInntekt = skjemaState.korrigertInntekt ?? skjemaState.inntekt;
-  const kanEndres = opplysninger.forespørselStatus !== "UTGÅTT";
 
   return (
     <FormSummary>
@@ -272,6 +155,191 @@ function InntektSummary({
     </FormSummary>
   );
 }
+
+const ArbeidsgiverOgAnsattOppsummering = ({
+  kanEndres,
+  opplysninger,
+  skjemaState,
+}: SkjemaoppsummeringProps & { kanEndres: boolean }) => (
+  <FormSummary>
+    <FormSummary.Header>
+      <FormSummary.Heading level="3">
+        Arbeidsgiver og den ansatte
+      </FormSummary.Heading>
+      {kanEndres && (
+        <FormSummary.EditLink
+          aria-label="Endre dine opplysninger"
+          as={Link}
+          to="../dine-opplysninger"
+        />
+      )}
+    </FormSummary.Header>
+    <FormSummary.Answers>
+      <FormSummary.Answer>
+        <FormSummary.Label>Arbeidsgiver</FormSummary.Label>
+        <FormSummary.Value>
+          {opplysninger.arbeidsgiver.organisasjonNavn}, org.nr.{" "}
+          {opplysninger.arbeidsgiver.organisasjonNummer}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+      <FormSummary.Answer>
+        <FormSummary.Label>Kontaktperson</FormSummary.Label>
+        <FormSummary.Value>
+          {formatterKontaktperson(skjemaState.kontaktperson)}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+      <FormSummary.Answer>
+        <FormSummary.Label>Den ansatte</FormSummary.Label>
+        <FormSummary.Value>
+          {lagFulltNavn(opplysninger.person)}
+          {", "}
+          {formatFødselsnummer(opplysninger.person.fødselsnummer)}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+    </FormSummary.Answers>
+  </FormSummary>
+);
+
+const FørsteDagOppsummering = ({
+  opplysninger,
+}: {
+  opplysninger: OpplysningerDto;
+}) => (
+  <FormSummary>
+    <FormSummary.Header>
+      <FormSummary.Heading level="3">
+        Første dag med {formatYtelsesnavn(opplysninger.ytelse)}
+      </FormSummary.Heading>
+    </FormSummary.Header>
+    <FormSummary.Answers>
+      <FormSummary.Answer>
+        <FormSummary.Label>Fra og med</FormSummary.Label>
+        <FormSummary.Value>
+          {formatDatoLang(new Date(opplysninger.førsteUttaksdato))}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+    </FormSummary.Answers>
+  </FormSummary>
+);
+
+const UtbetalingOgRefusjonOppsummering = ({
+  kanEndres,
+  skjemaState,
+}: {
+  kanEndres: boolean;
+  skjemaState: InntektsmeldingSkjemaStateValid;
+}) => (
+  <FormSummary>
+    <FormSummary.Header>
+      <FormSummary.Heading level="3">
+        Utbetaling og refusjon
+      </FormSummary.Heading>
+      {kanEndres && (
+        <FormSummary.EditLink
+          aria-label="Endre utbetaling og refusjon"
+          as={Link}
+          to="../inntekt-og-refusjon#refusjon"
+        />
+      )}
+    </FormSummary.Header>
+    <FormSummary.Answers>
+      <FormSummary.Answer>
+        <FormSummary.Label>
+          Betaler dere lønn under fraværet og krever refusjon?
+        </FormSummary.Label>
+        <FormSummary.Value>
+          {REFUSJON_RADIO_VALG[skjemaState.skalRefunderes]}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+      {skjemaState.skalRefunderes === "JA_LIK_REFUSJON" && (
+        <FormSummary.Answer>
+          <FormSummary.Label>Refusjonsbeløp per måned</FormSummary.Label>
+          <FormSummary.Value>
+            {formatKroner(skjemaState.refusjon[0].beløp)}
+          </FormSummary.Value>
+        </FormSummary.Answer>
+      )}
+      {skjemaState.skalRefunderes === "JA_VARIERENDE_REFUSJON" && (
+        <FormSummary.Answer>
+          <FormSummary.Label>Endringer i refusjon</FormSummary.Label>
+          <FormSummary.Value>
+            <FormSummary.Answers>
+              {skjemaState.refusjon.map((endring) => (
+                <FormSummary.Answer
+                  key={endring.fom!.toString() + endring?.beløp}
+                >
+                  <FormSummary.Label>
+                    Refusjonsbeløp per måned
+                  </FormSummary.Label>
+                  <FormSummary.Value>
+                    {formatKroner(endring.beløp)} (fra og med{" "}
+                    {formatDatoLang(new Date(endring.fom!))})
+                  </FormSummary.Value>
+                </FormSummary.Answer>
+              ))}
+            </FormSummary.Answers>
+          </FormSummary.Value>
+        </FormSummary.Answer>
+      )}
+    </FormSummary.Answers>
+  </FormSummary>
+);
+
+const NaturalytelserOppsummering = ({
+  kanEndres,
+  skjemaState,
+}: {
+  kanEndres: boolean;
+  skjemaState: InntektsmeldingSkjemaStateValid;
+}) => (
+  <FormSummary>
+    <FormSummary.Header>
+      <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
+      {kanEndres && (
+        <FormSummary.EditLink
+          aria-label="Endre naturalytelser"
+          as={Link}
+          to="../inntekt-og-refusjon#naturalytelser"
+        />
+      )}
+    </FormSummary.Header>
+    <FormSummary.Answers>
+      <FormSummary.Answer>
+        <FormSummary.Label>
+          Har den ansatte naturalytelser som faller bort ved fraværet?
+        </FormSummary.Label>
+        <FormSummary.Value>
+          {skjemaState.misterNaturalytelser ? "Ja" : "Nei"}
+        </FormSummary.Value>
+      </FormSummary.Answer>
+      {skjemaState.misterNaturalytelser && (
+        <FormSummary.Answer>
+          <FormSummary.Label>Naturalytelser som faller bort</FormSummary.Label>
+          <FormSummary.Value>
+            <FormSummary.Answers>
+              {skjemaState.bortfaltNaturalytelsePerioder.map(
+                (naturalytelse) => {
+                  return (
+                    <FormSummary.Answer
+                      key={`${naturalytelse.navn}-${naturalytelse.fom}`}
+                    >
+                      <FormSummary.Label>
+                        {formatYtelsesnavn(naturalytelse.navn, true)}
+                      </FormSummary.Label>
+                      <FormSummary.Value>
+                        {`Verdi ${formatKroner(naturalytelse.beløp)} (${formaterPeriodeStreng(naturalytelse)}) `}
+                      </FormSummary.Value>
+                    </FormSummary.Answer>
+                  );
+                },
+              )}
+            </FormSummary.Answers>
+          </FormSummary.Value>
+        </FormSummary.Answer>
+      )}
+    </FormSummary.Answers>
+  </FormSummary>
+);
 
 /**
  * Gir en streng på formatet "fra og med DATO, til og med DATO" hvis begge datoene er satt. Ellers kun den ene.
