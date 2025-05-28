@@ -272,8 +272,8 @@ const ofteStilteSpørsmålOmsorgspenger = [
           .{" "}
         </BodyLong>
         <BodyLong>
-          Der kan du klikke deg inn på en tidligere innsendt inntektsmelding og
-          sende inn på nytt for å gjøre endringer. Når vi får inn en ny
+          Der kan du klikke deg inn på en tidligere innsendte inntektsmeldinger
+          og sende inn på nytt for å gjøre endringer. Når vi får inn en ny
           inntektsmelding, revurderer vi saken.
         </BodyLong>
       </VStack>
