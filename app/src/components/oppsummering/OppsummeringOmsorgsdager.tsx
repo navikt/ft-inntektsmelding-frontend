@@ -27,8 +27,6 @@ export const OppsummeringOmsorgsdager = ({
   fraværHeleDager: { fom: string; tom: string }[];
   fraværDelerAvDagen: { dato: string; timer: string }[];
   dagerSomSkalTrekkes: { fom: string; tom: string }[];
-  // brukes i inntektsmelding initiert av arbeidstaker
-  harUtbetaltLønn?: boolean;
   harDekket10FørsteOmsorgsdager?: boolean;
   redigerbar: boolean;
   editPath?: string;
