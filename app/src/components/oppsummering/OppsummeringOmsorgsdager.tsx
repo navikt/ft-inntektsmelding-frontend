@@ -20,7 +20,6 @@ export const OppsummeringOmsorgsdager = ({
   fraværHeleDager,
   fraværDelerAvDagen,
   dagerSomSkalTrekkes,
-  harUtbetaltLønn,
   harDekket10FørsteOmsorgsdager,
   redigerbar,
   editPath = "../3-omsorgsdager",
