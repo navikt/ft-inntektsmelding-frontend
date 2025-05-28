@@ -20,6 +20,7 @@ import { lagFulltNavn } from "~/utils";
 
 import { InntektOgRefusjonForm } from "../inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
+import { RefusjonOmsorgspengerFormData } from "../refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
 
 const OmFraværetOmsorgspenger = () => {
   const { register, formState, watch } =
@@ -98,7 +99,11 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
   const innsending = {
     heleDager: [],
     delviseDager: [],
+  } as {
+    heleDager: RefusjonOmsorgspengerFormData["fraværHeleDager"];
+    delviseDager: RefusjonOmsorgspengerFormData["fraværDelerAvDagen"];
   };
+
   return (
     <Box className="bg-bg-subtle p-4">
       <div className="flex justify-between">
