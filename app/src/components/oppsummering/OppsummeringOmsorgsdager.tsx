@@ -20,15 +20,20 @@ export const OppsummeringOmsorgsdager = ({
   fraværHeleDager,
   fraværDelerAvDagen,
   dagerSomSkalTrekkes,
+  harUtbetaltLønn,
   harDekket10FørsteOmsorgsdager,
   redigerbar,
+  heading = "Omsorgsdager dere søker utbetaling for",
   editPath = "../3-omsorgsdager",
 }: {
   fraværHeleDager: { fom: string; tom: string }[];
   fraværDelerAvDagen: { dato: string; timer: string }[];
   dagerSomSkalTrekkes: { fom: string; tom: string }[];
+  // brukes i inntektsmelding initiert av arbeidstaker
+  harUtbetaltLønn?: boolean;
   harDekket10FørsteOmsorgsdager?: boolean;
   redigerbar: boolean;
+  heading?: string;
   editPath?: string;
 }) => {
   const context = useRefusjonOmsorgspengerArbeidsgiverFormContext();
@@ -40,9 +45,7 @@ export const OppsummeringOmsorgsdager = ({
   return (
     <FormSummary>
       <FormSummaryHeader>
-        <FormSummaryHeading level="3">
-          Omsorgsdager dere søker utbetaling for
-        </FormSummaryHeading>
+        <FormSummaryHeading level="3">{heading}</FormSummaryHeading>
         {redigerbar && <FormSummaryEditLink as={Link} to={editPath} />}
       </FormSummaryHeader>
       <FormSummaryAnswers>
@@ -122,6 +125,16 @@ export const OppsummeringOmsorgsdager = ({
                   </ListItem>
                 ))}
               </List>
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        )}
+        {harUtbetaltLønn !== undefined && (
+          <FormSummaryAnswer>
+            <FormSummaryLabel>
+              Har dere utbetalt lønn for dette fraværet?
+            </FormSummaryLabel>
+            <FormSummaryValue>
+              {harUtbetaltLønn ? "Ja" : "Nei"}
             </FormSummaryValue>
           </FormSummaryAnswer>
         )}

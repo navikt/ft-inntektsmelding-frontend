@@ -9,6 +9,7 @@ import {
 import {
   Alert,
   BodyLong,
+  BodyShort,
   Button,
   ExpansionCard,
   Heading,
@@ -52,9 +53,15 @@ export const Steg4Kvittering = () => {
   const inntektsmeldingsId = gyldigInntektsmeldingSkjemaState?.id;
 
   const erRefusjon = gyldigInntektsmeldingSkjemaState?.skalRefunderes !== "NEI";
-  const ofteStilteSpørsmål = erRefusjon
-    ? ofteStilteSpørsmålRefusjon
-    : ofteStilteSpørsmålIkkeRefusjon;
+  const ofteStilteSpørsmål = () => {
+    if (erRefusjon) {
+      return ofteStilteSpørsmålRefusjon;
+    }
+    if (opplysninger.ytelse === "OMSORGSPENGER") {
+      return ofteStilteSpørsmålOmsorgspenger;
+    }
+    return ofteStilteSpørsmålIkkeRefusjon;
+  };
   return (
     <div className="mx-4 mt-12 md:mx-0">
       <div className="p-6 bg-surface-success-subtle rounded-full mx-auto w-fit">
@@ -73,7 +80,7 @@ export const Steg4Kvittering = () => {
 
       <VStack className="mb-12" gap="4">
         <Heading size="medium">Ofte stilte spørsmål</Heading>
-        {ofteStilteSpørsmål.map((spørsmål) => (
+        {ofteStilteSpørsmål().map((spørsmål) => (
           <ExpansionCard
             aria-labelledby={slugify(spørsmål.spørsmål)}
             key={spørsmål.spørsmål}
@@ -130,9 +137,9 @@ const ofteStilteSpørsmålRefusjon = [
     svar: (
       <BodyLong>
         <Link href="https://www.nav.no/saksbehandlingstider">
-          Her finner du oversikt over saksbehandlingstiden til Nav.
-        </Link>{" "}
-        Vi tar kontakt hvis vi trenger flere opplysninger.
+          Her finner du oversikt over saksbehandlingstiden til Nav
+        </Link>
+        . Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
         Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
       </BodyLong>
@@ -205,8 +212,11 @@ const ofteStilteSpørsmålIkkeRefusjon = [
     ikon: <DocPencilIcon />,
     svar: (
       <BodyLong>
-        Du finner inntektsmeldingen ved å logge inn på Min Side Arbeidsgiver.
-        Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
+        Du finner inntektsmeldingen ved å logge inn på{" "}
+        <Link href="https://arbeidsgiver.nav.no/min-side-arbeidsgiver">
+          Min Side Arbeidsgiver
+        </Link>
+        . Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
       </BodyLong>
     ),
   },
@@ -220,6 +230,51 @@ const ofteStilteSpørsmålIkkeRefusjon = [
           ansatte om status på søknad og fravær fremover. Nav deler ikke
           sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
           et eventuelt avslag må du derfor ha dialog med den ansatte.
+        </BodyLong>
+      </VStack>
+    ),
+  },
+] satisfies OfteStilteSpørsmål[];
+
+const ofteStilteSpørsmålOmsorgspenger = [
+  {
+    spørsmål: "Hvor lang er saksbehandlingstiden?",
+    ikon: <ClockIcon />,
+    svar: (
+      <VStack gap="4">
+        <BodyLong>
+          <Link href="https://www.nav.no/saksbehandlingstider">
+            Her finner du oversikt over saksbehandlingstiden til Nav
+          </Link>
+          .
+        </BodyLong>
+        <BodyLong>
+          Siden søknaden og inntektsmeldingen gjelder utbetaling av
+          omsorgspenger direkte til den ansatte, vil ikke du som arbeidsgiver få
+          vite noe om den videre behandlingen av søknaden.
+        </BodyLong>
+        <BodyShort>
+          Vi tar kontakt med deg hvis vi trenger flere opplysninger.
+        </BodyShort>
+      </VStack>
+    ),
+  },
+  {
+    spørsmål: "Hvordan korrigere hvis noe er feil?",
+    ikon: <DocPencilIcon />,
+    svar: (
+      <VStack gap="4">
+        <BodyLong>
+          Du finner innsendte inntektsmeldinger i saksoversikten på{" "}
+          <Link href="https://arbeidsgiver.nav.no/min-side-arbeidsgiver/saksoversikt">
+            Min side - arbeidsgiver
+          </Link>
+          .{" "}
+        </BodyLong>
+        <BodyLong>
+          Der kan du klikke deg inn på en tidligere innsendt inntektsmelding og
+          sende inn på nytt for å gjøre endringer. Når vi får inn en ny
+          inntektsmelding, revurderer vi saken.
         </BodyLong>
       </VStack>
     ),
