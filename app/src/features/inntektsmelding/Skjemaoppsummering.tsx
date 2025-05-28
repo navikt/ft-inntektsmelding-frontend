@@ -42,9 +42,6 @@ export const Skjemaoppsummering = ({
           editPath="../inntekt-og-refusjon"
           fraværDelerAvDagen={[]}
           fraværHeleDager={[]}
-          harUtbetaltLønn={
-            skjemaState.skalRefunderes === "JA_LIK_REFUSJON" ? true : undefined
-          }
           redigerbar={true}
         />
         <InntektOppsummering

@@ -128,16 +128,6 @@ export const OppsummeringOmsorgsdager = ({
             </FormSummaryValue>
           </FormSummaryAnswer>
         )}
-        {harUtbetaltLønn && (
-          <FormSummaryAnswer>
-            <FormSummaryLabel>
-              Har dere utbetalt lønn for omsorgsdagene?
-            </FormSummaryLabel>
-            <FormSummaryValue>
-              {harUtbetaltLønn ? "Ja" : "Nei"}
-            </FormSummaryValue>
-          </FormSummaryAnswer>
-        )}
       </FormSummaryAnswers>
     </FormSummary>
   );
