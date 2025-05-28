@@ -194,10 +194,7 @@ function lagSendInntektsmeldingRequest(
     inntekt: formatStrengTilTall(gjeldendeInntekt),
     refusjon:
       opplysninger.ytelse === "OMSORGSPENGER"
-        ? refusjonForOmsorgspenger(
-            opplysninger.førsteUttaksdato,
-            gjeldendeInntekt,
-          )
+        ? []
         : refusjon.map((r) => ({
             ...r,
             beløp: formatStrengTilTall(r.beløp),
