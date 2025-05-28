@@ -59,7 +59,15 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg5 = () => {
       <VStack gap="4">
         <OppsummeringRefusjon redigerbar={true} />
         <OppsummeringArbeidsgiverOgAnsatt redigerbar={true} />
-        <OppsummeringOmsorgsdager redigerbar={true} />
+        <OppsummeringOmsorgsdager
+          dagerSomSkalTrekkes={getValues("dagerSomSkalTrekkes")}
+          fraværDelerAvDagen={getValues("fraværDelerAvDagen")}
+          fraværHeleDager={getValues("fraværHeleDager")}
+          harDekket10FørsteOmsorgsdager={
+            getValues("harDekket10FørsteOmsorgsdager") === "ja"
+          }
+          redigerbar={true}
+        />
         <OppsummeringMånedslønn redigerbar={true} />
       </VStack>
       {isError && (

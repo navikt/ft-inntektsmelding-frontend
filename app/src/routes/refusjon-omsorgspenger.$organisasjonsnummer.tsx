@@ -2,9 +2,14 @@ import { BodyShort, Loader } from "@navikt/ds-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
+import { OppgaveErUtgåttFeilside } from "~/features/error-boundary/OppgaveErUtgåttFeilside";
 import { hentInnloggetBrukerDataOptions } from "~/features/refusjon-omsorgspenger/api/queries";
 import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverRotLayout";
 import { queryClient } from "~/main";
+
+enum FEILKODER {
+  OPPGAVE_ER_UTGÅTT = "OPPGAVE_ER_UTGÅTT",
+}
 
 export const Route = createFileRoute(
   "/refusjon-omsorgspenger/$organisasjonsnummer",
@@ -16,6 +21,13 @@ export const Route = createFileRoute(
       <BodyShort className="text-center">Henter opplysninger…</BodyShort>
     </div>
   ),
+  errorComponent: ({ error }) => {
+    if (error.message === FEILKODER.OPPGAVE_ER_UTGÅTT) {
+      return <OppgaveErUtgåttFeilside />;
+    }
+
+    throw error;
+  },
   loader: async ({ params }) => {
     const organisasjonsnummerSchema = z
       .string()
