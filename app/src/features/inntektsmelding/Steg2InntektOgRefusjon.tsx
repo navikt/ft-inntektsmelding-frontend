@@ -188,8 +188,7 @@ export function Steg2InntektOgRefusjon() {
             <Button
               disabled={
                 watch("skalRefunderes") === "NEI" &&
-                (opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID ||
-                  opplysninger.ytelse === "OMSORGSPENGER")
+                opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
               }
               icon={<ArrowRightIcon />}
               iconPosition="right"

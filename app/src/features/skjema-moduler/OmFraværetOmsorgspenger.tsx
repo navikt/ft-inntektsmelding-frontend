@@ -30,8 +30,6 @@ const OmFraværetOmsorgspenger = () => {
     required: "Du må svare på dette spørsmålet",
   });
 
-  const årsakErKonfliktMedArbeidsgiver = "TODO: årsak til søknad";
-
   const ButtonLink = createLink(Button);
   return (
     <div className="flex gap-4 flex-col">
@@ -47,7 +45,7 @@ const OmFraværetOmsorgspenger = () => {
       <RadioGroup
         className="mt-5"
         error={formState.errors.skalRefunderes?.message}
-        legend="Har dere betalt lønn for dette fraværet?"
+        legend="Har dere utbetalt lønn for dette fraværet?"
         name={name}
       >
         <Radio value="JA_LIK_REFUSJON" {...radioGroupProps}>
@@ -57,14 +55,22 @@ const OmFraværetOmsorgspenger = () => {
           Nei
         </Radio>
       </RadioGroup>
-      {watch("skalRefunderes") === "NEI" && (
+      {watch("skalRefunderes") === "JA_LIK_REFUSJON" && (
         <Alert variant="info">
-          <BodyLong>
-            Har dere utbetalt full lønn for fraværet skal dere ikke sende inn
-            inntektsmeldingen. Hvis dere ikke er pliktig til å betale for
-            omsorgsdagene, men likevel har betalt og skal søke om refusjon, må
-            dere sende refusjonskrav omsorgspenger.
-          </BodyLong>
+          <div className="flex flex-col gap-4">
+            <BodyLong>
+              Har dere utbetalt full lønn for fraværet skal dere ikke sende inn
+              inntektsmeldingen. Hvis dere ikke er pliktig til å betale for
+              omsorgsdagene, men likevel har betalt og skal søke om refusjon, må
+              dere sende refusjonskrav omsorgspenger.
+            </BodyLong>
+
+            <BodyLong>
+              Har dere kun utbetalt delvis lønn for fraværet må dere sende inn
+              forklaring på hva/hvilke dager dere har utbetalt i tillegg til å
+              sende inn denne inntektsmeldingen.
+            </BodyLong>
+          </div>
           <ButtonLink
             className="mt-4"
             icon={<ArrowRightIcon />}
@@ -79,25 +85,19 @@ const OmFraværetOmsorgspenger = () => {
           </ButtonLink>
         </Alert>
       )}
-      {watch("skalRefunderes") === "JA_LIK_REFUSJON" &&
-        årsakErKonfliktMedArbeidsgiver && (
-          <Alert variant="info">
-            <BodyLong>
-              Har dere betalt full lønn for fraværet skal dere ikke sende inn
-              inntektsmeldingen. Hvis dere ikke er pliktig til å betale for
-              omsorgsdagene, men likevel har betalt og skal søke om refusjon, må
-              dere sende refusjonskrav omsorgspenger.
-            </BodyLong>
-          </Alert>
-        )}
+      {watch("skalRefunderes") === "NEI" && (
+        <Alert variant="info">
+          <BodyLong>TODO: koble til årsak til søknad</BodyLong>
+        </Alert>
+      )}
     </div>
   );
 };
 
 const Fraværsdager = ({ navn }: { navn?: string }) => {
   const innsending = {
-    heleDager: [{ fom: "2024-01-01", tom: "2024-01-31" }],
-    delviseDager: [{ dato: "2024-01-01", timer: "8" }],
+    heleDager: [],
+    delviseDager: [],
   };
   return (
     <Box className="bg-bg-subtle p-4">

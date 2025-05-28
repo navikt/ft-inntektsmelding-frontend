@@ -39,10 +39,13 @@ export const Skjemaoppsummering = ({
         />
         <OppsummeringOmsorgsdager
           dagerSomSkalTrekkes={[]}
+          editPath="../inntekt-og-refusjon"
           fraværDelerAvDagen={[]}
           fraværHeleDager={[]}
-          harUtbetaltLønn={skjemaState.skalRefunderes === "JA_LIK_REFUSJON"}
-          redigerbar={false}
+          harUtbetaltLønn={
+            skjemaState.skalRefunderes === "JA_LIK_REFUSJON" ? true : undefined
+          }
+          redigerbar={true}
         />
         <InntektOppsummering
           kanEndres={kanEndres}

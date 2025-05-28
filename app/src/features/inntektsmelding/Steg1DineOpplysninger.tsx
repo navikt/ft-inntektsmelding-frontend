@@ -171,6 +171,13 @@ const Intro = ({ opplysninger }: IntroProps) => {
     return null;
   }
 
+  const beskrivelseAvYtelse = () => {
+    if (opplysninger.ytelse === "OMSORGSPENGER") {
+      return "utbetaling av omsorgspenger (hjemme med sykt barn)";
+    }
+    return formatYtelsesnavn(opplysninger.ytelse);
+  };
+
   return (
     <GuidePanel className="mb-4 col-span-2">
       <div className="flex flex-col gap-4">
@@ -181,8 +188,8 @@ const Intro = ({ opplysninger }: IntroProps) => {
           <strong>
             {fulltNavnSøker} ({formatFødselsnummer(person.fødselsnummer)})
           </strong>{" "}
-          har søkt om {formatYtelsesnavn(opplysninger.ytelse)}. For å behandle
-          søknaden, trenger vi informasjon om {fornavnSøker} sin inntekt fra{" "}
+          har søkt om {beskrivelseAvYtelse()}. For å behandle søknaden, trenger
+          vi informasjon om {fornavnSøker} sin inntekt fra{" "}
           <strong>{arbeidsgiver.organisasjonNavn}</strong>.
         </BodyLong>
         <BodyLong>
