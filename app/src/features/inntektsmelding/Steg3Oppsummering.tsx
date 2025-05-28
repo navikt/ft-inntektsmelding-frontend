@@ -20,7 +20,6 @@ import {
   formatYtelsesnavn,
 } from "~/utils";
 
-import { refusjonForOmsorgspenger } from "../refusjon-omsorgspenger/utils";
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
 import { useOpplysninger } from "./useOpplysninger";
 
