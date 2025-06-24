@@ -137,9 +137,8 @@ const ofteStilteSpørsmålRefusjon = [
     svar: (
       <BodyLong>
         <Link href="https://www.nav.no/saksbehandlingstider">
-          Her finner du oversikt over saksbehandlingstiden til Nav
+          Her finner du oversikt over saksbehandlingstiden til Nav.
         </Link>
-        . Vi tar kontakt hvis vi trenger flere opplysninger.
         <br />
         Vedtaket sendes til den ansatte når søknaden er ferdig behandlet.
       </BodyLong>
@@ -164,8 +163,11 @@ const ofteStilteSpørsmålRefusjon = [
     ikon: <DocPencilIcon />,
     svar: (
       <BodyLong>
-        Du finner inntektsmeldingen ved å logge inn på Min Side Arbeidsgiver.
-        Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
+        Du kan se tidligere innsendte inntektsmeldinger i saksoversikten på min
+        side - arbeidsgiver.
+        <br />
+        Hvis du skal endre noe på inntektsmeldingen må du sende den inn på nytt.
+        Når vi mottar en ny inntektsmelding, revurderer vi saken.
       </BodyLong>
     ),
   },
@@ -176,9 +178,8 @@ const ofteStilteSpørsmålRefusjon = [
       <VStack gap="4">
         <BodyLong>
           Nav sender vedtaket til den ansatte, og du må ha dialog med den
-          ansatte om status på søknad og fravær fremover. Nav deler ikke
-          sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
-          et eventuelt avslag må du derfor ha dialog med den ansatte.
+          ansatte om status på søknaden. Nav deler ikke sensitiv informasjon fra
+          søknaden som er knyttet til den ansatte.
         </BodyLong>
         <BodyLong>
           Hvis du har spørsmål om utbetaling av refusjon, kan du{" "}
@@ -212,11 +213,11 @@ const ofteStilteSpørsmålIkkeRefusjon = [
     ikon: <DocPencilIcon />,
     svar: (
       <BodyLong>
-        Du finner inntektsmeldingen ved å logge inn på{" "}
-        <Link href="https://arbeidsgiver.nav.no/min-side-arbeidsgiver">
-          Min Side Arbeidsgiver
-        </Link>
-        . Der kan du se inntektsmeldingen, og eventuelt endre informasjonen.
+        Du kan se tidligere innsendte inntektsmeldinger i saksoversikten på min
+        side - arbeidsgiver.
+        <br />
+        Hvis du skal endre noe på inntektsmeldingen må du sende den inn på nytt.
+        Når vi mottar en ny inntektsmelding, revurderer vi saken.
       </BodyLong>
     ),
   },
@@ -227,9 +228,8 @@ const ofteStilteSpørsmålIkkeRefusjon = [
       <VStack gap="4">
         <BodyLong>
           Nav sender vedtaket til den ansatte, og du må ha dialog med den
-          ansatte om status på søknad og fravær fremover. Nav deler ikke
-          sensitiv informasjon fra søknaden som er knyttet til den ansatte. Ved
-          et eventuelt avslag må du derfor ha dialog med den ansatte.
+          ansatte om status på søknaden. Nav deler ikke sensitiv informasjon fra
+          søknaden som er knyttet til den ansatte.
         </BodyLong>
       </VStack>
     ),
