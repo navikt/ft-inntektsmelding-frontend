@@ -281,7 +281,7 @@ function VelgArbeidsgiver({ data }: { data?: SlåOppArbeidstakerResponseDto }) {
 
   return (
     <Select
-      description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver.  Velg hvilken underenhet inntektsmeldingen gjelder for. "
+      description="Den ansatte har flere arbeidsforhold hos samme arbeidsgiver. Velg hvilken underenhet inntektsmeldingen gjelder for. "
       error={formMethods.formState.errors.organisasjonsnummer?.message}
       label="Arbeidsgiver"
       {...formMethods.register(`organisasjonsnummer`, {
