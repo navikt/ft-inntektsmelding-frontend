@@ -1,7 +1,16 @@
 import { FormSummary, List, VStack } from "@navikt/ds-react";
+import {
+  FormSummaryAnswer,
+  FormSummaryAnswers,
+  FormSummaryEditLink,
+  FormSummaryHeader,
+  FormSummaryHeading,
+  FormSummaryLabel,
+  FormSummaryValue,
+} from "@navikt/ds-react/FormSummary";
+import { ListItem } from "@navikt/ds-react/List";
 import { Link } from "@tanstack/react-router";
 
-import { OppsummeringOmsorgsdager } from "~/components/oppsummering/OppsummeringOmsorgsdager";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt.tsx";
 import { REFUSJON_RADIO_VALG } from "~/features/skjema-moduler/UtbetalingOgRefusjon.tsx";
@@ -30,6 +39,8 @@ export const Skjemaoppsummering = ({
   const kanEndres = opplysninger.forespørselStatus !== "UTGÅTT";
 
   if (opplysninger.ytelse === "OMSORGSPENGER") {
+    const fravær = opplysninger.etterspurtePerioder;
+    const harUtbetaltLønn = skjemaState.skalRefunderes === "JA_LIK_REFUSJON";
     return (
       <VStack gap="4">
         <ArbeidsgiverOgAnsattOppsummering
@@ -37,15 +48,44 @@ export const Skjemaoppsummering = ({
           opplysninger={opplysninger}
           skjemaState={skjemaState}
         />
-        <OppsummeringOmsorgsdager
-          dagerSomSkalTrekkes={[]}
-          editPath="../inntekt-og-refusjon"
-          fraværDelerAvDagen={[]}
-          fraværHeleDager={[]}
-          harUtbetaltLønn={skjemaState.skalRefunderes === "JA_LIK_REFUSJON"}
-          heading="Om fraværet"
-          redigerbar={true}
-        />
+        <FormSummary>
+          <FormSummaryHeader>
+            <FormSummaryHeading level="3">Om fraværet</FormSummaryHeading>
+            <FormSummaryEditLink as={Link} to={"../inntekt-og-refusjon"} />
+          </FormSummaryHeader>
+          <FormSummaryAnswers>
+            <FormSummaryAnswer>
+              <FormSummaryLabel>Dager med oppgitt fravær</FormSummaryLabel>
+              <FormSummaryValue>
+                {fravær ? (
+                  <List>
+                    {fravær?.map((periode, index) =>
+                      periode.fom && periode.tom ? (
+                        <ListItem key={index}>
+                          {new Date(periode.fom).toLocaleDateString("nb-no")}–
+                          {new Date(periode.tom).toLocaleDateString("nb-no")}
+                        </ListItem>
+                      ) : null,
+                    )}
+                  </List>
+                ) : (
+                  "Ingen dager med oppgitt fravær"
+                )}
+              </FormSummaryValue>
+            </FormSummaryAnswer>
+
+            {harUtbetaltLønn !== undefined && (
+              <FormSummaryAnswer>
+                <FormSummaryLabel>
+                  Har dere utbetalt lønn for dette fraværet?
+                </FormSummaryLabel>
+                <FormSummaryValue>
+                  {harUtbetaltLønn ? "Ja" : "Nei"}
+                </FormSummaryValue>
+              </FormSummaryAnswer>
+            )}
+          </FormSummaryAnswers>
+        </FormSummary>
         <InntektOppsummering
           kanEndres={kanEndres}
           opplysninger={opplysninger}
