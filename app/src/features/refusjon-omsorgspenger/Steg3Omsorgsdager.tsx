@@ -621,10 +621,10 @@ const TidligereInnsendinger = ({
           Vis flere
         </Button>
       )}
-      <BodyLong className="text-text-subtle mt-4" size="small">
+      <Detail className="mt-4">
         Har dere brukt lønns- og personalsystem eller Altinn for å sende inn
         inntektsmelding for omsorgspenger vil de ikke vises i listen over.
-      </BodyLong>
+      </Detail>
     </Box>
   );
 };

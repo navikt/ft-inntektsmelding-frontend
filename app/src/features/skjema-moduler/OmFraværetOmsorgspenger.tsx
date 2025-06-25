@@ -5,6 +5,7 @@ import {
   BodyShort,
   Box,
   Button,
+  Detail,
   Heading,
   Label,
   List,
@@ -112,21 +113,27 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
       <Theme theme="dark">
         <div className="bg-bg-subtle mt-4 flex flex-col text-text-default gap-4">
           {opplysninger.etterspurtePerioder &&
-            opplysninger.etterspurtePerioder?.length > 0 && (
-              <div>
-                <Label>Dager med oppgitt fravær</Label>
-                <List className="flex flex-col gap-2 mt-1">
-                  {opplysninger.etterspurtePerioder?.map((periode) => (
-                    <List.Item key={periode.fom}>
-                      {new Date(periode.fom).toLocaleDateString("nb-NO")} -{" "}
-                      {new Date(periode.tom).toLocaleDateString("nb-NO")}
-                    </List.Item>
-                  ))}
-                </List>
-              </div>
-            )}
+          opplysninger.etterspurtePerioder?.length > 0 ? (
+            <div>
+              <Label>Dager med oppgitt fravær</Label>
+              <List className="flex flex-col gap-2 mt-1">
+                {opplysninger.etterspurtePerioder?.map((periode) => (
+                  <List.Item key={periode.fom}>
+                    {new Date(periode.fom).toLocaleDateString("nb-NO")} -{" "}
+                    {new Date(periode.tom).toLocaleDateString("nb-NO")}
+                  </List.Item>
+                ))}
+              </List>
+            </div>
+          ) : (
+            <BodyLong>Ingen dager med oppgitt fravær</BodyLong>
+          )}
         </div>
       </Theme>
+      <Detail className="mt-4">
+        Hvis den ansatte har hatt fravær deler av dagen, viser vi kun datoen for
+        fraværet og ikke antall timer.
+      </Detail>
     </Box>
   );
 };
