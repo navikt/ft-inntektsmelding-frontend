@@ -54,11 +54,8 @@ export const Steg4Kvittering = () => {
 
   const erRefusjon = gyldigInntektsmeldingSkjemaState?.skalRefunderes !== "NEI";
   const ofteStilteSpørsmål = () => {
-    if (erRefusjon) {
+    if (erRefusjon && opplysninger.ytelse !== "OMSORGSPENGER") {
       return ofteStilteSpørsmålRefusjon;
-    }
-    if (opplysninger.ytelse === "OMSORGSPENGER") {
-      return ofteStilteSpørsmålOmsorgspenger;
     }
     return ofteStilteSpørsmålIkkeRefusjon;
   };
@@ -230,51 +227,6 @@ const ofteStilteSpørsmålIkkeRefusjon = [
           Nav sender vedtaket til den ansatte, og du må ha dialog med den
           ansatte om status på søknaden. Nav deler ikke sensitiv informasjon fra
           søknaden som er knyttet til den ansatte.
-        </BodyLong>
-      </VStack>
-    ),
-  },
-] satisfies OfteStilteSpørsmål[];
-
-const ofteStilteSpørsmålOmsorgspenger = [
-  {
-    spørsmål: "Hvor lang er saksbehandlingstiden?",
-    ikon: <ClockIcon />,
-    svar: (
-      <VStack gap="4">
-        <BodyLong>
-          <Link href="https://www.nav.no/saksbehandlingstider">
-            Her finner du oversikt over saksbehandlingstiden til Nav
-          </Link>
-          .
-        </BodyLong>
-        <BodyLong>
-          Siden søknaden og inntektsmeldingen gjelder utbetaling av
-          omsorgspenger direkte til den ansatte, vil ikke du som arbeidsgiver få
-          vite noe om den videre behandlingen av søknaden.
-        </BodyLong>
-        <BodyShort>
-          Vi tar kontakt med deg hvis vi trenger flere opplysninger.
-        </BodyShort>
-      </VStack>
-    ),
-  },
-  {
-    spørsmål: "Hvordan korrigere hvis noe er feil?",
-    ikon: <DocPencilIcon />,
-    svar: (
-      <VStack gap="4">
-        <BodyLong>
-          Du finner innsendte inntektsmeldinger i saksoversikten på{" "}
-          <Link href="https://arbeidsgiver.nav.no/min-side-arbeidsgiver/saksoversikt">
-            Min side - arbeidsgiver
-          </Link>
-          .{" "}
-        </BodyLong>
-        <BodyLong>
-          Der kan du klikke deg inn på en tidligere innsendte inntektsmeldinger
-          og sende inn på nytt for å gjøre endringer. Når vi får inn en ny
-          inntektsmelding, revurderer vi saken.
         </BodyLong>
       </VStack>
     ),
