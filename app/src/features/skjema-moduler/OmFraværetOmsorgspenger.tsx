@@ -28,6 +28,12 @@ const OmFraværetOmsorgspenger = () => {
 
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
+    validate: (value) => {
+      if (value === "JA_LIK_REFUSJON") {
+        return "Hvis dere ikke er pliktig til å betale for omsorgsdagene, men likevel har betalt og skal søke om refusjon, må dere sende refusjonskrav omsorgspenger";
+      }
+      return true;
+    },
   });
 
   const ButtonLink = createLink(Button);

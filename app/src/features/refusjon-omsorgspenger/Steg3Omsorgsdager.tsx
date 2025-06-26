@@ -1,5 +1,3 @@
-import "@navikt/ds-css/darkside";
-
 import {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -18,6 +16,7 @@ import {
   Dropdown,
   GuidePanel,
   Heading,
+  HelpText,
   HStack,
   Label,
   List,
@@ -505,6 +504,7 @@ const TidligereInnsendinger = ({
           inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
             (dag) => Number(dag.timer) === 0,
           ),
+        erRefusjon: inntektsmelding.refusjon?.length ?? 0 > 0,
       };
     }) || [];
 
@@ -545,7 +545,9 @@ const TidligereInnsendinger = ({
             {innsendingerSomSkalVises?.map((innsending) => (
               <Accordion.Item key={innsending.id}>
                 <Accordion.Header className="text-text-action">
-                  Refusjonskrav - sendt inn{" "}
+                  {innsending.erRefusjon
+                    ? "Refusjonskrav - sendt inn"
+                    : "Inntektsmelding - sendt inn"}{" "}
                   {innsending.opprettetDato.toLocaleDateString("nb-NO")}
                 </Accordion.Header>
                 <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid border-surface-neutral-subtle">
@@ -553,7 +555,22 @@ const TidligereInnsendinger = ({
                     {innsending.heleDager &&
                       innsending.heleDager?.length > 0 && (
                         <div>
-                          <Label>Hele dager dere søkte refusjon for</Label>
+                          <div className="flex gap-2 items-center">
+                            <Label>
+                              {innsending.erRefusjon
+                                ? "Hele dager dere søkte refusjon for"
+                                : "Dager med oppgitt fravær"}
+                            </Label>
+                            {!innsending.erRefusjon && (
+                              <Theme theme="light">
+                                <HelpText title="Dager med oppgitt fravær">
+                                  Hvis den ansatte har hatt oppgitt fravær deler
+                                  av dagen, viser vi kun datoen for fraværet og
+                                  ikke antall timer fra inntektsmeldingen
+                                </HelpText>
+                              </Theme>
+                            )}
+                          </div>
                           <List className="flex flex-col gap-2 mt-1">
                             {innsending.heleDager?.map((dag) => (
                               <List.Item key={dag.fom}>
