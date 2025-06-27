@@ -176,6 +176,14 @@ export const opplysningerSchema = z.object({
     "OPPLÆRINGSPENGER",
     "OMSORGSPENGER",
   ]),
+  etterspurtePerioder: z
+    .array(
+      z.object({
+        fom: z.string(),
+        tom: z.string(),
+      }),
+    )
+    .optional(),
 });
 
 export type OpplysningerDto = z.infer<typeof opplysningerSchema>;
