@@ -23,9 +23,9 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Theme,
   VStack,
 } from "@navikt/ds-react";
-import { Theme } from "@navikt/ds-react/Theme";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -550,7 +550,7 @@ const TidligereInnsendinger = ({
                     : "Inntektsmelding - sendt inn"}{" "}
                   {innsending.opprettetDato.toLocaleDateString("nb-NO")}
                 </Accordion.Header>
-                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid border-surface-neutral-subtle">
+                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid !border-surface-neutral-subtle !border-y-0 !border-r-0">
                   <div className="flex flex-col gap-4">
                     {innsending.heleDager &&
                       innsending.heleDager?.length > 0 && (
@@ -563,11 +563,14 @@ const TidligereInnsendinger = ({
                             </Label>
                             {!innsending.erRefusjon && (
                               <Theme theme="light">
-                                <HelpText title="Dager med oppgitt fravær">
-                                  Hvis den ansatte har hatt oppgitt fravær deler
-                                  av dagen, viser vi kun datoen for fraværet og
-                                  ikke antall timer fra inntektsmeldingen
-                                </HelpText>
+                                <div className="bg-bg-subtle">
+                                  <HelpText title="Dager med oppgitt fravær">
+                                    Hvis den ansatte har hatt oppgitt fravær
+                                    deler av dagen, viser vi kun datoen for
+                                    fraværet og ikke antall timer fra
+                                    inntektsmeldingen
+                                  </HelpText>
+                                </div>
                               </Theme>
                             )}
                           </div>
