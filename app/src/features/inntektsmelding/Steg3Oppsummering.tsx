@@ -191,10 +191,13 @@ function lagSendInntektsmeldingRequest(
     kontaktperson: skjemaState.kontaktperson,
     startdato: opplysninger.førsteUttaksdato,
     inntekt: formatStrengTilTall(gjeldendeInntekt),
-    refusjon: refusjon.map((r) => ({
-      ...r,
-      beløp: formatStrengTilTall(r.beløp),
-    })),
+    refusjon:
+      opplysninger.ytelse === "OMSORGSPENGER"
+        ? []
+        : refusjon.map((r) => ({
+            ...r,
+            beløp: formatStrengTilTall(r.beløp),
+          })),
     bortfaltNaturalytelsePerioder: konverterNaturalytelsePerioder(
       skjemaState.bortfaltNaturalytelsePerioder,
     ),

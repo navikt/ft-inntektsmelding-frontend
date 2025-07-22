@@ -39,8 +39,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-      - name: Measure bundle size (PR branch)
-        run: npx vite-size --react --total > pr-bundle-size.json
+      - name: Measure bundle size (PR branch)q
+        run: npx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
@@ -51,7 +51,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
-        run: npx vite-size --react --total > base-bundle-size.json
+        run: npx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
 
       - name: Compare bundle sizes
         id: compare
