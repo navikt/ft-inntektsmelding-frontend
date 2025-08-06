@@ -17,41 +17,53 @@ import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refu
 import { ErrorMessage } from "./ErrorMessage";
 
 export const OppsummeringOmsorgsdager = ({
+  fraværHeleDager,
+  fraværDelerAvDagen,
+  dagerSomSkalTrekkes,
+  harUtbetaltLønn,
+  harDekket10FørsteOmsorgsdager,
   redigerbar,
+  heading = "Omsorgsdager dere søker utbetaling for",
+  editPath = "../3-omsorgsdager",
 }: {
+  fraværHeleDager: { fom: string; tom: string }[];
+  fraværDelerAvDagen: { dato: string; timer: string }[];
+  dagerSomSkalTrekkes: { fom: string; tom: string }[];
+  // brukes i inntektsmelding initiert av arbeidstaker
+  harUtbetaltLønn?: boolean;
+  harDekket10FørsteOmsorgsdager?: boolean;
   redigerbar: boolean;
+  heading?: string;
+  editPath?: string;
 }) => {
-  const { getValues, formState } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const context = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { formState } = context || {};
 
-  const fraværHeleDager = getValues("fraværHeleDager");
   const harFraværHeleDager = (fraværHeleDager?.length ?? 0) > 0;
-  const fraværDelerAvDagen = getValues("fraværDelerAvDagen");
   const harFraværDelerAvDagen = (fraværDelerAvDagen?.length ?? 0) > 0;
-  const dagerSomSkalTrekkes = getValues("dagerSomSkalTrekkes");
   const harDagerSomSkalTrekkes = (dagerSomSkalTrekkes?.length ?? 0) > 0;
   return (
     <FormSummary>
       <FormSummaryHeader>
-        <FormSummaryHeading level="3">
-          Omsorgsdager dere søker utbetaling for
-        </FormSummaryHeading>
-        {redigerbar && (
-          <FormSummaryEditLink as={Link} to={"../3-omsorgsdager"} />
-        )}
+        <FormSummaryHeading level="3">{heading}</FormSummaryHeading>
+        {redigerbar && <FormSummaryEditLink as={Link} to={editPath} />}
       </FormSummaryHeader>
       <FormSummaryAnswers>
-        <FormSummaryAnswer>
-          <FormSummaryLabel>
-            Har dere dekket de 10 første omsorgsdagene i år?
-          </FormSummaryLabel>
-          <FormSummaryValue>
-            {getValues("harDekket10FørsteOmsorgsdager") ? "Ja" : "Nei"}
-            <ErrorMessage
-              message={formState.errors.harDekket10FørsteOmsorgsdager?.message}
-            />
-          </FormSummaryValue>
-        </FormSummaryAnswer>
+        {harDekket10FørsteOmsorgsdager !== undefined && (
+          <FormSummaryAnswer>
+            <FormSummaryLabel>
+              Har dere dekket de 10 første omsorgsdagene i år?
+            </FormSummaryLabel>
+            <FormSummaryValue>
+              {harDekket10FørsteOmsorgsdager ? "Ja" : "Nei"}
+              <ErrorMessage
+                message={
+                  formState?.errors?.harDekket10FørsteOmsorgsdager?.message
+                }
+              />
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        )}
         <FormSummaryAnswer>
           <FormSummaryLabel>Dager med fravær hele dagen</FormSummaryLabel>
           <FormSummaryValue>
@@ -69,7 +81,9 @@ export const OppsummeringOmsorgsdager = ({
             ) : (
               "Ingen dager med fravær hele dagen"
             )}
-            <ErrorMessage message={formState.errors.fraværHeleDager?.message} />
+            <ErrorMessage
+              message={formState?.errors?.fraværHeleDager?.message}
+            />
           </FormSummaryValue>
         </FormSummaryAnswer>
         <FormSummaryAnswer>
@@ -95,7 +109,7 @@ export const OppsummeringOmsorgsdager = ({
               "Ingen dager med fravær bare deler av dagen"
             )}
             <ErrorMessage
-              message={formState.errors.fraværDelerAvDagen?.message}
+              message={formState?.errors?.fraværDelerAvDagen?.message}
             />
           </FormSummaryValue>
         </FormSummaryAnswer>
@@ -111,6 +125,16 @@ export const OppsummeringOmsorgsdager = ({
                   </ListItem>
                 ))}
               </List>
+            </FormSummaryValue>
+          </FormSummaryAnswer>
+        )}
+        {harUtbetaltLønn !== undefined && (
+          <FormSummaryAnswer>
+            <FormSummaryLabel>
+              Har dere utbetalt lønn for dette fraværet?
+            </FormSummaryLabel>
+            <FormSummaryValue>
+              {harUtbetaltLønn ? "Ja" : "Nei"}
             </FormSummaryValue>
           </FormSummaryAnswer>
         )}

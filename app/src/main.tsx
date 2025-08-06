@@ -1,4 +1,3 @@
-import "@navikt/ds-css";
 import "./index.css";
 import "./settOppGrafanaFaro.ts";
 

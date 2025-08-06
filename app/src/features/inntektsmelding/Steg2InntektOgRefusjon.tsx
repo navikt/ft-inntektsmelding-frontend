@@ -26,6 +26,7 @@ import {
   NATURALYTELSE_SOM_MISTES_TEMPLATE,
   Naturalytelser,
 } from "../skjema-moduler/Naturalytelser";
+import OmFraværetOmsorgspenger from "../skjema-moduler/OmFraværetOmsorgspenger";
 import { UtbetalingOgRefusjon } from "../skjema-moduler/UtbetalingOgRefusjon";
 import { useDocumentTitle } from "../useDocumentTitle";
 
@@ -160,14 +161,21 @@ export function Steg2InntektOgRefusjon() {
             Inntekt og refusjon
           </Heading>
           <Fremgangsindikator aktivtSteg={2} />
-          <Ytelsesperiode />
+          {opplysninger.ytelse !== "OMSORGSPENGER" && <Ytelsesperiode />}
+          {opplysninger.ytelse === "OMSORGSPENGER" && (
+            <OmFraværetOmsorgspenger />
+          )}
           <hr />
           <Inntekt
             harEksisterendeInntektsmeldinger={harEksisterendeInntektsmeldinger}
             opplysninger={opplysninger}
           />
-          <UtbetalingOgRefusjon />
-          <Naturalytelser opplysninger={opplysninger} />
+          {opplysninger.ytelse !== "OMSORGSPENGER" && (
+            <>
+              <UtbetalingOgRefusjon />
+              <Naturalytelser opplysninger={opplysninger} />
+            </>
+          )}
           <div className="flex gap-4 justify-center">
             <Button
               as={Link}
@@ -205,6 +213,9 @@ function Ytelsesperiode() {
   const { person, ytelse, førsteUttaksdato } = opplysninger;
 
   const førsteDag = capitalize(formatDatoLang(new Date(førsteUttaksdato)));
+  if (ytelse === "OMSORGSPENGER") {
+    return null;
+  }
 
   return (
     <VStack gap="4">

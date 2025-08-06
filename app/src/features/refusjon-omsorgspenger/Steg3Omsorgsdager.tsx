@@ -1,5 +1,3 @@
-import "@navikt/ds-css/darkside";
-
 import {
   ArrowDownIcon,
   ArrowLeftIcon,
@@ -18,15 +16,16 @@ import {
   Dropdown,
   GuidePanel,
   Heading,
+  HelpText,
   HStack,
   Label,
   List,
   Radio,
   RadioGroup,
   TextField,
+  Theme,
   VStack,
 } from "@navikt/ds-react";
-import { Theme } from "@navikt/ds-react/Theme";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
@@ -505,6 +504,7 @@ const TidligereInnsendinger = ({
           inntektsmelding.omsorgspenger.fraværDelerAvDagen?.filter(
             (dag) => Number(dag.timer) === 0,
           ),
+        erRefusjon: inntektsmelding.refusjon?.length ?? 0 > 0,
       };
     }) || [];
 
@@ -545,15 +545,35 @@ const TidligereInnsendinger = ({
             {innsendingerSomSkalVises?.map((innsending) => (
               <Accordion.Item key={innsending.id}>
                 <Accordion.Header className="text-text-action">
-                  Refusjonskrav - sendt inn{" "}
+                  {innsending.erRefusjon
+                    ? "Refusjonskrav - sendt inn"
+                    : "Inntektsmelding - sendt inn"}{" "}
                   {innsending.opprettetDato.toLocaleDateString("nb-NO")}
                 </Accordion.Header>
-                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid border-surface-neutral-subtle">
+                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid !border-surface-neutral-subtle !border-y-0 !border-r-0">
                   <div className="flex flex-col gap-4">
                     {innsending.heleDager &&
                       innsending.heleDager?.length > 0 && (
                         <div>
-                          <Label>Hele dager dere søkte refusjon for</Label>
+                          <div className="flex gap-2 items-center">
+                            <Label>
+                              {innsending.erRefusjon
+                                ? "Hele dager dere søkte refusjon for"
+                                : "Dager med oppgitt fravær"}
+                            </Label>
+                            {!innsending.erRefusjon && (
+                              <Theme theme="light">
+                                <div className="bg-bg-subtle">
+                                  <HelpText title="Dager med oppgitt fravær">
+                                    Hvis den ansatte har hatt oppgitt fravær
+                                    deler av dagen, viser vi kun datoen for
+                                    fraværet og ikke antall timer fra
+                                    inntektsmeldingen
+                                  </HelpText>
+                                </div>
+                              </Theme>
+                            )}
+                          </div>
                           <List className="flex flex-col gap-2 mt-1">
                             {innsending.heleDager?.map((dag) => (
                               <List.Item key={dag.fom}>
@@ -621,10 +641,10 @@ const TidligereInnsendinger = ({
           Vis flere
         </Button>
       )}
-      <BodyLong className="text-text-subtle mt-4" size="small">
+      <Detail className="mt-4">
         Har dere brukt lønns- og personalsystem eller Altinn for å sende inn
         inntektsmelding for omsorgspenger vil de ikke vises i listen over.
-      </BodyLong>
+      </Detail>
     </Box>
   );
 };
