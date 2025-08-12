@@ -12,7 +12,11 @@ import { Link } from "@tanstack/react-router";
 
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "~/features/refusjon-omsorgspenger/useInnloggetBruker";
-import { formatFodselsnummer, lagFulltNavn } from "~/utils";
+import {
+  formatFodselsnummer,
+  formatTelefonnummer,
+  lagFulltNavn,
+} from "~/utils";
 
 import { ErrorMessage } from "./ErrorMessage";
 
@@ -56,7 +60,7 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
           <FormSummaryLabel>Kontaktperson og innsender</FormSummaryLabel>
           <FormSummaryValue>
             {getValues("kontaktperson.navn")} (tlf.{" "}
-            {getValues("kontaktperson.telefonnummer")})
+            {formatTelefonnummer(getValues("kontaktperson.telefonnummer"))})
             <ErrorMessage
               message={
                 formState.errors.kontaktperson?.message ||
@@ -72,7 +76,7 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
               fornavn: getValues("ansattesFornavn")!,
               etternavn: getValues("ansattesEtternavn")!,
             })}
-            , {formatFodselsnummer(getValues("ansattesFødselsnummer"))}
+            , f.nr. {formatFodselsnummer(getValues("ansattesFødselsnummer"))}
             <ErrorMessage
               message={formState.errors.ansattesFødselsnummer?.message}
             />

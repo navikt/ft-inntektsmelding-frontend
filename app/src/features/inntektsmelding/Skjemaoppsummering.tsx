@@ -234,7 +234,7 @@ const ArbeidsgiverOgAnsattOppsummering = ({
         <FormSummary.Label>Den ansatte</FormSummary.Label>
         <FormSummary.Value>
           {lagFulltNavn(opplysninger.person)}
-          {", "}
+          {", f.nr. "}
           {formatFødselsnummer(opplysninger.person.fødselsnummer)}
         </FormSummary.Value>
       </FormSummary.Answer>
