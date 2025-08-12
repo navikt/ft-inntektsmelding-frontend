@@ -55,6 +55,7 @@ export const Steg1DineOpplysninger = () => {
       },
     });
   const navigate = useNavigate();
+  const { vis } = useHjelpetekst().visHjelpetekster;
 
   const onSubmit = handleSubmit((kontaktperson) => {
     setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
@@ -129,17 +130,20 @@ export const Steg1DineOpplysninger = () => {
                 size="medium"
               />
             </HGrid>
-            <Alert variant="info">
-              <Heading level="3" size="xsmall" spacing>
-                Er kontaktinformasjonen riktig?
-              </Heading>
-              <BodyLong>
-                Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
-                får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
-                for nummeret til sentralbordet. Hvis du vet at du vil være
-                utilgjengelig fremover, kan du endre til en annen kontaktperson.
-              </BodyLong>
-            </Alert>
+            {vis && (
+              <Alert variant="info">
+                <Heading level="3" size="xsmall" spacing>
+                  Er kontaktinformasjonen riktig?
+                </Heading>
+                <BodyLong>
+                  Hvis vi har spørsmål om inntektsmeldingen, er det viktig at vi
+                  får kontakt med deg. Bruk derfor direktenummeret ditt i stedet
+                  for nummeret til sentralbordet. Hvis du vet at du vil være
+                  utilgjengelig fremover, kan du endre til en annen
+                  kontaktperson.
+                </BodyLong>
+              </Alert>
+            )}
           </Informasjonsseksjon>
 
           <Button
@@ -222,7 +226,7 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
       <div>
         <span>{fulltNavn}</span>
         <div className="flex items-center gap-2">
-          {formatFødselsnummer(person.fødselsnummer)}{" "}
+          F.nr. {formatFødselsnummer(person.fødselsnummer)}{" "}
           <CopyButton copyText={person.fødselsnummer} size="small" />
         </div>
       </div>

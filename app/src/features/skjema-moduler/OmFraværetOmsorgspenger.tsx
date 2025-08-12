@@ -18,6 +18,7 @@ import { useFormContext } from "react-hook-form";
 
 import { formatDatoKort, lagFulltNavn } from "~/utils";
 
+import { useHjelpetekst } from "../Hjelpetekst";
 import { InntektOgRefusjonForm } from "../inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
 
@@ -25,6 +26,7 @@ const OmFraværetOmsorgspenger = () => {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const opplysninger = useOpplysninger();
+  const { vis } = useHjelpetekst().visHjelpetekster;
 
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
@@ -56,7 +58,7 @@ const OmFraværetOmsorgspenger = () => {
           Nei
         </Radio>
       </RadioGroup>
-      {watch("skalRefunderes") === "JA_LIK_REFUSJON" && (
+      {watch("skalRefunderes") === "JA_LIK_REFUSJON" && vis && (
         <Alert variant="info">
           <div className="flex flex-col gap-4">
             <BodyLong>
@@ -86,7 +88,7 @@ const OmFraværetOmsorgspenger = () => {
           </ButtonLink>
         </Alert>
       )}
-      {watch("skalRefunderes") === "NEI" && (
+      {watch("skalRefunderes") === "NEI" && vis && (
         <Alert variant="info">
           <div className="flex flex-col gap-4">
             <BodyLong>
