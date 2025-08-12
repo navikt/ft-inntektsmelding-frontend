@@ -194,7 +194,7 @@ const FraværHeleDagen = () => {
       </Heading>
       {fields.map((periode, index) => (
         <HStack
-          className="border-l-4 border-bg-subtle pl-4 py-2"
+          className="border-solid border-0 border-l-4 border-bg-subtle pl-4 py-2"
           gap="4"
           key={periode.id}
         >
@@ -261,7 +261,7 @@ const FraværDelerAvDagen = () => {
         return (
           <HStack
             align="start"
-            className="border-l-4 border-bg-subtle pl-4 py-2"
+            className="border-solid border-0 border-l-4 border-bg-subtle pl-4 py-2"
             gap="4"
             key={periode.id}
           >
@@ -387,7 +387,7 @@ const DagerSomSkalTrekkes = () => {
 
       {fields.map((periode, index) => (
         <HStack
-          className="border-l-4 border-bg-subtle pl-4 py-2"
+          className="border-solid border-0 border-l-4 border-bg-subtle pl-4 py-2"
           gap="4"
           key={periode.id}
         >
