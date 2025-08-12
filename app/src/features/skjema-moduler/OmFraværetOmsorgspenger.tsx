@@ -42,7 +42,7 @@ const OmFraværetOmsorgspenger = () => {
       <Heading id="om-fraværet-omsorgspenger" level="4" size="medium">
         Om fraværet
       </Heading>
-      <Fraværsdager navn={lagFulltNavn(opplysninger.innsender)} />
+      <Fraværsdager navn={lagFulltNavn(opplysninger.person)} />
       <RadioGroup
         className="mt-5"
         error={formState.errors.skalRefunderes?.message}
