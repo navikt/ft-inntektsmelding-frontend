@@ -16,7 +16,7 @@ import {
 import { createLink } from "@tanstack/react-router";
 import { useFormContext } from "react-hook-form";
 
-import { lagFulltNavn } from "~/utils";
+import { formatDatoKort, lagFulltNavn } from "~/utils";
 
 import { InntektOgRefusjonForm } from "../inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
@@ -125,8 +125,8 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
               <List className="flex flex-col gap-2 mt-1">
                 {opplysninger.etterspurtePerioder?.map((periode) => (
                   <List.Item key={periode.fom}>
-                    {new Date(periode.fom).toLocaleDateString("nb-NO")} -{" "}
-                    {new Date(periode.tom).toLocaleDateString("nb-NO")}
+                    {formatDatoKort(new Date(periode.fom))} -{" "}
+                    {formatDatoKort(new Date(periode.tom))}
                   </List.Item>
                 ))}
               </List>

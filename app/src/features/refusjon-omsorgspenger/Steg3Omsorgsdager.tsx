@@ -30,6 +30,8 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 
+import { formatDatoKort } from "~/utils.ts";
+
 import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
@@ -548,7 +550,7 @@ const TidligereInnsendinger = ({
                   {innsending.erRefusjon
                     ? "Refusjonskrav - sendt inn"
                     : "Inntektsmelding - sendt inn"}{" "}
-                  {innsending.opprettetDato.toLocaleDateString("nb-NO")}
+                  {formatDatoKort(innsending.opprettetDato)}
                 </Accordion.Header>
                 <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid !border-surface-neutral-subtle !border-y-0 !border-r-0">
                   <div className="flex flex-col gap-4">
@@ -577,9 +579,8 @@ const TidligereInnsendinger = ({
                           <List className="flex flex-col gap-2 mt-1">
                             {innsending.heleDager?.map((dag) => (
                               <List.Item key={dag.fom}>
-                                {new Date(dag.fom).toLocaleDateString("nb-NO")}{" "}
-                                -{" "}
-                                {new Date(dag.tom).toLocaleDateString("nb-NO")}
+                                {formatDatoKort(new Date(dag.fom))} -{" "}
+                                {formatDatoKort(new Date(dag.tom))}
                               </List.Item>
                             ))}
                           </List>
@@ -594,10 +595,8 @@ const TidligereInnsendinger = ({
                             <List className="flex flex-col gap-2 mt-1">
                               {innsending.delviseDager?.map((dag) => (
                                 <List.Item key={dag.dato}>
-                                  {new Date(dag.dato).toLocaleDateString(
-                                    "nb-NO",
-                                  )}{" "}
-                                  - {dag.timer} timer
+                                  {formatDatoKort(new Date(dag.dato))} -{" "}
+                                  {dag.timer} timer
                                 </List.Item>
                               ))}
                             </List>
@@ -613,9 +612,7 @@ const TidligereInnsendinger = ({
                             <List className="flex flex-col gap-2 mt-1">
                               {innsending.dagerSomSkalTrekkes?.map((dag) => (
                                 <List.Item key={dag.dato}>
-                                  {new Date(dag.dato).toLocaleDateString(
-                                    "nb-NO",
-                                  )}
+                                  {formatDatoKort(new Date(dag.dato))}
                                 </List.Item>
                               ))}
                             </List>

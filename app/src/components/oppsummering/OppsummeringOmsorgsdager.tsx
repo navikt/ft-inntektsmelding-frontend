@@ -13,6 +13,7 @@ import { ListItem } from "@navikt/ds-react/List";
 import { Link } from "@tanstack/react-router";
 
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
+import { formatDatoKort } from "~/utils.ts";
 
 import { ErrorMessage } from "./ErrorMessage";
 
@@ -72,8 +73,8 @@ export const OppsummeringOmsorgsdager = ({
                 {fraværHeleDager?.map((periode, index) =>
                   periode.fom && periode.tom ? (
                     <ListItem key={index}>
-                      {new Date(periode.fom).toLocaleDateString("nb-no")}–
-                      {new Date(periode.tom).toLocaleDateString("nb-no")}
+                      {formatDatoKort(new Date(periode.fom))}–
+                      {formatDatoKort(new Date(periode.tom))}
                     </ListItem>
                   ) : null,
                 )}
@@ -97,7 +98,7 @@ export const OppsummeringOmsorgsdager = ({
                   ?.filter((fravær) => Number(fravær.timer) > 0)
                   .map((fravær, index) => (
                     <ListItem key={index}>
-                      {new Date(fravær.dato).toLocaleDateString("nb-no")}
+                      {formatDatoKort(new Date(fravær.dato))}
                       {fravær.timer &&
                         ` (${fravær.timer} ${
                           Number(fravær.timer) === 1 ? "time" : "timer"
@@ -120,8 +121,8 @@ export const OppsummeringOmsorgsdager = ({
               <List>
                 {dagerSomSkalTrekkes?.map((dag, index) => (
                   <ListItem key={index}>
-                    {new Date(dag.fom).toLocaleDateString("nb-no")}–
-                    {new Date(dag.tom).toLocaleDateString("nb-no")}
+                    {formatDatoKort(new Date(dag.fom))}–
+                    {formatDatoKort(new Date(dag.tom))}
                   </ListItem>
                 ))}
               </List>

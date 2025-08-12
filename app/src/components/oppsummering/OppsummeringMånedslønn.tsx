@@ -12,7 +12,7 @@ import { Link } from "@tanstack/react-router";
 
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
 import { endringsårsak } from "~/features/skjema-moduler/Inntekt";
-import { formatKroner } from "~/utils";
+import { formatDatoKort, formatKroner } from "~/utils";
 
 import { ErrorMessage } from "./ErrorMessage";
 
@@ -57,9 +57,9 @@ export const OppsummeringMånedslønn = ({
                   {årsak.fom && (
                     <>
                       {" "}
-                      {new Date(årsak.fom).toLocaleDateString("nb-no")}
+                      {formatDatoKort(new Date(årsak.fom))}
                       {årsak.tom &&
-                        ` til ${new Date(årsak.tom).toLocaleDateString("nb-no")}`}
+                        ` til ${formatDatoKort(new Date(årsak.tom))}`}
                     </>
                   )}
                 </div>
