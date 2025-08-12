@@ -467,7 +467,7 @@ function Endringsårsaker({
       {fields.map((field, index) => {
         return (
           <div
-            className="pl-4 border-l-4 border-bg-subtle flex flex-col gap-4 relative"
+            className="pl-4 border-solid border-0 border-l-4 border-bg-subtle flex flex-col gap-4 relative"
             key={field.id}
           >
             <Select

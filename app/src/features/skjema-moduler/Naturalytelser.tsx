@@ -167,7 +167,10 @@ function MisterNaturalytelser({ opplysninger }: NaturalytelserProps) {
         const fom = watch(`bortfaltNaturalytelsePerioder.${index}.fom`);
 
         return (
-          <div className="border-l-4 border-bg-subtle p-4" key={field.id}>
+          <div
+            className="border-solid border-0 border-l-4 border-bg-subtle p-4"
+            key={field.id}
+          >
             <div className="flex gap-4 flex-col items-start relative">
               <Select
                 label="Naturalytelse som faller bort"
