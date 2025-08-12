@@ -121,7 +121,6 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
           {opplysninger.etterspurtePerioder &&
           opplysninger.etterspurtePerioder?.length > 0 ? (
             <div>
-              <Label>Dager med oppgitt fravær</Label>
               <List className="flex flex-col gap-2 mt-1">
                 {opplysninger.etterspurtePerioder?.map((periode) => (
                   <List.Item key={periode.fom}>
