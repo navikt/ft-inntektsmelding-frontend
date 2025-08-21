@@ -51,10 +51,6 @@ export function formatTelefonnummer(telefonnummer: string): string {
     return telefonnummer;
   }
 
-  if (["4", "8", "9"].includes(tegn[0])) {
-    return `${tegn.slice(0, 3)} ${tegn.slice(3, 5)} ${tegn.slice(5)}`;
-  }
-
   return `${tegn.slice(0, 2)} ${tegn.slice(2, 4)} ${tegn.slice(4, 6)} ${tegn.slice(6)}`;
 }
 

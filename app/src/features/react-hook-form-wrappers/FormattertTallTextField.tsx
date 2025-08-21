@@ -64,7 +64,7 @@ const formatTall = (value: string | undefined) => {
   if (Number.isNaN(numberValue)) {
     return value;
   }
-  const formattedValue = new Intl.NumberFormat("nb-NO", {
+  const formattedValue = new Intl.NumberFormat("nb-no", {
     maximumFractionDigits: 2,
   }).format(numberValue);
 

@@ -62,8 +62,8 @@ export const Skjemaoppsummering = ({
                     {fravær?.map((periode, index) =>
                       periode.fom && periode.tom ? (
                         <ListItem key={index}>
-                          {new Date(periode.fom).toLocaleDateString("nb-no")}–
-                          {new Date(periode.tom).toLocaleDateString("nb-no")}
+                          {formatDatoKort(new Date(periode.fom))}–
+                          {formatDatoKort(new Date(periode.tom))}
                         </ListItem>
                       ) : null,
                     )}
@@ -234,7 +234,7 @@ const ArbeidsgiverOgAnsattOppsummering = ({
         <FormSummary.Label>Den ansatte</FormSummary.Label>
         <FormSummary.Value>
           {lagFulltNavn(opplysninger.person)}
-          {", "}
+          {", f.nr. "}
           {formatFødselsnummer(opplysninger.person.fødselsnummer)}
         </FormSummary.Value>
       </FormSummary.Answer>

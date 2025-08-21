@@ -16,8 +16,9 @@ import {
 import { createLink } from "@tanstack/react-router";
 import { useFormContext } from "react-hook-form";
 
-import { lagFulltNavn } from "~/utils";
+import { formatDatoKort, lagFulltNavn } from "~/utils";
 
+import { useHjelpetekst } from "../Hjelpetekst";
 import { InntektOgRefusjonForm } from "../inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
 
@@ -25,6 +26,7 @@ const OmFraværetOmsorgspenger = () => {
   const { register, formState, watch } =
     useFormContext<InntektOgRefusjonForm>();
   const opplysninger = useOpplysninger();
+  const { vis } = useHjelpetekst().visHjelpetekster;
 
   const { name, ...radioGroupProps } = register("skalRefunderes", {
     required: "Du må svare på dette spørsmålet",
@@ -42,7 +44,7 @@ const OmFraværetOmsorgspenger = () => {
       <Heading id="om-fraværet-omsorgspenger" level="4" size="medium">
         Om fraværet
       </Heading>
-      <Fraværsdager navn={lagFulltNavn(opplysninger.innsender)} />
+      <Fraværsdager navn={lagFulltNavn(opplysninger.person)} />
       <RadioGroup
         className="mt-5"
         error={formState.errors.skalRefunderes?.message}
@@ -56,7 +58,7 @@ const OmFraværetOmsorgspenger = () => {
           Nei
         </Radio>
       </RadioGroup>
-      {watch("skalRefunderes") === "JA_LIK_REFUSJON" && (
+      {watch("skalRefunderes") === "JA_LIK_REFUSJON" && vis && (
         <Alert variant="info">
           <div className="flex flex-col gap-4">
             <BodyLong>
@@ -86,7 +88,7 @@ const OmFraværetOmsorgspenger = () => {
           </ButtonLink>
         </Alert>
       )}
-      {watch("skalRefunderes") === "NEI" && (
+      {watch("skalRefunderes") === "NEI" && vis && (
         <Alert variant="info">
           <div className="flex flex-col gap-4">
             <BodyLong>
@@ -121,12 +123,11 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
           {opplysninger.etterspurtePerioder &&
           opplysninger.etterspurtePerioder?.length > 0 ? (
             <div>
-              <Label>Dager med oppgitt fravær</Label>
               <List className="flex flex-col gap-2 mt-1">
                 {opplysninger.etterspurtePerioder?.map((periode) => (
                   <List.Item key={periode.fom}>
-                    {new Date(periode.fom).toLocaleDateString("nb-NO")} -{" "}
-                    {new Date(periode.tom).toLocaleDateString("nb-NO")}
+                    {formatDatoKort(new Date(periode.fom))} -{" "}
+                    {formatDatoKort(new Date(periode.tom))}
                   </List.Item>
                 ))}
               </List>
