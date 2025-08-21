@@ -143,10 +143,6 @@ export const InntektsmeldingSkjemaStateProvider = ({
     InntektsmeldingSkjemaStateSchema,
   );
 
-  console.log("defaultSkjemaState", defaultSkjemaState);
-
-  console.log("state", state);
-
   const gyldigInntektsmeldingSkjemaState =
     InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
 
