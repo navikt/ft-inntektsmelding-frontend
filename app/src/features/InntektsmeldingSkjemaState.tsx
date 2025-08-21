@@ -29,6 +29,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       fom: z.string().optional(),
       tom: z.string().optional(),
       bleKjentFom: z.string().optional(),
+      ignorerTom: z.boolean().optional(),
     }),
   ),
   skalRefunderes: z
@@ -141,6 +142,10 @@ export const InntektsmeldingSkjemaStateProvider = ({
     defaultSkjemaState,
     InntektsmeldingSkjemaStateSchema,
   );
+
+  console.log("defaultSkjemaState", defaultSkjemaState);
+
+  console.log("state", state);
 
   const gyldigInntektsmeldingSkjemaState =
     InntektsmeldingSkjemaStateSchemaValidated.safeParse(state);
