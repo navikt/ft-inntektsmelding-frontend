@@ -29,6 +29,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
       fom: z.string().optional(),
       tom: z.string().optional(),
       bleKjentFom: z.string().optional(),
+      ignorerTom: z.boolean().optional(),
     }),
   ),
   skalRefunderes: z
