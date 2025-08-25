@@ -8,9 +8,11 @@ import {
   Detail,
   Heading,
   Label,
+  Link,
   List,
   Radio,
   RadioGroup,
+  ReadMore,
   Theme,
 } from "@navikt/ds-react";
 import { createLink } from "@tanstack/react-router";
@@ -67,12 +69,6 @@ const OmFraværetOmsorgspenger = () => {
               for omsorgsdagene, men likevel har betalt og skal søke om
               refusjon, må dere sende refusjonskrav omsorgspenger.
             </BodyLong>
-
-            <BodyLong>
-              Har dere kun utbetalt delvis lønn for fraværet må dere sende inn
-              forklaring på hva/hvilke dager dere har utbetalt i tillegg til å
-              sende inn denne inntektsmeldingen.
-            </BodyLong>
           </div>
           <ButtonLink
             className="mt-4"
@@ -92,16 +88,35 @@ const OmFraværetOmsorgspenger = () => {
         <Alert variant="info">
           <div className="flex flex-col gap-4">
             <BodyLong>
-              Hvis det er uenighet mellom den ansatte og arbeidsgiver om
-              fraværet må dere i tillegg til inntektsmeldingen sende inn en
-              forklaring. Forklaringen kan dere levere til den ansatte som
-              laster den opp til saken.
+              Hvis dere ikke har utbetalt lønn på grunn av uenighet om fraværet,
+              må dere i tillegg til inntektsmeldingen sende inn en forklaring
+              som beskriver hvorfor dere ikke utbetaler omsorgspenger. Har dere
+              utbetalt lønn for deler av fraværet må dere også sende inn en
+              forklaring.
             </BodyLong>
-            <BodyLong>
-              Hvis den ansatte har jobbet kortere enn fire uker hos dere trenger
-              vi ikke noe forklaring utover inntektsmeldingen og registrering i
-              a-ordningen.
-            </BodyLong>
+            <ReadMore header="Slik sender du dokumentasjon">
+              <BodyShort>
+                Dokumentasjon kan sendes til oss på to måter:
+                <List>
+                  <List.Item>
+                    Gi dokumentasjonen til den ansatte, som selv ettersender den
+                    digitalt ved å logge inn på nav.no.
+                  </List.Item>
+                  <List.Item>
+                    Gå til{" "}
+                    <Link
+                      href="https://www.nav.no/start/ettersend-soknad-utbetaling-omsorgspenger-arbeidsgiver-ikke-utbetaler"
+                      target="_blank"
+                    >
+                      siden for ettersendelse
+                    </Link>
+                    , og velg ettersend i posten. Husk å notere den ansatte sitt
+                    fødsels- og personnummer når du henter ut førsteside for
+                    innsendelse.
+                  </List.Item>
+                </List>
+              </BodyShort>
+            </ReadMore>
           </div>
         </Alert>
       )}
@@ -138,8 +153,10 @@ const Fraværsdager = ({ navn }: { navn?: string }) => {
         </div>
       </Theme>
       <Detail className="mt-4">
-        Hvis den ansatte har hatt fravær deler av dagen, viser vi kun datoen for
-        fraværet og ikke antall timer.
+        Dette er dager den ansatte har søkt omsorgspenger, hvis du mener
+        fraværet er feil må du ta kontakt med den ansatte. Har den ansatte hatt
+        fravær deler av dagen, viser vi kun datoen for fraværet og ikke antall
+        timer.
       </Detail>
     </Box>
   );
