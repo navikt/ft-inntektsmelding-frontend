@@ -29,6 +29,7 @@ import {
 import OmFraværetOmsorgspenger from "../skjema-moduler/OmFraværetOmsorgspenger";
 import { UtbetalingOgRefusjon } from "../skjema-moduler/UtbetalingOgRefusjon";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 
 type JaNei = "ja" | "nei";
 
@@ -61,6 +62,7 @@ type NaturalytelserSomMistesForm = {
 };
 
 export function Steg2InntektOgRefusjon() {
+  useScrollToTopOnMount();
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Inntekt og refusjon – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,

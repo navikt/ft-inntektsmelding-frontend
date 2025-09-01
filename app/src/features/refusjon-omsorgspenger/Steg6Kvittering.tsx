@@ -27,8 +27,10 @@ import { ReactNode } from "react";
 import { hentInntektsmeldingPdfUrl } from "~/api/queries";
 
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 export const Steg6Kvittering = () => {
+  useScrollToTopOnMount();
   useDocumentTitle(
     "Kvittering – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );

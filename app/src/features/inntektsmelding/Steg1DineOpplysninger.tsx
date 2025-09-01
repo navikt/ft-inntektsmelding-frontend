@@ -29,12 +29,14 @@ import {
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "../skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
   InntektsmeldingSkjemaState["kontaktperson"]
 >;
 
 export const Steg1DineOpplysninger = () => {
+  useScrollToTopOnMount();
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,

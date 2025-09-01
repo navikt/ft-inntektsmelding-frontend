@@ -15,11 +15,13 @@ import { useEffect } from "react";
 import { capitalizeSetning } from "~/utils.ts";
 
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount.tsx";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 import { useInnloggetBruker } from "./useInnloggetBruker";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg1 = () => {
+  useScrollToTopOnMount();
   useDocumentTitle("Søknad om refusjon av omsorgspenger for arbeidsgiver");
 
   const innloggetBruker = useInnloggetBruker();

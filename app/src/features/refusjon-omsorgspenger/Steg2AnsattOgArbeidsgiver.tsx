@@ -20,11 +20,13 @@ import { formatFodselsnummer, lagFulltNavn } from "~/utils.ts";
 
 import { HjelpetekstAlert } from "../Hjelpetekst.tsx";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount.tsx";
 import { hentArbeidstakerOptions } from "./api/queries";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg2 = () => {
+  useScrollToTopOnMount();
   useDocumentTitle(
     "Ansatt og arbeidsgiver – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
