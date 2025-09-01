@@ -25,11 +25,13 @@ import { useInntektsmeldingSkjema } from "~/features/InntektsmeldingSkjemaState"
 import { useDocumentTitle } from "~/features/useDocumentTitle";
 import { formatYtelsesnavn, lagFulltNavn, slugify } from "~/utils";
 
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 
 export const Steg4Kvittering = () => {
+  useScrollToTopOnMount();
   const { id } = route.useParams();
   const opplysninger = useOpplysninger();
   const { gyldigInntektsmeldingSkjemaState } = useInntektsmeldingSkjema();

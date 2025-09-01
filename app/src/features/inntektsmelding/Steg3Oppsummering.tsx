@@ -20,12 +20,14 @@ import {
   formatYtelsesnavn,
 } from "~/utils";
 
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 import { Skjemaoppsummering } from "./Skjemaoppsummering";
 import { useOpplysninger } from "./useOpplysninger";
 
 const route = getRouteApi("/$id");
 
 export const Steg3Oppsummering = () => {
+  useScrollToTopOnMount();
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Oppsummering – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,

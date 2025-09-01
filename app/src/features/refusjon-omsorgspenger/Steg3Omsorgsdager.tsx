@@ -36,6 +36,7 @@ import { HjelpetekstAlert, HjelpetekstReadMore } from "../Hjelpetekst.tsx";
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
 import { DateRangePickerWrapped } from "../react-hook-form-wrappers/DateRangePickerWrapped";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount.tsx";
 import { RefusjonOmsorgspengerResponseDto } from "./api/mutations.ts";
 import { useHentInntektsmeldingForÅr } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
@@ -46,6 +47,7 @@ import {
 } from "./utils.ts";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg3 = () => {
+  useScrollToTopOnMount();
   useDocumentTitle(
     "Omsorgsdager - søknad om refusjon av omsorgspenger for arbeidsgiver",
   );

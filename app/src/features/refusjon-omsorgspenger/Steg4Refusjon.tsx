@@ -21,6 +21,7 @@ import { hentGrunnbeløpOptions } from "~/api/queries.ts";
 
 import { Inntekt } from "../skjema-moduler/Inntekt";
 import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount.tsx";
 import { hentInntektsopplysningerOptions } from "./api/queries.ts";
 import { OmsorgspengerFremgangsindikator } from "./OmsorgspengerFremgangsindikator.tsx";
 import {
@@ -29,6 +30,7 @@ import {
 } from "./RefusjonOmsorgspengerArbeidsgiverForm";
 
 export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
+  useScrollToTopOnMount();
   useDocumentTitle(
     "Refusjon – søknad om refusjon av omsorgspenger for arbeidsgiver",
   );
