@@ -96,9 +96,6 @@ export const HentOpplysninger = () => {
         ytelseType,
         førsteFraværsdag,
       );
-      if (ytelseType === "SVANGERSKAPSPENGER" && personinfo.kjønn === "MANN") {
-        throw new Error("MENN_KAN_IKKE_SØKE_SVP");
-      }
 
       return personinfo;
     },

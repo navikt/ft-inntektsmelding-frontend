@@ -18,6 +18,7 @@ import {
   type InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
@@ -63,7 +64,10 @@ export const Steg1DineOpplysninger = () => {
     setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
     navigate({
       from: "/$id/dine-opplysninger",
-      to: "../inntekt-og-refusjon",
+      to:
+        opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
+          ? "../refusjon"
+          : "../inntekt-og-refusjon",
     });
   });
 
