@@ -16,6 +16,7 @@ import { Route as IdIndexRouteImport } from './routes/$id.index'
 import { Route as RefusjonOmsorgspengerOrganisasjonsnummerRouteImport } from './routes/refusjon-omsorgspenger.$organisasjonsnummer'
 import { Route as IdVisRouteImport } from './routes/$id.vis'
 import { Route as IdRefusjonRouteImport } from './routes/$id.refusjon'
+import { Route as IdOppsummeringAgiRouteImport } from './routes/$id.oppsummering-agi'
 import { Route as IdOppsummeringRouteImport } from './routes/$id.oppsummering'
 import { Route as IdKvitteringRouteImport } from './routes/$id.kvittering'
 import { Route as IdInntektOgRefusjonRouteImport } from './routes/$id.inntekt-og-refusjon'
@@ -62,6 +63,11 @@ const IdVisRoute = IdVisRouteImport.update({
 const IdRefusjonRoute = IdRefusjonRouteImport.update({
   id: '/refusjon',
   path: '/refusjon',
+  getParentRoute: () => IdRoute,
+} as any)
+const IdOppsummeringAgiRoute = IdOppsummeringAgiRouteImport.update({
+  id: '/oppsummering-agi',
+  path: '/oppsummering-agi',
   getParentRoute: () => IdRoute,
 } as any)
 const IdOppsummeringRoute = IdOppsummeringRouteImport.update({
@@ -136,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/oppsummering-agi': typeof IdOppsummeringAgiRoute
   '/$id/refusjon': typeof IdRefusjonRoute
   '/$id/vis': typeof IdVisRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/oppsummering-agi': typeof IdOppsummeringAgiRoute
   '/$id/refusjon': typeof IdRefusjonRoute
   '/$id/vis': typeof IdVisRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
+  '/$id/oppsummering-agi': typeof IdOppsummeringAgiRoute
   '/$id/refusjon': typeof IdRefusjonRoute
   '/$id/vis': typeof IdVisRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/$id/inntekt-og-refusjon'
     | '/$id/kvittering'
     | '/$id/oppsummering'
+    | '/$id/oppsummering-agi'
     | '/$id/refusjon'
     | '/$id/vis'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
@@ -215,6 +225,7 @@ export interface FileRouteTypes {
     | '/$id/inntekt-og-refusjon'
     | '/$id/kvittering'
     | '/$id/oppsummering'
+    | '/$id/oppsummering-agi'
     | '/$id/refusjon'
     | '/$id/vis'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
@@ -235,6 +246,7 @@ export interface FileRouteTypes {
     | '/$id/inntekt-og-refusjon'
     | '/$id/kvittering'
     | '/$id/oppsummering'
+    | '/$id/oppsummering-agi'
     | '/$id/refusjon'
     | '/$id/vis'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
@@ -304,6 +316,13 @@ declare module '@tanstack/react-router' {
       path: '/refusjon'
       fullPath: '/$id/refusjon'
       preLoaderRoute: typeof IdRefusjonRouteImport
+      parentRoute: typeof IdRoute
+    }
+    '/$id/oppsummering-agi': {
+      id: '/$id/oppsummering-agi'
+      path: '/oppsummering-agi'
+      fullPath: '/$id/oppsummering-agi'
+      preLoaderRoute: typeof IdOppsummeringAgiRouteImport
       parentRoute: typeof IdRoute
     }
     '/$id/oppsummering': {
@@ -391,6 +410,7 @@ interface IdRouteChildren {
   IdInntektOgRefusjonRoute: typeof IdInntektOgRefusjonRoute
   IdKvitteringRoute: typeof IdKvitteringRoute
   IdOppsummeringRoute: typeof IdOppsummeringRoute
+  IdOppsummeringAgiRoute: typeof IdOppsummeringAgiRoute
   IdRefusjonRoute: typeof IdRefusjonRoute
   IdVisRoute: typeof IdVisRoute
   IdIndexRoute: typeof IdIndexRoute
@@ -401,6 +421,7 @@ const IdRouteChildren: IdRouteChildren = {
   IdInntektOgRefusjonRoute: IdInntektOgRefusjonRoute,
   IdKvitteringRoute: IdKvitteringRoute,
   IdOppsummeringRoute: IdOppsummeringRoute,
+  IdOppsummeringAgiRoute: IdOppsummeringAgiRoute,
   IdRefusjonRoute: IdRefusjonRoute,
   IdVisRoute: IdVisRoute,
   IdIndexRoute: IdIndexRoute,

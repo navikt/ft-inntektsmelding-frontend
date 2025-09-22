@@ -41,7 +41,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     .optional(),
   refusjon: z.array(
     z.object({
-      fom: z.string().optional(),
+      fom: z.string(),
       beløp: beløpSchema,
     }),
   ),
@@ -57,50 +57,59 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
   ),
 });
 
+export const InntektsmeldingSkjemaStateSchemaValidatedArbeidsgiverInitiert =
+  z.object({
+    kontaktperson: z.object({
+      navn: z.string(),
+      telefonnummer: z.string(),
+    }),
+    refusjon: z.array(
+      z.object({
+        fom: z.string(),
+        beløp: beløpSchema,
+      }),
+    ),
+    skalRefunderes: z.union([
+      z.literal("JA_LIK_REFUSJON"),
+      z.literal("JA_VARIERENDE_REFUSJON"),
+      z.literal("NEI"),
+    ]),
+    opprettetTidspunkt: z.string().optional(),
+    id: z.number().optional(),
+  });
+
+export type InntektsmeldingSkjemaStateValidArbeidsgiverInitiert = z.infer<
+  typeof InntektsmeldingSkjemaStateSchemaValidatedArbeidsgiverInitiert
+>;
+
 /**
  * En strengere skjema state. Her er alle verdiene validert mot skjema-logikken.
  */
-export const InntektsmeldingSkjemaStateSchemaValidated = z.object({
-  kontaktperson: z.object({
-    navn: z.string(),
-    telefonnummer: z.string(),
-  }),
-  inntekt: beløpSchema,
-  korrigertInntekt: beløpSchema.optional(),
-  endringAvInntektÅrsaker: z.array(
-    z.object({
-      årsak: EndringAvInntektÅrsakerSchema,
-      fom: z.string().optional(),
-      tom: z.string().optional(),
-      ignorerTom: z.boolean(),
-      bleKjentFom: z.string().optional(),
-    }),
-  ),
-  skalRefunderes: z.union([
-    z.literal("JA_LIK_REFUSJON"),
-    z.literal("JA_VARIERENDE_REFUSJON"),
-    z.literal("NEI"),
-  ]),
-  refusjon: z.array(
-    z.object({
-      fom: z.string().optional(),
-      beløp: beløpSchema,
-    }),
-  ),
-  misterNaturalytelser: z.boolean(),
-  bortfaltNaturalytelsePerioder: z.array(
-    z.object({
-      navn: NaturalytelseTypeSchema,
-      beløp: beløpSchema,
-      fom: z.string(),
-      tom: z.string().optional(),
-      inkluderTom: z.boolean(),
-    }),
-  ),
-  // TODO: Disse burde flyttes til en egen schema for eksisterende inntektsmeldinger
-  opprettetTidspunkt: z.string().optional(),
-  id: z.number().optional(),
-});
+export const InntektsmeldingSkjemaStateSchemaValidated =
+  InntektsmeldingSkjemaStateSchemaValidatedArbeidsgiverInitiert.extend({
+    inntekt: beløpSchema,
+    korrigertInntekt: beløpSchema.optional(),
+    endringAvInntektÅrsaker: z.array(
+      z.object({
+        årsak: EndringAvInntektÅrsakerSchema,
+        fom: z.string().optional(),
+        tom: z.string().optional(),
+        ignorerTom: z.boolean(),
+        bleKjentFom: z.string().optional(),
+      }),
+    ),
+    misterNaturalytelser: z.boolean(),
+    bortfaltNaturalytelsePerioder: z.array(
+      z.object({
+        navn: NaturalytelseTypeSchema,
+        beløp: beløpSchema,
+        fom: z.string(),
+        tom: z.string().optional(),
+        inkluderTom: z.boolean(),
+      }),
+    ),
+    // TODO: Disse burde flyttes til en egen schema for eksisterende inntektsmeldinger
+  });
 
 export type InntektsmeldingSkjemaState = z.infer<
   typeof InntektsmeldingSkjemaStateSchema
@@ -112,6 +121,7 @@ export type InntektsmeldingSkjemaStateValid = z.infer<
 
 type InntektsmeldingSkjemaStateContextType = {
   gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
+  gyldigInntektsmeldingSkjemaStateArbeidsgiverInitiert?: InntektsmeldingSkjemaStateValidArbeidsgiverInitiert;
   inntektsmeldingSkjemaStateError?: ZodError;
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
   setInntektsmeldingSkjemaState: Dispatch<

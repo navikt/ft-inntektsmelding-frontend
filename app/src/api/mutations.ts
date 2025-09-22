@@ -2,6 +2,7 @@ import { mapInntektsmeldingResponseTilValidState } from "~/api/queries.ts";
 import {
   InntektsmeldingResponseDtoSchema,
   SendInntektsmeldingRequestDto,
+  SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert,
 } from "~/types/api-models.ts";
 import { logDev } from "~/utils.ts";
 
@@ -32,4 +33,34 @@ export async function sendInntektsmelding(
   }
 
   return mapInntektsmeldingResponseTilValidState(parsedJson.data);
+}
+
+export async function sendInntektsmeldingArbeidsgiverInitiert(
+  sendInntektsmeldingRequest: SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert,
+) {
+  const response = await fetch(
+    `${SERVER_URL}/imdialog/send-inntektsmelding/arbeidsgiverinitiert-nyansatt`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(sendInntektsmeldingRequest),
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Noe gikk galt.");
+  }
+
+  const json = await response.json();
+  const parsedJson = InntektsmeldingResponseDtoSchema.safeParse(json);
+
+  if (!parsedJson.success) {
+    logDev("error", parsedJson.error);
+
+    throw new Error("Responsen fra serveren matchet ikke forventet format");
+  }
+
+  return response.json();
 }

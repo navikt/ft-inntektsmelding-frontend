@@ -2,26 +2,23 @@ import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
-import isEqual from "lodash/isEqual";
 
-import { sendInntektsmelding } from "~/api/mutations.ts";
-import {
-  InntektsmeldingSkjemaStateValid,
-  useInntektsmeldingSkjema,
-} from "~/features/InntektsmeldingSkjemaState";
+import { sendInntektsmeldingArbeidsgiverInitiert } from "~/api/mutations.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "~/features/useDocumentTitle";
-import type { OpplysningerDto } from "~/types/api-models.ts";
-import { SendInntektsmeldingRequestDto } from "~/types/api-models.ts";
-import {
-  finnSenesteInntektsmelding,
-  formatStrengTilTall,
-  formatYtelsesnavn,
-} from "~/utils";
+import type {
+  OpplysningerDto,
+  SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert,
+} from "~/types/api-models.ts";
+import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 
-import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
-import { Skjemaoppsummering } from "./Skjemaoppsummering";
-import { useOpplysninger } from "./useOpplysninger";
+import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
+import { Skjemaoppsummering } from "../Skjemaoppsummering";
+import { useOpplysninger } from "../useOpplysninger";
+import {
+  InntektsmeldingSkjemaStateValid,
+  useInntektsmeldingSkjemaArbeidsgiverInitiert,
+} from "./SkjemaStateAGI";
 
 const route = getRouteApi("/$id");
 
@@ -34,7 +31,7 @@ export const Steg3Oppsummering = () => {
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState, inntektsmeldingSkjemaStateError } =
-    useInntektsmeldingSkjema();
+    useInntektsmeldingSkjemaArbeidsgiverInitiert();
 
   if (!gyldigInntektsmeldingSkjemaState) {
     // På dette punktet "skal" skjemaet være gyldig med mindre noe har gått galt. Logg error til Grafana for innsikt.
@@ -85,42 +82,18 @@ type SendInnInntektsmeldingProps = {
 };
 function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
-  const { id } = route.useParams();
-  const { eksisterendeInntektsmeldinger } = route.useLoaderData();
 
   const { gyldigInntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjema();
+    useInntektsmeldingSkjemaArbeidsgiverInitiert();
 
   const { mutate, error, isPending } = useMutation({
     mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
-      if (opplysninger.forespørselStatus === "UTGÅTT") {
-        throw new Error(
-          "Du kan ikke sende inn en ny inntektsmelding når oppgaven den er knyttet til er utgått.",
-        );
-      }
       const inntektsmeldingRequest = lagSendInntektsmeldingRequest(
-        id,
         skjemaState,
         opplysninger,
       );
-      const sisteInntektsmelding = finnSenesteInntektsmelding(
-        eksisterendeInntektsmeldinger,
-      );
 
-      if (sisteInntektsmelding) {
-        const eksisterendeInntektsmelding = lagSendInntektsmeldingRequest(
-          id,
-          sisteInntektsmelding,
-          opplysninger,
-        );
-        if (isEqual(inntektsmeldingRequest, eksisterendeInntektsmelding)) {
-          throw new Error(
-            "Du har ikke gjort noen endringer fra forrige innsendte inntektsmelding.",
-          );
-        }
-      }
-
-      return sendInntektsmelding(inntektsmeldingRequest);
+      return sendInntektsmeldingArbeidsgiverInitiert(inntektsmeldingRequest);
     },
     onSuccess: (inntektsmeldingState) => {
       setInntektsmeldingSkjemaState(inntektsmeldingState);
@@ -162,7 +135,6 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 }
 
 function lagSendInntektsmeldingRequest(
-  id: string,
   skjemaState: InntektsmeldingSkjemaStateValid,
   opplysninger: OpplysningerDto,
 ) {
@@ -179,12 +151,9 @@ function lagSendInntektsmeldingRequest(
     arbeidsgiverIdent: opplysninger.arbeidsgiver.organisasjonNummer,
     kontaktperson: skjemaState.kontaktperson,
     startdato: opplysninger.førsteUttaksdato,
-    refusjon:
-      opplysninger.ytelse === "OMSORGSPENGER"
-        ? []
-        : refusjon.map((r) => ({
-            ...r,
-            beløp: formatStrengTilTall(r.beløp),
-          })),
-  } satisfies SendInntektsmeldingRequestDto;
+    refusjon: refusjon.map((r) => ({
+      ...r,
+      beløp: formatStrengTilTall(r.beløp),
+    })),
+  } satisfies SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert;
 }

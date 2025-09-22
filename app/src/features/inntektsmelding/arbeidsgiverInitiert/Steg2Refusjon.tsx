@@ -9,14 +9,14 @@ import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator
 import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
 import { formatYtelsesnavn } from "~/utils";
 
+import { DatePickerWrapped } from "../../react-hook-form-wrappers/DatePickerWrapped";
+import { UtbetalingOgRefusjon } from "../../skjema-moduler/UtbetalingOgRefusjon";
+import { useDocumentTitle } from "../../useDocumentTitle";
+import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
 import {
   InntektsmeldingSkjemaState,
-  useInntektsmeldingSkjema,
-} from "../InntektsmeldingSkjemaState";
-import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
-import { UtbetalingOgRefusjon } from "../skjema-moduler/UtbetalingOgRefusjon";
-import { useDocumentTitle } from "../useDocumentTitle";
-import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
+  useInntektsmeldingSkjemaArbeidsgiverInitiert,
+} from "./SkjemaStateAGI";
 
 export type RefusjonForm = {
   meta: {
@@ -34,7 +34,7 @@ export function Steg2Refusjon() {
   );
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjema();
+    useInntektsmeldingSkjemaArbeidsgiverInitiert();
 
   const defaultInntekt = opplysninger.inntektsopplysninger.gjennomsnittLønn;
 
@@ -79,7 +79,6 @@ export function Steg2Refusjon() {
   }, [førsteFraværsdag]);
 
   const navigate = useNavigate();
-
   const onSubmit = handleSubmit((skjemadata) => {
     const { refusjon, skalRefunderes, førsteFraværsdag } = skjemadata;
 
@@ -91,7 +90,7 @@ export function Steg2Refusjon() {
     }));
     navigate({
       from: "/$id/inntekt-og-refusjon",
-      to: "../oppsummering",
+      to: "../oppsummering-agi",
     });
   });
 
