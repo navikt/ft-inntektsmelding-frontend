@@ -9,7 +9,7 @@ import { RefusjonOmsorgspengerResponseDtoSchema } from "~/features/refusjon-omso
 import { VisInnsendtRefusjonskrav } from "~/features/refusjon-omsorgspenger/VisInnsendtRefusjonskrav";
 import { logDev } from "~/utils";
 
-import { ARBEIDSGIVER_INITERT_ID } from "./agi/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "./opprett.tsx";
 
 enum FEILKODER {
   OPPGAVE_ER_UTGÅTT = "OPPGAVE_ER_UTGÅTT",

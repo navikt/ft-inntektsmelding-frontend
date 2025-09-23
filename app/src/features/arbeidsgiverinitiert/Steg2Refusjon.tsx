@@ -6,13 +6,12 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import { formatYtelsesnavn } from "~/utils";
 
-import { DatePickerWrapped } from "../../react-hook-form-wrappers/DatePickerWrapped";
-import { UtbetalingOgRefusjon } from "../../skjema-moduler/UtbetalingOgRefusjon";
-import { useDocumentTitle } from "../../useDocumentTitle";
-import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
+import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
+import { UtbetalingOgRefusjon } from "../skjema-moduler/UtbetalingOgRefusjon";
+import { useDocumentTitle } from "../useDocumentTitle";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 import {
   InntektsmeldingSkjemaStateAGI,
   useInntektsmeldingSkjemaAGI,
@@ -56,6 +55,7 @@ export function Steg2Refusjon() {
                 { fom: undefined, beløp: 0 },
               ]
             : inntektsmeldingSkjemaState.refusjon,
+      skalRefunderes: inntektsmeldingSkjemaState.skalRefunderes,
     },
   });
 
@@ -77,6 +77,14 @@ export function Steg2Refusjon() {
       ]);
     }
   }, [førsteFraværsdag]);
+
+  const skalRefunderes = watch("skalRefunderes");
+  useEffect(() => {
+    if (skalRefunderes && skalRefunderes === "JA_LIK_REFUSJON") {
+      const refusjon = watch("refusjon");
+      setValue("refusjon", [refusjon[0]]);
+    }
+  }, [skalRefunderes, førsteFraværsdag]);
 
   const navigate = useNavigate();
   const onSubmit = handleSubmit((skjemadata) => {
@@ -122,10 +130,7 @@ export function Steg2Refusjon() {
               Forrige steg
             </Button>
             <Button
-              disabled={
-                watch("skalRefunderes") === "NEI" &&
-                opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
-              }
+              disabled={watch("skalRefunderes") === "NEI"}
               icon={<ArrowRightIcon />}
               iconPosition="right"
               type="submit"

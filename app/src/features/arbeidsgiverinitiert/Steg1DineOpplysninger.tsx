@@ -1,0 +1,31 @@
+import { useNavigate } from "@tanstack/react-router";
+
+import { Steg1DineOpplysningerComponent } from "../inntektsmelding/Steg1DineOpplysninger";
+import {
+  InntektsmeldingSkjemaStateAGI,
+  useInntektsmeldingSkjemaAGI,
+} from "./SkjemaStateAGI";
+
+export const Steg1DineOpplysningerAGI = () => {
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjemaAGI();
+  const navigate = useNavigate();
+  const onSubmit = (
+    kontaktperson: InntektsmeldingSkjemaStateAGI["kontaktperson"],
+  ) => {
+    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaStateAGI) => ({
+      ...prev,
+      kontaktperson,
+    }));
+    navigate({
+      from: "/agi/dine-opplysninger",
+      to: "../refusjon",
+    });
+  };
+  return (
+    <Steg1DineOpplysningerComponent
+      inntektsmeldingSkjemaState={inntektsmeldingSkjemaState}
+      onSubmit={onSubmit}
+    />
+  );
+};

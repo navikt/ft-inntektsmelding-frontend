@@ -48,6 +48,7 @@
     "@tanstack/eslint-plugin-query": "5.81.2",
     "@tanstack/react-query-devtools": "5.81.2",
     "@tanstack/router-devtools": "1.121.34",
+    "@tanstack/router-plugin": "^1.131.50",
     "@tanstack/router-vite-plugin": "1.121.37",
     "@types/lodash": "4.17.19",
     "@types/node": "22.15.2",

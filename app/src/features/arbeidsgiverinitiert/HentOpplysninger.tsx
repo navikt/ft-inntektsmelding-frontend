@@ -20,7 +20,7 @@ import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import {
   OpplysningerRequest,
   SlåOppArbeidstakerResponseDto,
@@ -35,7 +35,7 @@ type FormType = {
 };
 
 export const HentOpplysninger = () => {
-  const route = getRouteApi("/agi/opprett");
+  const route = getRouteApi("/opprett");
   const { ytelseType } = route.useSearch();
   const navigate = useNavigate();
   useDocumentTitle(
@@ -76,6 +76,7 @@ export const HentOpplysninger = () => {
         });
       }
 
+      // Vi har en eksisterende oppgave. Vi må vi redirecter til den.
       return navigate({
         to: "/$id",
         params: { id: opplysninger.forespørselUuid },
@@ -214,7 +215,7 @@ function HentOpplysningerError({ error }: { error: Error | null }) {
   if (!error) {
     return null;
   }
-  const route = getRouteApi("/agi/opprett");
+  const route = getRouteApi("/opprett");
   const { ytelseType } = route.useSearch();
   if (error?.message === "INGEN_SAK_FUNNET") {
     return (

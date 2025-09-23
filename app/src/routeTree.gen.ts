@@ -10,21 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OpprettRouteImport } from './routes/opprett'
+import { Route as AgiRouteImport } from './routes/agi'
 import { Route as IdRouteImport } from './routes/$id'
 import { Route as OpprettIndexRouteImport } from './routes/opprett.index'
-import { Route as AgiIndexRouteImport } from './routes/agi/index'
 import { Route as IdIndexRouteImport } from './routes/$id.index'
 import { Route as RefusjonOmsorgspengerOrganisasjonsnummerRouteImport } from './routes/refusjon-omsorgspenger.$organisasjonsnummer'
-import { Route as AgiRefusjonRouteImport } from './routes/agi/refusjon'
-import { Route as AgiOppsummeringRouteImport } from './routes/agi/oppsummering'
-import { Route as AgiOpprettRouteImport } from './routes/agi/opprett'
-import { Route as AgiDineOpplysningerRouteImport } from './routes/agi/dine-opplysninger'
+import { Route as AgiRefusjonRouteImport } from './routes/agi.refusjon'
+import { Route as AgiOppsummeringRouteImport } from './routes/agi.oppsummering'
+import { Route as AgiKvitteringRouteImport } from './routes/agi.kvittering'
+import { Route as AgiDineOpplysningerRouteImport } from './routes/agi.dine-opplysninger'
 import { Route as IdVisRouteImport } from './routes/$id.vis'
 import { Route as IdOppsummeringRouteImport } from './routes/$id.oppsummering'
 import { Route as IdKvitteringRouteImport } from './routes/$id.kvittering'
 import { Route as IdInntektOgRefusjonRouteImport } from './routes/$id.inntekt-og-refusjon'
 import { Route as IdDineOpplysningerRouteImport } from './routes/$id.dine-opplysninger'
-import { Route as AgiOpprettIndexRouteImport } from './routes/agi/opprett.index'
 import { Route as RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRouteImport } from './routes/refusjon-omsorgspenger.$organisasjonsnummer.6-kvittering'
 import { Route as RefusjonOmsorgspengerOrganisasjonsnummer5OppsummeringRouteImport } from './routes/refusjon-omsorgspenger.$organisasjonsnummer.5-oppsummering'
 import { Route as RefusjonOmsorgspengerOrganisasjonsnummer4RefusjonRouteImport } from './routes/refusjon-omsorgspenger.$organisasjonsnummer.4-refusjon'
@@ -38,6 +37,11 @@ const OpprettRoute = OpprettRouteImport.update({
   path: '/opprett',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AgiRoute = AgiRouteImport.update({
+  id: '/agi',
+  path: '/agi',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IdRoute = IdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -47,11 +51,6 @@ const OpprettIndexRoute = OpprettIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => OpprettRoute,
-} as any)
-const AgiIndexRoute = AgiIndexRouteImport.update({
-  id: '/agi/',
-  path: '/agi/',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const IdIndexRoute = IdIndexRouteImport.update({
   id: '/',
@@ -65,24 +64,24 @@ const RefusjonOmsorgspengerOrganisasjonsnummerRoute =
     getParentRoute: () => rootRouteImport,
   } as any)
 const AgiRefusjonRoute = AgiRefusjonRouteImport.update({
-  id: '/agi/refusjon',
-  path: '/agi/refusjon',
-  getParentRoute: () => rootRouteImport,
+  id: '/refusjon',
+  path: '/refusjon',
+  getParentRoute: () => AgiRoute,
 } as any)
 const AgiOppsummeringRoute = AgiOppsummeringRouteImport.update({
-  id: '/agi/oppsummering',
-  path: '/agi/oppsummering',
-  getParentRoute: () => rootRouteImport,
+  id: '/oppsummering',
+  path: '/oppsummering',
+  getParentRoute: () => AgiRoute,
 } as any)
-const AgiOpprettRoute = AgiOpprettRouteImport.update({
-  id: '/agi/opprett',
-  path: '/agi/opprett',
-  getParentRoute: () => rootRouteImport,
+const AgiKvitteringRoute = AgiKvitteringRouteImport.update({
+  id: '/kvittering',
+  path: '/kvittering',
+  getParentRoute: () => AgiRoute,
 } as any)
 const AgiDineOpplysningerRoute = AgiDineOpplysningerRouteImport.update({
-  id: '/agi/dine-opplysninger',
-  path: '/agi/dine-opplysninger',
-  getParentRoute: () => rootRouteImport,
+  id: '/dine-opplysninger',
+  path: '/dine-opplysninger',
+  getParentRoute: () => AgiRoute,
 } as any)
 const IdVisRoute = IdVisRouteImport.update({
   id: '/vis',
@@ -108,11 +107,6 @@ const IdDineOpplysningerRoute = IdDineOpplysningerRouteImport.update({
   id: '/dine-opplysninger',
   path: '/dine-opplysninger',
   getParentRoute: () => IdRoute,
-} as any)
-const AgiOpprettIndexRoute = AgiOpprettIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AgiOpprettRoute,
 } as any)
 const RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRoute =
   RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRouteImport.update({
@@ -161,6 +155,7 @@ const RefusjonOmsorgspengerOrganisasjonsnummerIdRoute =
 
 export interface FileRoutesByFullPath {
   '/$id': typeof IdRouteWithChildren
+  '/agi': typeof AgiRouteWithChildren
   '/opprett': typeof OpprettRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
@@ -168,12 +163,11 @@ export interface FileRoutesByFullPath {
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
   '/agi/dine-opplysninger': typeof AgiDineOpplysningerRoute
-  '/agi/opprett': typeof AgiOpprettRouteWithChildren
+  '/agi/kvittering': typeof AgiKvitteringRoute
   '/agi/oppsummering': typeof AgiOppsummeringRoute
   '/agi/refusjon': typeof AgiRefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
   '/$id/': typeof IdIndexRoute
-  '/agi': typeof AgiIndexRoute
   '/opprett/': typeof OpprettIndexRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/$id': typeof RefusjonOmsorgspengerOrganisasjonsnummerIdRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro': typeof RefusjonOmsorgspengerOrganisasjonsnummer1IntroRoute
@@ -182,20 +176,20 @@ export interface FileRoutesByFullPath {
   '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon': typeof RefusjonOmsorgspengerOrganisasjonsnummer4RefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering': typeof RefusjonOmsorgspengerOrganisasjonsnummer5OppsummeringRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering': typeof RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRoute
-  '/agi/opprett/': typeof AgiOpprettIndexRoute
 }
 export interface FileRoutesByTo {
+  '/agi': typeof AgiRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
   '/$id/kvittering': typeof IdKvitteringRoute
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
   '/agi/dine-opplysninger': typeof AgiDineOpplysningerRoute
+  '/agi/kvittering': typeof AgiKvitteringRoute
   '/agi/oppsummering': typeof AgiOppsummeringRoute
   '/agi/refusjon': typeof AgiRefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
   '/$id': typeof IdIndexRoute
-  '/agi': typeof AgiIndexRoute
   '/opprett': typeof OpprettIndexRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/$id': typeof RefusjonOmsorgspengerOrganisasjonsnummerIdRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro': typeof RefusjonOmsorgspengerOrganisasjonsnummer1IntroRoute
@@ -204,11 +198,11 @@ export interface FileRoutesByTo {
   '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon': typeof RefusjonOmsorgspengerOrganisasjonsnummer4RefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering': typeof RefusjonOmsorgspengerOrganisasjonsnummer5OppsummeringRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering': typeof RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRoute
-  '/agi/opprett': typeof AgiOpprettIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/$id': typeof IdRouteWithChildren
+  '/agi': typeof AgiRouteWithChildren
   '/opprett': typeof OpprettRouteWithChildren
   '/$id/dine-opplysninger': typeof IdDineOpplysningerRoute
   '/$id/inntekt-og-refusjon': typeof IdInntektOgRefusjonRoute
@@ -216,12 +210,11 @@ export interface FileRoutesById {
   '/$id/oppsummering': typeof IdOppsummeringRoute
   '/$id/vis': typeof IdVisRoute
   '/agi/dine-opplysninger': typeof AgiDineOpplysningerRoute
-  '/agi/opprett': typeof AgiOpprettRouteWithChildren
+  '/agi/kvittering': typeof AgiKvitteringRoute
   '/agi/oppsummering': typeof AgiOppsummeringRoute
   '/agi/refusjon': typeof AgiRefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer': typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
   '/$id/': typeof IdIndexRoute
-  '/agi/': typeof AgiIndexRoute
   '/opprett/': typeof OpprettIndexRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/$id': typeof RefusjonOmsorgspengerOrganisasjonsnummerIdRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro': typeof RefusjonOmsorgspengerOrganisasjonsnummer1IntroRoute
@@ -230,12 +223,12 @@ export interface FileRoutesById {
   '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon': typeof RefusjonOmsorgspengerOrganisasjonsnummer4RefusjonRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering': typeof RefusjonOmsorgspengerOrganisasjonsnummer5OppsummeringRoute
   '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering': typeof RefusjonOmsorgspengerOrganisasjonsnummer6KvitteringRoute
-  '/agi/opprett/': typeof AgiOpprettIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/$id'
+    | '/agi'
     | '/opprett'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
@@ -243,12 +236,11 @@ export interface FileRouteTypes {
     | '/$id/oppsummering'
     | '/$id/vis'
     | '/agi/dine-opplysninger'
-    | '/agi/opprett'
+    | '/agi/kvittering'
     | '/agi/oppsummering'
     | '/agi/refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
     | '/$id/'
-    | '/agi'
     | '/opprett/'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/$id'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro'
@@ -257,20 +249,20 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering'
-    | '/agi/opprett/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/agi'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
     | '/$id/kvittering'
     | '/$id/oppsummering'
     | '/$id/vis'
     | '/agi/dine-opplysninger'
+    | '/agi/kvittering'
     | '/agi/oppsummering'
     | '/agi/refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
     | '/$id'
-    | '/agi'
     | '/opprett'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/$id'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro'
@@ -279,10 +271,10 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering'
-    | '/agi/opprett'
   id:
     | '__root__'
     | '/$id'
+    | '/agi'
     | '/opprett'
     | '/$id/dine-opplysninger'
     | '/$id/inntekt-og-refusjon'
@@ -290,12 +282,11 @@ export interface FileRouteTypes {
     | '/$id/oppsummering'
     | '/$id/vis'
     | '/agi/dine-opplysninger'
-    | '/agi/opprett'
+    | '/agi/kvittering'
     | '/agi/oppsummering'
     | '/agi/refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer'
     | '/$id/'
-    | '/agi/'
     | '/opprett/'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/$id'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/1-intro'
@@ -304,18 +295,13 @@ export interface FileRouteTypes {
     | '/refusjon-omsorgspenger/$organisasjonsnummer/4-refusjon'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/5-oppsummering'
     | '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering'
-    | '/agi/opprett/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IdRoute: typeof IdRouteWithChildren
+  AgiRoute: typeof AgiRouteWithChildren
   OpprettRoute: typeof OpprettRouteWithChildren
-  AgiDineOpplysningerRoute: typeof AgiDineOpplysningerRoute
-  AgiOpprettRoute: typeof AgiOpprettRouteWithChildren
-  AgiOppsummeringRoute: typeof AgiOppsummeringRoute
-  AgiRefusjonRoute: typeof AgiRefusjonRoute
   RefusjonOmsorgspengerOrganisasjonsnummerRoute: typeof RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren
-  AgiIndexRoute: typeof AgiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -325,6 +311,13 @@ declare module '@tanstack/react-router' {
       path: '/opprett'
       fullPath: '/opprett'
       preLoaderRoute: typeof OpprettRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agi': {
+      id: '/agi'
+      path: '/agi'
+      fullPath: '/agi'
+      preLoaderRoute: typeof AgiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$id': {
@@ -340,13 +333,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/opprett/'
       preLoaderRoute: typeof OpprettIndexRouteImport
       parentRoute: typeof OpprettRoute
-    }
-    '/agi/': {
-      id: '/agi/'
-      path: '/agi'
-      fullPath: '/agi'
-      preLoaderRoute: typeof AgiIndexRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/$id/': {
       id: '/$id/'
@@ -364,31 +350,31 @@ declare module '@tanstack/react-router' {
     }
     '/agi/refusjon': {
       id: '/agi/refusjon'
-      path: '/agi/refusjon'
+      path: '/refusjon'
       fullPath: '/agi/refusjon'
       preLoaderRoute: typeof AgiRefusjonRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AgiRoute
     }
     '/agi/oppsummering': {
       id: '/agi/oppsummering'
-      path: '/agi/oppsummering'
+      path: '/oppsummering'
       fullPath: '/agi/oppsummering'
       preLoaderRoute: typeof AgiOppsummeringRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AgiRoute
     }
-    '/agi/opprett': {
-      id: '/agi/opprett'
-      path: '/agi/opprett'
-      fullPath: '/agi/opprett'
-      preLoaderRoute: typeof AgiOpprettRouteImport
-      parentRoute: typeof rootRouteImport
+    '/agi/kvittering': {
+      id: '/agi/kvittering'
+      path: '/kvittering'
+      fullPath: '/agi/kvittering'
+      preLoaderRoute: typeof AgiKvitteringRouteImport
+      parentRoute: typeof AgiRoute
     }
     '/agi/dine-opplysninger': {
       id: '/agi/dine-opplysninger'
-      path: '/agi/dine-opplysninger'
+      path: '/dine-opplysninger'
       fullPath: '/agi/dine-opplysninger'
       preLoaderRoute: typeof AgiDineOpplysningerRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AgiRoute
     }
     '/$id/vis': {
       id: '/$id/vis'
@@ -424,13 +410,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/$id/dine-opplysninger'
       preLoaderRoute: typeof IdDineOpplysningerRouteImport
       parentRoute: typeof IdRoute
-    }
-    '/agi/opprett/': {
-      id: '/agi/opprett/'
-      path: '/'
-      fullPath: '/agi/opprett/'
-      preLoaderRoute: typeof AgiOpprettIndexRouteImport
-      parentRoute: typeof AgiOpprettRoute
     }
     '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering': {
       id: '/refusjon-omsorgspenger/$organisasjonsnummer/6-kvittering'
@@ -504,6 +483,22 @@ const IdRouteChildren: IdRouteChildren = {
 
 const IdRouteWithChildren = IdRoute._addFileChildren(IdRouteChildren)
 
+interface AgiRouteChildren {
+  AgiDineOpplysningerRoute: typeof AgiDineOpplysningerRoute
+  AgiKvitteringRoute: typeof AgiKvitteringRoute
+  AgiOppsummeringRoute: typeof AgiOppsummeringRoute
+  AgiRefusjonRoute: typeof AgiRefusjonRoute
+}
+
+const AgiRouteChildren: AgiRouteChildren = {
+  AgiDineOpplysningerRoute: AgiDineOpplysningerRoute,
+  AgiKvitteringRoute: AgiKvitteringRoute,
+  AgiOppsummeringRoute: AgiOppsummeringRoute,
+  AgiRefusjonRoute: AgiRefusjonRoute,
+}
+
+const AgiRouteWithChildren = AgiRoute._addFileChildren(AgiRouteChildren)
+
 interface OpprettRouteChildren {
   OpprettIndexRoute: typeof OpprettIndexRoute
 }
@@ -514,18 +509,6 @@ const OpprettRouteChildren: OpprettRouteChildren = {
 
 const OpprettRouteWithChildren =
   OpprettRoute._addFileChildren(OpprettRouteChildren)
-
-interface AgiOpprettRouteChildren {
-  AgiOpprettIndexRoute: typeof AgiOpprettIndexRoute
-}
-
-const AgiOpprettRouteChildren: AgiOpprettRouteChildren = {
-  AgiOpprettIndexRoute: AgiOpprettIndexRoute,
-}
-
-const AgiOpprettRouteWithChildren = AgiOpprettRoute._addFileChildren(
-  AgiOpprettRouteChildren,
-)
 
 interface RefusjonOmsorgspengerOrganisasjonsnummerRouteChildren {
   RefusjonOmsorgspengerOrganisasjonsnummerIdRoute: typeof RefusjonOmsorgspengerOrganisasjonsnummerIdRoute
@@ -562,14 +545,10 @@ const RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IdRoute: IdRouteWithChildren,
+  AgiRoute: AgiRouteWithChildren,
   OpprettRoute: OpprettRouteWithChildren,
-  AgiDineOpplysningerRoute: AgiDineOpplysningerRoute,
-  AgiOpprettRoute: AgiOpprettRouteWithChildren,
-  AgiOppsummeringRoute: AgiOppsummeringRoute,
-  AgiRefusjonRoute: AgiRefusjonRoute,
   RefusjonOmsorgspengerOrganisasjonsnummerRoute:
     RefusjonOmsorgspengerOrganisasjonsnummerRouteWithChildren,
-  AgiIndexRoute: AgiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

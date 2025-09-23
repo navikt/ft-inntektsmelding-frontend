@@ -6,7 +6,7 @@ import { InntektsmeldingRootAGI } from "~/features/inntektsmelding/Inntektsmeldi
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { OpplysningerDto } from "~/types/api-models";
 
-export const Route = createFileRoute("/agi/")({
+export const Route = createFileRoute("/agi")({
   component: InntektsmeldingRootAGI,
   errorComponent: ({ error }) => {
     throw error;
@@ -24,6 +24,7 @@ export const Route = createFileRoute("/agi/")({
 
     return {
       opplysninger: opplysninger as OpplysningerDto,
+      eksisterendeInntektsmeldinger: [],
     };
   },
 });

@@ -9,10 +9,11 @@ import {
   HGrid,
   TextField,
 } from "@navikt/ds-react";
-import { useLoaderData, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
+import { useEksisterendeInntektsmeldinger } from "~/features/inntektsmelding/useEksisterendeInntektsmeldinger";
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import {
   InntektsmeldingSkjemaState,
@@ -30,13 +31,9 @@ import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "../skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
-import {
-  type InntektsmeldingSkjemaStateAGI,
-  useInntektsmeldingSkjemaAGI,
-} from "./arbeidsgiverInitiert/SkjemaStateAGI";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
-  InntektsmeldingSkjemaStateAGI["kontaktperson"]
+  InntektsmeldingSkjemaState["kontaktperson"]
 >;
 
 // Minimal type that works with both InntektsmeldingSkjemaState and InntektsmeldingSkjemaStateAGI
@@ -56,10 +53,10 @@ export const Steg1DineOpplysningerComponent = <T extends MinimalSkjemaState>({
 }) => {
   useScrollToTopOnMount();
   const opplysninger = useOpplysninger();
+  const eksisterendeInntektsmeldinger = useEksisterendeInntektsmeldinger();
   useDocumentTitle(
     `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
   );
-  const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
 
   const innsenderNavn = lagFulltNavn(opplysninger.innsender);
 
@@ -244,30 +241,6 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
         </div>
       </div>
     </Informasjonsseksjon>
-  );
-};
-
-export const Steg1DineOpplysningerAGI = () => {
-  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjemaAGI();
-  const navigate = useNavigate();
-  const onSubmit = (
-    kontaktperson: InntektsmeldingSkjemaStateAGI["kontaktperson"],
-  ) => {
-    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaStateAGI) => ({
-      ...prev,
-      kontaktperson,
-    }));
-    navigate({
-      from: "/agi/dine-opplysninger",
-      to: "../refusjon",
-    });
-  };
-  return (
-    <Steg1DineOpplysningerComponent
-      inntektsmeldingSkjemaState={inntektsmeldingSkjemaState}
-      onSubmit={onSubmit}
-    />
   );
 };
 

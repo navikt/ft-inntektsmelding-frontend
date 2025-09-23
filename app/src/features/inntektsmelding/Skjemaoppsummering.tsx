@@ -27,6 +27,8 @@ import {
   lagFulltNavn,
 } from "~/utils";
 
+import { InntektsmeldingSkjemaStateValidAGI } from "../arbeidsgiverinitiert/SkjemaStateAGI";
+
 type SkjemaoppsummeringProps = {
   opplysninger: OpplysningerDto;
   skjemaState: InntektsmeldingSkjemaStateValid;
@@ -101,7 +103,7 @@ export const Skjemaoppsummering = ({
         opplysninger={opplysninger}
         skjemaState={skjemaState}
       />
-      <FørsteDagOppsummering opplysninger={opplysninger} />
+      <FørsteDagOppsummering kanEndres={false} opplysninger={opplysninger} />
       <InntektOppsummering
         kanEndres={kanEndres}
         opplysninger={opplysninger}
@@ -198,11 +200,19 @@ function InntektOppsummering({
   );
 }
 
-const ArbeidsgiverOgAnsattOppsummering = ({
+export const ArbeidsgiverOgAnsattOppsummering = ({
   kanEndres,
   opplysninger,
   skjemaState,
-}: SkjemaoppsummeringProps & { kanEndres: boolean }) => (
+  editPath = "../dine-opplysninger",
+}: {
+  kanEndres: boolean;
+  opplysninger: OpplysningerDto;
+  skjemaState:
+    | InntektsmeldingSkjemaStateValid
+    | InntektsmeldingSkjemaStateValidAGI;
+  editPath?: string;
+}) => (
   <FormSummary>
     <FormSummary.Header>
       <FormSummary.Heading level="3">
@@ -212,7 +222,7 @@ const ArbeidsgiverOgAnsattOppsummering = ({
         <FormSummary.EditLink
           aria-label="Endre dine opplysninger"
           as={Link}
-          to="../dine-opplysninger"
+          to={editPath}
         />
       )}
     </FormSummary.Header>
@@ -242,16 +252,27 @@ const ArbeidsgiverOgAnsattOppsummering = ({
   </FormSummary>
 );
 
-const FørsteDagOppsummering = ({
+export const FørsteDagOppsummering = ({
   opplysninger,
+  kanEndres = false,
+  editPath = "",
 }: {
   opplysninger: OpplysningerDto;
+  kanEndres: boolean;
+  editPath?: string;
 }) => (
   <FormSummary>
     <FormSummary.Header>
       <FormSummary.Heading level="3">
         Første dag med {formatYtelsesnavn(opplysninger.ytelse)}
       </FormSummary.Heading>
+      {kanEndres && (
+        <FormSummary.EditLink
+          aria-label="Endre første dag med fravær"
+          as={Link}
+          to={editPath}
+        />
+      )}
     </FormSummary.Header>
     <FormSummary.Answers>
       <FormSummary.Answer>
@@ -264,12 +285,16 @@ const FørsteDagOppsummering = ({
   </FormSummary>
 );
 
-const UtbetalingOgRefusjonOppsummering = ({
+export const UtbetalingOgRefusjonOppsummering = ({
   kanEndres,
   skjemaState,
+  editPath = "../inntekt-og-refusjon#refusjon",
 }: {
   kanEndres: boolean;
-  skjemaState: InntektsmeldingSkjemaStateValid;
+  skjemaState:
+    | InntektsmeldingSkjemaStateValid
+    | InntektsmeldingSkjemaStateValidAGI;
+  editPath?: string;
 }) => (
   <FormSummary>
     <FormSummary.Header>
@@ -280,7 +305,7 @@ const UtbetalingOgRefusjonOppsummering = ({
         <FormSummary.EditLink
           aria-label="Endre utbetaling og refusjon"
           as={Link}
-          to="../inntekt-og-refusjon#refusjon"
+          to={editPath}
         />
       )}
     </FormSummary.Header>

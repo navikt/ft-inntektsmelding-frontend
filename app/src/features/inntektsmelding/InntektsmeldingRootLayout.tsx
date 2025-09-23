@@ -8,7 +8,7 @@ import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSk
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
-import { InntektsmeldingSkjemaStateProviderAGI } from "./arbeidsgiverInitiert/SkjemaStateAGI";
+import { InntektsmeldingSkjemaStateProviderAGI } from "../arbeidsgiverinitiert/SkjemaStateAGI";
 import { useOpplysninger } from "./useOpplysninger";
 
 type InntektsmeldingRootLayoutProps = {
@@ -87,7 +87,7 @@ export const InntektsmeldingRoot = () => {
 };
 
 export const InntektsmeldingRootAGI = () => {
-  const route = getRouteApi("/agi/");
+  const route = getRouteApi("/agi");
   const data = route.useLoaderData();
   return (
     <InntektsmeldingSkjemaStateProviderAGI skjemaId="agi">

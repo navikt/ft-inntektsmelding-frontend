@@ -4,7 +4,10 @@ import { createContext, useContext } from "react";
 import { z, ZodError } from "zod";
 
 import { useSessionStorageState } from "~/features/usePersistedState";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import { beløpSchema, logDev } from "~/utils.ts";
+
+import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
 
 const kontaktpersonSchema = z.object({
   navn: z.string(),
@@ -27,7 +30,7 @@ const skalRefunderesSchema = z.union([
 export const InntektsmeldingSkjemaStateSchema = z.object({
   kontaktperson: kontaktpersonSchema,
   refusjon: refusjonSchema,
-  skalRefunderes: skalRefunderesSchema.nullable(),
+  skalRefunderes: skalRefunderesSchema.optional(),
 });
 
 export const AGIValidatedInntektsmelding = z.object({
@@ -62,24 +65,25 @@ type InntektsmeldingSkjemaStateProviderProps = {
   children: ReactNode;
 };
 
-const defaultSkjemaState = {
-  kontaktperson: {
-    navn: "",
-    telefonnummer: "",
-  },
-  refusjon: [],
-  skalRefunderes: null,
-} satisfies InntektsmeldingSkjemaStateAGI;
+const defaultSkjemaState = () => {
+  const { innsender } = useOpplysninger();
+  return {
+    kontaktperson: {
+      navn: innsender.fornavn + " " + innsender.etternavn,
+      telefonnummer: "",
+    },
+    refusjon: [],
+  } satisfies InntektsmeldingSkjemaStateAGI;
+};
 
 export const InntektsmeldingSkjemaStateProviderAGI = ({
-  skjemaId,
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
   const [state, setState] =
     useSessionStorageState<InntektsmeldingSkjemaStateAGI>(
-      `skjemadata-${skjemaId}`,
-      defaultSkjemaState,
-      AGIValidatedInntektsmelding,
+      "skjemadata-" + ARBEIDSGIVER_INITERT_ID,
+      defaultSkjemaState(),
+      InntektsmeldingSkjemaStateSchema,
     );
 
   const gyldigInntektsmeldingSkjemaState =

@@ -1,7 +1,7 @@
 import { ArrowLeftIcon, PaperplaneIcon } from "@navikt/aksel-icons";
 import { Alert, BodyLong, Button, Heading, Stack } from "@navikt/ds-react";
 import { useMutation } from "@tanstack/react-query";
-import { getRouteApi, Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 
 import { sendInntektsmeldingArbeidsgiverInitiert } from "~/api/mutations.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
@@ -12,15 +12,17 @@ import type {
 } from "~/types/api-models.ts";
 import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 
-import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
-import { Skjemaoppsummering } from "../Skjemaoppsummering";
-import { useOpplysninger } from "../useOpplysninger";
+import {
+  ArbeidsgiverOgAnsattOppsummering,
+  FørsteDagOppsummering,
+  UtbetalingOgRefusjonOppsummering,
+} from "../inntektsmelding/Skjemaoppsummering";
+import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
+import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
 import {
   InntektsmeldingSkjemaStateValidAGI,
   useInntektsmeldingSkjemaAGI,
 } from "./SkjemaStateAGI";
-
-const route = getRouteApi("/$id");
 
 export const Steg3Oppsummering = () => {
   useScrollToTopOnMount();
@@ -28,7 +30,6 @@ export const Steg3Oppsummering = () => {
   useDocumentTitle(
     `Oppsummering – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
   );
-  const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState, inntektsmeldingSkjemaStateError } =
     useInntektsmeldingSkjemaAGI();
@@ -50,7 +51,7 @@ export const Steg3Oppsummering = () => {
           <Button
             as={Link}
             size="small"
-            to={`/${id}`}
+            to={`/opprett?ytelseType=${opplysninger.ytelse}`}
             variant="secondary-neutral"
           >
             Start på nytt
@@ -67,8 +68,19 @@ export const Steg3Oppsummering = () => {
           Oppsummering
         </Heading>
         <Fremgangsindikator aktivtSteg={3} />
-        <Skjemaoppsummering
+        <ArbeidsgiverOgAnsattOppsummering
+          kanEndres={true}
           opplysninger={opplysninger}
+          skjemaState={gyldigInntektsmeldingSkjemaState}
+        />
+        <FørsteDagOppsummering
+          editPath="/agi/refusjon"
+          kanEndres={true}
+          opplysninger={opplysninger}
+        />
+        <UtbetalingOgRefusjonOppsummering
+          editPath="/agi/refusjon"
+          kanEndres={true}
           skjemaState={gyldigInntektsmeldingSkjemaState}
         />
         <SendInnInntektsmelding opplysninger={opplysninger} />
@@ -99,7 +111,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       setInntektsmeldingSkjemaState(inntektsmeldingState);
       navigate({
         from: "/agi/oppsummering",
-        to: "../kvittering",
+        to: "/agi/kvittering",
       });
     },
   });
@@ -115,7 +127,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         <Button
           as={Link}
           icon={<ArrowLeftIcon />}
-          to="../inntekt-og-refusjon"
+          to="../refusjon"
           variant="secondary"
         >
           Forrige steg
@@ -135,7 +147,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 }
 
 function lagSendInntektsmeldingRequest(
-  skjemaState: InntektsmeldingSkjemaStateValid,
+  skjemaState: InntektsmeldingSkjemaStateValidAGI,
   opplysninger: OpplysningerDto,
 ) {
   const refusjon =
