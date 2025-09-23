@@ -16,8 +16,8 @@ import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
 import { Skjemaoppsummering } from "../Skjemaoppsummering";
 import { useOpplysninger } from "../useOpplysninger";
 import {
-  InntektsmeldingSkjemaStateValid,
-  useInntektsmeldingSkjemaArbeidsgiverInitiert,
+  InntektsmeldingSkjemaStateValidAGI,
+  useInntektsmeldingSkjemaAGI,
 } from "./SkjemaStateAGI";
 
 const route = getRouteApi("/$id");
@@ -31,7 +31,7 @@ export const Steg3Oppsummering = () => {
   const { id } = route.useParams();
 
   const { gyldigInntektsmeldingSkjemaState, inntektsmeldingSkjemaStateError } =
-    useInntektsmeldingSkjemaArbeidsgiverInitiert();
+    useInntektsmeldingSkjemaAGI();
 
   if (!gyldigInntektsmeldingSkjemaState) {
     // På dette punktet "skal" skjemaet være gyldig med mindre noe har gått galt. Logg error til Grafana for innsikt.
@@ -84,10 +84,10 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
   const navigate = useNavigate();
 
   const { gyldigInntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjemaArbeidsgiverInitiert();
+    useInntektsmeldingSkjemaAGI();
 
   const { mutate, error, isPending } = useMutation({
-    mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValid) => {
+    mutationFn: async (skjemaState: InntektsmeldingSkjemaStateValidAGI) => {
       const inntektsmeldingRequest = lagSendInntektsmeldingRequest(
         skjemaState,
         opplysninger,
@@ -98,7 +98,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
     onSuccess: (inntektsmeldingState) => {
       setInntektsmeldingSkjemaState(inntektsmeldingState);
       navigate({
-        from: "/$id/oppsummering",
+        from: "/agi/oppsummering",
         to: "../kvittering",
       });
     },

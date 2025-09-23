@@ -27,7 +27,7 @@ import { HjelpetekstReadMore } from "~/features/Hjelpetekst.tsx";
 import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/Steg2InntektOgRefusjon";
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
 
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
@@ -258,7 +258,7 @@ function VarierendeRefusjon() {
 }
 
 export const ENDRING_I_REFUSJON_TEMPLATE = {
-  fom: undefined,
+  fom: "",
   beløp: 0,
 };
 

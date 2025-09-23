@@ -4,7 +4,7 @@ import { z } from "zod";
 import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
 import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
 import { parseStorageItem } from "~/features/usePersistedState.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import {
   feilmeldingSchema,
   grunnbeløpSchema,

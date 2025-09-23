@@ -25,7 +25,7 @@ const skalRefunderesSchema = z.union([
 ]);
 
 export const InntektsmeldingSkjemaStateSchema = z.object({
-  kontaktperson: kontaktpersonSchema.nullable(),
+  kontaktperson: kontaktpersonSchema,
   refusjon: refusjonSchema,
   skalRefunderes: skalRefunderesSchema.nullable(),
 });
@@ -36,23 +36,23 @@ export const AGIValidatedInntektsmelding = z.object({
   skalRefunderes: skalRefunderesSchema,
 });
 
-export type InntektsmeldingSkjemaState = z.infer<
+export type InntektsmeldingSkjemaStateAGI = z.infer<
   typeof InntektsmeldingSkjemaStateSchema
 >;
 
-export type InntektsmeldingSkjemaStateValid = z.infer<
+export type InntektsmeldingSkjemaStateValidAGI = z.infer<
   typeof AGIValidatedInntektsmelding
 >;
 
 type InntektsmeldingSkjemaStateContextTypeArbeidsgiverInitiert = {
-  gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
+  gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValidAGI;
   inntektsmeldingSkjemaStateError?: ZodError;
-  inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
+  inntektsmeldingSkjemaState: InntektsmeldingSkjemaStateAGI;
   setInntektsmeldingSkjemaState: Dispatch<
-    SetStateAction<InntektsmeldingSkjemaState>
+    SetStateAction<InntektsmeldingSkjemaStateAGI>
   >;
 };
-const InntektsmeldingSkjemaStateContextArbeidsgiverInitiert =
+const InntektsmeldingSkjemaStateContextAGI =
   createContext<InntektsmeldingSkjemaStateContextTypeArbeidsgiverInitiert | null>(
     null,
   );
@@ -63,20 +63,24 @@ type InntektsmeldingSkjemaStateProviderProps = {
 };
 
 const defaultSkjemaState = {
-  kontaktperson: null,
+  kontaktperson: {
+    navn: "",
+    telefonnummer: "",
+  },
   refusjon: [],
   skalRefunderes: null,
-} satisfies InntektsmeldingSkjemaState;
+} satisfies InntektsmeldingSkjemaStateAGI;
 
-export const InntektsmeldingSkjemaStateProvider = ({
+export const InntektsmeldingSkjemaStateProviderAGI = ({
   skjemaId,
   children,
 }: InntektsmeldingSkjemaStateProviderProps) => {
-  const [state, setState] = useSessionStorageState<InntektsmeldingSkjemaState>(
-    `skjemadata-${skjemaId}`,
-    defaultSkjemaState,
-    AGIValidatedInntektsmelding,
-  );
+  const [state, setState] =
+    useSessionStorageState<InntektsmeldingSkjemaStateAGI>(
+      `skjemadata-${skjemaId}`,
+      defaultSkjemaState,
+      AGIValidatedInntektsmelding,
+    );
 
   const gyldigInntektsmeldingSkjemaState =
     AGIValidatedInntektsmelding.safeParse(state);
@@ -86,7 +90,7 @@ export const InntektsmeldingSkjemaStateProvider = ({
   }
 
   return (
-    <InntektsmeldingSkjemaStateContextArbeidsgiverInitiert.Provider
+    <InntektsmeldingSkjemaStateContextAGI.Provider
       value={{
         inntektsmeldingSkjemaState: state,
         gyldigInntektsmeldingSkjemaState: gyldigInntektsmeldingSkjemaState.data,
@@ -95,18 +99,16 @@ export const InntektsmeldingSkjemaStateProvider = ({
       }}
     >
       {children}
-    </InntektsmeldingSkjemaStateContextArbeidsgiverInitiert.Provider>
+    </InntektsmeldingSkjemaStateContextAGI.Provider>
   );
 };
 
 /** Henter ut global skjematilstand, og lar deg manipulere den */
-export const useInntektsmeldingSkjemaArbeidsgiverInitiert = () => {
-  const context = useContext(
-    InntektsmeldingSkjemaStateContextArbeidsgiverInitiert,
-  );
+export const useInntektsmeldingSkjemaAGI = () => {
+  const context = useContext(InntektsmeldingSkjemaStateContextAGI);
   if (!context) {
     throw new Error(
-      "useInntektsmeldingSkjema må brukes inne i en InntektsmeldingSkjemaStateProvider",
+      "useInntektsmeldingSkjemaAGI må brukes inne i en InntektsmeldingSkjemaStateProviderAGI",
     );
   }
 

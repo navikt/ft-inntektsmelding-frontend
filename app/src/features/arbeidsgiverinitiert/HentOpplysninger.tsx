@@ -14,24 +14,18 @@ import {
 } from "@navikt/ds-react";
 import { fnr } from "@navikt/fnrvalidator";
 import { useMutation } from "@tanstack/react-query";
-import {
-  getRouteApi,
-  Link as TanstackLink,
-  useNavigate,
-} from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
 import { DatePickerWrapped } from "~/features/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { useDocumentTitle } from "~/features/useDocumentTitle.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import {
   OpplysningerRequest,
   SlåOppArbeidstakerResponseDto,
 } from "~/types/api-models.ts";
 import { formatYtelsesnavn } from "~/utils.ts";
-
-const route = getRouteApi("/opprett");
 
 type FormType = {
   fødselsnummer: string;
@@ -41,6 +35,7 @@ type FormType = {
 };
 
 export const HentOpplysninger = () => {
+  const route = getRouteApi("/agi/opprett");
   const { ytelseType } = route.useSearch();
   const navigate = useNavigate();
   useDocumentTitle(
@@ -77,8 +72,7 @@ export const HentOpplysninger = () => {
         sessionStorage.setItem(fakeId, JSON.stringify(opplysningerMedId));
 
         return navigate({
-          to: "/$id",
-          params: { id: fakeId },
+          to: "/agi/dine-opplysninger",
         });
       }
 
@@ -198,24 +192,6 @@ function HentPersonError({ error }: { error: Error | null }) {
     return null;
   }
 
-  if (error?.message === "MENN_KAN_IKKE_SØKE_SVP") {
-    return (
-      <Alert variant="warning">
-        <Heading level="3" size="small">
-          Bare kvinner kan søke svangerskapspenger
-        </Heading>
-        Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
-        <TanstackLink
-          from="/opprett"
-          search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
-          to="."
-        >
-          Klikk her
-        </TanstackLink>
-      </Alert>
-    );
-  }
-
   if (error.message.includes("Fant ikke person")) {
     return (
       <Alert variant="error">
@@ -238,6 +214,7 @@ function HentOpplysningerError({ error }: { error: Error | null }) {
   if (!error) {
     return null;
   }
+  const route = getRouteApi("/agi/opprett");
   const { ytelseType } = route.useSearch();
   if (error?.message === "INGEN_SAK_FUNNET") {
     return (

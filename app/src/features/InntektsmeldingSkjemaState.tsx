@@ -15,12 +15,10 @@ import { useSessionStorageState } from "./usePersistedState";
  * Minst streng skjema-state. Denne brukes underveis der mange av feltene er optional fordi de ikke er utfylt enda.
  */
 export const InntektsmeldingSkjemaStateSchema = z.object({
-  kontaktperson: z
-    .object({
-      navn: z.string(),
-      telefonnummer: z.string(),
-    })
-    .optional(),
+  kontaktperson: z.object({
+    navn: z.string(),
+    telefonnummer: z.string(),
+  }),
   inntekt: beløpSchema,
   korrigertInntekt: beløpSchema.optional(),
   endringAvInntektÅrsaker: z.array(
@@ -121,7 +119,6 @@ export type InntektsmeldingSkjemaStateValid = z.infer<
 
 type InntektsmeldingSkjemaStateContextType = {
   gyldigInntektsmeldingSkjemaState?: InntektsmeldingSkjemaStateValid;
-  gyldigInntektsmeldingSkjemaStateArbeidsgiverInitiert?: InntektsmeldingSkjemaStateValidArbeidsgiverInitiert;
   inntektsmeldingSkjemaStateError?: ZodError;
   inntektsmeldingSkjemaState: InntektsmeldingSkjemaState;
   setInntektsmeldingSkjemaState: Dispatch<
@@ -141,6 +138,10 @@ const defaultSkjemaState = {
   refusjon: [],
   bortfaltNaturalytelsePerioder: [],
   endringAvInntektÅrsaker: [],
+  kontaktperson: {
+    navn: "",
+    telefonnummer: "",
+  },
 } satisfies InntektsmeldingSkjemaState;
 
 export const InntektsmeldingSkjemaStateProvider = ({

@@ -15,10 +15,9 @@ import { useForm } from "react-hook-form";
 import { useHjelpetekst } from "~/features/Hjelpetekst.tsx";
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import {
-  type InntektsmeldingSkjemaState,
+  InntektsmeldingSkjemaState,
   useInntektsmeldingSkjema,
 } from "~/features/InntektsmeldingSkjemaState";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   capitalizeSetning,
@@ -31,20 +30,36 @@ import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { Fremgangsindikator } from "../skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "../useDocumentTitle";
 import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
+import {
+  type InntektsmeldingSkjemaStateAGI,
+  useInntektsmeldingSkjemaAGI,
+} from "./arbeidsgiverInitiert/SkjemaStateAGI";
 
 type PersonOgSelskapsInformasjonForm = NonNullable<
-  InntektsmeldingSkjemaState["kontaktperson"]
+  InntektsmeldingSkjemaStateAGI["kontaktperson"]
 >;
 
-export const Steg1DineOpplysninger = () => {
+// Minimal type that works with both InntektsmeldingSkjemaState and InntektsmeldingSkjemaStateAGI
+type MinimalSkjemaState = {
+  kontaktperson: {
+    navn: string;
+    telefonnummer: string;
+  };
+};
+
+export const Steg1DineOpplysningerComponent = <T extends MinimalSkjemaState>({
+  inntektsmeldingSkjemaState,
+  onSubmit,
+}: {
+  inntektsmeldingSkjemaState: T;
+  onSubmit: (kontaktperson: T["kontaktperson"]) => void;
+}) => {
   useScrollToTopOnMount();
   const opplysninger = useOpplysninger();
   useDocumentTitle(
     `Dine opplysninger – inntektsmelding for ${formatYtelsesnavn(opplysninger.ytelse)}`,
   );
   const { eksisterendeInntektsmeldinger } = useLoaderData({ from: "/$id" });
-  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjema();
 
   const innsenderNavn = lagFulltNavn(opplysninger.innsender);
 
@@ -57,19 +72,7 @@ export const Steg1DineOpplysninger = () => {
         }),
       },
     });
-  const navigate = useNavigate();
   const { vis } = useHjelpetekst().visHjelpetekster;
-
-  const onSubmit = handleSubmit((kontaktperson) => {
-    setInntektsmeldingSkjemaState((prev) => ({ ...prev, kontaktperson }));
-    navigate({
-      from: "/$id/dine-opplysninger",
-      to:
-        opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
-          ? "../refusjon"
-          : "../inntekt-og-refusjon",
-    });
-  });
 
   // Hvis en oppgave er FERDIG, men vi ikke finner noen tidligere IMer kan vi anta den er sendt fra Altinn eller LPS
   const erTidligereSendInnFraAltinn =
@@ -92,7 +95,11 @@ export const Steg1DineOpplysninger = () => {
           </BodyLong>
         </Alert>
       )}
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={handleSubmit((kontaktperson) => {
+          onSubmit(kontaktperson);
+        })}
+      >
         <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
           <Heading level="3" size="large">
             Dine opplysninger
@@ -237,5 +244,54 @@ const Personinformasjon = ({ opplysninger }: PersoninformasjonProps) => {
         </div>
       </div>
     </Informasjonsseksjon>
+  );
+};
+
+export const Steg1DineOpplysningerAGI = () => {
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjemaAGI();
+  const navigate = useNavigate();
+  const onSubmit = (
+    kontaktperson: InntektsmeldingSkjemaStateAGI["kontaktperson"],
+  ) => {
+    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaStateAGI) => ({
+      ...prev,
+      kontaktperson,
+    }));
+    navigate({
+      from: "/agi/dine-opplysninger",
+      to: "../refusjon",
+    });
+  };
+  return (
+    <Steg1DineOpplysningerComponent
+      inntektsmeldingSkjemaState={inntektsmeldingSkjemaState}
+      onSubmit={onSubmit}
+    />
+  );
+};
+
+export const Steg1DineOpplysninger = () => {
+  const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
+    useInntektsmeldingSkjema();
+  const navigate = useNavigate();
+  const handleSubmit = (
+    kontaktperson: InntektsmeldingSkjemaState["kontaktperson"],
+  ) => {
+    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaState) => ({
+      ...prev,
+      kontaktperson,
+    }));
+    navigate({
+      from: "/$id/dine-opplysninger",
+      to: "../inntekt-og-refusjon",
+    });
+  };
+
+  return (
+    <Steg1DineOpplysningerComponent
+      inntektsmeldingSkjemaState={inntektsmeldingSkjemaState}
+      onSubmit={handleSubmit}
+    />
   );
 };

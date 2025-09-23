@@ -10,6 +10,7 @@ type DatePickerWrappedProps = {
   rules?: any;
   shouldUnregister?: boolean;
   datepickerProps?: DatePickerProps;
+  callback?: () => void;
 } & DateInputProps;
 
 export function DatePickerWrapped({
@@ -17,6 +18,7 @@ export function DatePickerWrapped({
   rules = {},
   shouldUnregister,
   datepickerProps = {},
+  callback = () => {},
   ...dateInputProps
 }: DatePickerWrappedProps) {
   const { field, fieldState } = useController({
@@ -29,6 +31,7 @@ export function DatePickerWrapped({
     onDateChange: (date) => {
       field.onChange(date ? formatIsoDatostempel(date) : undefined);
       field.onBlur();
+      callback();
     },
     defaultSelected: field.value ? new Date(field.value) : undefined,
   });

@@ -8,21 +8,8 @@ import { InntektsmeldingSkjemaStateProvider } from "~/features/InntektsmeldingSk
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { formatYtelsesnavn } from "~/utils.ts";
 
+import { InntektsmeldingSkjemaStateProviderAGI } from "./arbeidsgiverInitiert/SkjemaStateAGI";
 import { useOpplysninger } from "./useOpplysninger";
-
-const route = getRouteApi("/$id");
-
-export const InntektsmeldingRootLayout = () => {
-  const { id } = route.useParams();
-  const opplysninger = useOpplysninger();
-  return (
-    <InntektsmeldingRootLayoutComponent
-      skjemaId={id}
-      ytelse={opplysninger.ytelse}
-      {...opplysninger.arbeidsgiver}
-    />
-  );
-};
 
 type InntektsmeldingRootLayoutProps = {
   ytelse: string;
@@ -51,36 +38,64 @@ export const InntektsmeldingRootLayoutComponent = (
   const skalViseUndertittel =
     props.organisasjonNavn && props.organisasjonNummer;
   return (
-    <InntektsmeldingSkjemaStateProvider skjemaId={props.skjemaId}>
-      <RotLayout
-        background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
-        tittel={`Inntektsmelding ${formatYtelsesnavn(props.ytelse)}`}
-        undertittel={
-          skalViseUndertittel && (
-            <div className="flex gap-3">
-              <span>{props.organisasjonNavn}</span>
-              <span aria-hidden="true">|</span>
-              <span className="text-nowrap">
-                Org.nr.: {props.organisasjonNummer}
-              </span>
-            </div>
-          )
-        }
-      >
-        <Outlet />
-        {!erPåKvitteringssiden && (
-          <HStack align="center" justify="center">
-            <Button
-              as="a"
-              href="/min-side-arbeidsgiver"
-              icon={<XMarkIcon />}
-              variant="tertiary"
-            >
-              Avbryt
-            </Button>
-          </HStack>
-        )}
-      </RotLayout>
+    <RotLayout
+      background={erPåKvitteringssiden ? "bg-default" : "bg-subtle"}
+      tittel={`Inntektsmelding ${formatYtelsesnavn(props.ytelse)}`}
+      undertittel={
+        skalViseUndertittel && (
+          <div className="flex gap-3">
+            <span>{props.organisasjonNavn}</span>
+            <span aria-hidden="true">|</span>
+            <span className="text-nowrap">
+              Org.nr.: {props.organisasjonNummer}
+            </span>
+          </div>
+        )
+      }
+    >
+      <Outlet />
+      {!erPåKvitteringssiden && (
+        <HStack align="center" justify="center">
+          <Button
+            as="a"
+            href="/min-side-arbeidsgiver"
+            icon={<XMarkIcon />}
+            variant="tertiary"
+          >
+            Avbryt
+          </Button>
+        </HStack>
+      )}
+    </RotLayout>
+  );
+};
+
+export const InntektsmeldingRoot = () => {
+  const route = getRouteApi("/$id");
+  const { id } = route.useParams();
+  const opplysninger = useOpplysninger();
+
+  return (
+    <InntektsmeldingSkjemaStateProvider skjemaId={id}>
+      <InntektsmeldingRootLayoutComponent
+        skjemaId={id}
+        ytelse={opplysninger.ytelse}
+        {...opplysninger.arbeidsgiver}
+      />
     </InntektsmeldingSkjemaStateProvider>
+  );
+};
+
+export const InntektsmeldingRootAGI = () => {
+  const route = getRouteApi("/agi/");
+  const data = route.useLoaderData();
+  return (
+    <InntektsmeldingSkjemaStateProviderAGI skjemaId="agi">
+      <InntektsmeldingRootLayoutComponent
+        skjemaId="agi"
+        ytelse={data.opplysninger.ytelse}
+        {...data.opplysninger.arbeidsgiver}
+      />
+    </InntektsmeldingSkjemaStateProviderAGI>
   );
 };

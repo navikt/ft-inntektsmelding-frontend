@@ -6,7 +6,7 @@ import {
   hentOpplysningerData,
 } from "~/api/queries";
 import { OppgaveErUtgåttFeilside } from "~/features/error-boundary/OppgaveErUtgåttFeilside.tsx";
-import { InntektsmeldingRootLayout } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
+import { InntektsmeldingRoot } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
 import { RotLayout } from "~/features/rot-layout/RotLayout";
 import { OpplysningerDto } from "~/types/api-models";
 
@@ -15,7 +15,7 @@ enum FEILKODER {
 }
 
 export const Route = createFileRoute("/$id")({
-  component: InntektsmeldingRootLayout,
+  component: InntektsmeldingRoot,
   errorComponent: ({ error }) => {
     if (error.message === FEILKODER.OPPGAVE_ER_UTGÅTT) {
       return <OppgaveErUtgåttFeilside />;

@@ -5,7 +5,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,

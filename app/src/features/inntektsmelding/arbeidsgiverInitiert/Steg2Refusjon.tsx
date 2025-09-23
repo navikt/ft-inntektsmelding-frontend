@@ -6,7 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/agi/opprett";
 import { formatYtelsesnavn } from "~/utils";
 
 import { DatePickerWrapped } from "../../react-hook-form-wrappers/DatePickerWrapped";
@@ -14,8 +14,8 @@ import { UtbetalingOgRefusjon } from "../../skjema-moduler/UtbetalingOgRefusjon"
 import { useDocumentTitle } from "../../useDocumentTitle";
 import { useScrollToTopOnMount } from "../../useScrollToTopOnMount";
 import {
-  InntektsmeldingSkjemaState,
-  useInntektsmeldingSkjemaArbeidsgiverInitiert,
+  InntektsmeldingSkjemaStateAGI,
+  useInntektsmeldingSkjemaAGI,
 } from "./SkjemaStateAGI";
 
 export type RefusjonForm = {
@@ -24,7 +24,7 @@ export type RefusjonForm = {
   };
   skalRefunderes: "JA_LIK_REFUSJON" | "JA_VARIERENDE_REFUSJON" | "NEI";
   førsteFraværsdag: string;
-} & Pick<InntektsmeldingSkjemaState, "refusjon">;
+} & Pick<InntektsmeldingSkjemaStateAGI, "refusjon">;
 
 export function Steg2Refusjon() {
   useScrollToTopOnMount();
@@ -34,7 +34,7 @@ export function Steg2Refusjon() {
   );
 
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
-    useInntektsmeldingSkjemaArbeidsgiverInitiert();
+    useInntektsmeldingSkjemaAGI();
 
   const defaultInntekt = opplysninger.inntektsopplysninger.gjennomsnittLønn;
 
@@ -82,15 +82,15 @@ export function Steg2Refusjon() {
   const onSubmit = handleSubmit((skjemadata) => {
     const { refusjon, skalRefunderes, førsteFraværsdag } = skjemadata;
 
-    setInntektsmeldingSkjemaState((prev) => ({
+    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaStateAGI) => ({
       ...prev,
       førsteFraværsdag,
       refusjon,
       skalRefunderes,
     }));
     navigate({
-      from: "/$id/inntekt-og-refusjon",
-      to: "../oppsummering-agi",
+      from: "/agi/refusjon",
+      to: "../oppsummering",
     });
   });
 
