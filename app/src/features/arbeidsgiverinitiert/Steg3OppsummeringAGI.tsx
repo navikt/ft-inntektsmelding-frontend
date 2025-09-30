@@ -114,7 +114,7 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
         from: "/agi/oppsummering",
         to: "/$id/kvittering",
         params: {
-          id: inntektsmeldingState.id,
+          id: inntektsmeldingState.foresporselUuid,
         },
       });
     },

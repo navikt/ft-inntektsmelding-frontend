@@ -54,6 +54,7 @@ export async function sendInntektsmeldingArbeidsgiverInitiert(
   }
 
   const json = await response.json();
+
   const parsedJson = InntektsmeldingResponseDtoSchema.safeParse(json);
 
   if (!parsedJson.success) {
@@ -62,5 +63,5 @@ export async function sendInntektsmeldingArbeidsgiverInitiert(
     throw new Error("Responsen fra serveren matchet ikke forventet format");
   }
 
-  return response.json();
+  return parsedJson.data;
 }
