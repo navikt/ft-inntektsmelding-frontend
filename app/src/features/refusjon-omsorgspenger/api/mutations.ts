@@ -7,6 +7,7 @@ import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models.ts";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RefusjonOmsorgspengerDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
+    foresporselUuid: z.undefined(),
     omsorgspenger: z.object({
       fraværHeleDager: z
         .array(
