@@ -83,7 +83,7 @@ export const SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert = z.object(
     }),
     refusjon: z.array(
       z.object({
-        fom: z.string(),
+        fom: z.string().optional(),
         beløp: z.number(),
       }),
     ),

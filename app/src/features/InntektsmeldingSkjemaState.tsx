@@ -38,7 +38,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
     .optional(),
   refusjon: z.array(
     z.object({
-      fom: z.string(),
+      fom: z.string().optional(),
       beløp: beløpSchema,
     }),
   ),

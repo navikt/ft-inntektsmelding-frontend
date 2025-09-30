@@ -13,13 +13,6 @@ const kontaktpersonSchema = z.object({
   telefonnummer: z.string(),
 });
 
-const refusjonSchema = z.array(
-  z.object({
-    fom: z.string(),
-    beløp: beløpSchema,
-  }),
-);
-
 const skalRefunderesSchema = z.union([
   z.literal("JA_LIK_REFUSJON"),
   z.literal("JA_VARIERENDE_REFUSJON"),
@@ -28,13 +21,25 @@ const skalRefunderesSchema = z.union([
 
 export const InntektsmeldingSkjemaStateSchema = z.object({
   kontaktperson: kontaktpersonSchema,
-  refusjon: refusjonSchema,
+  refusjon: z.array(
+    z
+      .object({
+        fom: z.string().optional(),
+        beløp: beløpSchema.optional(),
+      })
+      .optional(),
+  ),
   skalRefunderes: skalRefunderesSchema.optional(),
 });
 
 export const AGIValidatedInntektsmelding = z.object({
   kontaktperson: kontaktpersonSchema,
-  refusjon: refusjonSchema,
+  refusjon: z.array(
+    z.object({
+      fom: z.string(),
+      beløp: beløpSchema,
+    }),
+  ),
   skalRefunderes: skalRefunderesSchema,
 });
 

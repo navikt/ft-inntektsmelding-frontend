@@ -71,7 +71,7 @@ export function Steg2Refusjon() {
       setValue("refusjon", [
         {
           fom: førsteFraværsdag,
-          beløp: refusjon[0].beløp,
+          beløp: refusjon[0]?.beløp,
         },
         ...refusjon.slice(1),
       ]);
