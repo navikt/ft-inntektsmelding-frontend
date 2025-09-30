@@ -109,9 +109,13 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
     },
     onSuccess: (inntektsmeldingState) => {
       setInntektsmeldingSkjemaState(inntektsmeldingState);
+      // her kan vi kanskje hente id fra inntektsmeldingState?
       navigate({
         from: "/agi/oppsummering",
-        to: "/agi/kvittering",
+        to: "/$id/kvittering",
+        params: {
+          id: inntektsmeldingState.id,
+        },
       });
     },
   });
