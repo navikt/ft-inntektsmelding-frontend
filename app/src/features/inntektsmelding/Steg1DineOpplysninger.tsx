@@ -38,7 +38,7 @@ type PersonOgSelskapsInformasjonForm = NonNullable<
 
 // Minimal type that works with both InntektsmeldingSkjemaState and InntektsmeldingSkjemaStateAGI
 type MinimalSkjemaState = {
-  kontaktperson: {
+  kontaktperson?: {
     navn: string;
     telefonnummer: string;
   };
