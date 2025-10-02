@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-import { svpOpplysninger } from "../mocks/opplysninger.ts";
 import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
