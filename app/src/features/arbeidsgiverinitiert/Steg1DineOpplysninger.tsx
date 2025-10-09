@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 
-import { Steg1DineOpplysningerComponent } from "../inntektsmelding/Steg1DineOpplysninger";
+import { DineOpplysninger } from "../shared/DineOpplysninger";
 import {
   InntektsmeldingSkjemaStateAGI,
   useInntektsmeldingSkjemaAGI,
@@ -23,7 +23,7 @@ export const Steg1DineOpplysningerAGI = () => {
     });
   };
   return (
-    <Steg1DineOpplysningerComponent
+    <DineOpplysninger
       inntektsmeldingSkjemaState={inntektsmeldingSkjemaState}
       onSubmit={onSubmit}
     />

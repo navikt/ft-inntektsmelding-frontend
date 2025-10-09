@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Steg4Kvittering } from "~/features/inntektsmelding/Steg4Kvittering";
+import { Steg4KvitteringAGI } from "~/features/arbeidsgiverinitiert/Steg4KvitteringAGI.tsx";
 
 export const Route = createFileRoute("/agi/kvittering")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  return <Steg4Kvittering />;
+  return <Steg4KvitteringAGI />;
 }

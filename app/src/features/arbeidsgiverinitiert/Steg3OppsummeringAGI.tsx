@@ -107,15 +107,10 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
 
       return sendInntektsmeldingArbeidsgiverInitiert(inntektsmeldingRequest);
     },
-    onSuccess: (inntektsmeldingState) => {
-      setInntektsmeldingSkjemaState(inntektsmeldingState);
-      // her kan vi kanskje hente id fra inntektsmeldingState?
+    onSuccess: (inntektsmeldingResponse) => {
+      setInntektsmeldingSkjemaState(inntektsmeldingResponse);
       navigate({
-        from: "/agi/oppsummering",
-        to: "/$id/kvittering",
-        params: {
-          id: inntektsmeldingState.foresporselUuid,
-        },
+        to: "/agi/kvittering",
       });
     },
   });
