@@ -16,8 +16,8 @@ import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 import { useOpplysninger } from "../../shared/hooks/useOpplysninger.tsx";
 import { useScrollToTopOnMount } from "../../shared/hooks/useScrollToTopOnMount.tsx";
 import { useInntektsmeldingSkjemaAGI } from "../SkjemaStateContext";
-import { InntektsmeldingSkjemaStateValidAGI } from "../zodSchemas.tsx";
 import { SkjemaoppsummeringAGI } from "../visningskomponenter/SkjemaoppsummeringAGI";
+import { InntektsmeldingSkjemaStateValidAGI } from "../zodSchemas.tsx";
 
 export const Steg3Oppsummering = () => {
   useScrollToTopOnMount();

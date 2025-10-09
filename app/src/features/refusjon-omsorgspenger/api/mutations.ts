@@ -4,7 +4,6 @@ import { z } from "zod";
 import { SERVER_URL } from "~/api/mutations";
 import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RefusjonOmsorgspengerDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
     foresporselUuid: z.undefined(),
@@ -29,7 +28,6 @@ const RefusjonOmsorgspengerDtoSchema =
     }),
   });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const RefusjonOmsorgspengerResponseDtoSchema =
   RefusjonOmsorgspengerDtoSchema.extend({
     id: z.number(),

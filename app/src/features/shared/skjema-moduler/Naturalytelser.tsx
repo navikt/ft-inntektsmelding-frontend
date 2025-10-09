@@ -13,8 +13,8 @@ import {
 import { isBefore } from "date-fns";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-import { HjelpetekstReadMore } from "~/features/shared/Hjelpetekst";
 import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/steg/Steg2InntektOgRefusjon";
+import { HjelpetekstReadMore } from "~/features/shared/Hjelpetekst";
 import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
 import {
   Naturalytelsetype,

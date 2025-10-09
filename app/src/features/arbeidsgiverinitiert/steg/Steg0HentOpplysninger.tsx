@@ -18,8 +18,8 @@ import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
-import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
 import { useDocumentTitle } from "~/features/shared/hooks/useDocumentTitle";
+import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
 import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import {
   OpplysningerRequest,

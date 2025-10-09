@@ -11,9 +11,9 @@ import {
 } from "@navikt/ds-react";
 import { useForm } from "react-hook-form";
 
+import { useHjelpetekst } from "~/features/shared/Hjelpetekst";
 import { useEksisterendeInntektsmeldinger } from "~/features/shared/hooks/useEksisterendeInntektsmeldinger";
 import { useOpplysninger } from "~/features/shared/hooks/useOpplysninger";
-import { useHjelpetekst } from "~/features/shared/Hjelpetekst";
 import type { OpplysningerDto } from "~/types/api-models.ts";
 import {
   capitalizeSetning,

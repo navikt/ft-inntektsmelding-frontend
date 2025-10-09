@@ -25,11 +25,11 @@ import { isAfter } from "date-fns";
 import { Fragment } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
+import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/steg/Steg2InntektOgRefusjon";
 import {
   HjelpetekstAlert,
   HjelpetekstReadMore,
 } from "~/features/shared/Hjelpetekst";
-import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/steg/Steg2InntektOgRefusjon";
 import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
 import {
   EndringAvInntektÅrsaker,
@@ -44,9 +44,9 @@ import {
 } from "~/utils.ts";
 import { navnPåMåned } from "~/utils/date-utils";
 
+import { useDisclosure } from "../hooks/useDisclosure";
 import { Informasjonsseksjon } from "../Informasjonsseksjon";
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
-import { useDisclosure } from "../hooks/useDisclosure";
 
 type InntektProps = {
   opplysninger: Pick<

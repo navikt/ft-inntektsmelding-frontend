@@ -374,7 +374,6 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
     // Validations for Step 4
     if (data.meta.step === 4 || data.meta.step === 5) {
-      // eslint-disable-next-line unicorn/no-lonely-if
       if (!data.meta.skalKorrigereInntekt && !data.inntekt) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
