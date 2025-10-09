@@ -3,7 +3,7 @@ import { getRouteApi, useLocation } from "@tanstack/react-router";
 export const useOpplysninger = () => {
   const location = useLocation();
   const route = location.pathname.startsWith("/agi")
-    ? getRouteApi("/agi")
+    ? getRouteApi("/agi/$id")
     : getRouteApi("/$id");
   const routeData = route.useLoaderData();
 

@@ -64,22 +64,28 @@ export const HentOpplysninger = () => {
         // 2. lagrer opplysningene i sessionStorage
         // 3. redirecter til samme sti som før
         // 4. komponenten leser ID og avgjør om den skal hente opplysninger fra Backend eller sessionstorage.
-        const fakeId = ARBEIDSGIVER_INITERT_ID;
         const opplysningerMedId = {
           ...opplysninger,
-          forespørselUuid: fakeId,
+          forespørselUuid: ARBEIDSGIVER_INITERT_ID,
         };
-        sessionStorage.setItem(fakeId, JSON.stringify(opplysningerMedId));
+        sessionStorage.setItem(
+          ARBEIDSGIVER_INITERT_ID,
+          JSON.stringify(opplysningerMedId),
+        );
 
         return navigate({
-          to: "/agi/dine-opplysninger",
+          to: "/agi/$id/dine-opplysninger",
+          params: {
+            id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID,
+          },
         });
       }
 
-      // Vi har en eksisterende oppgave. Vi må vi redirecter til den.
+      //TODO: Sjekke og er innsendt agi-initiert eller ikke
+      // Vi har en eksisterende oppgave. Vi må redirecte til den.
       return navigate({
         to: "/$id",
-        params: { id: opplysninger.forespørselUuid },
+        params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
       });
     },
   });

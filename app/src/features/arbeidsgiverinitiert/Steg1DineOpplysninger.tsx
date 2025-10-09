@@ -1,5 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
+
+import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
 import { DineOpplysninger } from "../shared/DineOpplysninger";
 import {
   InntektsmeldingSkjemaStateAGI,
@@ -7,6 +10,7 @@ import {
 } from "./SkjemaStateAGI";
 
 export const Steg1DineOpplysningerAGI = () => {
+  const opplysninger = useOpplysninger();
   const { inntektsmeldingSkjemaState, setInntektsmeldingSkjemaState } =
     useInntektsmeldingSkjemaAGI();
   const navigate = useNavigate();
@@ -18,7 +22,8 @@ export const Steg1DineOpplysningerAGI = () => {
       kontaktperson,
     }));
     navigate({
-      from: "/agi/dine-opplysninger",
+      from: "/agi/$id/dine-opplysninger",
+      params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
       to: "../refusjon",
     });
   };

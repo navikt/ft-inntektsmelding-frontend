@@ -6,19 +6,16 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { sendInntektsmeldingArbeidsgiverInitiert } from "~/api/mutations.ts";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator";
 import { useDocumentTitle } from "~/features/useDocumentTitle";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import type {
   OpplysningerDto,
   SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert,
 } from "~/types/api-models.ts";
 import { formatStrengTilTall, formatYtelsesnavn } from "~/utils";
 
-import {
-  ArbeidsgiverOgAnsattOppsummering,
-  FørsteDagOppsummering,
-  UtbetalingOgRefusjonOppsummering,
-} from "../inntektsmelding/Skjemaoppsummering";
 import { useOpplysninger } from "../inntektsmelding/useOpplysninger";
 import { useScrollToTopOnMount } from "../useScrollToTopOnMount";
+import { SkjemaoppsummeringAGI } from "./SkjemaoppsummeringAGI";
 import {
   InntektsmeldingSkjemaStateValidAGI,
   useInntektsmeldingSkjemaAGI,
@@ -68,21 +65,10 @@ export const Steg3Oppsummering = () => {
           Oppsummering
         </Heading>
         <Fremgangsindikator aktivtSteg={3} />
-        <ArbeidsgiverOgAnsattOppsummering
-          kanEndres={true}
+        <SkjemaoppsummeringAGI
+          gyldigInntektsmeldingSkjemaState={gyldigInntektsmeldingSkjemaState}
           opplysninger={opplysninger}
-          skjemaState={gyldigInntektsmeldingSkjemaState}
-        />
-        <FørsteDagOppsummering
-          editPath="/agi/refusjon"
-          kanEndres={true}
-          opplysninger={opplysninger}
-        />
-        <UtbetalingOgRefusjonOppsummering
-          editPath="/agi/refusjon"
-          kanEndres={true}
-          skjemaState={gyldigInntektsmeldingSkjemaState}
-        />
+        />{" "}
         <SendInnInntektsmelding opplysninger={opplysninger} />
       </div>
     </section>
@@ -110,7 +96,10 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
     onSuccess: (inntektsmeldingResponse) => {
       setInntektsmeldingSkjemaState(inntektsmeldingResponse);
       navigate({
-        to: "/agi/kvittering",
+        to: "/agi/$id/kvittering",
+        params: {
+          id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID,
+        },
       });
     },
   });

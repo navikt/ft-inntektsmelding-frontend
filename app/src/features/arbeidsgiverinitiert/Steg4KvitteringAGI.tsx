@@ -8,7 +8,7 @@ export const Steg4KvitteringAGI = () => {
 
   return (
     <Kvittering
-      breadcrumbUrl="/agi/kvittering"
+      breadcrumbUrl="/agi/$id/kvittering"
       inntektsmeldingsId={gyldigInntektsmeldingSkjemaState?.id}
       opplysninger={opplysninger}
       skalRefunderes={gyldigInntektsmeldingSkjemaState?.skalRefunderes}

@@ -103,7 +103,7 @@ export const Skjemaoppsummering = ({
         opplysninger={opplysninger}
         skjemaState={skjemaState}
       />
-      <FørsteDagOppsummering kanEndres={false} opplysninger={opplysninger} />
+      <RefusjonOppsummering kanEndres={false} opplysninger={opplysninger} />
       <InntektOppsummering
         kanEndres={kanEndres}
         opplysninger={opplysninger}
@@ -252,7 +252,7 @@ export const ArbeidsgiverOgAnsattOppsummering = ({
   </FormSummary>
 );
 
-export const FørsteDagOppsummering = ({
+export const RefusjonOppsummering = ({
   opplysninger,
   kanEndres = false,
   editPath = "",

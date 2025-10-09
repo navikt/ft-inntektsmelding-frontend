@@ -5,7 +5,7 @@ export const useEksisterendeInntektsmeldinger = () => {
 
   const erAGI = location.pathname.startsWith("/agi");
 
-  const route = erAGI ? getRouteApi("/agi") : getRouteApi("/$id");
+  const route = erAGI ? getRouteApi("/agi/$id") : getRouteApi("/$id");
   const routeData = route.useLoaderData();
 
   if (!routeData?.eksisterendeInntektsmeldinger) {

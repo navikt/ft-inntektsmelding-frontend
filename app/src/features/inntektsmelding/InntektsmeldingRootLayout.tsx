@@ -87,12 +87,13 @@ export const InntektsmeldingRoot = () => {
 };
 
 export const InntektsmeldingRootAGI = () => {
-  const route = getRouteApi("/agi");
+  const route = getRouteApi("/agi/$id");
+  const { id } = route.useParams();
   const data = route.useLoaderData();
   return (
-    <InntektsmeldingSkjemaStateProviderAGI skjemaId="agi">
+    <InntektsmeldingSkjemaStateProviderAGI skjemaId={id}>
       <InntektsmeldingRootLayoutComponent
-        skjemaId="agi"
+        skjemaId={id}
         ytelse={data.opplysninger.ytelse}
         {...data.opplysninger.arbeidsgiver}
       />

@@ -6,6 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/inntektsmelding/useOpplysninger";
 import { Fremgangsindikator } from "~/features/skjema-moduler/Fremgangsindikator.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import { formatYtelsesnavn } from "~/utils";
 
 import { DatePickerWrapped } from "../react-hook-form-wrappers/DatePickerWrapped";
@@ -97,7 +98,8 @@ export function Steg2Refusjon() {
       skalRefunderes,
     }));
     navigate({
-      from: "/agi/refusjon",
+      from: "/agi/$id/refusjon",
+      params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
       to: "../oppsummering",
     });
   });

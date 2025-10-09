@@ -31,6 +31,7 @@ export const InntektsmeldingSkjemaStateSchema = z.object({
   ),
   skalRefunderes: skalRefunderesSchema.optional(),
   id: z.number().optional(),
+  opprettetTidspunkt: z.string().optional(),
 });
 
 export const AGIValidatedInntektsmelding = z.object({
@@ -43,6 +44,7 @@ export const AGIValidatedInntektsmelding = z.object({
   ),
   skalRefunderes: skalRefunderesSchema,
   id: z.number().optional(),
+  opprettetTidspunkt: z.string().optional(),
 });
 
 export type InntektsmeldingSkjemaStateAGI = z.infer<

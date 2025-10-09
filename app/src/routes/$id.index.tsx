@@ -8,6 +8,19 @@ export const Route = createFileRoute("/$id/")({
     if (!eksisterendeInntektsmeldinger) {
       throw new Error("No loader data");
     }
+    /*
+    Her skal vi sjekke om vi det er agi eller ikke, og redirecte til agi eller vanlig.
+    /* */
+    // if (true) {
+    //   return redirect({
+    //     to: "/agi/$id/vis",
+    //     params: {
+    //       id: params.id,
+    //     },
+    //     replace: true,
+    //     throw: true,
+    //   });
+    // }
     if (eksisterendeInntektsmeldinger[0] === undefined) {
       redirect({
         to: "/$id/dine-opplysninger",
