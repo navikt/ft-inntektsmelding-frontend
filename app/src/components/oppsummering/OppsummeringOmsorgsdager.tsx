@@ -12,7 +12,7 @@ import {
 import { ListItem } from "@navikt/ds-react/List";
 import { Link } from "@tanstack/react-router";
 
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
+import { useSkjemaState } from "~/features/refusjon-omsorgspenger/SkjemaStateContext";
 import { formatDatoKort } from "~/utils.ts";
 
 import { ErrorMessage } from "./ErrorMessage";
@@ -37,7 +37,7 @@ export const OppsummeringOmsorgsdager = ({
   heading?: string;
   editPath?: string;
 }) => {
-  const context = useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const context = useSkjemaState();
   const { formState } = context || {};
 
   const harFraværHeleDager = (fraværHeleDager?.length ?? 0) > 0;

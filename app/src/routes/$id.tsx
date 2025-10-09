@@ -5,9 +5,9 @@ import {
   hentEksisterendeInntektsmeldinger,
   hentOpplysningerData,
 } from "~/api/queries";
-import { OppgaveErUtgåttFeilside } from "~/features/error-boundary/OppgaveErUtgåttFeilside.tsx";
-import { InntektsmeldingRoot } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { OppgaveErUtgåttFeilside } from "~/features/shared/error-boundary/OppgaveErUtgåttFeilside";
+import { InntektsmeldingRoot } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
+import { RotLayout } from "~/features/shared/rot-layout/RotLayout";
 import { OpplysningerDto } from "~/types/api-models";
 
 enum FEILKODER {

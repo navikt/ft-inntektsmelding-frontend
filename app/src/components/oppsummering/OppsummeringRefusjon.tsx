@@ -10,7 +10,7 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { Link } from "@tanstack/react-router";
 
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
+import { useSkjemaState } from "~/features/refusjon-omsorgspenger/SkjemaStateContext";
 
 import { ErrorMessage } from "./ErrorMessage";
 
@@ -19,8 +19,7 @@ export const OppsummeringRefusjon = ({
 }: {
   redigerbar: boolean;
 }) => {
-  const { getValues, formState } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { getValues, formState } = useSkjemaState();
   return (
     <FormSummary>
       <FormSummaryHeader>

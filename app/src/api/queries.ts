@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
-import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
-import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
-import { parseStorageItem } from "~/features/usePersistedState.tsx";
+import { InntektsmeldingSkjemaStateValid } from "~/features/inntektsmelding/zodSchemas";
+import { parseStorageItem } from "~/features/shared/hooks/usePersistedState";
+import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/shared/skjema-moduler/Inntekt.tsx";
 import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import {
   feilmeldingSchema,

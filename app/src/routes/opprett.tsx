@@ -1,7 +1,7 @@
 import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { InntektsmeldingRootLayoutComponent } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
+import { InntektsmeldingRootLayoutComponent } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
 import { YtelsetypeSchema } from "~/types/api-models";
 
 export const ARBEIDSGIVER_INITERT_ID = "agi";

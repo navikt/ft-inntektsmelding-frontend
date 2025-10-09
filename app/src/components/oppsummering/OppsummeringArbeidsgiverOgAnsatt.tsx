@@ -10,7 +10,7 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { Link } from "@tanstack/react-router";
 
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
+import { useSkjemaState } from "~/features/refusjon-omsorgspenger/SkjemaStateContext";
 import { useInnloggetBruker } from "~/features/refusjon-omsorgspenger/useInnloggetBruker";
 import {
   formatFodselsnummer,
@@ -25,8 +25,7 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
 }: {
   redigerbar: boolean;
 }) => {
-  const { getValues, formState } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { getValues, formState } = useSkjemaState();
   const innloggetBruker = useInnloggetBruker();
   return (
     <FormSummary>

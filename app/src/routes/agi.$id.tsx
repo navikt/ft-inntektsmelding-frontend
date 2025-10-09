@@ -4,9 +4,9 @@ import z from "zod";
 
 import { SERVER_URL } from "~/api/mutations";
 import { hentOpplysningerData } from "~/api/queries";
-import { InntektsmeldingSkjemaStateValidAGI } from "~/features/arbeidsgiverinitiert/SkjemaStateAGI";
-import { InntektsmeldingRootAGI } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
+import { InntektsmeldingSkjemaStateValidAGI } from "~/features/arbeidsgiverinitiert/zodSchemas";
+import { InntektsmeldingRootAGI } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
+import { RotLayout } from "~/features/shared/rot-layout/RotLayout";
 import {
   InntektsmeldingResponseDtoSchema,
   SendInntektsmeldingResponseDto,

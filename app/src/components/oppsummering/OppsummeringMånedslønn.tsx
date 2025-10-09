@@ -10,8 +10,8 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { Link } from "@tanstack/react-router";
 
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
-import { endringsårsak } from "~/features/skjema-moduler/Inntekt";
+import { useSkjemaState } from "~/features/refusjon-omsorgspenger/SkjemaStateContext";
+import { endringsårsak } from "~/features/shared/skjema-moduler/Inntekt";
 import { formatDatoKort, formatKroner } from "~/utils";
 
 import { ErrorMessage } from "./ErrorMessage";
@@ -21,8 +21,7 @@ export const OppsummeringMånedslønn = ({
 }: {
   redigerbar: boolean;
 }) => {
-  const { getValues, formState } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { getValues, formState } = useSkjemaState();
 
   return (
     <FormSummary>

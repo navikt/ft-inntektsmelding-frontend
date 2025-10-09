@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { Steg4KvitteringAGI } from "~/features/arbeidsgiverinitiert/Steg4KvitteringAGI.tsx";
+import { Steg4KvitteringAGI } from "~/features/arbeidsgiverinitiert/steg/Steg4KvitteringAGI";
 
 export const Route = createFileRoute("/agi/$id/kvittering")({
   component: RouteComponent,

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { SERVER_URL } from "~/api/mutations";
 import { hentOpplysningerData } from "~/api/queries";
 import { RefusjonOmsorgspengerResponseDtoSchema } from "~/features/refusjon-omsorgspenger/api/mutations";
-import { VisInnsendtRefusjonskrav } from "~/features/refusjon-omsorgspenger/VisInnsendtRefusjonskrav";
+import { VisInnsendtRefusjonskrav } from "~/features/refusjon-omsorgspenger/visningskomponenter/VisInnsendtRefusjonskrav.tsx";
 import { logDev } from "~/utils";
 
 import { ARBEIDSGIVER_INITERT_ID } from "./opprett.tsx";
