@@ -195,11 +195,14 @@ export const HentOpplysninger = () => {
 };
 
 function HentPersonError({ error }: { error: Error | null }) {
+  const route = getRouteApi("/opprett");
+  const { ytelseType } = route.useSearch();
+
   if (!error) {
     return null;
   }
 
-  if (error.message.includes("Fant ikke person")) {
+  if (error.message.includes("FANT_IKKE_PERSON")) {
     return (
       <Alert variant="error">
         <Heading level="3" size="small">
@@ -213,16 +216,6 @@ function HentPersonError({ error }: { error: Error | null }) {
       </Alert>
     );
   }
-
-  return <Alert variant="error">{error.message}</Alert>;
-}
-
-function HentOpplysningerError({ error }: { error: Error | null }) {
-  if (!error) {
-    return null;
-  }
-  const route = getRouteApi("/opprett");
-  const { ytelseType } = route.useSearch();
   if (error?.message === "INGEN_SAK_FUNNET") {
     return (
       <Alert variant="warning">
@@ -230,12 +223,20 @@ function HentOpplysningerError({ error }: { error: Error | null }) {
           Kan ikke opprette inntektsmelding
         </Heading>
         Du kan ikke sende inn inntektsmelding på {formatYtelsesnavn(ytelseType)}{" "}
-        på denne personen
+        på denne personen.
       </Alert>
     );
   }
 
-  return <Alert variant="error">{error.message}</Alert>;
+  return <Alert variant="error">Kunne ikke hente personopplysninger</Alert>;
+}
+
+function HentOpplysningerError({ error }: { error: Error | null }) {
+  if (!error) {
+    return null;
+  }
+
+  return <Alert variant="error">Kunne ikke hente personopplysninger</Alert>;
 }
 
 function UnntattAaregRegistrering() {

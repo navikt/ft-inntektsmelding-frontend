@@ -173,19 +173,15 @@ export async function hentPersonFraFnr(
   );
 
   if (response.status === 404) {
-    throw new Error("Fant ikke person");
-  }
-  if (!response.ok) {
-    throw new Error("Kunne ikke hente personopplysninger.");
+    throw new Error("FANT_IKKE_PERSON");
   }
 
   const json = await response.json();
   const parsedJson = SlåOppArbeidstakerResponseDtoSchema.safeParse(json);
-
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);
 
-    throw new Error("Responsen fra serveren matchet ikke forventet format");
+    throw new Error(json.type);
   }
 
   return parsedJson.data;
