@@ -12,7 +12,7 @@ test.describe("Happy path", () => {
     await mockGrunnbeløp({ page });
     await mockInntektsmeldinger({ page });
 
-    await page.goto("/fp-im-dialog/1/dine-opplysninger");
+    await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
     // Vi starter på "dine-opplysninger" steget
     await expect(

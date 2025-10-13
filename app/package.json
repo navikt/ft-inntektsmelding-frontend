@@ -6,7 +6,6 @@
   "scripts": {
     "dev:fp": "vite --base=/fp-im-dialog",
     "dev:k9": "vite --base=/k9-im-dialog",
-    "build:fp": "tsc && vite build --base=/fp-im-dialog",
     "build:k9": "tsc && vite build --base=/k9-im-dialog",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",

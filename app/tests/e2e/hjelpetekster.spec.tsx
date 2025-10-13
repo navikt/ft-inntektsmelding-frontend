@@ -11,12 +11,12 @@ test("Skal toggle hjelpetekster med switch", async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
   await expect(
     page.getByRole("checkbox", { name: "Vis hjelpetekster" }),
   ).toBeChecked();
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
   await expect(page.getByText("Hva betyr dette?")).toBeVisible();
   await page.getByRole("checkbox", { name: "Vis hjelpetekster" }).click();
   await expect(page.getByText("Hva betyr dette?")).toBeVisible({

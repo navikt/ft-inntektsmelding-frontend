@@ -18,7 +18,7 @@ test("burde vise alert dersom vi kan anta at IM er sendt inn tidligere fra LPS/A
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
   await expect(
     page.getByText(
@@ -44,7 +44,7 @@ test("burde ikke vise alert dersom IM finnes", async ({ page }) => {
     json: mangeEksisterendeInntektsmeldingerResponse,
   });
 
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
   await expect(
     page.getByRole("heading", { name: "Dine opplysninger" }),

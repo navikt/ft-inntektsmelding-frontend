@@ -10,7 +10,7 @@ test('burde vise "dine opplysninger" riktig', async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
   await expect(
     page.getByText("Underfundig Dyreflokk", { exact: true }),

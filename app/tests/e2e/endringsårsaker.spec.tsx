@@ -12,7 +12,7 @@ test("endringsårsaker uten ekstra felter", async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
   await expect(
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
@@ -58,7 +58,7 @@ test("endringsårsaker med fom dato", async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
   await expect(
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
@@ -84,7 +84,7 @@ test("endringsårsaker med fom og tom dato (kun ferie)", async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
   await expect(
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
@@ -103,7 +103,7 @@ test("endringsårsaker med fom og valgfri tom dato", async ({ page }) => {
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
   await expect(
     page.getByText("Dette hjelper oss å forstå avviket fra rapportert lønn."),
@@ -153,7 +153,7 @@ test("oppsummering vises riktig når tomdato er gjort valgfri", async ({
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
   await page.getByLabel("Telefon").fill("12312312");
   await page.getByText("Bekreft og gå videre").click();
 
