@@ -9,8 +9,6 @@ export const Route = createFileRoute("/$id/")({
     if (!eksisterendeInntektsmeldinger || !opplysninger) {
       throw new Error("No loader data");
     }
-    console.log("opplysninger", opplysninger);
-    console.log("eksisterendeInntektsmeldinger", eksisterendeInntektsmeldinger);
 
     if (opplysninger.forespørselType === "ARBEIDSGIVERINITIERT_NYANSATT") {
       return redirect({
