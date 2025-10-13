@@ -42,6 +42,7 @@ const STANDARD_OPPLYSNINGER = {
   skjæringstidspunkt: "2024-05-30",
   førsteUttaksdato: "2024-05-31",
   ytelse: "FORELDREPENGER" as const,
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const enkeltOpplysningerResponse = STANDARD_OPPLYSNINGER;
@@ -49,6 +50,7 @@ export const enkeltOpplysningerResponse = STANDARD_OPPLYSNINGER;
 export const utgåttOpplysningerResponse = {
   ...STANDARD_OPPLYSNINGER,
   forespørselStatus: "UTGÅTT" as const,
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist = {
@@ -81,6 +83,7 @@ export const opplysningerMedSisteMånedIkkeRapportertFørRapporteringsfrist = {
       },
     ],
   },
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const opplysningerMedSisteMånedRapportert0 = {
@@ -107,6 +110,7 @@ export const opplysningerMedSisteMånedRapportert0 = {
       },
     ],
   },
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const opplysningerMedAInntektNede = {
@@ -130,6 +134,7 @@ export const opplysningerMedAInntektNede = {
       },
     ],
   },
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const opplysningerMedFlereEnn3Måneder = {
@@ -168,11 +173,13 @@ export const opplysningerMedFlereEnn3Måneder = {
       },
     ],
   },
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const svpOpplysninger = {
   ...STANDARD_OPPLYSNINGER,
   ytelse: "SVANGERSKAPSPENGER",
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const opplysningerMedBådeRapportertOgIkkePassert = {
@@ -205,9 +212,11 @@ export const opplysningerMedBådeRapportertOgIkkePassert = {
       },
     ],
   },
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
 
 export const fullførtOppgaveResponse = {
   ...STANDARD_OPPLYSNINGER,
   forespørselStatus: "FERDIG" as const,
+  forespørselType: "BESTILT_AV_FAGSYSTEM" as const,
 } satisfies OpplysningerDto;
