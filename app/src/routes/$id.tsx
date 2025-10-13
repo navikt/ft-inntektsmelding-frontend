@@ -8,7 +8,6 @@ import {
 import { OppgaveErUtgåttFeilside } from "~/features/shared/error-boundary/OppgaveErUtgåttFeilside";
 import { InntektsmeldingRoot } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
 import { RotLayout } from "~/features/shared/rot-layout/RotLayout";
-import { OpplysningerDto } from "~/types/api-models";
 
 enum FEILKODER {
   OPPGAVE_ER_UTGÅTT = "OPPGAVE_ER_UTGÅTT",
@@ -45,7 +44,7 @@ export const Route = createFileRoute("/$id")({
     }
 
     return {
-      opplysninger: opplysninger as OpplysningerDto,
+      opplysninger: opplysninger,
       eksisterendeInntektsmeldinger,
     };
   },

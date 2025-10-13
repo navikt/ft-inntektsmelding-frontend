@@ -5,22 +5,21 @@ export const Route = createFileRoute("/$id/")({
     const { loaderData } = await parentMatchPromise;
     const eksisterendeInntektsmeldinger =
       loaderData?.eksisterendeInntektsmeldinger;
-    if (!eksisterendeInntektsmeldinger) {
+    const opplysninger = loaderData?.opplysninger;
+    if (!eksisterendeInntektsmeldinger || !opplysninger) {
       throw new Error("No loader data");
     }
-    /*
-    Her skal vi sjekke om vi det er agi eller ikke, og redirecte til agi eller vanlig.
-    /* */
-    // if (true) {
-    //   return redirect({
-    //     to: "/agi/$id/vis",
-    //     params: {
-    //       id: params.id,
-    //     },
-    //     replace: true,
-    //     throw: true,
-    //   });
-    // }
+
+    if (opplysninger.forespørselType === "ARBEIDSGIVERINITIERT_NYANSATT") {
+      return redirect({
+        to: "/agi/$id/vis",
+        params: {
+          id: params.id,
+        },
+        replace: true,
+        throw: true,
+      });
+    }
     if (eksisterendeInntektsmeldinger[0] === undefined) {
       redirect({
         to: "/$id/dine-opplysninger",

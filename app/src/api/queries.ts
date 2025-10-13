@@ -9,6 +9,7 @@ import {
   feilmeldingSchema,
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
+  OpplysningerDto,
   OpplysningerRequest,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
@@ -116,7 +117,9 @@ export function mapInntektsmeldingResponseTilValidState(
   } satisfies InntektsmeldingSkjemaStateValid;
 }
 
-export async function hentOpplysningerData(uuid: string) {
+export async function hentOpplysningerData(
+  uuid: string,
+): Promise<OpplysningerDto> {
   if (uuid === ARBEIDSGIVER_INITERT_ID) {
     // Da har vi en fakeId. Hent fra sessionstorage
     const opplysninger = parseStorageItem(

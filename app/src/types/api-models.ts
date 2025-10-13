@@ -174,6 +174,12 @@ export const opplysningerSchema = z.object({
     ),
   }),
   forespørselStatus: z.enum(["UNDER_BEHANDLING", "FERDIG", "UTGÅTT"]),
+  forespørselType: z.enum([
+    "BESTILT_AV_FAGSYSTEM",
+    "ARBEIDSGIVERINITIERT_NYANSATT",
+    "ARBEIDSGIVERINITIERT_UREGISTRERT",
+    "OMSORGSPENGER_REFUSJON",
+  ]),
   skjæringstidspunkt: z.string(),
   førsteUttaksdato: z.string(),
   ytelse: z.enum([
