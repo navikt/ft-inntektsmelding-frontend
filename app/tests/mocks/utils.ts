@@ -113,3 +113,37 @@ export const expectError = async ({
 export const brukNoBreakSpaces = (s: string) => {
   return s.replaceAll(" ", "\u00A0");
 };
+
+type MockAGIOpplysningerParams = {
+  page: Page;
+  json?: OpplysningerDto;
+};
+
+export const mockAGIOpplysninger = ({
+  page,
+  json,
+}: MockAGIOpplysningerParams) => {
+  return page.route(
+    `**/*/arbeidsgiverinitiert/opplysninger`,
+    async (route) => {
+      await route.fulfill({ json });
+    },
+  );
+};
+
+type MockAGISendInntektsmeldingParams = {
+  page: Page;
+  json?: any;
+};
+
+export const mockAGISendInntektsmelding = ({
+  page,
+  json,
+}: MockAGISendInntektsmeldingParams) => {
+  return page.route(
+    `**/*/imdialog/send-inntektsmelding/arbeidsgiverinitiert-nyansatt`,
+    async (route) => {
+      await route.fulfill({ json });
+    },
+  );
+};
