@@ -38,12 +38,16 @@ export function Steg2Refusjon() {
 
   const formMethods = useForm<RefusjonForm>({
     defaultValues: {
-      førsteFraværsdag: opplysninger.førsteUttaksdato,
+      førsteFraværsdag:
+        inntektsmeldingSkjemaState.førsteFraværsdag ||
+        opplysninger.førsteUttaksdato,
       refusjon:
         inntektsmeldingSkjemaState.refusjon.length === 0
           ? [
               {
-                fom: opplysninger.førsteUttaksdato,
+                fom:
+                  inntektsmeldingSkjemaState.førsteFraværsdag ||
+                  opplysninger.førsteUttaksdato,
                 beløp: defaultInntekt,
               },
               { fom: undefined, beløp: 0 },

@@ -26,6 +26,7 @@ export const SkjemaoppsummeringAGI = ({
         editPath="/agi/$id/refusjon"
         kanEndres={true}
         opplysninger={opplysninger}
+        startdato={gyldigInntektsmeldingSkjemaState.førsteFraværsdag}
       />
       <UtbetalingOgRefusjonOppsummering
         editPath="/agi/$id/refusjon"

@@ -31,6 +31,7 @@ const mapInntektsmeldingResponseTilValidState = (
         : im.refusjon?.length === 1
           ? "JA_LIK_REFUSJON"
           : "NEI",
+    førsteFraværsdag: im.startdato,
     opprettetTidspunkt: im.opprettetTidspunkt,
     id: im.id,
   };

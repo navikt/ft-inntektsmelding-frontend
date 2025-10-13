@@ -103,7 +103,11 @@ export const Skjemaoppsummering = ({
         opplysninger={opplysninger}
         skjemaState={skjemaState}
       />
-      <RefusjonOppsummering kanEndres={false} opplysninger={opplysninger} />
+      <RefusjonOppsummering
+        kanEndres={false}
+        opplysninger={opplysninger}
+        startdato={opplysninger.førsteUttaksdato}
+      />
       <InntektOppsummering
         kanEndres={kanEndres}
         opplysninger={opplysninger}
@@ -253,10 +257,12 @@ export const ArbeidsgiverOgAnsattOppsummering = ({
 );
 
 export const RefusjonOppsummering = ({
+  startdato,
   opplysninger,
   kanEndres = false,
   editPath = "",
 }: {
+  startdato: string;
   opplysninger: OpplysningerDto;
   kanEndres: boolean;
   editPath?: string;
@@ -278,7 +284,7 @@ export const RefusjonOppsummering = ({
       <FormSummary.Answer>
         <FormSummary.Label>Fra og med</FormSummary.Label>
         <FormSummary.Value>
-          {formatDatoLang(new Date(opplysninger.førsteUttaksdato))}
+          {formatDatoLang(new Date(startdato))}
         </FormSummary.Value>
       </FormSummary.Answer>
     </FormSummary.Answers>
