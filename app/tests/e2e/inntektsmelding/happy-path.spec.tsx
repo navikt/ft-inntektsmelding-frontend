@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
-import { enkelSendInntektsmeldingResponse } from "tests/mocks/send-inntektsmelding";
+import { enkelSendInntektsmeldingResponse } from "tests/mocks/inntektsmelding/send-inntektsmelding";
 import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
 test.describe("Happy path", () => {
   test("Enklest mulige utfylling", async ({ page }) => {

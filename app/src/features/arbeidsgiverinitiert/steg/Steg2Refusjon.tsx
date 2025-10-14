@@ -9,7 +9,9 @@ import { Fremgangsindikator } from "~/features/shared/skjema-moduler/Fremgangsin
 import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import { formatYtelsesnavn } from "~/utils";
 
+import { PersonOppslagError } from "../../shared/components/PersonOppslagFeil.tsx";
 import { useDocumentTitle } from "../../shared/hooks/useDocumentTitle.tsx";
+import { usePersonOppslag } from "../../shared/hooks/usePersonOppslag.tsx";
 import { useScrollToTopOnMount } from "../../shared/hooks/useScrollToTopOnMount.tsx";
 import { DatePickerWrapped } from "../../shared/react-hook-form-wrappers/DatePickerWrapped.tsx";
 import { UtbetalingOgRefusjon } from "../../shared/skjema-moduler/UtbetalingOgRefusjon.tsx";
@@ -64,6 +66,9 @@ export function Steg2Refusjon() {
 
   const { handleSubmit, watch, setValue } = formMethods;
 
+  // Legg til person oppslag mutation for dato validering for første fraværsdag
+  const validerFørsteFraværsdagMutation = usePersonOppslag();
+
   watch("førsteFraværsdag");
   const førsteFraværsdag = watch("førsteFraværsdag");
 
@@ -93,17 +98,33 @@ export function Steg2Refusjon() {
   const onSubmit = handleSubmit((skjemadata) => {
     const { refusjon, skalRefunderes, førsteFraværsdag } = skjemadata;
 
-    setInntektsmeldingSkjemaState((prev: InntektsmeldingSkjemaStateAGI) => ({
-      ...prev,
-      førsteFraværsdag,
-      refusjon,
-      skalRefunderes,
-    }));
-    navigate({
-      from: "/agi/$id/refusjon",
-      params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
-      to: "../oppsummering",
-    });
+    validerFørsteFraværsdagMutation.mutate(
+      {
+        fødselsnummer: opplysninger.person.fødselsnummer,
+        ytelse: opplysninger.ytelse,
+        førsteFraværsdag,
+      },
+      {
+        onSuccess: () => {
+          // Hvis validering er vellykket, lagre og naviger
+          setInntektsmeldingSkjemaState(
+            (prev: InntektsmeldingSkjemaStateAGI) => ({
+              ...prev,
+              førsteFraværsdag,
+              refusjon,
+              skalRefunderes,
+            }),
+          );
+          navigate({
+            from: "/agi/$id/refusjon",
+            params: {
+              id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID,
+            },
+            to: "../oppsummering",
+          });
+        },
+      },
+    );
   });
 
   return (
@@ -122,8 +143,15 @@ export function Steg2Refusjon() {
             name="førsteFraværsdag"
             rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
           />
-
+          {validerFørsteFraværsdagMutation.error && (
+            <PersonOppslagError
+              context="dato_validering"
+              error={validerFørsteFraværsdagMutation.error}
+              ytelse={opplysninger.ytelse}
+            />
+          )}
           <UtbetalingOgRefusjon />
+
           <div className="flex gap-4 justify-center">
             <Button
               as={Link}
@@ -137,6 +165,7 @@ export function Steg2Refusjon() {
               disabled={watch("skalRefunderes") === "NEI"}
               icon={<ArrowRightIcon />}
               iconPosition="right"
+              loading={validerFørsteFraværsdagMutation.isPending}
               type="submit"
               variant="primary"
             >

@@ -3,9 +3,9 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
-import { utgåttOpplysningerResponse } from "../mocks/opplysninger.ts";
+import { utgåttOpplysningerResponse } from "../../mocks/inntektsmelding/opplysninger.ts";
 
 test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
   page,

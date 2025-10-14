@@ -4,10 +4,10 @@ import {
   mockAGISendInntektsmelding,
   mockGrunnbeløp,
   mockHentPersonOgArbeidsforhold,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
-import { agiOpplysningerResponseNyAnsatt } from "../mocks/agi-opplysninger";
-import { agiSendInntektsmeldingResponse } from "../mocks/agi-send-inntektsmelding";
+import { agiOpplysningerResponseNyAnsatt } from "../../mocks/arbeidsgiverinitiert/agi-opplysninger";
+import { agiSendInntektsmeldingResponse } from "../../mocks/arbeidsgiverinitiert/agi-send-inntektsmelding";
 
 const FAKE_FNR = "09810198874";
 

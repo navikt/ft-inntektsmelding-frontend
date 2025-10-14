@@ -2,13 +2,13 @@ import { expect, Locator, Page } from "@playwright/test";
 
 import type { OpplysningerDto } from "~/types/api-models.ts";
 
-import { arbeidsforholdResponse } from "./arbeidsforhold.ts";
+import { arbeidsforholdResponse } from "../arbeidsgiverinitiert/arbeidsforhold.ts";
 import {
   ingenEksisterendeInntektsmeldingerResponse,
   mangeEksisterendeInntektsmeldingerResponse,
-} from "./eksisterende-inntektsmeldinger";
+} from "../inntektsmelding/eksisterende-inntektsmeldinger";
 import { grunnbeløpResponse } from "./grunnbeløp";
-import { enkeltOpplysningerResponse } from "./opplysninger.ts";
+import { enkeltOpplysningerResponse } from "../inntektsmelding/opplysninger.ts";
 
 type mockOpplysningerParams = {
   page: Page;

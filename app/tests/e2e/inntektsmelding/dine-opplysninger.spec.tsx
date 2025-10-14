@@ -3,7 +3,7 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
 test('burde vise "dine opplysninger" riktig', async ({ page }) => {
   await mockOpplysninger({ page });

@@ -5,7 +5,7 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "../mocks/utils.ts";
+} from "../../mocks/shared/utils.ts";
 
 test("endringsårsaker uten ekstra felter", async ({ page }) => {
   await mockOpplysninger({ page });

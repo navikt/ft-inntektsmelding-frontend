@@ -17,8 +17,10 @@ import { useMutation } from "@tanstack/react-query";
 import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
-import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
+import { hentOpplysninger } from "~/api/queries.ts";
+import { PersonOppslagError } from "~/features/shared/components/PersonOppslagFeil";
 import { useDocumentTitle } from "~/features/shared/hooks/useDocumentTitle";
+import { usePersonOppslag } from "~/features/shared/hooks/usePersonOppslag";
 import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
 import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import {
@@ -90,27 +92,7 @@ export const HentOpplysninger = () => {
     },
   });
 
-  const hentPersonMutation = useMutation({
-    mutationFn: async ({ fødselsnummer, førsteFraværsdag }: FormType) => {
-      const personinfo = await hentPersonFraFnr(
-        fødselsnummer,
-        ytelseType,
-        førsteFraværsdag,
-      );
-
-      return personinfo;
-    },
-    onSuccess: (data, { fødselsnummer, førsteFraværsdag }) => {
-      if (data.arbeidsforhold.length === 1) {
-        return opprettOpplysningerMutation.mutate({
-          fødselsnummer,
-          førsteFraværsdag,
-          ytelseType,
-          organisasjonsnummer: data.arbeidsforhold[0].organisasjonsnummer,
-        });
-      }
-    },
-  });
+  const hentPersonMutation = usePersonOppslag();
 
   const isPending =
     hentPersonMutation.isPending || opprettOpplysningerMutation.isPending;
@@ -120,7 +102,26 @@ export const HentOpplysninger = () => {
       <section className="mt-2">
         <form
           onSubmit={formMethods.handleSubmit((values) =>
-            hentPersonMutation.mutate(values),
+            hentPersonMutation.mutate(
+              {
+                fødselsnummer: values.fødselsnummer,
+                ytelse: ytelseType,
+                førsteFraværsdag: values.førsteFraværsdag,
+              },
+              {
+                onSuccess: (data) => {
+                  if (data.arbeidsforhold.length === 1) {
+                    return opprettOpplysningerMutation.mutate({
+                      fødselsnummer: values.fødselsnummer,
+                      førsteFraværsdag: values.førsteFraværsdag,
+                      ytelseType,
+                      organisasjonsnummer:
+                        data.arbeidsforhold[0].organisasjonsnummer,
+                    });
+                  }
+                },
+              },
+            ),
           )}
         >
           <div className="bg-bg-default px-5 py-6 rounded-md flex flex-col gap-6">
@@ -164,7 +165,11 @@ export const HentOpplysninger = () => {
               <UnntattAaregRegistrering />
             )}
             {formMethods.watch("årsak") === "annen_årsak" && <AnnenÅrsak />}
-            <HentPersonError error={hentPersonMutation.error} />
+            <PersonOppslagError
+              context="person_oppslag"
+              error={hentPersonMutation.error}
+              ytelse={ytelseType}
+            />
             <HentOpplysningerError error={opprettOpplysningerMutation.error} />
             {(hentPersonMutation.data?.arbeidsforhold.length ?? 0) > 1 && (
               <Button
@@ -193,43 +198,6 @@ export const HentOpplysninger = () => {
     </FormProvider>
   );
 };
-
-function HentPersonError({ error }: { error: Error | null }) {
-  const route = getRouteApi("/opprett");
-  const { ytelseType } = route.useSearch();
-
-  if (!error) {
-    return null;
-  }
-
-  if (error.message.includes("FANT_IKKE_PERSON")) {
-    return (
-      <Alert variant="error">
-        <Heading level="3" size="small">
-          Vi finner ingen ansatt registrert hos dere med dette fødselsnummeret
-        </Heading>
-        <BodyShort>
-          Sjekk om fødselsnummeret er riktig og at den ansatte er registrert hos
-          dere i Aa-registeret. Den ansatte må være registrert i Aa-registeret
-          for å kunne sende inn inntektsmelding.{" "}
-        </BodyShort>
-      </Alert>
-    );
-  }
-  if (error?.message === "INGEN_SAK_FUNNET") {
-    return (
-      <Alert variant="warning">
-        <Heading level="3" size="small">
-          Kan ikke opprette inntektsmelding
-        </Heading>
-        Du kan ikke sende inn inntektsmelding på {formatYtelsesnavn(ytelseType)}{" "}
-        på denne personen.
-      </Alert>
-    );
-  }
-
-  return <Alert variant="error">Kunne ikke hente personopplysninger</Alert>;
-}
 
 function HentOpplysningerError({ error }: { error: Error | null }) {
   if (!error) {

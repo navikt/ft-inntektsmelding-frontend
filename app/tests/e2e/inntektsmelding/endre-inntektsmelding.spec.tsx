@@ -4,9 +4,9 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
-import { mangeEksisterendeInntektsmeldingerResponse } from "../mocks/eksisterende-inntektsmeldinger";
+import { mangeEksisterendeInntektsmeldingerResponse } from "../../mocks/inntektsmelding/eksisterende-inntektsmeldinger";
 
 test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
   await mockOpplysninger({

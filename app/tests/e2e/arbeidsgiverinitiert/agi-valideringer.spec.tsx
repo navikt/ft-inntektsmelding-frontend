@@ -4,9 +4,9 @@ import {
   mockAGIOpplysninger,
   mockGrunnbeløp,
   mockHentPersonOgArbeidsforhold,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
-import { agiOpplysningerResponseNyAnsatt } from "../mocks/agi-opplysninger";
+import { agiOpplysningerResponseNyAnsatt } from "../../mocks/arbeidsgiverinitiert/agi-opplysninger";
 
 const FAKE_FNR = "09810198874";
 

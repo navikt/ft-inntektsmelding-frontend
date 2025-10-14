@@ -6,7 +6,7 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
 test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await mockOpplysninger({ page });

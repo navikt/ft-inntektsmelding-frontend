@@ -3,13 +3,13 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "tests/mocks/utils";
+} from "tests/mocks/shared/utils";
 
-import { mangeEksisterendeInntektsmeldingerResponse } from "../mocks/eksisterende-inntektsmeldinger.ts";
+import { mangeEksisterendeInntektsmeldingerResponse } from "../../mocks/inntektsmelding/eksisterende-inntektsmeldinger.ts";
 import {
   enkeltOpplysningerResponse,
   fullførtOppgaveResponse,
-} from "../mocks/opplysninger.ts";
+} from "../../mocks/inntektsmelding/opplysninger.ts";
 
 test("burde vise alert dersom vi kan anta at IM er sendt inn tidligere fra LPS/Altinn", async ({
   page,

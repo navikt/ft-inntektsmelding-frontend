@@ -4,7 +4,7 @@ import {
   mockGrunnbeløp,
   mockInntektsmeldinger,
   mockOpplysninger,
-} from "../mocks/utils.ts";
+} from "../../mocks/shared/utils.ts";
 
 test("Skal toggle hjelpetekster med switch", async ({ page }) => {
   await mockOpplysninger({ page });
