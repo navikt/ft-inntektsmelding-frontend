@@ -70,6 +70,10 @@ export const HentOpplysninger = () => {
           ...opplysninger,
           forespørselUuid: ARBEIDSGIVER_INITERT_ID,
         };
+
+        // TODO: i denne er det litt mye data som lagres i sessionStorage.
+        // hvis det kan forsvares må det dokumenteres i cookiebanner
+        // hvis ikke, lagre i state og akseptere at det forsvinner i refresh
         sessionStorage.setItem(
           ARBEIDSGIVER_INITERT_ID,
           JSON.stringify(opplysningerMedId),
