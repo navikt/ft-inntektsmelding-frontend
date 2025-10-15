@@ -74,6 +74,8 @@ export const HentOpplysninger = () => {
           ARBEIDSGIVER_INITERT_ID,
           JSON.stringify(opplysningerMedId),
         );
+        // hvis vi har noe skjemadata liggende fra tidligere innsendinger, så fjerner vi det
+        sessionStorage.removeItem(`skjemadata-${ARBEIDSGIVER_INITERT_ID}`);
 
         return navigate({
           to: "/agi/$id/dine-opplysninger",
