@@ -7,8 +7,8 @@ import {
   ingenEksisterendeInntektsmeldingerResponse,
   mangeEksisterendeInntektsmeldingerResponse,
 } from "../inntektsmelding/eksisterende-inntektsmeldinger";
-import { grunnbeløpResponse } from "./grunnbeløp";
 import { enkeltOpplysningerResponse } from "../inntektsmelding/opplysninger.ts";
+import { grunnbeløpResponse } from "./grunnbeløp";
 
 type mockOpplysningerParams = {
   page: Page;
@@ -123,17 +123,14 @@ export const mockAGIOpplysninger = ({
   page,
   json,
 }: MockAGIOpplysningerParams) => {
-  return page.route(
-    `**/*/arbeidsgiverinitiert/opplysninger`,
-    async (route) => {
-      await route.fulfill({ json });
-    },
-  );
+  return page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
+    await route.fulfill({ json });
+  });
 };
 
 type MockAGISendInntektsmeldingParams = {
   page: Page;
-  json?: any;
+  json?: unknown;
 };
 
 export const mockAGISendInntektsmelding = ({
