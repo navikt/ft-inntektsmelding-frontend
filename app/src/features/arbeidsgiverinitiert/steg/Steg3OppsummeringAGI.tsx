@@ -92,7 +92,12 @@ function SendInnInntektsmelding({ opplysninger }: SendInnInntektsmeldingProps) {
       return sendInntektsmeldingArbeidsgiverInitiert(inntektsmeldingRequest);
     },
     onSuccess: (inntektsmeldingResponse) => {
-      setInntektsmeldingSkjemaState(inntektsmeldingResponse);
+      setInntektsmeldingSkjemaState((prev) => ({
+        ...prev,
+        id: inntektsmeldingResponse.id,
+        opprettetTidspunkt: inntektsmeldingResponse.opprettetTidspunkt,
+      }));
+
       navigate({
         to: "/agi/$id/kvittering",
         params: {
