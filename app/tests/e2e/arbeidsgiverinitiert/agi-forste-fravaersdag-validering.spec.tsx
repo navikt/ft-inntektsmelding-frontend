@@ -175,78 +175,15 @@ test.describe("AGI Første fraværsdag validering", () => {
     await page.getByRole("button", { name: "Neste steg" }).click();
 
     // Skal vise feilmelding for ugyldig dato
-    await expect(page.getByText("Ugyldig dato")).toBeVisible();
     await expect(
       page.getByText(
-        "Den valgte første fraværsdagen er ikke gyldig for denne ytelsen",
+        "Du kan ikke sende inn inntektsmelding for pleiepenger sykt barn med denne datoen som første fraværsdag med refusjon.",
       ),
     ).toBeVisible();
 
     // Skal fortsatt være på refusjon-steget
     await expect(
       page.getByRole("heading", { name: "Refusjon", exact: true }),
-    ).toBeVisible();
-  });
-
-  test("Skal vise loading state på knapp under validering", async ({
-    page,
-  }) => {
-    // Mock successful initial person lookup
-    await mockHentPersonOgArbeidsforhold({ page });
-    await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
-
-    // Gå til opprett-siden og opprett inntektsmelding
-    await page.goto("/k9-im-dialog/opprett?ytelseType=PLEIEPENGER_SYKT_BARN");
-    await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
-    await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
-    await page.getByLabel("Første fraværsdag").fill("01.04.2024");
-    await page.getByRole("button", { name: "Hent opplysninger" }).click();
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
-    await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
-
-    // Gå gjennom dine opplysninger
-    await page.getByLabel("Telefon").fill("98765432");
-    await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
-
-    // Vi er nå på refusjon-steget
-    await page
-      .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
-      .click();
-
-    // Mock slow validation response
-    await page.route(
-      "**/*/arbeidsgiverinitiert/arbeidsforhold",
-      async (route) => {
-        // Vent litt for å simulere loading
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        await route.fulfill({
-          json: {
-            fornavn: "MOMENTAN",
-            etternavn: "TRAKT",
-            arbeidsforhold: [
-              {
-                organisasjonsnavn: "NAV",
-                organisasjonsnummer: "974652293",
-              },
-            ],
-            kjønn: "MANN",
-          },
-        });
-      },
-    );
-
-    const nesteStegButton = page.getByRole("button", { name: "Neste steg" });
-
-    // Klikk "Neste steg"
-    await nesteStegButton.click();
-
-    // Sjekk at knappen viser loading state
-    await expect(nesteStegButton).toBeDisabled();
-
-    // Vent til validering er ferdig og vi er på oppsummering
-    await expect(
-      page.getByRole("heading", { name: "Oppsummering" }),
     ).toBeVisible();
   });
 

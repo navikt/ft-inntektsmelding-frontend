@@ -162,7 +162,10 @@ export function Steg2Refusjon() {
               Forrige steg
             </Button>
             <Button
-              disabled={watch("skalRefunderes") === "NEI"}
+              disabled={
+                watch("skalRefunderes") === "NEI" ||
+                validerFørsteFraværsdagMutation.isPending
+              }
               icon={<ArrowRightIcon />}
               iconPosition="right"
               loading={validerFørsteFraværsdagMutation.isPending}
