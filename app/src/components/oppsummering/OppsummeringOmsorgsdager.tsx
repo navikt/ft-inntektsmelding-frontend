@@ -4,6 +4,7 @@ import {
   FormSummaryAnswer,
   FormSummaryAnswers,
   FormSummaryEditLink,
+  FormSummaryFooter,
   FormSummaryHeader,
   FormSummaryHeading,
   FormSummaryLabel,
@@ -47,7 +48,6 @@ export const OppsummeringOmsorgsdager = ({
     <FormSummary>
       <FormSummaryHeader>
         <FormSummaryHeading level="3">{heading}</FormSummaryHeading>
-        {redigerbar && <FormSummaryEditLink as={Link} to={editPath} />}
       </FormSummaryHeader>
       <FormSummaryAnswers>
         {harDekket10FørsteOmsorgsdager !== undefined && (
@@ -140,6 +140,11 @@ export const OppsummeringOmsorgsdager = ({
           </FormSummaryAnswer>
         )}
       </FormSummaryAnswers>
+      {redigerbar && (
+        <FormSummaryFooter>
+          <FormSummaryEditLink as={Link} to={editPath} />
+        </FormSummaryFooter>
+      )}
     </FormSummary>
   );
 };

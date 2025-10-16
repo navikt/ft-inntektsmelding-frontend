@@ -3,6 +3,7 @@ import {
   FormSummaryAnswer,
   FormSummaryAnswers,
   FormSummaryEditLink,
+  FormSummaryFooter,
   FormSummaryHeader,
   FormSummaryHeading,
   FormSummaryLabel,
@@ -33,9 +34,6 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
         <FormSummaryHeading level="3">
           Arbeidsgiver og den ansatte
         </FormSummaryHeading>
-        {redigerbar && (
-          <FormSummaryEditLink as={Link} to="../2-ansatt-og-arbeidsgiver" />
-        )}
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -82,6 +80,11 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
           </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
+      {redigerbar && (
+        <FormSummaryFooter>
+          <FormSummaryEditLink as={Link} to="../2-ansatt-og-arbeidsgiver" />
+        </FormSummaryFooter>
+      )}
     </FormSummary>
   );
 };

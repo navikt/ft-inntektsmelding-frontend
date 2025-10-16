@@ -3,6 +3,7 @@ import {
   FormSummaryAnswer,
   FormSummaryAnswers,
   FormSummaryEditLink,
+  FormSummaryFooter,
   FormSummaryHeader,
   FormSummaryHeading,
   FormSummaryLabel,
@@ -29,7 +30,6 @@ export const OppsummeringMånedslønn = ({
         <FormSummaryHeading level="3">
           Beregnet månedslønn for refusjon
         </FormSummaryHeading>
-        {redigerbar && <FormSummaryEditLink as={Link} to={"../4-refusjon"} />}
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -70,6 +70,11 @@ export const OppsummeringMånedslønn = ({
           </FormSummaryAnswer>
         )}
       </FormSummaryAnswers>
+      {redigerbar && (
+        <FormSummaryFooter>
+          <FormSummaryEditLink as={Link} to={"../4-refusjon"} />
+        </FormSummaryFooter>
+      )}
     </FormSummary>
   );
 };

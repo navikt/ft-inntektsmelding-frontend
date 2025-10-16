@@ -3,6 +3,7 @@ import {
   FormSummaryAnswer,
   FormSummaryAnswers,
   FormSummaryEditLink,
+  FormSummaryFooter,
   FormSummaryHeader,
   FormSummaryHeading,
   FormSummaryLabel,
@@ -53,7 +54,6 @@ export const Skjemaoppsummering = ({
         <FormSummary>
           <FormSummaryHeader>
             <FormSummaryHeading level="3">Om fraværet</FormSummaryHeading>
-            <FormSummaryEditLink as={Link} to={"../inntekt-og-refusjon"} />
           </FormSummaryHeader>
           <FormSummaryAnswers>
             <FormSummaryAnswer>
@@ -87,6 +87,9 @@ export const Skjemaoppsummering = ({
               </FormSummaryAnswer>
             )}
           </FormSummaryAnswers>
+          <FormSummaryFooter>
+            <FormSummaryEditLink as={Link} to={"../inntekt-og-refusjon"} />
+          </FormSummaryFooter>
         </FormSummary>
         <InntektOppsummering
           kanEndres={kanEndres}
@@ -138,13 +141,6 @@ function InntektOppsummering({
     <FormSummary>
       <FormSummary.Header>
         <FormSummary.Heading level="3">Månedslønn</FormSummary.Heading>
-        {kanEndres && (
-          <FormSummary.EditLink
-            aria-label="Endre inntekt"
-            as={Link}
-            to="../inntekt-og-refusjon#beregnet-manedslonn"
-          />
-        )}
       </FormSummary.Header>
       <FormSummary.Answers>
         <FormSummary.Answer>
@@ -200,6 +196,15 @@ function InntektOppsummering({
           </>
         )}
       </FormSummary.Answers>
+      {kanEndres && (
+        <FormSummary.Footer>
+          <FormSummary.EditLink
+            aria-label="Endre inntekt"
+            as={Link}
+            to="../inntekt-og-refusjon#beregnet-manedslonn"
+          />
+        </FormSummary.Footer>
+      )}
     </FormSummary>
   );
 }
@@ -222,13 +227,6 @@ export const ArbeidsgiverOgAnsattOppsummering = ({
       <FormSummary.Heading level="3">
         Arbeidsgiver og den ansatte
       </FormSummary.Heading>
-      {kanEndres && (
-        <FormSummary.EditLink
-          aria-label="Endre dine opplysninger"
-          as={Link}
-          to={editPath}
-        />
-      )}
     </FormSummary.Header>
     <FormSummary.Answers>
       <FormSummary.Answer>
@@ -253,6 +251,15 @@ export const ArbeidsgiverOgAnsattOppsummering = ({
         </FormSummary.Value>
       </FormSummary.Answer>
     </FormSummary.Answers>
+    {kanEndres && (
+      <FormSummary.Footer>
+        <FormSummary.EditLink
+          aria-label="Endre dine opplysninger"
+          as={Link}
+          to={editPath}
+        />
+      </FormSummary.Footer>
+    )}
   </FormSummary>
 );
 
@@ -272,13 +279,6 @@ export const RefusjonOppsummering = ({
       <FormSummary.Heading level="3">
         Første dag med {formatYtelsesnavn(opplysninger.ytelse)}
       </FormSummary.Heading>
-      {kanEndres && (
-        <FormSummary.EditLink
-          aria-label="Endre første dag med fravær"
-          as={Link}
-          to={editPath}
-        />
-      )}
     </FormSummary.Header>
     <FormSummary.Answers>
       <FormSummary.Answer>
@@ -288,6 +288,15 @@ export const RefusjonOppsummering = ({
         </FormSummary.Value>
       </FormSummary.Answer>
     </FormSummary.Answers>
+    {kanEndres && (
+      <FormSummary.Footer>
+        <FormSummary.EditLink
+          aria-label="Endre første dag med fravær"
+          as={Link}
+          to={editPath}
+        />
+      </FormSummary.Footer>
+    )}
   </FormSummary>
 );
 
@@ -307,13 +316,6 @@ export const UtbetalingOgRefusjonOppsummering = ({
       <FormSummary.Heading level="3">
         Utbetaling og refusjon
       </FormSummary.Heading>
-      {kanEndres && (
-        <FormSummary.EditLink
-          aria-label="Endre utbetaling og refusjon"
-          as={Link}
-          to={editPath}
-        />
-      )}
     </FormSummary.Header>
     <FormSummary.Answers>
       <FormSummary.Answer>
@@ -355,6 +357,15 @@ export const UtbetalingOgRefusjonOppsummering = ({
         </FormSummary.Answer>
       )}
     </FormSummary.Answers>
+    {kanEndres && (
+      <FormSummary.Footer>
+        <FormSummary.EditLink
+          aria-label="Endre utbetaling og refusjon"
+          as={Link}
+          to={editPath}
+        />
+      </FormSummary.Footer>
+    )}
   </FormSummary>
 );
 
@@ -368,13 +379,6 @@ const NaturalytelserOppsummering = ({
   <FormSummary>
     <FormSummary.Header>
       <FormSummary.Heading level="3">Naturalytelser</FormSummary.Heading>
-      {kanEndres && (
-        <FormSummary.EditLink
-          aria-label="Endre naturalytelser"
-          as={Link}
-          to="../inntekt-og-refusjon#naturalytelser"
-        />
-      )}
     </FormSummary.Header>
     <FormSummary.Answers>
       <FormSummary.Answer>
@@ -411,6 +415,15 @@ const NaturalytelserOppsummering = ({
         </FormSummary.Answer>
       )}
     </FormSummary.Answers>
+    {kanEndres && (
+      <FormSummary.Footer>
+        <FormSummary.EditLink
+          aria-label="Endre naturalytelser"
+          as={Link}
+          to="../inntekt-og-refusjon#naturalytelser"
+        />
+      </FormSummary.Footer>
+    )}
   </FormSummary>
 );
 
