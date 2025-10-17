@@ -14,7 +14,7 @@ import {
 } from "@navikt/ds-react";
 import { fnr } from "@navikt/fnrvalidator";
 import { useMutation } from "@tanstack/react-query";
-import { getRouteApi, redirect } from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { hentOpplysninger } from "~/api/queries.ts";
@@ -39,6 +39,7 @@ type FormType = {
 export const HentOpplysninger = () => {
   const route = getRouteApi("/opprett");
   const { ytelseType } = route.useSearch();
+  const navigate = useNavigate();
   useDocumentTitle(
     `Opprett inntektsmelding for ${formatYtelsesnavn(ytelseType)}`,
   );
@@ -80,20 +81,19 @@ export const HentOpplysninger = () => {
         // hvis vi har noe skjemadata liggende fra tidligere innsendinger, så fjerner vi det
         sessionStorage.removeItem(`skjemadata-${ARBEIDSGIVER_INITERT_ID}`);
 
-        return redirect({
+        return navigate({
           to: "/agi/$id/dine-opplysninger",
           params: {
-            id: ARBEIDSGIVER_INITERT_ID,
+            id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID,
           },
-          replace: true,
-          throw: true,
         });
       }
 
-      // vi kan redirecte til /$id/, så kan $id.index.tsx ta seg av redirecte riktig etterpå
-      return redirect({
+      //TODO: Sjekke og er innsendt agi-initiert eller ikke
+      // Vi har en eksisterende oppgave. Vi må redirecte til den.
+      return navigate({
         to: "/$id",
-        params: { id: opplysninger.forespørselUuid },
+        params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
       });
     },
   });
