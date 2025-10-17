@@ -158,5 +158,6 @@ function lagSendInntektsmeldingRequest(
       ...r,
       beløp: formatStrengTilTall(r.beløp),
     })),
+    forespørselUuid: opplysninger.forespørselUuid,
   } satisfies SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert;
 }

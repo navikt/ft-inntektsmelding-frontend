@@ -88,6 +88,7 @@ export const SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert = z.object(
       }),
     ),
     startdato: z.string(),
+    forespørselUuid: z.string(),
   },
 );
 
