@@ -44,7 +44,7 @@
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.29.0",
     "@navikt/aksel-stylelint": "7.24.0",
-    "@playwright/test": "1.53.1",
+    "@playwright/test": "1.56.1",
     "@tanstack/eslint-plugin-query": "5.81.2",
     "@tanstack/react-query-devtools": "5.81.2",
     "@tanstack/router-devtools": "1.121.34",
