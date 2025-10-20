@@ -84,16 +84,16 @@ export const HentOpplysninger = () => {
         return navigate({
           to: "/agi/$id/dine-opplysninger",
           params: {
-            id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID,
+            id: ARBEIDSGIVER_INITERT_ID,
           },
         });
       }
 
-      //TODO: Sjekke og er innsendt agi-initiert eller ikke
-      // Vi har en eksisterende oppgave. Vi må redirecte til den.
+      // vi kan sende til /$id uavhengig av inntektsmeldingstype
+      // fordi /$id.index.tsx sjekker om inntektsmeldingstype og redirecter til riktig sti
       return navigate({
         to: "/$id",
-        params: { id: opplysninger.forespørselUuid || ARBEIDSGIVER_INITERT_ID },
+        params: { id: opplysninger.forespørselUuid },
       });
     },
   });
