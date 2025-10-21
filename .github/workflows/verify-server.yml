@@ -27,10 +27,14 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Configure Yarn for GitHub Packages
+        run: |
+          yarn config set npmScopes.navikt.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.navikt.npmAlwaysAuth true
+          yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
+
       - name: Install dependencies
         run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Run ESLint
         run: yarn workspace ft-inntektsmelding-frontend lint

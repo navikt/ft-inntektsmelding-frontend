@@ -37,10 +37,14 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Configure Yarn for GitHub Packages
+        run: |
+          yarn config set npmScopes.navikt.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.navikt.npmAlwaysAuth true
+          yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
+
       - name: Install dependencies (PR branch)
         run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (PR branch)
         run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
@@ -50,8 +54,6 @@ jobs:
 
       - name: Install dependencies (base branch)
         run: yarn install --immutable
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
         run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
