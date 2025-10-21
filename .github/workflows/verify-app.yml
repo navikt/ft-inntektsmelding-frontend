@@ -17,8 +17,8 @@ jobs:
     name: Run end to end tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: https://npm.pkg.github.com/
@@ -34,12 +34,12 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn workspace app install --immutable
+        run: yarn install --immutable
 
       - name: Install Playwright Browsers
-        run: yarn workspace app dlx playwright install --with-deps
+        run: yarn dlx playwright install --with-deps
       - name: Run Playwright tests
-        run: yarn workspace app test:e2e
+        run: yarn test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
@@ -50,8 +50,8 @@ jobs:
     name: Verify there are no lint or typescript errors
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: "22"
           registry-url: https://npm.pkg.github.com/
@@ -70,10 +70,10 @@ jobs:
         run: yarn install --immutable
 
       - name: Run ESLint
-        run: yarn workspace app lint
+        run: yarn lint
 
       - name: Run stylelint
-        run: yarn workspace app stylelint
+        run: yarn stylelint
 
       - name: Check for typescript errors
-        run: yarn workspace app check:types
+        run: yarn check:types
