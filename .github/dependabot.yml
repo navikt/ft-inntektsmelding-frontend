@@ -24,7 +24,7 @@ updates:
         dependency-type: "production"
         update-types:
           - "major"
-      app-dev-deps:
+      app-dev-minor-deps:
         dependency-type: "development"
         update-types:
           - "minor"
@@ -50,7 +50,7 @@ updates:
         dependency-type: "production"
         update-types:
           - "major"
-      server-dev-deps:
+      server-dev-minor-deps:
         dependency-type: "development"
         update-types:
           - "minor"
