@@ -27,9 +27,12 @@ updates:
       app-dev-deps:
         dependency-type: "development"
         update-types:
-          - "major"
           - "minor"
           - "patch"
+      app-dev-major-deps:
+        dependency-type: "development"
+        update-types:
+          - "major"
   - package-ecosystem: npm
     directory: "/server"
     registries:
@@ -50,9 +53,12 @@ updates:
       server-dev-deps:
         dependency-type: "development"
         update-types:
-          - "major"
           - "minor"
           - "patch"
+      server-dev-major-deps:
+        dependency-type: "development"
+        update-types:
+          - "major"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
