@@ -92,7 +92,6 @@ jobs:
   deploy-prod-k9:
     if: github.ref == 'refs/heads/master'
     name: Deploy PROD [K9]
-    environment: "prod-gcp:k9saksbehandling"
     permissions:
       id-token: write
     needs: [build-app-k9, deploy-dev-k9]
