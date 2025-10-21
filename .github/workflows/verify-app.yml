@@ -37,9 +37,9 @@ jobs:
         run: yarn install --immutable
 
       - name: Install Playwright Browsers
-        run: yarn dlx playwright install --with-deps
+        run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: yarn dlx playwright test
+        run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
