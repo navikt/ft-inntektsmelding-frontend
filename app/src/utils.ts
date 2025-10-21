@@ -156,8 +156,6 @@ export function formatStønadsnavn({
   return navn;
 }
 const STØNADSNAVN = {
-  FORELDREPENGER: "foreldrepenger",
-  SVANGERSKAPSPENGER: "svangerskapspenger",
   PLEIEPENGER_SYKT_BARN: "pleiepenger",
   PLEIEPENGER_I_LIVETS_SLUTTFASE: "pleiepenger",
   OPPLÆRINGSPENGER: "opplæringspenger",

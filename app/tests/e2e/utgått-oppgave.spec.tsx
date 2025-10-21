@@ -16,7 +16,7 @@ test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
     page,
   });
 
-  await page.goto("/fp-im-dialog/1");
+  await page.goto("/k9-im-dialog/1");
 
   await expect(
     page.getByRole("heading", { name: "Oppgaven er utgått" }),
@@ -26,7 +26,7 @@ test("utgått oppgave skal vise egen side og hindre innsending av IM", async ({
   ).toBeVisible();
 
   // Forsøk gå til en annen underside, og forvent samme resultat
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
   await expect(
     page.getByRole("heading", { name: "Oppgaven er utgått" }),

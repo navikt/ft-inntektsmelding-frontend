@@ -14,7 +14,7 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await mockInntektsmeldinger({ page });
 
   // Skal forsøke hente eksisterende inntektsmelding og navigere til første steg når IM ikke finnes.
-  await page.goto("/fp-im-dialog/1");
+  await page.goto("/k9-im-dialog/1");
 
   await expect(
     page.getByText("Underfundig Dyreflokk", { exact: true }),
@@ -50,11 +50,11 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   ).toBeVisible();
 
   await expect(
-    page.getByRole("heading", { name: "Periode med foreldrepenger" }),
+    page.getByRole("heading", { name: "Periode med pleiepenger" }),
   ).toBeVisible();
 
   await expect(
-    page.getByText("Underfundigs første dag med foreldrepenger"),
+    page.getByText("Underfundigs første dag med pleiepenger"),
   ).toBeVisible();
   await expect(page.getByText("Fra søknaden til Underfundig")).toBeVisible();
   await expect(page.getByText("Fredag 31. mai 2024")).toBeVisible();
@@ -389,7 +389,7 @@ test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", 
   await mockInntektsmeldinger({ page });
 
   // Skal forsøke hente eksisterende inntektsmelding og navigere til første steg når IM ikke finnes.
-  await page.goto("/fp-im-dialog/1");
+  await page.goto("/k9-im-dialog/1");
 
   await page.getByLabel("Navn").fill("Berømt Flyttelass");
   await page.getByLabel("Telefon").fill("12312312");
@@ -431,7 +431,7 @@ test("Lim inn inntekt skal også formattere input", async ({
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   await page.getByRole("button", { name: "Endre månedslønn" }).click();
   await page.getByRole("button", { name: "Neste steg" }).click();

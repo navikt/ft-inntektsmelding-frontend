@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev:fp",
+    command: "npm run dev:k9",
     port: 5173,
     reuseExistingServer: !process.env.CI,
   },

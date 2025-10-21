@@ -8,7 +8,7 @@ Etter at Node er installert kjører du følgende kommandoer for å starte:
 
 ```bash
 npm install
-npm run dev:fp # eller npm run dev:k9
+npm run dev
 ```
 
 ## Logge inn med idporten i dev

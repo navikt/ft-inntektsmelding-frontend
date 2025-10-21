@@ -22,7 +22,7 @@ test("[08.05] Alle 3 måneder har rapportert inntekt", async ({ page }) => {
     page,
   });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -55,7 +55,7 @@ test("[01.05] Siste måned er ikke rapportert - frist ikke passert", async ({
     page,
   });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -96,7 +96,7 @@ test("[08.05] mangler siste måned men brukt i gjennomsnitt - frist passert", as
     page,
   });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -136,7 +136,7 @@ test("[04.04] 2 siste måneder mangler før rapporteringsfrist", async ({
     page,
   });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -181,7 +181,7 @@ test("[??.??] siste måned ikke passert, nest siste passert", async ({
     page,
   });
 
-  await page.goto("/fp-im-dialog/1/inntekt-og-refusjon");
+  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
 
   const beregnetMånedslønn = page
     .getByRole("heading", { name: "Beregnet månedslønn" })
@@ -227,7 +227,7 @@ test("A-inntekt er nede", async ({ page }) => {
   await mockInntektsmeldinger({
     page,
   });
-  await page.goto("/fp-im-dialog/1/dine-opplysninger");
+  await page.goto("/k9-im-dialog/1/dine-opplysninger");
 
   // Fyll ut navn og telefonnummer på "dine-opplysninger steget"
   await page.getByLabel("Navn").fill("Test Brukersen");

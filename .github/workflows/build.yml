@@ -54,7 +54,7 @@ jobs:
 
       - name: Build webapp [K9]
         working-directory: app
-        run: npm run build:k9
+        run: npm run build
 
       - name: Copy webapp into public directory of server
         working-directory: app
@@ -72,8 +72,6 @@ jobs:
           dockerfile: "./server/Dockerfile"
           build-version: ${{ steps.generate-build-version.outputs.build-version }}
           push-image: true
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
           namespace: k9saksbehandling
 
   deploy-dev-k9:

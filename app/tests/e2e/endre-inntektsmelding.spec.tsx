@@ -20,7 +20,7 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
     uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
   });
 
-  await page.goto("/fp-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
+  await page.goto("/k9-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
 
   await expect(
     page.getByRole("heading", { name: "Innsendt inntektsmelding" }),
@@ -219,7 +219,7 @@ test("sjekk at tilbakestill inntekt tilbakestiller til gjennomsnitt fra opplysni
     uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
   });
 
-  await page.goto("/fp-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
+  await page.goto("/k9-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
   await page.getByRole("link", { name: "Endre inntekt" }).click();
   await expect(
     await finnInputFraLabel({ page, labelText: "Endret månedsinntekt" }),
@@ -247,7 +247,7 @@ test("skal ikke få lov til å sende inn uten endring", async ({ page }) => {
     uuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
   });
 
-  await page.goto("/fp-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
+  await page.goto("/k9-im-dialog/f29dcea7-febe-4a76-911c-ad8f6d3e8858");
   await page.getByRole("button", { name: "Endre" }).first().click();
   await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
   await page.getByRole("button", { name: "Neste steg" }).click();

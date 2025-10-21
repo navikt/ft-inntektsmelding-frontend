@@ -244,17 +244,6 @@ function Ytelsesperiode() {
           kontakte den ansatte før du sender inntektsmeldingen. Hvis den ansatte
           endrer søknadsperioden, vil du få en ny oppgave med riktig dato for
           første fraværsdag.
-          {ytelse === "FORELDREPENGER" && (
-            <>
-              <br />
-              <br />I noen tilfeller kan første dag med foreldrepenger og datoen
-              du får opp under beregnet månedslønn være forskjellig. Det er
-              fordi tidspunktet lønn beregnes fra noen ganger kan være ulik
-              første fraværsdag, for eksempel hvis termin faller på en helg,
-              eller den ansatte har søkt foreldrepenger mindre enn 3 uker før
-              termin.
-            </>
-          )}
         </>
       </HjelpetekstReadMore>
     </VStack>

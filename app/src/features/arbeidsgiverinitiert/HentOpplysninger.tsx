@@ -14,11 +14,7 @@ import {
 } from "@navikt/ds-react";
 import { fnr } from "@navikt/fnrvalidator";
 import { useMutation } from "@tanstack/react-query";
-import {
-  getRouteApi,
-  Link as TanstackLink,
-  useNavigate,
-} from "@tanstack/react-router";
+import { getRouteApi, useNavigate } from "@tanstack/react-router";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { hentOpplysninger, hentPersonFraFnr } from "~/api/queries.ts";
@@ -96,9 +92,6 @@ export const HentOpplysninger = () => {
         ytelseType,
         førsteFraværsdag,
       );
-      if (ytelseType === "SVANGERSKAPSPENGER" && personinfo.kjønn === "MANN") {
-        throw new Error("MENN_KAN_IKKE_SØKE_SVP");
-      }
 
       return personinfo;
     },
@@ -199,24 +192,6 @@ export const HentOpplysninger = () => {
 function HentPersonError({ error }: { error: Error | null }) {
   if (!error) {
     return null;
-  }
-
-  if (error?.message === "MENN_KAN_IKKE_SØKE_SVP") {
-    return (
-      <Alert variant="warning">
-        <Heading level="3" size="small">
-          Bare kvinner kan søke svangerskapspenger
-        </Heading>
-        Ønsker du heller sende inntektsmelding for foreldrepenger?{" "}
-        <TanstackLink
-          from="/opprett"
-          search={(s) => ({ ...s, ytelseType: "FORELDREPENGER" })}
-          to="."
-        >
-          Klikk her
-        </TanstackLink>
-      </Alert>
-    );
   }
 
   if (error.message.includes("Fant ikke person")) {
@@ -343,10 +318,10 @@ function AnnenÅrsak() {
         Det er ikke mulig å opprette inntektsmelding for andre årsaker enda
       </Heading>
       <BodyShort>
-        Den ansatte må søke om foreldrepenger før du kan sende inntektsmelding.
-        Varsel med oppgave blir tilgjengelig i saksoversikten når den ansatte
-        har sendt inn søknad til oss, men tidligst 4 uker før første fraværsdag.
-        Trenger du hjelp, kontakt oss på{" "}
+        Den ansatte må søke om ytelse før du kan sende inntektsmelding. Varsel
+        med oppgave blir tilgjengelig i saksoversikten når den ansatte har sendt
+        inn søknad til oss, men tidligst 4 uker før første fraværsdag. Trenger
+        du hjelp, kontakt oss på{" "}
         <a href="tel:55553336">tlf.&nbsp;55&nbsp;55&nbsp;33&nbsp;36.</a>
       </BodyShort>
     </Alert>
