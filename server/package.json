@@ -20,7 +20,16 @@
     "http-proxy-middleware": "3.0.5"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "3.3.1",
+    "@eslint/js": "9.38.0",
     "@types/express": "5.0.3",
-    "@typescript-eslint/eslint-plugin": "8.46.2"
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "eslint": "9.38.0",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "eslint-plugin-unicorn": "61.0.2",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2"
   }
 }

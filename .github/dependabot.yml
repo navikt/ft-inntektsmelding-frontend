@@ -8,23 +8,6 @@ registries:
 
 updates:
   - package-ecosystem: npm
-    directory: "/"
-    registries:
-      - ft-inntektsmelding-frontend
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 10
-    groups:
-      root-dev-deps:
-        dependency-type: "all"
-        update-types:
-          - "minor"
-          - "patch"
-      root-major:
-        dependency-type: "all"
-        update-types:
-          - "major"
-  - package-ecosystem: npm
     directory: "/app"
     registries:
       - ft-inntektsmelding-frontend
