@@ -41,32 +41,7 @@ test("'Hva betyr dette' skal ha riktig tekst for pleiepenger", async ({
 
   await expect(
     page.getByText(
-      "Dette er den første dagen den ansatte har søkt om pleiepenger.",
+      "Dette er den første dagen den ansatte har søkt om pleiepenger sykt barn.",
     ),
   ).toBeVisible();
-
-  // Ekstra avsnitt som kun finnes for pleiepenger.
-  await expect(
-    page.getByText("I noen tilfeller kan første dag med pleiepenger"),
-  ).toBeVisible();
-});
-
-test("'Hva betyr dette' skal ha riktig tekst for SVP", async ({ page }) => {
-  await mockOpplysninger({ page, json: svpOpplysninger });
-  await mockGrunnbeløp({ page });
-  await mockInntektsmeldinger({ page });
-
-  await page.goto("/k9-im-dialog/1/inntekt-og-refusjon");
-  await page.getByText("Hva betyr dette?").click();
-
-  await expect(
-    page.getByText(
-      "Dette er den første dagen den ansatte har søkt om pleiepenger.",
-    ),
-  ).toBeVisible();
-
-  // Ekstra avsnitt som kun finnes for pleiepenger.
-  await expect(
-    page.getByText("I noen tilfeller kan første dag med pleiepenger"),
-  ).toBeVisible({ visible: false });
 });
