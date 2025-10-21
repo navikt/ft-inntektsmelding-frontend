@@ -3,10 +3,10 @@ name: "verify: server"
 on:
   pull_request:
     branches:
-      - '**'
+      - "**"
     paths:
-      - 'server/**'
-      - '.github/workflows/verify-server.yml'
+      - "server/**"
+      - ".github/workflows/verify-server.yml"
 
 defaults:
   run:
@@ -20,9 +20,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           registry-url: https://npm.pkg.github.com/
-          scope: '@navikt'
+          scope: "@navikt"
 
       - name: Enable Corepack
         run: corepack enable
@@ -34,10 +34,10 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn workspace ft-inntektsmelding-frontend-server install --immutable
 
       - name: Run ESLint
-        run: yarn workspace ft-inntektsmelding-frontend lint
+        run: yarn workspace ft-inntektsmelding-frontend-server lint
 
       - name: Check for typescript errors
-        run: yarn workspace ft-inntektsmelding-frontend check:types
+        run: yarn workspace ft-inntektsmelding-frontend-server check:types

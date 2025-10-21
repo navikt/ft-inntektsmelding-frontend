@@ -34,10 +34,10 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn install --immutable
+        run: yarn workspace ft-inntektsmelding-frontend-app install --immutable
 
       - name: Install Playwright Browsers
-        run: yarn dlx playwright install --with-deps
+        run: yarn workspace ft-inntektsmelding-frontend-app dlx playwright install --with-deps
       - name: Run Playwright tests
         run: yarn workspace ft-inntektsmelding-frontend-app test:e2e
       - uses: actions/upload-artifact@v4
