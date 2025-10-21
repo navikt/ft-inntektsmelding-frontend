@@ -16,12 +16,12 @@ updates:
     open-pull-requests-limit: 10
     groups:
       root-dev-deps:
-        dependency-type: "development"
+        dependency-type: "all"
         update-types:
           - "minor"
           - "patch"
       root-major:
-        dependency-type: "development"
+        dependency-type: "all"
         update-types:
           - "major"
   - package-ecosystem: npm
