@@ -34,24 +34,27 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies (PR branch)
-        run: npm ci
+        run: yarn install --immutable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
-      - name: Measure bundle size (PR branch)q
-        run: npx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
+      - name: Measure bundle size (PR branch)
+        run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
 
       - name: Install dependencies (base branch)
-        run: npm ci
+        run: yarn install --immutable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Measure bundle size (base branch)
-        run: npx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
+        run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
 
       - name: Compare bundle sizes
         id: compare

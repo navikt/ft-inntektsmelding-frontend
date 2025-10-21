@@ -1,0 +1,9 @@
+{
+  "name": "ft-inntektsmelding-frontend-root",
+  "private": true,
+  "packageManager": "yarn@4.10.3",
+  "workspaces": [
+    "app",
+    "server"
+  ]
+}

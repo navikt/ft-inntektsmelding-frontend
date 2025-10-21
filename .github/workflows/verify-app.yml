@@ -21,19 +21,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
-          cache-dependency-path: app
+
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: yarn dlx playwright install --with-deps
       - name: Run Playwright tests
-        run: npx playwright test
+        run: yarn workspace ft-inntektsmelding-frontend-app test:e2e
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
@@ -48,20 +50,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-          cache: "npm"
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
-          cache-dependency-path: app
+
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --immutable
         env:
           NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
 
       - name: Run ESLint
-        run: npm run lint
+        run: yarn workspace ft-inntektsmelding-frontend-app lint
 
       - name: Run stylelint
-        run: npm run stylelint
+        run: yarn workspace ft-inntektsmelding-frontend-app stylelint
 
       - name: Check for typescript errors
-        run: npm run check:types
+        run: yarn workspace ft-inntektsmelding-frontend-app check:types

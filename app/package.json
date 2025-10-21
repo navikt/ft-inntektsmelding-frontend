@@ -13,7 +13,7 @@
     "lint:fix": "eslint --fix",
     "stylelint": "stylelint '**/*.{tsx,css}'",
     "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
-    "bundle-visualizer": "npx vite-bundle-visualizer",
+    "bundle-visualizer": "yarn dlx vite-bundle-visualizer",
     "test:unit": "vitest src/**/*.spec.ts"
   },
   "dependencies": {
