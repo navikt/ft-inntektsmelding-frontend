@@ -34,10 +34,10 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn workspace ft-inntektsmelding-frontend-server install --immutable
+        run: yarn workspace server install --immutable
 
       - name: Run ESLint
-        run: yarn workspace ft-inntektsmelding-frontend-server lint
+        run: yarn workspace server lint
 
       - name: Check for typescript errors
-        run: yarn workspace ft-inntektsmelding-frontend-server check:types
+        run: yarn workspace server check:types
