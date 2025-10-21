@@ -50,7 +50,7 @@ jobs:
         run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
 
       - name: Stash .yarnrc.yml before checkout
-        run: git stash .yarnrc.yml
+        run: git stash
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
