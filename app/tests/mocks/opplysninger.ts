@@ -41,7 +41,7 @@ const STANDARD_OPPLYSNINGER = {
   },
   skjæringstidspunkt: "2024-05-30",
   førsteUttaksdato: "2024-05-31",
-  ytelse: "FORELDREPENGER" as const,
+  ytelse: "PLEIEPENGER_SYKT_BARN" as const,
 } satisfies OpplysningerDto;
 
 export const enkeltOpplysningerResponse = STANDARD_OPPLYSNINGER;
@@ -172,7 +172,7 @@ export const opplysningerMedFlereEnn3Måneder = {
 
 export const svpOpplysninger = {
   ...STANDARD_OPPLYSNINGER,
-  ytelse: "SVANGERSKAPSPENGER",
+  ytelse: "PLEIEPENGER_I_LIVETS_SLUTTFASE",
 } satisfies OpplysningerDto;
 
 export const opplysningerMedBådeRapportertOgIkkePassert = {

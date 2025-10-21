@@ -4,7 +4,7 @@ export const enkelSendInntektsmeldingResponse = {
   id: 1_000_801,
   foresporselUuid: "1",
   aktorId: "2715347149890",
-  ytelse: "FORELDREPENGER",
+  ytelse: "PLEIEPENGER_SYKT_BARN",
   arbeidsgiverIdent: "810007842",
   kontaktperson: {
     navn: "Test Testesen",

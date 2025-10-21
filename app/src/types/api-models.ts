@@ -3,8 +3,6 @@ import { z } from "zod";
 import { formatNavn } from "~/utils.ts";
 
 export const YtelsetypeSchema = z.enum([
-  "FORELDREPENGER",
-  "SVANGERSKAPSPENGER",
   "PLEIEPENGER_SYKT_BARN",
   "PLEIEPENGER_I_LIVETS_SLUTTFASE",
   "OPPLÆRINGSPENGER",
@@ -169,8 +167,6 @@ export const opplysningerSchema = z.object({
   skjæringstidspunkt: z.string(),
   førsteUttaksdato: z.string(),
   ytelse: z.enum([
-    "FORELDREPENGER",
-    "SVANGERSKAPSPENGER",
     "PLEIEPENGER_SYKT_BARN",
     "PLEIEPENGER_I_LIVETS_SLUTTFASE",
     "OPPLÆRINGSPENGER",

@@ -13,7 +13,7 @@ updates:
       - ft-inntektsmelding-frontend
     schedule:
       interval: daily
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
     groups:
       prod-minor-deps:
         dependency-type: "production"
@@ -25,6 +25,11 @@ updates:
         update-types:
           - "minor"
           - "patch"
+          - "major"
+      prod-major-deps:
+        dependency-type: "production"
+        update-types:
+          - "major"
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
