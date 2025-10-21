@@ -29,7 +29,9 @@ test("Skal toggle hjelpetekster med switch", async ({ page }) => {
   });
 });
 
-test("'Hva betyr dette' skal ha riktig tekst for pleiepenger", async ({ page }) => {
+test("'Hva betyr dette' skal ha riktig tekst for pleiepenger", async ({
+  page,
+}) => {
   await mockOpplysninger({ page });
   await mockGrunnbeløp({ page });
   await mockInntektsmeldinger({ page });
