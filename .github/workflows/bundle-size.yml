@@ -49,11 +49,14 @@ jobs:
       - name: Measure bundle size (PR branch)
         run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
 
-      - name: Reset .yarnrc.yml before checkout
-        run: git checkout HEAD -- .yarnrc.yml
+      - name: Stash .yarnrc.yml before checkout
+        run: git stash .yarnrc.yml
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
+
+      - name: Pop .yarnrc.yml after checkout
+        run: git stash pop
 
       - name: Install dependencies (base branch)
         run: yarn install --immutable
