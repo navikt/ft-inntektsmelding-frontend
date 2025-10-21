@@ -20,16 +20,16 @@
     "http-proxy-middleware": "3.0.5"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "3.2.0",
-    "@eslint/js": "9.18.0",
+    "@eslint/eslintrc": "3.3.1",
+    "@eslint/js": "9.38.0",
     "@types/express": "4.17.21",
-    "@typescript-eslint/eslint-plugin": "8.21.0",
-    "eslint": "9.18.0",
-    "eslint-plugin-prettier": "5.2.3",
+    "@typescript-eslint/eslint-plugin": "8.46.2",
+    "eslint": "9.38.0",
+    "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-simple-import-sort": "12.1.1",
-    "eslint-plugin-unicorn": "56.0.1",
-    "prettier": "3.4.2",
-    "typescript": "5.7.3",
-    "typescript-eslint": "8.21.0"
+    "eslint-plugin-unicorn": "61.0.2",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.2"
   }
 }
