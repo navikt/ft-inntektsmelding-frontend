@@ -165,7 +165,10 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
    * Lik refusjon
    */
   await page
-    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .getByRole("group", {
+      name: "Betaler dere lønn under fraværet og krever refusjon?",
+    })
+    .getByRole("radio", { name: "Ja, likt beløp i hele perioden" })
     .click();
 
   const refusjonsBlock = page
@@ -194,7 +197,10 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
    * Variabel refusjon
    */
   await page
-    .locator('input[name="skalRefunderes"][value="JA_VARIERENDE_REFUSJON"]')
+    .getByRole("group", {
+      name: "Betaler dere lønn under fraværet og krever refusjon?",
+    })
+    .getByRole("radio", { name: "Ja, men kun deler av perioden eller varierende beløp" })
     .click();
 
   const variabelRefusjonBlock = page.getByTestId("varierende-refusjon");
@@ -264,7 +270,12 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     }),
   ).toHaveCount(0);
 
-  await page.locator('input[name="misterNaturalytelser"][value="ja"]').click();
+  await page
+    .getByRole("group", {
+      name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
+    })
+    .getByRole("radio", { name: "Ja" })
+    .click();
 
   const naturalytelserBlokk = page.getByTestId("naturalytelser-blokk");
   await page.getByRole("button", { name: "Neste steg" }).click();
@@ -302,9 +313,10 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
   await naturalytelserBlokk.getByText("Fra og med").fill("31.05.2024");
   await naturalytelserBlokk.getByText("Verdi pr. måned").fill("2500");
   await naturalytelserBlokk
-    .locator(
-      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="ja"]',
-    )
+    .getByRole("group", {
+      name: "Vil naturalytelsen komme tilbake i løpet av fraværet?",
+    })
+    .getByRole("radio", { name: "Ja" })
     .click();
   await page.getByRole("button", { name: "Neste steg" }).click();
   await expectError({
@@ -344,9 +356,11 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     ),
   ).toBeVisible({ visible: false });
   await naturalytelserBlokk
-    .locator(
-      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="nei"]',
-    )
+    .getByRole("group", {
+      name: "Vil naturalytelsen komme tilbake i løpet av fraværet?",
+    })
+    .getByRole("radio", { name: "Nei" })
+    .first()
     .click();
   await page.getByRole("button", { name: "Neste steg" }).click();
   await expect(
@@ -403,7 +417,10 @@ test("tilbakestilling av inntekt skal også oppdatere ønsket refusjonsbeløp", 
   );
 
   await page
-    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .getByRole("group", {
+      name: "Betaler dere lønn under fraværet og krever refusjon?",
+    })
+    .getByRole("radio", { name: "Ja, likt beløp i hele perioden" })
     .click();
 
   const refusjonsBlock = page
