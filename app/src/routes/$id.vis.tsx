@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { VisInntektsmelding } from "~/features/inntektsmelding/VisInntektsmelding";
+import { VisInntektsmelding } from "~/features/inntektsmelding/visningskomponenter/VisInntektsmelding";
 
 const InntektsmeldingContainer = () => {
   return <VisInntektsmelding />;

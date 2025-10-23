@@ -1,14 +1,15 @@
 import { queryOptions } from "@tanstack/react-query";
 import { z } from "zod";
 
-import { InntektsmeldingSkjemaStateValid } from "~/features/InntektsmeldingSkjemaState";
-import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/skjema-moduler/Inntekt.tsx";
-import { parseStorageItem } from "~/features/usePersistedState.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett.tsx";
+import { InntektsmeldingSkjemaStateValid } from "~/features/inntektsmelding/zodSchemas";
+import { parseStorageItem } from "~/features/shared/hooks/usePersistedState";
+import { PÅKREVDE_ENDRINGSÅRSAK_FELTER } from "~/features/shared/skjema-moduler/Inntekt.tsx";
+import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import {
   feilmeldingSchema,
   grunnbeløpSchema,
   InntektsmeldingResponseDtoSchema,
+  OpplysningerDto,
   OpplysningerRequest,
   opplysningerSchema,
   SendInntektsmeldingResponseDto,
@@ -116,7 +117,9 @@ export function mapInntektsmeldingResponseTilValidState(
   } satisfies InntektsmeldingSkjemaStateValid;
 }
 
-export async function hentOpplysningerData(uuid: string) {
+export async function hentOpplysningerData(
+  uuid: string,
+): Promise<OpplysningerDto> {
   if (uuid === ARBEIDSGIVER_INITERT_ID) {
     // Da har vi en fakeId. Hent fra sessionstorage
     const opplysninger = parseStorageItem(
@@ -170,19 +173,15 @@ export async function hentPersonFraFnr(
   );
 
   if (response.status === 404) {
-    throw new Error("Fant ikke person");
-  }
-  if (!response.ok) {
-    throw new Error("Kunne ikke hente personopplysninger.");
+    throw new Error("FANT_IKKE_PERSON");
   }
 
   const json = await response.json();
   const parsedJson = SlåOppArbeidstakerResponseDtoSchema.safeParse(json);
-
   if (!parsedJson.success) {
     logDev("error", parsedJson.error);
 
-    throw new Error("Responsen fra serveren matchet ikke forventet format");
+    throw new Error(json.type);
   }
 
   return parsedJson.data;

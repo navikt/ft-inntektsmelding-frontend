@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useSearch } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { InntektsmeldingRootLayoutComponent } from "~/features/inntektsmelding/InntektsmeldingRootLayout.tsx";
-import { YtelsetypeSchema } from "~/types/api-models.ts";
+import { InntektsmeldingRootLayoutComponent } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
+import { YtelsetypeSchema } from "~/types/api-models";
 
 export const ARBEIDSGIVER_INITERT_ID = "agi";
 
@@ -10,18 +10,16 @@ const agiSearchParams = z.object({
   ytelseType: YtelsetypeSchema,
 });
 
-/**
- * Rute for AGI - arbeidsgiverinitiert inntektsmelding.
- */
 export const Route = createFileRoute("/opprett")({
-  component: RouteComponent,
+  component: () => {
+    const { ytelseType } = useSearch({ from: "/opprett" });
+    return (
+      <InntektsmeldingRootLayoutComponent
+        skjemaId={ARBEIDSGIVER_INITERT_ID}
+        ytelse={ytelseType}
+      />
+    );
+  },
+
   validateSearch: (search) => agiSearchParams.parse(search),
 });
-
-function RouteComponent() {
-  const { ytelseType } = Route.useSearch();
-
-  return (
-    <InntektsmeldingRootLayoutComponent skjemaId="agi" ytelse={ytelseType} />
-  );
-}

@@ -70,46 +70,55 @@ export type SlåOppArbeidstakerResponseDto = z.infer<
   typeof SlåOppArbeidstakerResponseDtoSchema
 >;
 
-export const SendInntektsmeldingRequestDtoSchema = z.object({
-  foresporselUuid: z.string().optional(),
-  aktorId: z.string(),
-  ytelse: YtelsetypeSchema,
-  arbeidsgiverIdent: z.string(),
-  kontaktperson: z.object({
-    telefonnummer: z.string(),
-    navn: z.string(),
-  }),
-  startdato: z.string(),
-  inntekt: z.number(),
-  refusjon: z
-    .array(
+export const SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert = z.object(
+  {
+    aktorId: z.string(),
+    ytelse: YtelsetypeSchema,
+    arbeidsgiverIdent: z.string(),
+    kontaktperson: z.object({
+      telefonnummer: z.string(),
+      navn: z.string(),
+    }),
+    refusjon: z.array(
       z.object({
         fom: z.string().optional(),
         beløp: z.number(),
       }),
-    )
-    .optional(),
-  endringAvInntektÅrsaker: z
-    .array(
-      z.object({
-        årsak: EndringAvInntektÅrsakerSchema,
-        fom: z.string().optional(),
-        tom: z.string().optional(),
-        bleKjentFom: z.string().optional(),
-      }),
-    )
-    .optional(), //TODO: midlertidig optional
-  bortfaltNaturalytelsePerioder: z
-    .array(
-      z.object({
-        fom: z.string(),
-        tom: z.string().optional(),
-        beløp: z.number(),
-        naturalytelsetype: NaturalytelseTypeSchema,
-      }),
-    )
-    .optional(), // TODO: Når databasen er wipet, kan vi fjerne optional her.
-});
+    ),
+    startdato: z.string(),
+    foresporselUuid: z.string().optional(),
+  },
+);
+
+export type SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert = z.infer<
+  typeof SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert
+>;
+
+export const SendInntektsmeldingRequestDtoSchema =
+  SendInntektsmeldingRequestDtoSchemaArbeidsgiverInitiert.extend({
+    foresporselUuid: z.string(),
+    inntekt: z.number(),
+    endringAvInntektÅrsaker: z
+      .array(
+        z.object({
+          årsak: EndringAvInntektÅrsakerSchema,
+          fom: z.string().optional(),
+          tom: z.string().optional(),
+          bleKjentFom: z.string().optional(),
+        }),
+      )
+      .optional(), //TODO: midlertidig optional
+    bortfaltNaturalytelsePerioder: z
+      .array(
+        z.object({
+          fom: z.string(),
+          tom: z.string().optional(),
+          beløp: z.number(),
+          naturalytelsetype: NaturalytelseTypeSchema,
+        }),
+      )
+      .optional(), // TODO: Når databasen er wipet, kan vi fjerne optional her.
+  });
 
 export const InntektsmeldingResponseDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
@@ -164,6 +173,12 @@ export const opplysningerSchema = z.object({
     ),
   }),
   forespørselStatus: z.enum(["UNDER_BEHANDLING", "FERDIG", "UTGÅTT"]),
+  forespørselType: z.enum([
+    "BESTILT_AV_FAGSYSTEM",
+    "ARBEIDSGIVERINITIERT_NYANSATT",
+    "ARBEIDSGIVERINITIERT_UREGISTRERT",
+    "OMSORGSPENGER_REFUSJON",
+  ]),
   skjæringstidspunkt: z.string(),
   førsteUttaksdato: z.string(),
   ytelse: z.enum([

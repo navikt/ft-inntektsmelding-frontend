@@ -5,17 +5,16 @@ import {
   hentEksisterendeInntektsmeldinger,
   hentOpplysningerData,
 } from "~/api/queries";
-import { OppgaveErUtgåttFeilside } from "~/features/error-boundary/OppgaveErUtgåttFeilside.tsx";
-import { InntektsmeldingRootLayout } from "~/features/inntektsmelding/InntektsmeldingRootLayout";
-import { RotLayout } from "~/features/rot-layout/RotLayout";
-import { OpplysningerDto } from "~/types/api-models";
+import { OppgaveErUtgåttFeilside } from "~/features/shared/error-boundary/OppgaveErUtgåttFeilside";
+import { InntektsmeldingRoot } from "~/features/shared/rot-layout/InntektsmeldingRootLayout";
+import { RotLayout } from "~/features/shared/rot-layout/RotLayout";
 
 enum FEILKODER {
   OPPGAVE_ER_UTGÅTT = "OPPGAVE_ER_UTGÅTT",
 }
 
 export const Route = createFileRoute("/$id")({
-  component: InntektsmeldingRootLayout,
+  component: InntektsmeldingRoot,
   errorComponent: ({ error }) => {
     if (error.message === FEILKODER.OPPGAVE_ER_UTGÅTT) {
       return <OppgaveErUtgåttFeilside />;
@@ -45,7 +44,7 @@ export const Route = createFileRoute("/$id")({
     }
 
     return {
-      opplysninger: opplysninger as OpplysningerDto,
+      opplysninger: opplysninger,
       eksisterendeInntektsmeldinger,
     };
   },

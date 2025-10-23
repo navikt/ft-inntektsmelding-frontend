@@ -11,7 +11,7 @@ import {
   RefusjonOmsorgspengerDto,
   RefusjonOmsorgspengerResponseDto,
 } from "./api/mutations";
-import { RefusjonOmsorgspengerFormData } from "./RefusjonOmsorgspengerArbeidsgiverForm";
+import { RefusjonOmsorgspengerFormData } from "./zodSchemas";
 
 const mapJaNeiTilBoolean = (value: "ja" | "nei") => {
   if (value === "ja") {
