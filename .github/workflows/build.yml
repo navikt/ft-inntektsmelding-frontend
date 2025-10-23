@@ -46,13 +46,13 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn workspaces focus ft-inntektsmelding-frontend-app install --immutable
+        run: yarn workspaces focus ft-inntektsmelding-frontend-app
 
       - name: Build webapp [K9]
         run: yarn workspace ft-inntektsmelding-frontend-app build
 
       - name: Install dependencies server
-        run: yarn workspaces focus ft-inntektsmelding-frontend install --immutable
+        run: yarn workspaces focus ft-inntektsmelding-frontend
 
       - name: Build server
         run: yarn workspace ft-inntektsmelding-frontend build
