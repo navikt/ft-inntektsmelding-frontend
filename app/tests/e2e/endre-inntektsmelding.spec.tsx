@@ -119,9 +119,13 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
     page.getByRole("heading", { name: "Utbetaling og refusjon" }),
   ).toBeVisible();
   await expect(
-    page.locator(
-      'input[name="skalRefunderes"][value="JA_VARIERENDE_REFUSJON"]',
-    ),
+    page
+      .getByRole("group", {
+        name: "Betaler dere lønn under fraværet og krever refusjon?",
+      })
+      .getByRole("radio", {
+        name: "Ja, men kun deler av perioden eller varierende beløp",
+      }),
   ).toBeChecked();
   const varierendeRefusjonBlokk = page.getByTestId("varierende-refusjon");
   await expect(
@@ -162,7 +166,11 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
   const naturalytelserBlokk = page.getByTestId("naturalytelser-blokk");
 
   await expect(
-    page.locator('input[name="misterNaturalytelser"][value="ja"]'),
+    page
+      .getByRole("group", {
+        name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
+      })
+      .getByRole("radio", { name: "Ja" }),
   ).toBeChecked();
   await expect(
     await finnInputFraLabel({
@@ -192,9 +200,11 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
     }),
   ).toHaveValue("50");
   await expect(
-    page.locator(
-      'input[name="bortfaltNaturalytelsePerioder.0.inkluderTom"][value="ja"]',
-    ),
+    naturalytelserBlokk
+      .getByRole("group", {
+        name: "Vil naturalytelsen komme tilbake i løpet av fraværet?",
+      })
+      .getByRole("radio", { name: "Ja" }),
   ).toBeChecked();
   await expect(
     await finnInputFraLabel({

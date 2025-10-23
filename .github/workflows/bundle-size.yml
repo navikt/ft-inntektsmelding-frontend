@@ -34,24 +34,35 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: "@navikt"
 
-      - name: Install dependencies (PR branch)
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+      - name: Enable Corepack
+        run: corepack enable
 
-      - name: Measure bundle size (PR branch)q
-        run: npx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
+      - name: Configure Yarn for GitHub Packages
+        run: |
+          yarn config set npmScopes.navikt.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.navikt.npmAlwaysAuth true
+          yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
+
+      - name: Install dependencies (PR branch)
+        run: yarn install --immutable
+
+      - name: Measure bundle size (PR branch)
+        run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > pr-bundle-size.json
+
+      - name: Stash .yarnrc.yml before checkout
+        run: git stash
 
       - name: Checkout base branch
         run: git checkout ${{ github.event.pull_request.base.ref }}
 
+      - name: Pop .yarnrc.yml after checkout
+        run: git stash pop
+
       - name: Install dependencies (base branch)
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+        run: yarn install --immutable
 
       - name: Measure bundle size (base branch)
-        run: npx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
+        run: yarn dlx vite-size --react --total | sed '/^Generated route tree/d' > base-bundle-size.json
 
       - name: Compare bundle sizes
         id: compare

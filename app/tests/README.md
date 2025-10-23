@@ -11,19 +11,19 @@ Du kan lære mer om playwright [her](https://playwright.dev/).
 For å kjøre tester lokalt, må du først ha installert Playwright. Det gjør du med:
 
 ```bash
-npx playwright install
+yarn dlx playwright install
 ```
 
 Når du har installert playwright, kan du kjøre tester med:
 
 ```bash
-npm run test:e2e
+yarn test:e2e
 ```
 
 For å kjøre tester med et brukergrensesnitt, kjør:
 
 ```bash
-npm run test:e2e:ui
+yarn test:e2e:ui
 ```
 
 ## Mocking av data

@@ -14,19 +14,18 @@ Klon ned repoet:
 git clone git@github.com:navikt/ft-inntektsmelding-frontend.git
 ```
 
-Gå inn i mappene `app` og `server` og kjør `npm install` for å installere avhengigheter.
+Kjør `yarn install` i rot-mappen for å installere avhengigheter for både app og server.
 
 ```bash
-cd app && npm install
-cd ../server && npm install
+yarn install
 ```
 
 Du trenger typisk ikke å starte serveren for å utvikle lokalt!
 
-Start frontenden ved å gå til `app`-mappen og kjøre `npm run dev`.
+Start frontenden ved å gå til `app`-mappen og kjøre `yarn dev`.
 
 ```bash
-cd app && npm run dev
+cd app && yarn dev
 ```
 
 ## Hovedside for min side arbeidsgiver
