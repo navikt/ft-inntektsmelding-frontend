@@ -261,10 +261,18 @@ test("A-inntekt er nede", async ({ page }) => {
   ).toBeVisible({ visible: false });
 
   await page
-    .locator('input[name="skalRefunderes"][value="JA_LIK_REFUSJON"]')
+    .getByRole("group", {
+      name: "Betaler dere lønn under fraværet og krever refusjon?",
+    })
+    .getByRole("radio", { name: "Ja, likt beløp i hele perioden" })
     .click();
 
-  await page.locator('input[name="misterNaturalytelser"][value="nei"]').click();
+  await page
+    .getByRole("group", {
+      name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
+    })
+    .getByRole("radio", { name: "Nei" })
+    .click();
 
   await page.getByRole("button", { name: "Neste steg" }).click();
 

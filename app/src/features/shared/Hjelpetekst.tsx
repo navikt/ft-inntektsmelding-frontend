@@ -1,6 +1,7 @@
 import { AlertProps, Page, ReadMoreProps } from "@navikt/ds-react";
 import { Alert, ReadMore, Switch } from "@navikt/ds-react";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import type { ReactNode } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { createContext, useContext } from "react";
 import { z } from "zod";
 

@@ -25,10 +25,18 @@ test.describe("Happy path", () => {
     await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
 
     // Nå er vi på "inntekt og refusjon" steget
-    await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
+    await page
+      .getByRole("group", {
+        name: "Betaler dere lønn under fraværet og krever refusjon?",
+      })
+      .getByRole("radio", { name: "Nei" })
+      .click();
 
     await page
-      .locator('input[name="misterNaturalytelser"][value="nei"]')
+      .getByRole("group", {
+        name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
+      })
+      .getByRole("radio", { name: "Nei" })
       .click();
 
     await page.getByRole("button", { name: "Neste steg" }).click();

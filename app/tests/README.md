@@ -2,9 +2,19 @@
 
 End-to-end tester for inntektsmelding-frontend. Testmappen er organisert etter samme struktur som `src/features/`.
 
+Playwright er et verktøy for å lage og kjøre ende-til-ende tester for webapplikasjoner. Vi bruker dette til å teste vår frontend.
+
+Du kan lære mer om playwright [her](https://playwright.dev/).
+
+For å kjøre tester lokalt, må du først ha installert Playwright. Det gjør du med:
+
+```bash
+yarn dlx playwright install
+```
+
 ## Struktur
 
-```
+````
 tests/
 ├── e2e/                         # Playwright E2E tester
 │   ├── arbeidsgiverinitiert/    # AGI-tester (24 tester)
@@ -14,7 +24,6 @@ tests/
     ├── arbeidsgiverinitiert/    # AGI-spesifikke mocks
     ├── inntektsmelding/         # Inntektsmelding-mocks
     └── shared/                  # Delte mocks og utilities
-```
 
 ## Kjøre tester
 
@@ -35,11 +44,12 @@ npm run test:e2e:ui
 
 # Kun headless (raskere)
 npm run test:e2e -- --headed=false
-```
+````
 
 ## Playwright-oppsett
 
 Testene bruker Playwright med:
+
 - **Chromium** som standard browser
 - **Automatisk mocking** av API-endepunkter
 - **Page Object Model** for gjenbrukbare komponenter
@@ -48,6 +58,7 @@ Testene bruker Playwright med:
 ## Mock-system
 
 Alle API-kall mockes automatisk:
+
 - `mockOpplysninger()` - Mocker opplysninger-endepunkt
 - `mockGrunnbeløp()` - Mocker grunnbeløp fra G-API
 - `mockHentPersonOgArbeidsforhold()` - Mocker person-oppslag
@@ -62,12 +73,23 @@ Alle API-kall mockes automatisk:
 ## Debugging
 
 ```bash
+<<<<<<< HEAD
 # Kjør med UI for å se hva som skjer
 npm run test:e2e:ui
+=======
+yarn test:e2e:ui
+```
+
+> > > > > > > origin/master
 
 # Kjør spesifikk test med debug
+
 npm run test:e2e -- agi-happy-path --debug
 
 # Se test-rapport etter kjøring
+
 npx playwright show-report
+
+```
+
 ```

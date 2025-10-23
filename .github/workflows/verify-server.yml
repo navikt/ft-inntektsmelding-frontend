@@ -3,10 +3,10 @@ name: "verify: server"
 on:
   pull_request:
     branches:
-      - '**'
+      - "**"
     paths:
-      - 'server/**'
-      - '.github/workflows/verify-server.yml'
+      - "server/**"
+      - ".github/workflows/verify-server.yml"
 
 defaults:
   run:
@@ -20,19 +20,24 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
           registry-url: https://npm.pkg.github.com/
-          scope: '@navikt'
-          cache-dependency-path: server
+          scope: "@navikt"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Configure Yarn for GitHub Packages
+        run: |
+          yarn config set npmScopes.navikt.npmRegistryServer "https://npm.pkg.github.com"
+          yarn config set npmScopes.navikt.npmAlwaysAuth true
+          yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.READER_TOKEN }}
+        run: yarn install --immutable
 
       - name: Run ESLint
-        run: npm run lint
+        run: yarn lint
 
       - name: Check for typescript errors
-        run: npm run check:types
+        run: yarn check:types

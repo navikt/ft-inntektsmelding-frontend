@@ -7,7 +7,7 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
     id: 1_001_706,
     foresporselUuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
     aktorId: "2715347149890",
-    ytelse: "FORELDREPENGER",
+    ytelse: "PLEIEPENGER_SYKT_BARN",
     arbeidsgiverIdent: "810007842",
     kontaktperson: {
       navn: "Berømt Flyttelass",
@@ -49,7 +49,7 @@ export const mangeEksisterendeInntektsmeldingerResponse = [
     id: 1_001_705,
     foresporselUuid: "f29dcea7-febe-4a76-911c-ad8f6d3e8858",
     aktorId: "2715347149890",
-    ytelse: "FORELDREPENGER",
+    ytelse: "PLEIEPENGER_SYKT_BARN",
     arbeidsgiverIdent: "810007842",
     kontaktperson: {
       navn: "Berømt Flyttelass",

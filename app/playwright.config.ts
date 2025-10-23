@@ -18,7 +18,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev:k9",
+    command: "yarn dev",
     port: 5173,
     reuseExistingServer: !process.env.CI,
   },

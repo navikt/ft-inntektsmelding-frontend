@@ -13,7 +13,9 @@ test("Ny ansatt", async ({ page }) => {
 
   await page.goto("/k9-im-dialog/opprett?ytelseType=PLEIEPENGER_SYKT_BARN");
 
-  await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
+  await page
+    .getByRole("radio", { name: "Ny ansatt som mottar ytelse fra Nav" })
+    .click();
   await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR.slice(2));
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
@@ -36,7 +38,9 @@ test("Ny ansatt", async ({ page }) => {
     await route.fulfill({ json: enkeltOpplysningerResponse });
   });
 
-  await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+  await page
+    .getByRole("combobox", { name: "Arbeidsgiver" })
+    .selectOption("974652293");
 
   await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
   await expect(
@@ -51,7 +55,9 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
 
   await page.goto("/k9-im-dialog/opprett?ytelseType=PLEIEPENGER_SYKT_BARN");
 
-  await page.locator('input[name="årsak"][value="ny_ansatt"]').click();
+  await page
+    .getByRole("radio", { name: "Ny ansatt som mottar ytelse fra Nav" })
+    .click();
   await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
   await page.getByLabel("Første fraværsdag").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
@@ -60,13 +66,26 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
     await route.fulfill({ json: enkeltOpplysningerResponse });
   });
 
-  await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+  await page
+    .getByRole("combobox", { name: "Arbeidsgiver" })
+    .selectOption("974652293");
 
   await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
   await page.getByLabel("Telefon").fill("13371337");
   await page.getByRole("button", { name: "Bekreft og gå videre" }).click();
 
-  await page.locator('input[name="skalRefunderes"][value="NEI"]').click();
+  await page
+    .getByRole("group", {
+      name: "Betaler dere lønn under fraværet og krever refusjon?",
+    })
+    .getByRole("radio", { name: "Nei" })
+    .click();
+  await page
+    .getByRole("group", {
+      name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
+    })
+    .getByRole("radio", { name: "Nei" })
+    .click();
   await expect(
     page.getByText("Inntektsmelding kan ikke sendes inn"),
   ).toBeVisible();

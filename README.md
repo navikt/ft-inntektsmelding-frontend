@@ -1,6 +1,6 @@
 # ft-inntektsmelding-frontend
 
-Frontend for inntektsmelding for Team Foreldrepenger og Team Sykdom i Familien
+Frontend for inntektsmelding for Team Sykdom i Familien
 
 ## Arkitektur
 
@@ -14,19 +14,18 @@ Klon ned repoet:
 git clone git@github.com:navikt/ft-inntektsmelding-frontend.git
 ```
 
-Gå inn i mappene `app` og `server` og kjør `npm install` for å installere avhengigheter.
+Kjør `yarn install` i rot-mappen for å installere avhengigheter for både app og server.
 
 ```bash
-cd app && npm install
-cd ../server && npm install
+yarn install
 ```
 
 Du trenger typisk ikke å starte serveren for å utvikle lokalt!
 
-Start frontenden ved å gå til `app`-mappen og kjøre `npm run dev:fp` eller `npm run dev:k9`.
+Start frontenden ved å gå til `app`-mappen og kjøre `yarn dev`.
 
 ```bash
-cd app && npm run dev:fp
+cd app && yarn dev
 ```
 
 ## Hovedside for min side arbeidsgiver
@@ -34,8 +33,7 @@ cd app && npm run dev:fp
 
 ## Inntektsmelding
 
-1) For FP, gå til [https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/fp-im-dialog/vite-on) for å utvikle lokalt!
-   For K9 [https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on)
+1) For K9, gå til [https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on](https://arbeidsgiver.intern.dev.nav.no/k9-im-dialog/vite-on) for å utvikle lokalt!
    [Dokumentasjon for kobling mot lokal devserver](https://github.com/navikt/vite-mode)
 
 2) Logg inn! Her vil du få muligheten til å velge hvilken testbruker du ønsker å logge inn med. Følg guiden for testbrukere under.

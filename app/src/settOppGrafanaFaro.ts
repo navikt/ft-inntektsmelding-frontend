@@ -17,9 +17,6 @@ if (import.meta.env.PROD) {
 }
 
 function lagGrafanaAppName() {
-  if (import.meta.env.BASE_URL === "/fp-im-dialog") {
-    return "fpinntektsmelding-frontend";
-  }
   if (import.meta.env.BASE_URL === "/k9-im-dialog") {
     return "k9-inntektsmelding-frontend";
   }

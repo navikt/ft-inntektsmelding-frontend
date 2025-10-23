@@ -4,9 +4,8 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev:fp": "vite --base=/fp-im-dialog",
-    "dev:k9": "vite --base=/k9-im-dialog",
-    "build:k9": "tsc && vite build --base=/k9-im-dialog",
+    "dev": "vite --base=/k9-im-dialog",
+    "build": "tsc && vite build --base=/k9-im-dialog",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "check:types": "tsc --noemit",
@@ -14,7 +13,7 @@
     "lint:fix": "eslint --fix",
     "stylelint": "stylelint '**/*.{tsx,css}'",
     "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
-    "bundle-visualizer": "npx vite-bundle-visualizer",
+    "bundle-visualizer": "yarn dlx vite-bundle-visualizer",
     "test:unit": "vitest src/**/*.spec.ts"
   },
   "dependencies": {
