@@ -58,10 +58,10 @@ jobs:
         run: yarn workspace ft-inntektsmelding-frontend build
 
       - name: Copy server node_modules to server folder
-        run: cp -r node_modules server/node_modules
+        run: cp -r ./node_modules ./server/node_modules
 
       - name: Copy webapp into public directory of server
-        run: cp -r app/dist/ server/public
+        run: cp -r ./app/dist/ ./server/public
 
       - name: Generate build version
         id: generate-build-version
