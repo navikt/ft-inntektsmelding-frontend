@@ -123,7 +123,9 @@ test('burde vise "vis IM"-siden for siste innsendte IM', async ({ page }) => {
       .getByRole("group", {
         name: "Betaler dere lønn under fraværet og krever refusjon?",
       })
-      .getByRole("radio", { name: "Ja, men kun deler av perioden eller varierende beløp" }),
+      .getByRole("radio", {
+        name: "Ja, men kun deler av perioden eller varierende beløp",
+      }),
   ).toBeChecked();
   const varierendeRefusjonBlokk = page.getByTestId("varierende-refusjon");
   await expect(

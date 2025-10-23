@@ -200,7 +200,9 @@ test("Gå igjennom skjema og test alle valideringer", async ({ page }) => {
     .getByRole("group", {
       name: "Betaler dere lønn under fraværet og krever refusjon?",
     })
-    .getByRole("radio", { name: "Ja, men kun deler av perioden eller varierende beløp" })
+    .getByRole("radio", {
+      name: "Ja, men kun deler av perioden eller varierende beløp",
+    })
     .click();
 
   const variabelRefusjonBlock = page.getByTestId("varierende-refusjon");
