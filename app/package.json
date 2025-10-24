@@ -52,7 +52,7 @@
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.6",
     "@typescript-eslint/parser": "8.35.0",
-    "@vitejs/plugin-react": "4.6.0",
+    "@vitejs/plugin-react": "5.1.0",
     "autoprefixer": "10.4.21",
     "eslint": "9.29.0",
     "eslint-config-prettier": "10.1.5",
@@ -60,17 +60,17 @@
     "eslint-plugin-prettier": "5.5.1",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-simple-import-sort": "12.1.1",
-    "eslint-plugin-unicorn": "56.0.1",
+    "eslint-plugin-unicorn": "61.0.2",
     "postcss-import": "16.1.1",
     "postcss-styled-syntax": "0.7.1",
     "prettier": "3.6.1",
     "stylelint": "16.21.0",
-    "stylelint-config-standard": "36.0.1",
-    "tailwindcss": "3.4.17",
+    "stylelint-config-standard": "39.0.1",
+    "tailwindcss": "4.1.16",
     "typescript": "5.8.3",
     "typescript-eslint": "8.35.0",
-    "vite": "6.3.4",
+    "vite": "7.1.12",
     "vite-size": "0.0.6",
-    "vitest": "3.2.4"
+    "vitest": "4.0.2"
   }
 }
