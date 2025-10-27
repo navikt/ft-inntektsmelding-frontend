@@ -80,12 +80,6 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
     })
     .getByRole("radio", { name: "Nei" })
     .click();
-  await page
-    .getByRole("group", {
-      name: "Har den ansatte naturalytelser som faller bort ved fraværet?",
-    })
-    .getByRole("radio", { name: "Nei" })
-    .click();
   await expect(
     page.getByText("Inntektsmelding kan ikke sendes inn"),
   ).toBeVisible();
