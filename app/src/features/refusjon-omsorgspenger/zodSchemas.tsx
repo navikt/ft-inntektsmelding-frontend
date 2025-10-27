@@ -22,8 +22,8 @@ const baseSchema = z.object({
     harSendtSøknad: z.boolean(),
   }),
   // Steg 1 fields
-  harUtbetaltLønn: z.preprocess((val) => val || "", z.string()),
-  årForRefusjon: z.preprocess((val) => val || "", z.string()),
+  harUtbetaltLønn: z.string().default(""),
+  årForRefusjon: z.string().default(""),
 
   // Steg 2 fields
   kontaktperson: z.object({
@@ -37,7 +37,7 @@ const baseSchema = z.object({
   organisasjonsnummer: z.string().optional(),
 
   // Steg 3 fields
-  harDekket10FørsteOmsorgsdager: z.preprocess((val) => val || "", z.string()),
+  harDekket10FørsteOmsorgsdager: z.string().default(""),
   fraværHeleDager: z.array(
     z.object({
       fom: z.string(),
@@ -47,7 +47,7 @@ const baseSchema = z.object({
   fraværDelerAvDagen: z.array(
     z.object({
       dato: z.string(),
-      timer: z.preprocess((val) => String(val) || "", z.string()),
+      timer: z.string().default(""),
     }),
   ),
   dagerSomSkalTrekkes: z.array(
@@ -63,7 +63,7 @@ const baseSchema = z.object({
   endringAvInntektÅrsaker: z
     .array(
       z.object({
-        årsak: EndringAvInntektÅrsakerSchema.or(z.literal("")),
+        årsak: z.union([EndringAvInntektÅrsakerSchema, z.literal("")]),
         fom: z.string().optional(),
         tom: z.string().optional(),
         bleKjentFom: z.string().optional(),
@@ -89,14 +89,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
     if (data.meta.step === 1 || data.meta.step === 5) {
       if (!data.harUtbetaltLønn) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må svare på om dere har utbetalt lønn under fraværet",
           path: ["harUtbetaltLønn"],
         });
       }
       if (!data.årForRefusjon) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må svare på hvilket år du søker refusjon for",
           path: ["årForRefusjon"],
         });
@@ -107,21 +107,21 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
     if (data.meta.step === 2 || data.meta.step === 5) {
       if (!data.kontaktperson?.navn) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må oppgi navn på kontaktperson",
           path: ["kontaktperson", "navn"],
         });
       }
       if (!data.kontaktperson?.telefonnummer) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må oppgi et telefonnummer for kontaktpersonen",
           path: ["kontaktperson", "telefonnummer"],
         });
       }
       if (!/^(\d{8}|\+\d+)$/.test(data.kontaktperson.telefonnummer)) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message:
             "Telefonnummer må være 8 siffer, eller 10 siffer med landkode",
           path: ["kontaktperson", "telefonnummer"],
@@ -129,7 +129,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       }
       if (!data.ansattesFødselsnummer) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må oppgi fødselsnummer eller d-nummer for den ansatte",
           path: ["ansattesFødselsnummer"],
         });
@@ -140,7 +140,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
         if (ugyldig) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Fødselsnummer eller d-nummer er ikke gyldig",
             path: ["ansattesFødselsnummer"],
           });
@@ -148,7 +148,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       }
       if (!data.organisasjonsnummer) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må oppgi et organisasjonsnummer",
           path: ["organisasjonsnummer"],
         });
@@ -159,7 +159,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
     if (data.meta.step === 3 || data.meta.step === 5) {
       if (!data.harDekket10FørsteOmsorgsdager) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: "Du må svare på om dere har dekket 10 første omsorgsdager",
           path: ["harDekket10FørsteOmsorgsdager"],
         });
@@ -171,7 +171,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
       if (!hasHeleDager && !hasDelerAvDagen && !hasDagerSomSkalTrekkes) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message:
             "Du må oppgi fravær enten som hele dager, deler av dager eller dager som skal trekkes",
           path: ["fraværHeleDager"],
@@ -182,14 +182,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       for (const [index, periode] of data.fraværHeleDager.entries()) {
         if (!periode.fom) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi en fra og med dato",
             path: ["fraværHeleDager", index, "fom"],
           });
         }
         if (!periode.tom) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi en til og med dato",
             path: ["fraværHeleDager", index, "tom"],
           });
@@ -202,7 +202,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           )
         ) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
             path: ["fraværHeleDager", index, "fom"],
           });
@@ -215,7 +215,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           )
         ) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
             path: ["fraværHeleDager", index, "tom"],
           });
@@ -229,7 +229,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           )
         ) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message:
               "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
             path: ["fraværHeleDager", index, "fom"],
@@ -241,7 +241,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       for (const [index, dag] of data.fraværDelerAvDagen.entries()) {
         if (!dag.dato) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi en dato",
             path: ["fraværDelerAvDagen", index, "dato"],
           });
@@ -255,7 +255,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           );
           if (overlap) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: "custom",
               message:
                 "Fravær deler av dag må ikke overlappe med fravær hele dager",
               path: ["fraværDelerAvDagen", index, "dato"],
@@ -270,7 +270,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
             )
           ) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: "custom",
               message:
                 "Du oppgir å ha dekket 10 omsorgsdager i år, samtidig som du ber om refusjon for fravær innenfor de 10 første dagene av året",
               path: ["fraværDelerAvDagen", index, "dato"],
@@ -281,7 +281,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           const feilmelding = validateTimer(dag.timer);
           if (typeof feilmelding === "string") {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: "custom",
               message: feilmelding,
               path: ["fraværDelerAvDagen", index, "timer"],
             });
@@ -289,14 +289,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           // kun to desimaler
           if (dag.timer.split(".")?.[1]?.length > 2) {
             ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+              code: "custom",
               message: "Timer kan ikke ha mer enn 2 desimaler",
               path: ["fraværDelerAvDagen", index, "timer"],
             });
           }
         } else {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi antall timer",
             path: ["fraværDelerAvDagen", index, "timer"],
           });
@@ -308,7 +308,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           )
         ) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: `Fraværet må være mellom ${data.årForRefusjon}.01.01 og ${data.årForRefusjon}.12.31`,
             path: ["fraværDelerAvDagen", index, "dato"],
           });
@@ -318,14 +318,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       for (const [index, dag] of data.dagerSomSkalTrekkes.entries()) {
         if (!dag.fom) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi en fra og med dato",
             path: ["dagerSomSkalTrekkes", index, "fom"],
           });
         }
         if (!dag.tom) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi en til og med dato",
             path: ["dagerSomSkalTrekkes", index, "tom"],
           });
@@ -336,7 +336,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           isBefore(new Date(dag.tom), new Date(dag.fom))
         ) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Fra og med dato må være før til og med dato",
             path: ["dagerSomSkalTrekkes", index, "fom"],
           });
@@ -348,7 +348,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
         if (overlap) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Dagene kan ikke overlappe med fravær hele dager",
             path: ["dagerSomSkalTrekkes", index, "fom"],
           });
@@ -364,7 +364,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
         });
         if (overlapDelerAvDag) {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Dagene kan ikke overlappe med fravær deler av dag",
             path: ["dagerSomSkalTrekkes", index, "fom"],
           });
@@ -376,7 +376,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
     if (data.meta.step === 4 || data.meta.step === 5) {
       if (!data.meta.skalKorrigereInntekt && !data.inntekt) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message:
             "Månedsinntekten er satt til kr 0. Dersom dere har utbetalt lønn og krever refusjon må månedsinntekten være større en kr 0.",
           path: ["inntekt"],
@@ -384,7 +384,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
       }
       if (data.meta.skalKorrigereInntekt && !data.korrigertInntekt) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message:
             "Månedsinntekten er satt til kr 0. Dersom dere har utbetalt lønn og krever refusjon må månedsinntekten være større en kr 0.",
           path: ["korrigertInntekt"],
@@ -394,7 +394,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
         const feilmelding = validateInntekt(data.korrigertInntekt, 0);
         if (typeof feilmelding === "string") {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: feilmelding,
             path: ["korrigertInntekt"],
           });
@@ -408,7 +408,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
 
               if (endringsårsakRules.fom && !årsak.fom) {
                 ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
+                  code: "custom",
                   message: "Du må oppgi fra og med dato",
                   path: ["endringAvInntektÅrsaker", index, "fom"],
                 });
@@ -420,7 +420,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
                 isBefore(new Date(årsak.tom), new Date(årsak.fom))
               ) {
                 ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
+                  code: "custom",
                   message: "Fra og med dato må være før til og med dato",
                   path: ["endringAvInntektÅrsaker", index, "fom"],
                 });
@@ -433,14 +433,14 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
                   (endringsårsakRules.tomErValgfritt && !årsak.ignorerTom))
               ) {
                 ctx.addIssue({
-                  code: z.ZodIssueCode.custom,
+                  code: "custom",
                   message: "Du må oppgi til og med dato",
                   path: ["endringAvInntektÅrsaker", index, "tom"],
                 });
               }
             } else {
               ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 message: "Du må oppgi en endringsårsak",
                 path: ["endringAvInntektÅrsaker", index, "årsak"],
               });
@@ -448,7 +448,7 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
           }
         } else {
           ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+            code: "custom",
             message: "Du må oppgi endringsårsak",
             path: ["endringAvInntektÅrsaker"],
           });
