@@ -1,9 +1,5 @@
 declare global {
   interface Window {
-    dekoratorenAmplitude?: (params?: {
-      origin: unknown | string;
-      eventName: unknown | string;
-      eventData?: unknown;
-    }) => Promise<unknown>;
+    // Global window interface extensions can be added here
   }
 }
