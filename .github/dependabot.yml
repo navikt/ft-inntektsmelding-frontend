@@ -8,54 +8,28 @@ registries:
 
 updates:
   - package-ecosystem: npm
-    directory: "/app"
+    directory: "/"
     registries:
       - ft-inntektsmelding-frontend
     schedule:
       interval: daily
     open-pull-requests-limit: 20
     groups:
-      app-prod-minor-deps:
+      prod-minor-deps:
         dependency-type: "production"
         update-types:
           - "minor"
           - "patch"
-      app-prod-major-deps:
+      prod-major-deps:
         dependency-type: "production"
         update-types:
           - "major"
-      app-dev-minor-deps:
+      dev-minor-deps:
         dependency-type: "development"
         update-types:
           - "minor"
           - "patch"
-      app-dev-major-deps:
-        dependency-type: "development"
-        update-types:
-          - "major"
-  - package-ecosystem: npm
-    directory: "/server"
-    registries:
-      - ft-inntektsmelding-frontend
-    schedule:
-      interval: daily
-    open-pull-requests-limit: 20
-    groups:
-      server-prod-minor-deps:
-        dependency-type: "production"
-        update-types:
-          - "minor"
-          - "patch"
-      server-prod-major-deps:
-        dependency-type: "production"
-        update-types:
-          - "major"
-      server-dev-minor-deps:
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-      server-dev-major-deps:
+      dev-major-deps:
         dependency-type: "development"
         update-types:
           - "major"
