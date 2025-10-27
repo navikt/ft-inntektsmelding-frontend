@@ -16,6 +16,8 @@ updates:
     open-pull-requests-limit: 20
     groups:
       prod-minor-deps:
+        exclude-patterns:
+          - "@navikt/vite-mode"
         dependency-type: "production"
         update-types:
           - "minor"
@@ -25,8 +27,6 @@ updates:
         update-types:
           - "major"
       dev-minor-deps:
-        exclude-patterns:
-          - "@navikt/vite-mode"
         dependency-type: "development"
         update-types:
           - "minor"
