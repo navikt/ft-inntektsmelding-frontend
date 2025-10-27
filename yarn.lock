@@ -1837,7 +1837,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/vite@npm:^4.1.16":
+"@tailwindcss/vite@npm:4.1.16":
   version: 4.1.16
   resolution: "@tailwindcss/vite@npm:4.1.16"
   dependencies:
@@ -2229,7 +2229,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsdom@npm:^27":
+"@types/jsdom@npm:27.0.0":
   version: 27.0.0
   resolution: "@types/jsdom@npm:27.0.0"
   dependencies:
@@ -2247,10 +2247,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.17.19":
-  version: 4.17.19
-  resolution: "@types/lodash@npm:4.17.19"
-  checksum: 10c0/0d512e90a92c09b48ec0e46945876392d3ef60c0be7d023fdab22ecb0224a65ff4ed0b76c7acbf1c0152c27768aa4661ea7a1c3afb5b5ab13a50bda674a7c3f7
+"@types/lodash@npm:4.17.20":
+  version: 4.17.20
+  resolution: "@types/lodash@npm:4.17.20"
+  checksum: 10c0/98cdd0faae22cbb8079a01a3bb65aa8f8c41143367486c1cbf5adc83f16c9272a2a5d2c1f541f61d0d73da543c16ee1d21cf2ef86cb93cd0cc0ac3bced6dd88f
   languageName: node
   linkType: hard
 
@@ -2261,21 +2261,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=13.7.0":
+"@types/node@npm:*, @types/node@npm:24.9.1, @types/node@npm:>=13.7.0":
   version: 24.9.1
   resolution: "@types/node@npm:24.9.1"
   dependencies:
     undici-types: "npm:~7.16.0"
   checksum: 10c0/c52f8168080ef9a7c3dc23d8ac6061fab5371aad89231a0f6f4c075869bc3de7e89b075b1f3e3171d9e5143d0dda1807c3dab8e32eac6d68f02e7480e7e78576
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:22.15.2":
-  version: 22.15.2
-  resolution: "@types/node@npm:22.15.2"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10c0/39da31d5fc63b14fabd217bb8a921c4a7fc3d99f233440209f9fc2d5d736e8773f7efc65223e2fd0e8db8390b0baab9c0cd2e951c2ece8b237f07313ab3cf295
   languageName: node
   linkType: hard
 
@@ -2293,7 +2284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19":
+"@types/react-dom@npm:19.2.2":
   version: 19.2.2
   resolution: "@types/react-dom@npm:19.2.2"
   peerDependencies:
@@ -2302,7 +2293,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19":
+"@types/react@npm:19.2.2":
   version: 19.2.2
   resolution: "@types/react@npm:19.2.2"
   dependencies:
@@ -3248,7 +3239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csp-header@npm:^6.2.0":
+"csp-header@npm:6.2.0":
   version: 6.2.0
   resolution: "csp-header@npm:6.2.0"
   checksum: 10c0/589568394a94946c6c600d74bfa1f1a8ea20daeeaa8994a99fa458dae0144e1329c9ff126e7ead89e23ea96f5600e6eda14c9a362e99facf79157df775cb2708
@@ -4375,17 +4366,17 @@ __metadata:
     "@navikt/fnrvalidator": "npm:2.1.5"
     "@navikt/nav-dekoratoren-moduler": "npm:3.4.0"
     "@playwright/test": "npm:1.56.1"
-    "@tailwindcss/vite": "npm:^4.1.16"
+    "@tailwindcss/vite": "npm:4.1.16"
     "@tanstack/eslint-plugin-query": "npm:5.91.2"
     "@tanstack/react-query": "npm:5.90.5"
     "@tanstack/react-query-devtools": "npm:5.90.2"
     "@tanstack/react-router": "npm:1.133.32"
     "@tanstack/router-devtools": "npm:1.133.32"
     "@tanstack/router-vite-plugin": "npm:1.133.32"
-    "@types/lodash": "npm:4.17.19"
-    "@types/node": "npm:22.15.2"
-    "@types/react": "npm:^19"
-    "@types/react-dom": "npm:^19"
+    "@types/lodash": "npm:4.17.20"
+    "@types/node": "npm:24.9.1"
+    "@types/react": "npm:19.2.2"
+    "@types/react-dom": "npm:19.2.2"
     "@typescript-eslint/parser": "npm:8.46.2"
     "@vitejs/plugin-react": "npm:5.1.0"
     autoprefixer: "npm:10.4.21"
@@ -4430,18 +4421,18 @@ __metadata:
     "@navikt/oasis": "npm:4.1.0"
     "@navikt/vite-mode": "npm:0.13.6"
     "@types/express": "npm:5.0.4"
-    "@types/jsdom": "npm:^27"
-    "@types/react": "npm:^19"
+    "@types/jsdom": "npm:27.0.0"
+    "@types/react": "npm:19.2.2"
     "@typescript-eslint/eslint-plugin": "npm:8.46.2"
-    csp-header: "npm:^6.2.0"
+    csp-header: "npm:6.2.0"
     eslint: "npm:9.38.0"
     eslint-plugin-prettier: "npm:5.5.4"
     eslint-plugin-simple-import-sort: "npm:12.1.1"
     eslint-plugin-unicorn: "npm:62.0.0"
     express: "npm:5.1.0"
-    html-react-parser: "npm:^5.2.7"
+    html-react-parser: "npm:5.2.7"
     http-proxy-middleware: "npm:3.0.5"
-    jsdom: "npm:^27.0.1"
+    jsdom: "npm:27.0.1"
     prettier: "npm:3.6.2"
     react: "npm:19.2.0"
     typescript: "npm:5.9.3"
@@ -4706,7 +4697,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"html-react-parser@npm:^5.2.7":
+"html-react-parser@npm:5.2.7":
   version: 5.2.7
   resolution: "html-react-parser@npm:5.2.7"
   dependencies:
@@ -5283,7 +5274,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsdom@npm:^27.0.1":
+"jsdom@npm:27.0.1":
   version: 27.0.1
   resolution: "jsdom@npm:27.0.1"
   dependencies:
@@ -7452,13 +7443,6 @@ __metadata:
     has-symbols: "npm:^1.1.0"
     which-boxed-primitive: "npm:^1.1.1"
   checksum: 10c0/7dbd35ab02b0e05fe07136c72cb9355091242455473ec15057c11430129bab38b7b3624019b8778d02a881c13de44d63cd02d122ee782fb519e1de7775b5b982
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
