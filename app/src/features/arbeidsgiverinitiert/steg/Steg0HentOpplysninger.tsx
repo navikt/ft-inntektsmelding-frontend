@@ -283,7 +283,7 @@ function NyAnsattForm({ data }: { data?: SlåOppArbeidstakerResponseDto }) {
         </VStack>
       </HStack>
       <DatePickerWrapped
-        label="Første fraværsdag"
+        label="Første fraværsdag med refusjon"
         name="førsteFraværsdag"
         rules={{ required: "Må oppgis" }} // TODO: Forklare hvorfor det må oppgis
       />
