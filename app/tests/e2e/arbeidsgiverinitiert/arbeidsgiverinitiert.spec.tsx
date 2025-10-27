@@ -26,12 +26,12 @@ test("Ny ansatt", async ({ page }) => {
   });
   await expectError({
     page,
-    label: "Første fraværsdag",
+    label: "Første fraværsdag med refusjon",
     error: "Må oppgis",
   });
 
   await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
-  await page.getByLabel("Første fraværsdag").fill("01.4.2024");
+  await page.getByLabel("Første fraværsdag med refusjon").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
   await page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
@@ -59,7 +59,7 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
     .getByRole("radio", { name: "Ny ansatt som mottar ytelse fra Nav" })
     .click();
   await page.getByLabel("Ansattes fødselsnummer").fill(FAKE_FNR);
-  await page.getByLabel("Første fraværsdag").fill("01.4.2024");
+  await page.getByLabel("Første fraværsdag med refusjon").fill("01.4.2024");
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
   await page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
