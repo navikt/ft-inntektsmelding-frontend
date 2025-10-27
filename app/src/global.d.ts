@@ -7,5 +7,3 @@ declare global {
     }) => Promise<unknown>;
   }
 }
-
-export {};

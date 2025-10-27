@@ -196,7 +196,7 @@ export function finnSenesteInntektsmelding<
   const medOpprettetTidspunkt = inntektsmeldinger.filter(
     (im) => !!im.opprettetTidspunkt,
   );
-  const [sisteInntektsmelding] = medOpprettetTidspunkt.sort(
+  const [sisteInntektsmelding] = medOpprettetTidspunkt.toSorted(
     (a, b) =>
       new Date(b.opprettetTidspunkt).getTime() -
       new Date(a.opprettetTidspunkt).getTime(),

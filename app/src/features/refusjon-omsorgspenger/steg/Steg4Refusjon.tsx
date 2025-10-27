@@ -67,7 +67,7 @@ export const RefusjonOmsorgspengerArbeidsgiverSteg4 = () => {
     ...(fraværHeleDager?.map((dag) => dag.fom) ?? []),
     ...(fraværDelerAvDagen?.map((dag) => dag.dato) ?? []),
     ...(dagerSomSkalTrekkes?.map((dag) => dag.fom) ?? []),
-  ].sort()[0];
+  ].toSorted()[0];
 
   const {
     data: inntektsopplysninger,

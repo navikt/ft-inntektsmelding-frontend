@@ -61,7 +61,7 @@ export const VisInnsendtRefusjonskrav = () => {
 
   const unikeMåneder = [...new Set(måneder)];
 
-  const sisteMåned = unikeMåneder?.[unikeMåneder.length - 1];
+  const sisteMåned = unikeMåneder?.at(-1);
 
   const månedtekst =
     unikeMåneder.length === 1

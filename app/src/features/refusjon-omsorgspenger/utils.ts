@@ -38,10 +38,10 @@ export const utledFørsteFraværsdag = (
   fraværHeleDager: FraværPeriodeArray,
   fraværDelerAvDagen: FraværDelerAvDagenArray,
 ) => {
-  const førsteFraværsdagHeleDager = fraværHeleDager.sort((a, b) => {
+  const førsteFraværsdagHeleDager = fraværHeleDager.toSorted((a, b) => {
     return new Date(a.fom).getTime() - new Date(b.fom).getTime();
   })[0]?.fom;
-  const førsteFraværsdagDelerAvDagen = fraværDelerAvDagen.sort((a, b) => {
+  const førsteFraværsdagDelerAvDagen = fraværDelerAvDagen.toSorted((a, b) => {
     return new Date(a.dato).getTime() - new Date(b.dato).getTime();
   })[0]?.dato;
 
