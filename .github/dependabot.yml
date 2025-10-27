@@ -15,32 +15,19 @@ updates:
       interval: daily
     open-pull-requests-limit: 20
     groups:
-      prod-minor-deps:
+      minor:
         exclude-patterns:
           - "@navikt/vite-mode"
-        dependency-type: "production"
         update-types:
           - "minor"
           - "patch"
-      prod-major-deps:
+      prod-major:
         dependency-type: "production"
         update-types:
           - "major"
-      dev-minor-deps:
+      dev-major:
         dependency-type: "development"
         update-types:
-          - "minor"
-          - "patch"
-      dev-major-deps:
-        dependency-type: "development"
-        update-types:
-          - "major"
-      types-deps:
-        patterns:
-          - "@types/**"
-        update-types:
-          - "minor"
-          - "patch"
           - "major"
   - package-ecosystem: github-actions
     directory: "/"
