@@ -3,6 +3,7 @@ import {
   FormSummaryAnswer,
   FormSummaryAnswers,
   FormSummaryEditLink,
+  FormSummaryFooter,
   FormSummaryHeader,
   FormSummaryHeading,
   FormSummaryLabel,
@@ -10,7 +11,7 @@ import {
 } from "@navikt/ds-react/FormSummary";
 import { Link } from "@tanstack/react-router";
 
-import { useRefusjonOmsorgspengerArbeidsgiverFormContext } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverForm";
+import { useSkjemaState } from "~/features/refusjon-omsorgspenger/SkjemaStateContext";
 import { useInnloggetBruker } from "~/features/refusjon-omsorgspenger/useInnloggetBruker";
 import {
   formatFodselsnummer,
@@ -25,8 +26,7 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
 }: {
   redigerbar: boolean;
 }) => {
-  const { getValues, formState } =
-    useRefusjonOmsorgspengerArbeidsgiverFormContext();
+  const { getValues, formState } = useSkjemaState();
   const innloggetBruker = useInnloggetBruker();
   return (
     <FormSummary>
@@ -34,9 +34,6 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
         <FormSummaryHeading level="3">
           Arbeidsgiver og den ansatte
         </FormSummaryHeading>
-        {redigerbar && (
-          <FormSummaryEditLink as={Link} to="../2-ansatt-og-arbeidsgiver" />
-        )}
       </FormSummaryHeader>
       <FormSummaryAnswers>
         <FormSummaryAnswer>
@@ -83,6 +80,11 @@ export const OppsummeringArbeidsgiverOgAnsatt = ({
           </FormSummaryValue>
         </FormSummaryAnswer>
       </FormSummaryAnswers>
+      {redigerbar && (
+        <FormSummaryFooter>
+          <FormSummaryEditLink as={Link} to="../2-ansatt-og-arbeidsgiver" />
+        </FormSummaryFooter>
+      )}
     </FormSummary>
   );
 };

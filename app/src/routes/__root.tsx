@@ -7,8 +7,8 @@ import {
 import React from "react";
 
 import { hentGrunnbeløpOptions } from "~/api/queries.ts";
-import { GenerellFeilside } from "~/features/error-boundary/GenerellFeilside";
-import { VisHjelpeteksterStateProvider } from "~/features/Hjelpetekst.tsx";
+import { GenerellFeilside } from "~/features/shared/error-boundary/GenerellFeilside";
+import { VisHjelpeteksterStateProvider } from "~/features/shared/Hjelpetekst";
 
 const TanStackRouterDevtools = import.meta.env.PROD
   ? () => null // Render nothing in production

@@ -6,6 +6,7 @@ import { SendInntektsmeldingRequestDtoSchema } from "~/types/api-models.ts";
 
 const RefusjonOmsorgspengerDtoSchema =
   SendInntektsmeldingRequestDtoSchema.extend({
+    foresporselUuid: z.undefined(),
     omsorgspenger: z.object({
       fraværHeleDager: z
         .array(

@@ -2,9 +2,9 @@ import { BodyShort, Loader } from "@navikt/ds-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-import { OppgaveErUtgåttFeilside } from "~/features/error-boundary/OppgaveErUtgåttFeilside";
 import { hentInnloggetBrukerDataOptions } from "~/features/refusjon-omsorgspenger/api/queries";
-import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger/RefusjonOmsorgspengerArbeidsgiverRotLayout";
+import { RefusjonOmsorgspengerArbeidsgiverRotLayout } from "~/features/refusjon-omsorgspenger/RootLayoutRefusjonOmsorgspenger";
+import { OppgaveErUtgåttFeilside } from "~/features/shared/error-boundary/OppgaveErUtgåttFeilside";
 import { queryClient } from "~/main";
 
 enum FEILKODER {
