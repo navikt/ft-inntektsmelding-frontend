@@ -36,7 +36,9 @@ test.describe("AGI Ulike scenarier", () => {
       json: agiOpplysningerAlternativYtelse,
     });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Telefon").fill("98765432");
@@ -78,7 +80,9 @@ test.describe("AGI Ulike scenarier", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     const testNavn = "Ola Nordmann";
@@ -128,7 +132,9 @@ test.describe("AGI Ulike scenarier", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Navn").fill("Ola Nordmann");
@@ -222,7 +228,9 @@ test.describe("AGI Ulike scenarier", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Telefon").fill("98765432");

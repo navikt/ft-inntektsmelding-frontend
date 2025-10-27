@@ -39,7 +39,7 @@ test("Ny ansatt", async ({ page }) => {
   });
 
   await page
-    .getByRole("combobox", { name: "Arbeidsgiver" })
+    .getByTestId("steg-0-select-arbeidsgiver")
     .selectOption("974652293");
 
   await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
@@ -67,7 +67,7 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
   });
 
   await page
-    .getByRole("combobox", { name: "Arbeidsgiver" })
+    .getByTestId("steg-0-select-arbeidsgiver")
     .selectOption("974652293");
 
   await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();

@@ -60,7 +60,9 @@ test.describe("AGI Valideringer", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     // Verifiser at vi er på dine-opplysninger siden
@@ -87,7 +89,9 @@ test.describe("AGI Valideringer", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Telefon").fill("98765432");
@@ -112,7 +116,9 @@ test.describe("AGI Valideringer", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Telefon").fill("98765432");
@@ -146,7 +152,7 @@ test.describe("AGI Valideringer", () => {
     await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
     // Siden mock har flere arbeidsforhold, skal dropdown vises
-    await expect(page.getByLabel("Arbeidsgiver")).toBeVisible();
+    await expect(page.getByTestId("steg-0-select-arbeidsgiver")).toBeVisible();
 
     // Verifiser at "Opprett inntektsmelding" knappen vises
     await expect(
@@ -169,7 +175,9 @@ test.describe("AGI Valideringer", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     await page.getByLabel("Telefon").fill("98765432");

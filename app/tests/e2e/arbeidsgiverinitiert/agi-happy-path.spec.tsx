@@ -37,7 +37,9 @@ test.describe("AGI Happy Path", () => {
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
     // Velg arbeidsgiver
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
 
     // Klikk "Opprett inntektsmelding"
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
@@ -96,7 +98,9 @@ test.describe("AGI Happy Path", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     // Fyll ut dine opplysninger
@@ -146,7 +150,9 @@ test.describe("AGI Happy Path", () => {
 
     await mockAGIOpplysninger({ page, json: agiOpplysningerResponseNyAnsatt });
 
-    await page.getByLabel("Arbeidsgiver").selectOption("974652293");
+    await page
+      .getByTestId("steg-0-select-arbeidsgiver")
+      .selectOption("974652293");
     await page.getByRole("button", { name: "Opprett inntektsmelding" }).click();
 
     // Fyll ut dine opplysninger
