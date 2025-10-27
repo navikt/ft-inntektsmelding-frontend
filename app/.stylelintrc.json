@@ -1,6 +1,8 @@
 {
-  "extends": ["stylelint-config-standard", "@navikt/aksel-stylelint/recommended"],
-  "customSyntax": "postcss-styled-syntax",
+  "extends": [
+    "stylelint-config-standard",
+    "@navikt/aksel-stylelint/recommended"
+  ],
 
   "rules": {
     "no-empty-source": null,
