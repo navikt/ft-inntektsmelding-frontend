@@ -20,7 +20,7 @@ const RefusjonOmsorgspengerDtoSchema =
         .array(
           z.object({
             dato: z.string(),
-            timer: z.preprocess(String, z.string()),
+            timer: z.string(),
           }),
         )
         .optional(),
