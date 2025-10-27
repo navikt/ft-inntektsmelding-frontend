@@ -555,7 +555,7 @@ const TidligereInnsendinger = ({
                     : "Inntektsmelding - sendt inn"}{" "}
                   {formatDatoKort(innsending.opprettetDato)}
                 </Accordion.Header>
-                <Accordion.Content className="pl-5 mt-4 !border-l-2 !border-solid !border-surface-neutral-subtle !border-y-0 !border-r-0">
+                <Accordion.Content className="pl-5 mt-4 border-l-2! border-solid! border-surface-neutral-subtle! border-y-0! border-r-0!">
                   <div className="flex flex-col gap-4">
                     {innsending.heleDager &&
                       innsending.heleDager?.length > 0 && (

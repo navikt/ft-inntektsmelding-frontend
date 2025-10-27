@@ -11,8 +11,6 @@
     "check:types": "tsc --noemit",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "stylelint": "stylelint '**/*.{tsx,css}'",
-    "stylelint:fix": "stylelint --fix '**/*.{tsx,css}'",
     "bundle-visualizer": "yarn dlx vite-bundle-visualizer",
     "test:unit": "vitest src/**/*.spec.ts"
   },
@@ -41,8 +39,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.38.0",
-    "@navikt/aksel-stylelint": "7.32.3",
     "@playwright/test": "1.56.1",
+    "@tailwindcss/vite": "^4.1.16",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.90.2",
     "@tanstack/router-devtools": "1.133.32",
@@ -52,7 +50,7 @@
     "@types/react": "18.3.20",
     "@types/react-dom": "18.3.6",
     "@typescript-eslint/parser": "8.46.2",
-    "@vitejs/plugin-react": "4.6.0",
+    "@vitejs/plugin-react": "5.1.0",
     "autoprefixer": "10.4.21",
     "eslint": "9.38.0",
     "eslint-config-prettier": "10.1.8",
@@ -60,17 +58,13 @@
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-simple-import-sort": "12.1.1",
-    "eslint-plugin-unicorn": "56.0.1",
-    "postcss-import": "16.1.1",
-    "postcss-styled-syntax": "0.7.1",
+    "eslint-plugin-unicorn": "62.0.0",
     "prettier": "3.6.2",
-    "stylelint": "16.25.0",
-    "stylelint-config-standard": "36.0.1",
-    "tailwindcss": "3.4.17",
+    "tailwindcss": "4.1.16",
     "typescript": "5.9.3",
     "typescript-eslint": "8.46.2",
-    "vite": "6.3.4",
+    "vite": "7.1.12",
     "vite-size": "0.0.6",
-    "vitest": "3.2.4"
+    "vitest": "4.0.3"
   }
 }

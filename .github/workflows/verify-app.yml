@@ -72,8 +72,5 @@ jobs:
       - name: Run ESLint
         run: yarn lint
 
-      - name: Run stylelint
-        run: yarn stylelint
-
       - name: Check for typescript errors
         run: yarn check:types

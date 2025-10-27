@@ -49,7 +49,7 @@ export const dagerTilPerioder = (
   // Sort dates in ascending order and normalize to UTC midnight
   const sortedDager = [...dager]
     .map((date) => new Date(date))
-    .sort((a, b) => a.getTime() - b.getTime());
+    .toSorted((a, b) => a.getTime() - b.getTime());
 
   const perioder: { fom: string; tom: string }[] = [];
   let currentPeriod = {

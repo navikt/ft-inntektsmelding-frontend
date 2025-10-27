@@ -17,7 +17,6 @@ const IGNORED_UNICORN_RULES = {
 export default tseslint.config(
   {
     ignores: [
-      "postcss.config.cjs",
       "src/vite-env.d.ts",
       "src/routeTree.gen.ts",
       "dist/*",
