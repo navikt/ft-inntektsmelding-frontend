@@ -95,7 +95,7 @@ jobs:
           RESOURCE: .deploy/naiserator.yaml
           VARS: .deploy/dev-gcp-k9saksbehandling.json
           NAMESPACE: k9saksbehandling
-          IMAGE: image=${{ needs.build-app-k9.outputs.image-ref }}
+          IMAGE: ${{ needs.build-app-k9.outputs.image-ref }}
 
   deploy-prod-k9:
     if: github.ref == 'refs/heads/master'
@@ -113,4 +113,4 @@ jobs:
           RESOURCE: .deploy/naiserator.yaml
           VARS: .deploy/prod-gcp-k9saksbehandling.json
           NAMESPACE: k9saksbehandling
-          IMAGE: image=${{ needs.build-app-k9.outputs.image-ref }}
+          IMAGE: ${{ needs.build-app-k9.outputs.image-ref }}
