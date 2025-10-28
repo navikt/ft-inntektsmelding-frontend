@@ -1,4 +1,4 @@
-# Brukergrensesnitt for ft-inntektsmelding-frontend
+# Brukergrensesnitt for k9-inntektsmelding-frontend
 
 For å bruke Yarn trenger du ha `node` installert.
 Vi anbefaler at du bruker [asdf](https://asdf-vm.com/) slik at du automatisk kjører nødvendige pakker på støttet versjon.

@@ -46,16 +46,16 @@ jobs:
           yarn config set npmScopes.navikt.npmAuthToken ${{ secrets.READER_TOKEN }}
 
       - name: Install dependencies
-        run: yarn workspaces focus ft-inntektsmelding-frontend-app
+        run: yarn workspaces focus app
 
       - name: Build webapp [K9]
-        run: yarn workspace ft-inntektsmelding-frontend-app build
+        run: yarn workspace app build
 
       - name: Install dependencies server
-        run: yarn workspaces focus ft-inntektsmelding-frontend
+        run: yarn workspaces focus server
 
       - name: Build server
-        run: yarn workspace ft-inntektsmelding-frontend build
+        run: yarn workspace server build
 
       - name: Copy server node_modules to server folder
         run: cp -r ./node_modules ./server/node_modules

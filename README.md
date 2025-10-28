@@ -1,4 +1,4 @@
-# ft-inntektsmelding-frontend
+# k9-inntektsmelding-frontend
 
 Frontend for inntektsmelding for Team Sykdom i Familien
 
@@ -11,7 +11,7 @@ Dette repoet er delt inn i to deler – en `app` og en `server`. `app` er fronte
 Klon ned repoet:
 
 ```bash
-git clone git@github.com:navikt/ft-inntektsmelding-frontend.git
+git clone git@github.com:navikt/k9-inntektsmelding-frontend.git
 ```
 
 Kjør `yarn install` i rot-mappen for å installere avhengigheter for både app og server.
