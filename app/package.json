@@ -43,7 +43,7 @@
     "@tailwindcss/vite": "^4.1.16",
     "@tanstack/eslint-plugin-query": "5.91.2",
     "@tanstack/react-query-devtools": "5.90.2",
-    "@tanstack/router-devtools": "1.133.32",
+    "@tanstack/router-devtools": "1.133.34",
     "@tanstack/router-vite-plugin": "1.133.32",
     "@types/lodash": "4.17.19",
     "@types/node": "22.15.2",
