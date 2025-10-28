@@ -69,41 +69,40 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
       - name: Bygg og push docker image k9saksbehandling
-        uses: navikt/fp-gha-workflows/.github/actions/build-push-docker-image@main # ratchet:exclude
+        uses: navikt/sif-gha-workflows/.github/actions/maven/build-push-docker-image@main 
         with:
           docker_context: "./server"
           dockerfile: "./server/Dockerfile"
           build-version: ${{ steps.generate-build-version.outputs.build-version }}
           push-image: true
-          namespace: k9saksbehandling
 
   deploy-dev-k9:
     name: Deploy DEV [K9]
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
     needs: build-app-k9
-    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
-    with:
-      gar: true
-      image: ${{ needs.build-app-k9.outputs.build-version }}
-      cluster: dev-gcp
-      deploy_context: "/k9"
-      naiserator_file: "k9/naiserator.yaml"
-      namespace: k9saksbehandling
-    secrets: inherit
+    steps:
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .deploy/naiserator.yaml
+          VARS: .deploy/dev-gcp-k9saksbehandling.json
+          NAMESPACE: k9saksbehandling
+          IMAGE: image=${{ needs.build-app-k9.outputs.build-version }}
 
   deploy-prod-k9:
     if: github.ref == 'refs/heads/master'
     name: Deploy PROD [K9]
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
     needs: [build-app-k9, deploy-dev-k9]
-    uses: navikt/fp-gha-workflows/.github/workflows/deploy.yml@main
-    with:
-      gar: true
-      image: ${{ needs.build-app-k9.outputs.build-version }}
-      cluster: prod-gcp
-      deploy_context: "/k9"
-      naiserator_file: "k9/naiserator.yaml"
-      namespace: k9saksbehandling
-    secrets: inherit
+    steps:
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: prod-gcp
+          RESOURCE: .deploy/naiserator.yaml
+          VARS: .deploy/prod-gcp-k9saksbehandling.json
+          NAMESPACE: k9saksbehandling
+          IMAGE: image=${{ needs.build-app-k9.outputs.build-version }}
