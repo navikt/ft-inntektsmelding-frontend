@@ -24,7 +24,7 @@ jobs:
       TZ: "Europe/Oslo"
     outputs:
       build-version: ${{ steps.generate-build-version.outputs.build-version }}
-      image-ref: ${{ steps.set-image-ref.outputs.image }}
+      IMAGE: ${{ steps.set-image-ref.outputs.IMAGE }}
     steps:
       - name: Checkout code
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # ratchet:actions/checkout@v4
@@ -69,16 +69,17 @@ jobs:
         run: echo "build-version=k9-$(date +%Y.%m.%d.%H%M%S)-$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_OUTPUT
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
-      - name: Set full image reference
-        id: set-image-ref
-        run: echo "image=ghcr.io/navikt/k9-inntektsmelding-frontend:${{ steps.generate-build-version.outputs.build-version }}" >> $GITHUB_OUTPUT
       - name: Bygg og push docker image k9saksbehandling
+        id: docker-push
         uses: navikt/sif-gha-workflows/.github/actions/maven/build-push-docker-image@main
         with:
           docker_context: "./server"
           dockerfile: "./server/Dockerfile"
           build-version: ${{ steps.generate-build-version.outputs.build-version }}
           push-image: true
+      - name: Set full image reference
+        id: set-image-ref
+        run: echo "IMAGE=${{steps.docker-push.outputs.image}}" >> $GITHUB_OUTPUT
 
   deploy-dev-k9:
     name: Deploy DEV [K9]
@@ -95,7 +96,7 @@ jobs:
           RESOURCE: .deploy/naiserator.yaml
           VARS: .deploy/dev-gcp-k9saksbehandling.json
           NAMESPACE: k9saksbehandling
-          IMAGE: ${{ needs.build-app-k9.outputs.image-ref }}
+          IMAGE: ${{ needs.build-app-k9.outputs.IMAGE }}
 
   deploy-prod-k9:
     if: github.ref == 'refs/heads/master'
@@ -113,4 +114,4 @@ jobs:
           RESOURCE: .deploy/naiserator.yaml
           VARS: .deploy/prod-gcp-k9saksbehandling.json
           NAMESPACE: k9saksbehandling
-          IMAGE: ${{ needs.build-app-k9.outputs.image-ref }}
+          IMAGE: ${{ needs.build-app-k9.outputs.IMAGE }}
