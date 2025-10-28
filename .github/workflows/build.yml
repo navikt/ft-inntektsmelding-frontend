@@ -87,8 +87,8 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
-          RESOURCE: ./.deploy/naiserator.yaml
-          VARS: ./.deploy/dev-gcp-k9saksbehandling.json
+          RESOURCE: .deploy/naiserator.yaml
+          VARS: .deploy/dev-gcp-k9saksbehandling.json
           NAMESPACE: k9saksbehandling
           IMAGE: image=${{ needs.build-app-k9.outputs.build-version }}
 
