@@ -84,6 +84,7 @@ jobs:
       id-token: write
     needs: build-app-k9
     steps:
+      - uses: actions/checkout@v5
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: dev-gcp
@@ -101,6 +102,7 @@ jobs:
       id-token: write
     needs: [build-app-k9, deploy-dev-k9]
     steps:
+      - uses: actions/checkout@v5
       - uses: nais/deploy/actions/deploy@v2
         env:
           CLUSTER: prod-gcp
