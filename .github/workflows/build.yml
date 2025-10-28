@@ -69,7 +69,7 @@ jobs:
       - name: Print build version
         run: echo "Generated build-version is ${{ steps.generate-build-version.outputs.build-version }}"
       - name: Bygg og push docker image k9saksbehandling
-        uses: navikt/sif-gha-workflows/.github/actions/maven/build-push-docker-image@main 
+        uses: navikt/sif-gha-workflows/.github/actions/maven/build-push-docker-image@main
         with:
           docker_context: "./server"
           dockerfile: "./server/Dockerfile"
@@ -79,6 +79,7 @@ jobs:
   deploy-dev-k9:
     name: Deploy DEV [K9]
     runs-on: ubuntu-latest
+    environment: dev-gcp:k9saksbehandling
     permissions:
       id-token: write
     needs: build-app-k9
@@ -95,6 +96,7 @@ jobs:
     if: github.ref == 'refs/heads/master'
     name: Deploy PROD [K9]
     runs-on: ubuntu-latest
+    environment: prod-gcp:k9saksbehandling
     permissions:
       id-token: write
     needs: [build-app-k9, deploy-dev-k9]
