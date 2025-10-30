@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { DownloadIcon } from "@navikt/aksel-icons";
 import { Alert, Button, Detail, Heading, VStack } from "@navikt/ds-react";
 import { getRouteApi, Link, useParams } from "@tanstack/react-router";
+import type { Resolver } from "react-hook-form";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { hentInntektsmeldingPdfUrl } from "~/api/queries.ts";
@@ -44,7 +45,9 @@ export const VisInnsendtRefusjonskrav = () => {
   );
 
   const form = useForm<RefusjonOmsorgspengerFormData>({
-    resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),
+    resolver: zodResolver(
+      RefusjonOmsorgspengerSchemaMedValidering,
+    ) as Resolver<RefusjonOmsorgspengerFormData>,
     defaultValues,
     mode: "onSubmit",
     reValidateMode: "onBlur",
