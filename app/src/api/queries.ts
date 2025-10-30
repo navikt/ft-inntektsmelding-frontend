@@ -51,9 +51,6 @@ async function hentGrunnbeløp() {
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
-  if (uuid === ARBEIDSGIVER_INITERT_ID) {
-    return [];
-  }
   const response = await fetch(
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
   );
