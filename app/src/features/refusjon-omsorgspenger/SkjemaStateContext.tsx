@@ -1,11 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getRouteApi } from "@tanstack/react-router";
+import type { Resolver } from "react-hook-form";
 import { DeepPartial } from "react-hook-form";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { lagFulltNavn } from "~/utils";
 
-import { RefusjonOmsorgspengerFormData } from "./zodSchemas.tsx";
+import {
+  RefusjonOmsorgspengerFormData,
+  RefusjonOmsorgspengerFormDataInput,
+} from "./zodSchemas.tsx";
 import { RefusjonOmsorgspengerSchemaMedValidering } from "./zodSchemas.tsx";
 
 export const RefusjonOmsorgspengerArbeidsgiverForm = ({
@@ -17,7 +21,7 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({
 
   const { innloggetBruker } = route.useLoaderData();
 
-  const defaultValues: DeepPartial<RefusjonOmsorgspengerFormData> = {
+  const defaultValues: DeepPartial<RefusjonOmsorgspengerFormDataInput> = {
     meta: {
       step: 1,
       skalKorrigereInntekt: false,
@@ -39,7 +43,9 @@ export const RefusjonOmsorgspengerArbeidsgiverForm = ({
   };
 
   const form = useForm<RefusjonOmsorgspengerFormData>({
-    resolver: zodResolver(RefusjonOmsorgspengerSchemaMedValidering),
+    resolver: zodResolver(
+      RefusjonOmsorgspengerSchemaMedValidering,
+    ) as Resolver<RefusjonOmsorgspengerFormData>,
     defaultValues,
     mode: "onSubmit",
     reValidateMode: "onBlur",

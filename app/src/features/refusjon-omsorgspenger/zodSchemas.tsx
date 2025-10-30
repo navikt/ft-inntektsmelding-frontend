@@ -22,8 +22,8 @@ const baseSchema = z.object({
     harSendtSøknad: z.boolean(),
   }),
   // Steg 1 fields
-  harUtbetaltLønn: z.string().default(""),
-  årForRefusjon: z.string().default(""),
+  harUtbetaltLønn: z.string().optional().default(""),
+  årForRefusjon: z.string().optional().default(""),
 
   // Steg 2 fields
   kontaktperson: z.object({
@@ -37,7 +37,7 @@ const baseSchema = z.object({
   organisasjonsnummer: z.string().optional(),
 
   // Steg 3 fields
-  harDekket10FørsteOmsorgsdager: z.string().default(""),
+  harDekket10FørsteOmsorgsdager: z.string().optional().default(""),
   fraværHeleDager: z.array(
     z.object({
       fom: z.string(),
@@ -47,7 +47,7 @@ const baseSchema = z.object({
   fraværDelerAvDagen: z.array(
     z.object({
       dato: z.string(),
-      timer: z.string().default(""),
+      timer: z.string().optional().default(""),
     }),
   ),
   dagerSomSkalTrekkes: z.array(
@@ -457,7 +457,11 @@ export const RefusjonOmsorgspengerSchemaMedValidering =
     }
   });
 
-// Define form data type based on the schema
-export type RefusjonOmsorgspengerFormData = z.infer<
+// Define form data types based on the schema
+// For @hookform/resolvers v5 compatibility with schemas that have input/output differences
+export type RefusjonOmsorgspengerFormDataInput = z.input<
+  typeof RefusjonOmsorgspengerSchemaMedValidering
+>;
+export type RefusjonOmsorgspengerFormData = z.output<
   typeof RefusjonOmsorgspengerSchemaMedValidering
 >;
