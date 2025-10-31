@@ -127,7 +127,7 @@ export async function hentOpplysningerData(
     if (!opplysninger) {
       throw new Error("Finner ikke arbeidsgiverinitierte opplysninger");
     }
-    return opplysninger as OpplysningerDto;
+    return opplysninger;
   }
 
   const response = await fetch(
