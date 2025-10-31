@@ -27,7 +27,6 @@ import type { InntektOgRefusjonForm } from "~/features/inntektsmelding/steg/Steg
 import { HjelpetekstReadMore } from "~/features/shared/Hjelpetekst";
 import { useOpplysninger } from "~/features/shared/hooks/useOpplysninger";
 import { DatePickerWrapped } from "~/features/shared/react-hook-form-wrappers/DatePickerWrapped";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import { formatKroner, formatStønadsnavn } from "~/utils.ts";
 
 import { FormattertTallTextField } from "../react-hook-form-wrappers/FormattertTallTextField";
@@ -116,7 +115,7 @@ export function UtbetalingOgRefusjon() {
         <VarierendeRefusjon />
       ) : undefined}
       {skalRefunderes === "NEI" &&
-        opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID && (
+        opplysninger.forespørselType === "ARBEIDSGIVERINITIERT_NYANSATT" && (
           <Alert variant="warning">
             <Heading level="2" size="small">
               Inntektsmelding kan ikke sendes inn

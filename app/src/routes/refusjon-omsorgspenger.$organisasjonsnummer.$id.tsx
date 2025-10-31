@@ -9,16 +9,11 @@ import { RefusjonOmsorgspengerResponseDtoSchema } from "~/features/refusjon-omso
 import { VisInnsendtRefusjonskrav } from "~/features/refusjon-omsorgspenger/visningskomponenter/VisInnsendtRefusjonskrav.tsx";
 import { logDev } from "~/utils";
 
-import { ARBEIDSGIVER_INITERT_ID } from "./opprett.tsx";
-
 enum FEILKODER {
   OPPGAVE_ER_UTGÅTT = "OPPGAVE_ER_UTGÅTT",
 }
 
 export async function hentEksisterendeInntektsmeldinger(uuid: string) {
-  if (uuid === ARBEIDSGIVER_INITERT_ID) {
-    return [];
-  }
   const response = await fetch(
     `${SERVER_URL}/imdialog/inntektsmeldinger?foresporselUuid=${uuid}`,
   );

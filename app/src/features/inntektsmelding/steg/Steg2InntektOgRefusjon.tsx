@@ -5,7 +5,6 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { useOpplysninger } from "~/features/shared/hooks/useOpplysninger";
 import { Fremgangsindikator } from "~/features/shared/skjema-moduler/Fremgangsindikator.tsx";
-import { ARBEIDSGIVER_INITERT_ID } from "~/routes/opprett";
 import { EndringAvInntektÅrsaker, Naturalytelsetype } from "~/types/api-models";
 import {
   capitalize,
@@ -120,7 +119,7 @@ export function Steg2InntektOgRefusjon() {
     },
   });
 
-  const { handleSubmit, watch } = formMethods;
+  const { handleSubmit } = formMethods;
   const navigate = useNavigate();
 
   const onSubmit = handleSubmit((skjemadata) => {
@@ -189,10 +188,6 @@ export function Steg2InntektOgRefusjon() {
               Forrige steg
             </Button>
             <Button
-              disabled={
-                watch("skalRefunderes") === "NEI" &&
-                opplysninger.forespørselUuid === ARBEIDSGIVER_INITERT_ID
-              }
               icon={<ArrowRightIcon />}
               iconPosition="right"
               type="submit"
