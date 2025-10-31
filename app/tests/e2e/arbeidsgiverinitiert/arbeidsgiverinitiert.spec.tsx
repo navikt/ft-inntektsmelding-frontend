@@ -35,7 +35,12 @@ test("Ny ansatt", async ({ page }) => {
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
   await page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
-    await route.fulfill({ json: enkeltOpplysningerResponse });
+    await route.fulfill({
+      json: {
+        ...enkeltOpplysningerResponse,
+        forespørselType: "ARBEIDSGIVERINITIERT_NYANSATT",
+      },
+    });
   });
 
   await page
@@ -63,7 +68,12 @@ test("Skal ikke kunne velge NEI på refusjon hvis AGI og nyansatt", async ({
   await page.getByRole("button", { name: "Hent opplysninger" }).click();
 
   await page.route(`**/*/arbeidsgiverinitiert/opplysninger`, async (route) => {
-    await route.fulfill({ json: enkeltOpplysningerResponse });
+    await route.fulfill({
+      json: {
+        ...enkeltOpplysningerResponse,
+        forespørselType: "ARBEIDSGIVERINITIERT_NYANSATT",
+      },
+    });
   });
 
   await page

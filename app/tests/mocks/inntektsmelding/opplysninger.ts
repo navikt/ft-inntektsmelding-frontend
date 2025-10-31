@@ -1,6 +1,7 @@
 import { OpplysningerDto } from "~/types/api-models.ts";
 
 const STANDARD_OPPLYSNINGER = {
+  forespørselType: "ARBEIDSGIVERINITIERT_NYANSATT" as const,
   person: {
     fornavn: "UNDERFUNDIG",
     etternavn: "DYREFLOKK",
